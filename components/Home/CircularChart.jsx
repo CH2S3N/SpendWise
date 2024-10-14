@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
-import Colors from '../constants/Colors';
+import Colors from '../../constants/Colors';
 import PieChart from 'react-native-pie-chart';
 
 
@@ -11,14 +11,23 @@ export default function CircularChart() {
   return (
     <View>
       <View style={styles.container}>
-          <Text style ={styles.text}>Circular Chart</Text>
+        <View style={styles.item1}>
+          <Text>Circular Chart</Text>
           <PieChart
                   widthAndHeight={widthAndHeight}
                   series={values}
                   sliceColor={sliceColor}
                   coverRadius={0.45}
-                  coverFill={'#FFF4EA'}
+                  coverFill={'#FFFFFF'}
               />
+
+        </View>
+        <View style={styles.item2}>
+          <Text>Legend</Text>
+          <Text>Lorem ipsum</Text>
+          <Text>"Lorem ipsum</Text>
+          <Text>"Lorem ipsum</Text>
+        </View>
 
       </View>
     </View>
@@ -26,16 +35,22 @@ export default function CircularChart() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        marginTop: 20,
-        backgroundColor:Colors.DWHITE,
-        padding:20,
-        borderRadius: 15,
-        elevation: 1
-    },
-    text: {
-     marginLeft: 10,
-     marginBottom: 10
-    }
+  container: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+  },
+  item1: {
+    justifyContent: 'center',
+    alignItems: 'center',
+
+  },
+  item2: {
+    justifyContent: 'center',
+    alignItems: 'center',
+
+  },
+
 
 })
