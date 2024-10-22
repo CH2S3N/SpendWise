@@ -46,7 +46,6 @@ const styles= StyleSheet.create({
    
   },
   itemText: {
-    fontFamily: 'montserrat-bold',
     fontSize: 20,
     color: Colors.LIGHT
 

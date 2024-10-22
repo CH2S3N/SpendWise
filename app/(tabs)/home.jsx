@@ -7,6 +7,7 @@ import ExpenseSummary from '../../components/Home/ExpenseSummary'
 import Goals from '../../components/Home/Goals'
 import DailyBudget from '../../components/Home/DailyBudget'
 
+
 export default function home() {
   return (
     <SafeAreaView style={styles.safeArea}>
