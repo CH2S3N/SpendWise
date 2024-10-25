@@ -33,7 +33,7 @@ export default function RootLayout() {
     }
     >
       <SQLiteProvider databaseName="mySQLiteDB.db" useSuspense>
-        <Stack>
+        <Stack >
           <Stack.Screen name="(tabs)" 
             options={{
               headerShown: false,

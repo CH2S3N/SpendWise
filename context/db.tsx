@@ -10,6 +10,7 @@ const loadDatabase =async () => {
     const dbFilePath = `${FileSystem.documentDirectory}SQLite/${dbName}`;
   
     // making db if db doesnt exist
+    
     const fileInfo = await FileSystem.getInfoAsync(dbFilePath);
     if (!fileInfo.exists){
       await FileSystem.makeDirectoryAsync(

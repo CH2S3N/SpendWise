@@ -4,12 +4,12 @@ export default function _layout() {
   return (
    <Tabs
    screenOptions={{
-    headerShown: false
+    headerShown: false,
+    
    }}
    >
     <Tabs.Screen name="home"/>
     <Tabs.Screen name="goal"/>
-    <Tabs.Screen name="profile"/>
-   </Tabs>
+    </Tabs>
   )
 }
