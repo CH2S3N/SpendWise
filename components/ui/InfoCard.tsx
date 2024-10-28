@@ -1,6 +1,6 @@
 import Colors from "@/constants/Colors";
 import React from "react";
-import { StyleSheet, View, ViewStyle } from "react-native";
+import { StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 
 interface CardProps extends React.PropsWithChildren {
   style?: ViewStyle;
@@ -14,16 +14,14 @@ export default function Card({ children, style = {} }: CardProps) {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   card: {
-    padding: 15,
+    backgroundColor:Colors.LIGHT,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    flexGrow: 1,
     borderRadius: 15,
-    backgroundColor: Colors.LIGHT,
-    elevation: 5,
-    shadowColor: "#000",
-    shadowRadius: 8,
-    shadowOffset: { height: 6, width: 0 },
-    shadowOpacity: 0.15,
-  }
+  },
+
 })

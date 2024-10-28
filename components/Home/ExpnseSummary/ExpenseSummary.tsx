@@ -4,6 +4,7 @@ import Colors from '../../../constants/Colors';
 import { Category, Transaction } from '../../../types';
 import { useSQLiteContext } from 'expo-sqlite/next';
 import TransactionList from './TransactionsList';
+import Card from '@/components/ui/Card';
 
 
 export default function ExpenseSummary() {
@@ -40,11 +41,10 @@ export default function ExpenseSummary() {
         <View style={styles.content}>  
               <TransactionList categories={categories} transactions={transactions} deleteTransaction={deleteTransaction}/>
         </View>
-
-       
     </View>
   )
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -58,6 +58,4 @@ const styles = StyleSheet.create({
     content: {
       paddingVertical: 5
     }
-
-   
 })

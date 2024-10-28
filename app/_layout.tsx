@@ -4,7 +4,6 @@ import React from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 import loadDatabase from './../context/db'
 
-
 export default function RootLayout() {
   const [dbLoaded,setDbLoaded] = React.useState<boolean>(false);
 
@@ -24,25 +23,23 @@ export default function RootLayout() {
     )
 
   return (
-    <React.Suspense
-    fallback={
-      <View>
-        <ActivityIndicator size={"large"}/>
-        <Text> Loading Database...</Text>
-      </View>
-    }
-    >
-      <SQLiteProvider databaseName="mySQLiteDB.db" useSuspense>
-        <Stack >
-          <Stack.Screen name="(tabs)" 
-            options={{
-              headerShown: false,
-            }}
-            />
-        </Stack>
-      </SQLiteProvider>
-    </React.Suspense>
-
-
+        <React.Suspense
+        fallback={
+          <View>
+            <ActivityIndicator size={"large"}/>
+            <Text> Loading Database...</Text>
+          </View>
+        }
+        >
+          <SQLiteProvider databaseName="mySQLiteDB.db" useSuspense>
+            <Stack >
+              <Stack.Screen name="index" 
+                options={{
+                  headerShown: false,
+                }}
+                />
+            </Stack>
+          </SQLiteProvider>
+        </React.Suspense>
   );
 }

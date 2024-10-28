@@ -6,6 +6,7 @@ import Card from "./Card";
 import SegmentedControl from "@react-native-segmented-control/segmented-control";
 import Colors from "@/constants/Colors";
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function AddTransaction ({
     insertTransaction,
@@ -25,6 +26,7 @@ export default function AddTransaction ({
     const [categoryId, setCategoryId] = React.useState<number>(1);
     const db = useSQLiteContext();
 
+    const [selectedIndex, setSelectedIndex] = React.useState<number>(1);
 
     React.useEffect(() => {
         getExpenseType(currentTab);
@@ -57,6 +59,7 @@ export default function AddTransaction ({
 
         // to insert transactions
         await insertTransaction({
+           
             description,
             frequency: frequency as "Daily" | "Weekly" | "Bi-Weekly" | "Monthly",
             prioritization: prioritization as "High" | "Medium" | "Low",
@@ -76,18 +79,22 @@ export default function AddTransaction ({
     }
 
 
+
+    // Return function of the Add transaction
     return (
-        <View style={{ marginBottom: 15 }}>
+        <View style={{ marginBottom: 15}}>
         {isAddingTransaction ? (
           <View>
             <Card>
 
+              {/* DESCRIPTION */}
               <TextInput
-                placeholder="Description"
-                style={{ marginBottom: 15 }}
+                placeholder="Provide an entry description"
+                style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
                 onChangeText={setDescription}
               />
 
+              {/* FREQUENCY */}
               <Text style={{ marginBottom: 6 }}>Frequency</Text>
               <SegmentedControl
                 values={["Daily", "Weekly", "Bi-Weekly", "Monthly"]}
@@ -97,7 +104,7 @@ export default function AddTransaction ({
                   setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
                 }}
               />
-
+              {/* PRIORITIZATION */}
               <Text style={{ marginBottom: 6 }}>Prioritization</Text>
               <SegmentedControl
                 values={["High", "Medium", "Low"]}
@@ -108,30 +115,33 @@ export default function AddTransaction ({
                 }}
               />
 
-              <Text style={{ marginBottom: 6 }}>Is Fixed Amount?</Text>
-              <SegmentedControl
-                values={["Yes", "No"]}
-                style={{ marginBottom: 15 }}
-                selectedIndex={["Yes", "No"].indexOf(isfixedamount)}
-                onChange={(event) => {
-                  setIsFixedAmount(["Yes", "No"][event.nativeEvent.selectedSegmentIndex]);
-                }}
-              />
+              {/* IS FIXED AMOUNT */}
+              <View>
+                <Text style={{ marginBottom: 6 }}>Is Fixed Amount?</Text>
+                <SegmentedControl
+                  values={['Yes', 'No']}
+                  selectedIndex={selectedIndex}
+                  onChange={(event) => setSelectedIndex(event.nativeEvent.selectedSegmentIndex)}
+                />
+                 {/* AMOUNT */}
+                {selectedIndex === 0 && ( 
+                  <TextInput
+                    placeholder="$Amount"
+                    style={{ fontSize: 32, marginBottom: 15, fontWeight: "bold" }}
+                    keyboardType="numeric"
+                    onChangeText={(text) => {
+                      // Remove any non-numeric characters before setting the state
+                      const numericValue = text.replace(/[^0-9.]/g, "");
+                      setAmount(numericValue);
+                    }}
+                  />
+                )}
+              </View>
 
-              <TextInput
-                placeholder="$Amount"
-                style={{ fontSize: 32, marginBottom: 15, fontWeight: "bold" }}
-                keyboardType="numeric"
-                onChangeText={(text) => {
-                  // Remove any non-numeric characters before setting the state
-                  const numericValue = text.replace(/[^0-9.]/g, "");
-                  setAmount(numericValue);
-                }}
-              />
-
-              <Text style={{ marginBottom: 6 }}>Select a entry type</Text>
+                {/* ENTRY TYPE, ESSENTIAL & NON ESSENTIAL */}
+              <Text style={{ marginBottom: 6 }}>Select a Entry Type</Text>
               <SegmentedControl
-                values={["Essential", "Non_Essential"]}
+                values={["Essential", "Non Essential"]}
                 style={{ marginBottom: 15 }}
                 selectedIndex={currentTab}
                 onChange={(event) => {
@@ -153,15 +163,14 @@ export default function AddTransaction ({
 
             </Card>
             
+
+            {/* Cancel and Save Button */}
             <View
               style={{ flexDirection: "row", justifyContent: "space-around" }}
             >
-              <Button
-                title="Cancel"
-                color="red"
-                onPress={() => setIsAddingTransaction(false)}
+              <Button title="Cancel" color={Colors.DARK} onPress={() => setIsAddingTransaction(false)}
               />
-              <Button title="Save" onPress={handleSave} />
+              <Button title="Save" color={Colors.DARK} onPress={handleSave} />
             </View>
           </View>
         ) : (
@@ -182,18 +191,19 @@ function AddButton({
       <View style={{ 
         position: 'absolute', 
         bottom: 1, 
-        left: 'auto'
+        left: '42%',
         }}>
         <TouchableOpacity
             onPress={() => setIsAddingTransaction(true)}
             activeOpacity={0.5}
+            
         >
             <AntDesign name="pluscircle" size={60} color={Colors.DARK} />
         </TouchableOpacity>
       </View>
     )
 }
-
+// ENTRY TYPE PICKER
 function CategoryButton({
     id,
     title,
@@ -217,18 +227,19 @@ function CategoryButton({
         style={{
             height: 40,
             flexDirection: "row",
-            alignContent: "center",
             justifyContent: "center",
-            backgroundColor: isSelected? "#007BFF20" : "00000020",
+            alignItems: "center",
+            backgroundColor: isSelected? Colors.DARK : Colors.LIGHT,
             borderRadius: 15,
             marginBottom: 6,
+          
         }}
         >
             <Text
                 style={{
                     fontWeight: "700",
-                    color: isSelected? "#007BFF" : "#000000",
-                    marginLeft: 5
+                    color: isSelected? Colors.LIGHT : Colors.DARK,
+                    marginLeft: 5,
                 }}
             >
                 {title}
@@ -236,3 +247,5 @@ function CategoryButton({
         </TouchableOpacity>
     )
 }
+
+

@@ -28,16 +28,18 @@ export default function TransactionList({
                         (category) => category.id === transaction.category_id
                     )
                     return (
-                        <TouchableOpacity
-                            key={transaction.id}
-                            activeOpacity={0.5}
-                            onLongPress={()=> deleteTransaction(transaction.id)}
-                        >
-                            <TransactionListItem 
-                            transaction={transaction} 
-                            categoryInfo={categoryForCurrentItem}
-                            />
-                        </TouchableOpacity>
+                        <ScrollView>
+                            <TouchableOpacity
+                                key={transaction.id}
+                                activeOpacity={0.5}
+                                onLongPress={()=> deleteTransaction(transaction.id)}
+                            >
+                                <TransactionListItem 
+                                transaction={transaction} 
+                                categoryInfo={categoryForCurrentItem}
+                                />
+                            </TouchableOpacity>
+                        </ScrollView>
                     )
                 })}   
             </View>
@@ -47,16 +49,18 @@ export default function TransactionList({
                         (category) => category.id === transaction.category_id
                     )
                     return (
-                        <TouchableOpacity
-                            key={transaction.id}
-                            activeOpacity={0.5}
-                            onLongPress={()=> deleteTransaction(transaction.id)}
-                        >
-                            <TransactionListItem 
-                            transaction={transaction} 
-                            categoryInfo={categoryForCurrentItem}
-                            />
-                        </TouchableOpacity>
+                        <ScrollView>
+                            <TouchableOpacity
+                                key={transaction.id}
+                                activeOpacity={0.5}
+                                onLongPress={()=> deleteTransaction(transaction.id)}
+                            >
+                                <TransactionListItem 
+                                transaction={transaction} 
+                                categoryInfo={categoryForCurrentItem}
+                                />
+                            </TouchableOpacity>
+                        </ScrollView>
                     )
                 })}   
             </View>
