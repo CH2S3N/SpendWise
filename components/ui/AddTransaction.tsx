@@ -69,7 +69,7 @@ export default function AddTransaction ({
             type: category as "Essential" | "Non_Essential",
         });
         setDescription("");
-        setFrequency("");
+        setFrequency("Daily");
         setPrioritization("High");
         setIsFixedAmount("Yes");
         setAmount("");

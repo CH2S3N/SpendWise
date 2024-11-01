@@ -1,20 +1,30 @@
-import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
+import { View,  StyleSheet, SafeAreaView, Modal, Text, Button, TouchableOpacity } from 'react-native';
 import { useSQLiteContext } from 'expo-sqlite/next';
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '../components/Home/Header';
 import Colors from '../constants/Colors'
-import CircularChart from '../components/Home/CircularChart';
+import CircularChart from '../components/Home/Chart/CircularChart';
 import ExpenseSummary from '../components/Home/ExpnseSummary/ExpenseSummary';
-import Goals from '../components/Home/Goals';
-import DailyBudget from '../components/Home/DailyBudget';
+import Goals from '../components/Home/Goal/Goals';
+import DailyBudget from '../components/Home/DailyBudget/DailyBudget';
 import AddTransaction from '../components/ui/AddTransaction';
 import { Category, Transaction } from '@/types';
-import { NavigationContainer } from '@react-navigation/native';
+import GoalsInfo from '@/components/Home/Goal/GoalsInfo';
+import DailyBudgetInfo from '@/components/Home/DailyBudget/DailyBudgetInfo';
+import SummaryInfo from '@/components/Home/ExpnseSummary/SummaryInfo';
+import ChartInfo from '@/components/Home/Chart/ChartInfo';
+
 
 export default function home() {
   const [categories, setCategories] = React.useState<Category[]>([]);
   const [transactions, setTransactions] = React.useState<Transaction[]>([]);
   const db = useSQLiteContext();
+
+  const [isGoalModalVisible, setGoalModalVisible] = useState(false);
+  const [isDailyBudgetModalVisible, setDailyBudgetModalVisible] = useState(false);
+  const [isSummaryModalVisible, setSummaryModalVisible] = useState(false);
+  const [isChartModalVisible, setChartModalVisible] = useState(false);
+
 
   async function getData() {
     const result = await db.getAllAsync<Transaction>('SELECT * FROM Transactions');
@@ -48,27 +58,81 @@ export default function home() {
           <Header/>
           <View style={styles.container}>
               <View style={styles.container1}>
-                <View style={styles.item}>
+  
+                <TouchableOpacity onPress={() => setGoalModalVisible(true)} style={styles.item}>
                   <Goals />
-                </View>
-                <View style={styles.item}>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => setDailyBudgetModalVisible(true)} style={styles.item}>
                   <DailyBudget />
-                </View>
+                </TouchableOpacity>
               </View>
-              <View style={styles.item}>
-                <ExpenseSummary />
-              </View>
-              <View style={styles.item}>
+                <TouchableOpacity onPress={() => setSummaryModalVisible(true)} style={styles.item}>
+                  <ExpenseSummary />
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => setChartModalVisible(true)} style={styles.item}>
                 <CircularChart />
-              </View>
+              </TouchableOpacity>
           </View >
 
         <View style={styles.btn}>
           <AddTransaction insertTransaction={insertTransaction} />
         </View>
+
+    {/* PopUp Screen */}
+    <Modal visible={isGoalModalVisible} >
+      <View style={styles.container}>
+        <GoalsInfo/>
+        <Button 
+          title='Back' 
+          color={Colors.DARK}
+          onPress={() => setGoalModalVisible(false)}
+        />
+      </View>
+    </Modal>
+    <Modal visible={isDailyBudgetModalVisible} >
+      <View style={styles.container}>
+        <DailyBudgetInfo/>
+        <Button 
+          title='Back' 
+          color={Colors.DARK}
+          onPress={() => setDailyBudgetModalVisible(false)}
+        />
+      </View>
+    </Modal>
+    <Modal visible={isSummaryModalVisible} >
+      <View style={styles.container}>
+        <SummaryInfo/>
+        <Button 
+          title='Back' 
+          color={Colors.DARK}
+          onPress={() => setSummaryModalVisible(false)}
+        />
+      </View>
+    </Modal>
+    <Modal visible={isChartModalVisible} >
+      <View style={styles.container}>
+        <ChartInfo/>
+        <Button 
+          title='Back' 
+          color={Colors.DARK}
+          onPress={() => setChartModalVisible(false)}
+        />
+      </View>
+    </Modal>
       </SafeAreaView>
+
+
   )
+
+
 }
+
+
+
+
+
 
 
 const styles= StyleSheet.create({
@@ -80,7 +144,7 @@ const styles= StyleSheet.create({
     flex: 1,
     padding: 10,
     gap: 15,
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-evenly',
   },
   container1: {
     columnGap: 15,
@@ -98,7 +162,12 @@ const styles= StyleSheet.create({
     flex: 1,
     flexGrow: 1,
     borderRadius: 15,
-
+    elevation: 5,
+    shadowColor: "#000",
+    shadowRadius: 8,
+    shadowOffset: { height: 6, width: 0 },
+    shadowOpacity: 0.15,
+    padding: 10
   },
   btn: {
     position: 'absolute',
