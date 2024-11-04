@@ -4,7 +4,6 @@ import * as React from "react";
 import { Button, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Card from "./Card";
 import SegmentedControl from "@react-native-segmented-control/segmented-control";
-import Colors from "@/constants/Colors";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -59,14 +58,14 @@ export default function AddTransaction ({
 
         // to insert transactions
         await insertTransaction({
-           
-            description,
-            frequency: frequency as "Daily" | "Weekly" | "Bi-Weekly" | "Monthly",
-            prioritization: prioritization as "High" | "Medium" | "Low",
-            isfixedamount: isfixedamount as "Yes" | "No",
-            amount: Number(amount),
-            category_id: categoryId,
-            type: category as "Essential" | "Non_Essential",
+          id: 0,
+          description,
+          frequency: frequency as "Daily" | "Weekly" | "Bi-Weekly" | "Monthly",
+          prioritization: prioritization as "High" | "Medium" | "Low",
+          isfixedamount: isfixedamount as "Yes" | "No",
+          amount: Number(amount),
+          category_id: categoryId,
+          type: category as "Essential" | "Non_Essential",
         });
         setDescription("");
         setFrequency("Daily");
@@ -168,9 +167,9 @@ export default function AddTransaction ({
             <View
               style={{ flexDirection: "row", justifyContent: "space-around" }}
             >
-              <Button title="Cancel" color={Colors.DARK} onPress={() => setIsAddingTransaction(false)}
+              <Button title="Cancel" color={'black'} onPress={() => setIsAddingTransaction(false)}
               />
-              <Button title="Save" color={Colors.DARK} onPress={handleSave} />
+              <Button title="Save" color={'black'} onPress={handleSave} />
             </View>
           </View>
         ) : (
@@ -198,7 +197,7 @@ function AddButton({
             activeOpacity={0.5}
             
         >
-            <AntDesign name="pluscircle" size={60} color={Colors.DARK} />
+            <AntDesign name="pluscircle" size={60} color={'black'} />
         </TouchableOpacity>
       </View>
     )
@@ -229,7 +228,7 @@ function CategoryButton({
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: isSelected? Colors.DARK : Colors.LIGHT,
+            backgroundColor: isSelected? 'black' : 'white',
             borderRadius: 15,
             marginBottom: 6,
           
@@ -238,7 +237,7 @@ function CategoryButton({
             <Text
                 style={{
                     fontWeight: "700",
-                    color: isSelected? Colors.LIGHT : Colors.DARK,
+                    color: isSelected? 'white' : 'black',
                     marginLeft: 5,
                 }}
             >

@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import React from 'react';
-import Colors from '../../../constants/Colors';
+
 import { Category, Transaction } from '../../../types';
 import { useSQLiteContext } from 'expo-sqlite/next';
 import TransactionList from './TransactionsList';

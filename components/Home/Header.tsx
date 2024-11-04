@@ -1,14 +1,15 @@
 import { View, Text } from 'react-native'
 import React from 'react'
-import Colors from '../../constants/Colors'
 import { StyleSheet } from 'react-native'
 import Ionicons from '@expo/vector-icons/Ionicons';
+
+
 
 export default function Header() {
   return (
     <View  style={{
       padding: 20,
-      backgroundColor:Colors.DARK,
+      backgroundColor: 'black',
       height: 150,
       }}>
       <View style={styles.item}>
@@ -29,7 +30,7 @@ const styles= StyleSheet.create({
   circular: {
     width: 50,
     height: 50,
-    backgroundColor:Colors.LIGHT,
+    backgroundColor: 'white',
     borderRadius: 90,
     marginRight: 15
   },
@@ -47,7 +48,7 @@ const styles= StyleSheet.create({
   },
   itemText: {
     fontSize: 20,
-    color: Colors.LIGHT
+    color: 'white',
 
   },
    
