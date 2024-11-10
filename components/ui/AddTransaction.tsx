@@ -190,7 +190,7 @@ function AddButton({
       <View style={{ 
         position: 'absolute', 
         bottom: 1, 
-        left: '42%',
+        left: 20,
         }}>
         <TouchableOpacity
             onPress={() => setIsAddingTransaction(true)}

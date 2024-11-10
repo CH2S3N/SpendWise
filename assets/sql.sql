@@ -5,6 +5,12 @@ CREATE TABLE IF NOT EXISTS "Categories" (
 	"type"	TEXT NOT NULL CHECK("type" IN ('Essential', 'Non_Essential')),
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
+CREATE TABLE IF NOT EXISTS "Goals" (
+	"id"	INTEGER,
+	"name"	TEXT NOT NULL,
+	"amount"	INTEGER NOT NULL,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
 CREATE TABLE IF NOT EXISTS "Transactions" (
 	"id"	INTEGER,
 	"category_id"	INTEGER,
@@ -32,6 +38,10 @@ INSERT INTO "Categories" VALUES (6,'Dining out','Non_Essential');
 INSERT INTO "Categories" VALUES (7,'Shopping','Non_Essential');
 INSERT INTO "Categories" VALUES (8,'Travel','Non_Essential');
 INSERT INTO "Categories" VALUES (9,'Subscription','Non_Essential');
+INSERT INTO "Goals" VALUES (1,'new Phone',10000);
+INSERT INTO "Goals" VALUES (2,'clothing',1200);
+INSERT INTO "Goals" VALUES (3,'book',700);
+INSERT INTO "Goals" VALUES (4,'new shoes',1000);
 INSERT INTO "Transactions" VALUES (1,1,'rent','Monthly','High','Yes',1000,'Essential');
 INSERT INTO "Transactions" VALUES (2,2,'commute','Daily','High','Yes',40,'Essential');
 INSERT INTO "Transactions" VALUES (3,3,'food','Daily','High','Yes',100,'Essential');

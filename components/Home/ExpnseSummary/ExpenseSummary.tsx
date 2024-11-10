@@ -1,10 +1,9 @@
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import React from 'react';
-
 import { Category, Transaction } from '../../../types';
 import { useSQLiteContext } from 'expo-sqlite/next';
 import TransactionList from './TransactionsList';
-import Card from '@/components/ui/Card';
+
 
 
 export default function ExpenseSummary() {
@@ -32,30 +31,20 @@ export default function ExpenseSummary() {
       await getData();
     }) 
   }
+  
+  function calcTotalExpense() {
+    return transactions.reduce((total, transaction) => {
+      return total + (transaction.amount || 0);
+    }, 0)
+  }
 
   return (
-    <View style={styles.container}>
-        <View style={styles.title}>
-          <Text>Expense Summary</Text>
-        </View>
-        <View style={styles.content}>  
-              <TransactionList categories={categories} transactions={transactions} deleteTransaction={deleteTransaction}/>
-        </View>
+    <View>
+      <TransactionList categories={categories} transactions={transactions} deleteTransaction={deleteTransaction}/>
+      <Text>Total Expense: {calcTotalExpense()}</Text>
+
     </View>
   )
 }
 
 
-const styles = StyleSheet.create({
-    container: {
-      flex:1,
-      paddingTop: 5,
-      paddingHorizontal:10
-    },
-    title: {
-      alignItems: 'center'
-    },
-    content: {
-      paddingVertical: 5
-    }
-})

@@ -17,7 +17,7 @@ export default function CircularChart() {
                   widthAndHeight={widthAndHeight}
                   series={values}
                   sliceColor={sliceColor}
-                  coverRadius={0.45}
+                  coverRadius={0.60}
                   coverFill={'#FFFFFF'}
               />
 

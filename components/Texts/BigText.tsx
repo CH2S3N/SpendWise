@@ -9,7 +9,7 @@ const BigText: React.FC<{content: string}> = ({content}) => {
 
 const styles = StyleSheet.create({
     text: {
-        fontSize: 30,
+        fontSize: 20,
         color: colors.black,
     }
 })

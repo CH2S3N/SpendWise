@@ -35,7 +35,7 @@ export default function RootLayout() {
       >
         <SQLiteProvider databaseName="mySQLiteDB.db" useSuspense>
           <Stack>
-            <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
+            <Stack.Screen name="screens" options={{headerShown: false}}/>
           </Stack>
         </SQLiteProvider>
       </React.Suspense>

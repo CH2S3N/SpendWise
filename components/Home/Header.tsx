@@ -12,12 +12,14 @@ export default function Header() {
       backgroundColor: 'black',
       height: 150,
       }}>
-      <View style={styles.item}>
-        <View style={styles.itemLeft}>
-          <View style={styles.circular}/>
-          <Text style={styles.itemText}>USER</Text>
+      <View style={styles.container}>
+        <View style={styles.item}></View>
+        <View style={styles.item}>
+          <Text style={styles.itemText}>SpendWise</Text>
         </View>
-        <Ionicons name="notifications" size={24} color="white" />
+        <View style={styles.item}>
+          <Ionicons name="notifications" size={35} color="white" />
+        </View>
       </View>
 
     </View>
@@ -25,30 +27,23 @@ export default function Header() {
 };
 
 const styles= StyleSheet.create({
-  
-
-  circular: {
-    width: 50,
-    height: 50,
-    backgroundColor: 'white',
-    borderRadius: 90,
-    marginRight: 15
-  },
-  item: {
-    height: 150,
-    alignContent: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  itemLeft: {
+  container: {
+    flex: 1,
+    marginTop: 50,
+    justifyContent: 'center',
     flexDirection: 'row',
     alignItems: 'center',
    
   },
+  item: {
+    
+    
+   
+  },
   itemText: {
-    fontSize: 20,
+    fontSize: 40,
     color: 'white',
+    fontWeight: 'bold'
 
   },
    

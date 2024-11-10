@@ -10,16 +10,10 @@ interface TransactionListItemProps{
 export default function TransactionListItem({ transaction, categoryInfo}: TransactionListItemProps) {
     return (
         <View>  
-                       
-                        <Text>{transaction?.description} amount: {transaction.amount}</Text>
-                         
+            <Text>{transaction?.description} amount: {transaction.amount}</Text>
         </View>
 
     )
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    }
-})
+

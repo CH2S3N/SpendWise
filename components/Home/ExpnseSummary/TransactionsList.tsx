@@ -21,60 +21,51 @@ export default function TransactionList({
     );
 
     return (
-        <View style={styles.container}>
-            <View style={styles.item}>
-                {essentialTransactions.map((transaction) => {
-                    const categoryForCurrentItem = categories.find(
-                        (category) => category.id === transaction.category_id
-                    )
-                    return (
-                        <ScrollView>
-                            <TouchableOpacity
-                                key={transaction.id}
-                                activeOpacity={0.5}
-                                onLongPress={()=> deleteTransaction(transaction.id)}
-                            >
-                                <TransactionListItem 
-                                transaction={transaction} 
-                                categoryInfo={categoryForCurrentItem}
-                                />
-                            </TouchableOpacity>
-                        </ScrollView>
-                    )
-                })}   
+        <ScrollView>
+            <View style={styles.container}>
+                    <View style={styles.section}>
+                        {essentialTransactions.map((transaction) => {
+                            const categoryForCurrentItem = categories.find(
+                                (category) => category.id === transaction.category_id
+                            )
+                            return (
+                                <View>
+                                    <TransactionListItem 
+                                    transaction={transaction} 
+                                    categoryInfo={categoryForCurrentItem}
+                                    />
+                                </View>
+                            )
+                        })}   
+                    </View>
+                    <View style={styles.section}>
+                        {nonEssentialTransactions.map((transaction) => {
+                            const categoryForCurrentItem = categories.find(
+                                (category) => category.id === transaction.category_id
+                            )
+                            return (
+                                <View>
+                                    <TransactionListItem 
+                                    transaction={transaction} 
+                                    categoryInfo={categoryForCurrentItem}
+                                    />
+                                </View>
+                            )
+                        })}   
+                    </View>
             </View>
-            <View>
-                {nonEssentialTransactions.map((transaction) => {
-                    const categoryForCurrentItem = categories.find(
-                        (category) => category.id === transaction.category_id
-                    )
-                    return (
-                        <ScrollView>
-                            <TouchableOpacity
-                                key={transaction.id}
-                                activeOpacity={0.5}
-                                onLongPress={()=> deleteTransaction(transaction.id)}
-                            >
-                                <TransactionListItem 
-                                transaction={transaction} 
-                                categoryInfo={categoryForCurrentItem}
-                                />
-                            </TouchableOpacity>
-                        </ScrollView>
-                    )
-                })}   
-            </View>
-        </View>
+        </ScrollView>
     )
 }
 
 const styles=StyleSheet.create({
     container: {
+        flex: 1,
         flexDirection: 'row',
-        justifyContent: 'space-evenly',
-    
+        padding: 10,
     },
-    item:{
-        flex:1,
+
+    section: {
+       padding: 10,
     }
 })

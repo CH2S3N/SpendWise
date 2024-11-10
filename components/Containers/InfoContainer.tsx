@@ -22,7 +22,7 @@ const InfoContainer: React.FC<InfoContainerProps> = ({title, content, style}) =>
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'white',
+        backgroundColor: colors.light,
         flex: 1,
         flexGrow: 1,
         borderRadius: 15,
@@ -31,13 +31,18 @@ const styles = StyleSheet.create({
         shadowRadius: 8,
         shadowOffset: { height: 6, width: 0 },
         shadowOpacity: 0.15,
-        padding: 10
+        padding: 10,
     },
     title: {
-
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     content: {
-
+        
+        flex: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
     }
 })
 

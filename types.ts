@@ -14,3 +14,15 @@ export interface Category {
     name: string;
     type: "Essential" | "Non_Essential";
 }
+
+export interface Goal {
+    id: number;
+    name: string;
+    amount: number;
+}
+
+export interface User {
+    id: number;
+    userName: string;
+    budget_Amount: number;
+}
