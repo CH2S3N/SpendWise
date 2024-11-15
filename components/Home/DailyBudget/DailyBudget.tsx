@@ -1,18 +1,11 @@
-import { View, Text, StyleSheet } from 'react-native'
-import React from 'react'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React from 'react';
 
 export default function DailyBudget() {
   return (
-    <View>
-        <View style={styles.container}>
+        <View >
             <Text>DailyBudget</Text>
-
         </View>
-    </View>
+
   )
 }
-
-const styles = StyleSheet.create({
-    container: {
-    }
-})

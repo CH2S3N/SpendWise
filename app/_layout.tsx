@@ -1,44 +1,19 @@
-import { SQLiteProvider} from 'expo-sqlite/next';
-import React from "react";
-import { ActivityIndicator, Text, View } from "react-native";
-import loadDatabase from './../context/db'
+import { SQLiteProvider } from 'expo-sqlite/next';
+import React from 'react';
 import { Stack } from 'expo-router';
-
-
+import { Provider } from 'react-redux';
+import { store } from '@/state/store';
 
 export default function RootLayout() {
-  const [dbLoaded,setDbLoaded] = React.useState<boolean>(false);
-
-  React.useEffect(() => {
-    loadDatabase()
-      .then(() => setDbLoaded(true))
-      .catch((e) => console.error(e));
-  }, []);
-
-  // Loadin screen while database is loading
-    if (!dbLoaded)
-    return (
-      <View>
-        <ActivityIndicator size={"large"}/>
-        <Text> Loading Database...</Text>
-      </View>
-    )
-
   return (
-      <React.Suspense
-      fallback={
-        <View>
-          <ActivityIndicator size={"large"}/>
-          <Text> Loading Database...</Text>
-        </View>
-      }
-      >
+  
+      <Provider store={store}>
         <SQLiteProvider databaseName="mySQLiteDB.db" useSuspense>
           <Stack>
-            <Stack.Screen name="screens" options={{headerShown: false}}/>
+            <Stack.Screen name="screens" options={{ headerShown: false }} />
           </Stack>
         </SQLiteProvider>
-      </React.Suspense>
-
+      </Provider>
+    
   );
 }

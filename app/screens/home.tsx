@@ -1,6 +1,6 @@
 import { View,  StyleSheet, SafeAreaView, Modal, Text, Button, TouchableOpacity } from 'react-native';
 import { useSQLiteContext } from 'expo-sqlite/next';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../../components/Home/Header';
 import CircularChart from '../../components/Home/Chart/CircularChart';
 import ExpenseSummary from '../../components/Home/ExpnseSummary/ExpenseSummary';
@@ -16,13 +16,16 @@ import MainContainer from '@/components/Containers/MainContainer';
 import InfoContainer from '@/components/Containers/InfoContainer';
 import BigText from '@/components/Texts/BigText';
 import Budget from '@/components/Home/Budget/Budget';
+import { AppDispatch, RootState } from '@/state/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { setData, setError, setLoading } from '@/state/dataSlice';
 
 
 export default function Home() {
-  const [categories, setCategories] = React.useState<Category[]>([]);
-  const [transactions, setTransactions] = React.useState<Transaction[]>([]);
-  const [user, setUserData] = React.useState<User[]>([]);
-  const [goal, setGoal] = React.useState<Goal[]>([]);
+  const dispatch = useDispatch<AppDispatch>();
+  const { categories, transactions, user, goal, loading, error } = useSelector(
+    (state: RootState) => state.data
+  );  // Access data from Redux store
   const db = useSQLiteContext();
 
   const [isGoalModalVisible, setGoalModalVisible] = useState(false);
@@ -31,23 +34,38 @@ export default function Home() {
   const [isChartModalVisible, setChartModalVisible] = useState(false);
 
 
-  async function getData() {
-    const transactionResult = await db.getAllAsync<Transaction>('SELECT * FROM Transactions');
-    setTransactions(transactionResult);
-    const categoriesResult = await db.getAllAsync<Category>('SELECT * FROM Categories');
-    setCategories(categoriesResult);
-    const goalsResult = await db.getAllAsync<Goal>('SELECT * FROM Goals');
-    setGoal(goalsResult);
-    const userResult = await db.getAllAsync<User>('SELECT * FROM User');
-    setUserData(userResult);
-  }
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        dispatch(setLoading()); // Set loading state before fetching data
+        
+        const transactionResult = await db.getAllAsync<Transaction>('SELECT * FROM Transactions');
+        const categoriesResult = await db.getAllAsync<Category>('SELECT * FROM Categories');
+        const goalsResult = await db.getAllAsync<Goal>('SELECT * FROM Goals');
+        const userResult = await db.getAllAsync<User>('SELECT * FROM User');
 
-  async function insertTransaction(transaction: Transaction) {
-    db.withTransactionAsync(async () => {
+        // Dispatch fetched data to Redux
+        dispatch(
+          setData({
+            transactions: transactionResult,
+            categories: categoriesResult,
+            goal: goalsResult,
+            user: userResult,
+          })
+        );
+      } catch (error: any) {
+        dispatch(setError(error.message || 'Failed to load data'));
+      }
+    };
+
+    getData();
+  }, [db, dispatch]);
+
+// Handle inserting a transaction
+  const insertTransaction = async (transaction: Transaction) => {
+    await db.withTransactionAsync(async () => {
       await db.runAsync(
-        `
-        INSERT INTO Transactions (category_id, description, frequency, priotization, isfixedamount, amount, type) VALUES(?, ?, ?, ?, ?, ?, ?)
-        `,
+        `INSERT INTO Transactions (category_id, description, frequency, prioritization, isfixedamount, amount, type) VALUES(?, ?, ?, ?, ?, ?, ?)`,
         [
           transaction.category_id,
           transaction.description,
@@ -58,10 +76,12 @@ export default function Home() {
           transaction.type,
         ]
       );
-      await getData();
-    })
-  }
 
+      // Reload data after inserting transaction
+      const transactionResult = await db.getAllAsync<Transaction>('SELECT * FROM Transactions');
+      dispatch(setData({ transactions: transactionResult, categories, goal, user }));
+    });
+  };
 
 
   return (
@@ -75,9 +95,7 @@ export default function Home() {
                 <InfoContainer
                   title={<BigText content="Goal"/>}
                   content={
-                    <TouchableOpacity onPress={() => setGoalModalVisible(true)}>
                       <Goals/>
-                    </TouchableOpacity>
                     }
                 />
                   <InfoContainer
@@ -94,9 +112,7 @@ export default function Home() {
               <InfoContainer
                   title={<BigText content="Expense Summary"/>}
                   content={
-                    <TouchableOpacity onPress={() => setSummaryModalVisible(true)}>
                       <ExpenseSummary />
-                    </TouchableOpacity>
                   }
                 />
               
@@ -118,6 +134,7 @@ export default function Home() {
         <Modal visible={isGoalModalVisible} >
           <View style={styles.container}>
             <GoalsInfo/>
+            
             <Button 
               title='Back' 
               color= 'black'

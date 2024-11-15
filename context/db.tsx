@@ -1,8 +1,10 @@
-import * as FileSystem from 'expo-file-system'
-import { Asset} from 'expo-asset'
+import * as FileSystem from 'expo-file-system';
+import { Asset} from 'expo-asset';
+import { AppDispatch } from '@/state/store';
+import { setDbLoaded, setDbLoadedError } from '@/state/db/dbSlice';
 
 // load the database
-const loadDatabase =async () => {
+const loadDatabase =async (dispatch: AppDispatch) => {
     // path of the database
     const dbName = "mySQLiteDB.db";
     const dbAsset = require("./../assets/mySQLiteDB.db");
@@ -11,15 +13,22 @@ const loadDatabase =async () => {
   
     // making db if db doesnt exist
     
-    const fileInfo = await FileSystem.getInfoAsync(dbFilePath);
-    if (!fileInfo.exists){
-      await FileSystem.makeDirectoryAsync(
-          `${FileSystem.documentDirectory}SQLite`,
-          {intermediates: true}
-      );
-      await FileSystem.downloadAsync(dbUri,dbFilePath);
-    }
+    try {
+      const fileInfo = await FileSystem.getInfoAsync(dbFilePath);
+      if (!fileInfo.exists) {
+        await FileSystem.makeDirectoryAsync(`${FileSystem.documentDirectory}SQLite`, {
+          intermediates: true,
+        });
   
+
+        await FileSystem.downloadAsync(dbUri, dbFilePath);
+      }
+  
+      dispatch(setDbLoaded());
+    } catch (error: any) {
+      console.error('Error loading database:', error.message);
+      dispatch(setDbLoadedError(error.message || 'Unknown error'));
+    }
   };
 
   export default loadDatabase;
