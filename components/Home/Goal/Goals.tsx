@@ -9,7 +9,7 @@ import { setData, setError, setLoading } from '@/state/dataSlice';
 
 export default function Goals() {
   const dispatch = useDispatch<AppDispatch>();
-  const { goal, loading, error } = useSelector(
+  const { goals, loading, error } = useSelector(
     (state: RootState) => state.data
   );
 
@@ -31,7 +31,7 @@ export default function Goals() {
         transactions: transactionsResult,
         categories: categoriesResult,
         user: userResult, 
-        goal: goalResult,
+        goals: goalResult,
       }));
     } catch (err: any) {
       dispatch(setError(err.message || 'Error fetching data'));
@@ -56,7 +56,7 @@ export default function Goals() {
   }
 
   function calcTotalGoal() {
-    return goal.reduce((total, goals) => {
+    return goals.reduce((total, goals) => {
       return total + (goals.amount || 0);
     }, 0)
   }
@@ -74,7 +74,7 @@ export default function Goals() {
   return (
     <View>
         <View style={styles.container}>
-            <GoalsList goals={goal} deleteGoal={deleteGoal} />
+            <GoalsList goals={goals} deleteGoal={deleteGoal} />
             <Text>Total: {calcTotalGoal()}</Text>
         </View>
     </View>

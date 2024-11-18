@@ -1,18 +1,26 @@
-import { Category, Transaction } from "@/types";
+import { Category, Goal, Transaction, User } from "@/types";
 import { useSQLiteContext } from "expo-sqlite";
 import * as React from "react";
-import { Button, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Button, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Card from "./Card";
 import SegmentedControl from "@react-native-segmented-control/segmented-control";
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { SafeAreaView } from "react-native-safe-area-context";
+import AddButton from "../buttons/AddButton";
+
+
+
 
 export default function AddTransaction ({
-    insertTransaction,
+    insertTransaction, insertGoal
 }: {
     insertTransaction(transaction: Transaction): Promise<void>;
+    insertGoal(goal: Goal): Promise<void>;
+    
 }) {
     const [isAddingTransaction, setIsAddingTransaction] = React.useState<boolean>(false);
+    const [isAddingGoal, setIsAddingGoal] = React.useState<boolean>(false);
+    const [isAddingBudget, setIsAddingBudget] = React.useState<boolean>(false);
+
     const [currentTab, setCurrentTab] = React.useState<number>(0);
     const [categories, setCategories] = React.useState<Category[]>([]);
     const [typeSelected, setTypeSelected] = React.useState<string>("");
@@ -23,10 +31,16 @@ export default function AddTransaction ({
     const [isfixedamount, setIsFixedAmount] = React.useState<string>("Yes");
     const [category, setCategory] = React.useState<string>("Essential");
     const [categoryId, setCategoryId] = React.useState<number>(1);
+    // Goals state
+    const [goalAmount, setGoalAmount] = React.useState<string>("");
+    const [goalName, setGoalName] = React.useState<string>("");
+    // Budget state
+    const [budgetAmount, setBudgetAmount] = React.useState<string>("");
+    const [budgetName, setBudgetName] = React.useState<string>("");
     const db = useSQLiteContext();
 
     const [selectedIndex, setSelectedIndex] = React.useState<number>(1);
-
+    const [selectedTypeIndex, setselectedTypeIndex] = React.useState<number>(0);
     React.useEffect(() => {
         getExpenseType(currentTab);
     }, [currentTab]);
@@ -41,7 +55,6 @@ export default function AddTransaction ({
         );
         setCategories(result);
     }
-
 
     // to save added transactions
     async function handleSave() {
@@ -76,102 +89,205 @@ export default function AddTransaction ({
         setCurrentTab(0);
         setIsAddingTransaction(false);
     }
+    // to save added goals
+    async function handleSaveGoal() {
+        console.log ({
+            name: goalName,
+            amount: Number(amount),
 
+        });
+
+        // to insert transactions
+        await insertGoal({
+            name: goalName,
+            amount: Number(amount)
+        });
+        setGoalName("");
+        setGoalAmount("");
+        setCurrentTab(0);
+        setIsAddingTransaction(false);;
+    }
+    // async function handleSaveBudget() {
+    //     console.log ({
+    //         id: 0,
+    //         userName,
+    //         amount: Number(amount),
+    //     });
+
+    //     // to insert transactions
+    //     await insertBudget({
+    //       id: 0,
+    //       userName,
+    //       budget_Amount: Number(amount),
+    //     });
+    //     setGoalName("");
+    //     setGoalAmount("");
+    //     setCurrentTab(0);
+    //     setIsAddingGoal(false);
+    // }
+
+    
 
 
     // Return function of the Add transaction
     return (
-        <View style={{ marginBottom: 15}}>
-        {isAddingTransaction ? (
-          <View>
-            <Card>
-
-              {/* DESCRIPTION */}
-              <TextInput
-                placeholder="Provide an entry description"
-                style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
-                onChangeText={setDescription}
-              />
-
-              {/* FREQUENCY */}
-              <Text style={{ marginBottom: 6 }}>Frequency</Text>
-              <SegmentedControl
-                values={["Daily", "Weekly", "Bi-Weekly", "Monthly"]}
-                style={{ marginBottom: 15 }}
-                selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
-                onChange={(event) => {
-                  setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
-                }}
-              />
-              {/* PRIORITIZATION */}
-              <Text style={{ marginBottom: 6 }}>Prioritization</Text>
-              <SegmentedControl
-                values={["High", "Medium", "Low"]}
-                style={{ marginBottom: 15 }}
-                selectedIndex={["High", "Medium", "Low"].indexOf(prioritization)}
-                onChange={(event) => {
-                  setPrioritization(["High", "Medium", "Low"][event.nativeEvent.selectedSegmentIndex]);
-                }}
-              />
-
-              {/* IS FIXED AMOUNT */}
-              <View>
-                <Text style={{ marginBottom: 6 }}>Is Fixed Amount?</Text>
-                <SegmentedControl
-                  values={['Yes', 'No']}
-                  selectedIndex={selectedIndex}
-                  onChange={(event) => setSelectedIndex(event.nativeEvent.selectedSegmentIndex)}
+        <View>
+        {isAddingTransaction || isAddingGoal ? (
+          <View  style={styles.container}>
+               <SegmentedControl
+                  values={['Expense', 'Goal', 'Budget']}
+                  selectedIndex={selectedTypeIndex}
+                  onChange={(event) => setselectedTypeIndex(event.nativeEvent.selectedSegmentIndex)}
                 />
-                 {/* AMOUNT */}
-                {selectedIndex === 0 && ( 
-                  <TextInput
-                    placeholder="$Amount"
-                    style={{ fontSize: 32, marginBottom: 15, fontWeight: "bold" }}
-                    keyboardType="numeric"
-                    onChangeText={(text) => {
-                      // Remove any non-numeric characters before setting the state
-                      const numericValue = text.replace(/[^0-9.]/g, "");
-                      setAmount(numericValue);
-                    }}
-                  />
+                {/* Expense Form */}
+                 {selectedTypeIndex === 0 && ( 
+                    <Card>
+
+                      {/* DESCRIPTION */}
+                      <TextInput
+                        placeholder="Provide an entry description"
+                        style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
+                        onChangeText={setDescription}
+                      />
+
+                      {/* FREQUENCY */}
+                      <Text style={{ marginBottom: 6 }}>Frequency</Text>
+                      <SegmentedControl
+                        values={["Daily", "Weekly", "Bi-Weekly", "Monthly"]}
+                        style={{ marginBottom: 15 }}
+                        selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
+                        onChange={(event) => {
+                          setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
+                        }}
+                      />
+                      {/* PRIORITIZATION */}
+                      <Text style={{ marginBottom: 6 }}>Prioritization</Text>
+                      <SegmentedControl
+                        values={["High", "Medium", "Low"]}
+                        style={{ marginBottom: 15 }}
+                        selectedIndex={["High", "Medium", "Low"].indexOf(prioritization)}
+                        onChange={(event) => {
+                          setPrioritization(["High", "Medium", "Low"][event.nativeEvent.selectedSegmentIndex]);
+                        }}
+                      />
+
+                      {/* IS FIXED AMOUNT */}
+                      <View>
+                        <Text style={{ marginBottom: 6 }}>Is Fixed Amount?</Text>
+                        <SegmentedControl
+                          values={['Yes', 'No']}
+                          selectedIndex={selectedIndex}
+                          onChange={(event) => setSelectedIndex(event.nativeEvent.selectedSegmentIndex)}
+                        />
+                        {/* AMOUNT */}
+                        {selectedIndex === 0 && ( 
+                          <TextInput
+                            placeholder="$Amount"
+                            style={{ fontSize: 32, marginBottom: 15, fontWeight: "bold" }}
+                            keyboardType="numeric"
+                            onChangeText={(text) => {
+                              // Remove any non-numeric characters before setting the state
+                              const numericValue = text.replace(/[^0-9.]/g, "");
+                              setAmount(numericValue);
+                            }}
+                          />
+                        )}
+                      </View>
+
+                        {/* ENTRY TYPE, ESSENTIAL & NON ESSENTIAL */}
+                      <Text style={{ marginBottom: 6 }}>Select a Entry Type</Text>
+                      <SegmentedControl
+                        values={["Essential", "Non Essential"]}
+                        style={{ marginBottom: 15 }}
+                        selectedIndex={currentTab}
+                        onChange={(event) => {
+                          setCurrentTab(event.nativeEvent.selectedSegmentIndex);
+                        }}
+                      />
+
+                      {categories.map((cat) => (
+                        <CategoryButton
+                          key={cat.name}
+                          // @ts-ignore
+                          id={cat.id}
+                          title={cat.name}
+                          isSelected={typeSelected === cat.name}
+                          setTypeSelected={setTypeSelected}
+                          setCategoryId={setCategoryId}
+                        />
+                      ))}
+
+                      {/* Cancel and Save Button */}
+                      <View
+                        style={{ flexDirection: "row", justifyContent: "space-around" }}
+                      >
+                        <Button title="Cancel" color={'black'} onPress={() => setIsAddingTransaction(false)}
+                        />
+                        <Button title="Save" color={'black'} onPress={handleSave} />
+                      </View>
+                    </Card>
                 )}
-              </View>
+                {/* Goal Form */}
+                {selectedTypeIndex === 1 && ( 
+                    <Card>
 
-                {/* ENTRY TYPE, ESSENTIAL & NON ESSENTIAL */}
-              <Text style={{ marginBottom: 6 }}>Select a Entry Type</Text>
-              <SegmentedControl
-                values={["Essential", "Non Essential"]}
-                style={{ marginBottom: 15 }}
-                selectedIndex={currentTab}
-                onChange={(event) => {
-                  setCurrentTab(event.nativeEvent.selectedSegmentIndex);
-                }}
-              />
+                      {/* DESCRIPTION */}
+                      <TextInput
+                        placeholder="Provide an entry description"
+                        style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
+                        onChangeText={setGoalName}
+                      />
+                      {/* IS FIXED AMOUNT */}
+ 
+                          <TextInput
+                            placeholder="$Amount"
+                            style={{ fontSize: 32, marginBottom: 15, fontWeight: "bold" }}
+                            keyboardType="numeric"
+                            onChangeText={(text) => {
+                              // Remove any non-numeric characters before setting the state
+                              const numericValue = text.replace(/[^0-9.]/g, "");
+                              setGoalAmount(numericValue);
+                            }}
+                          />
+                      {/* Cancel and Save Button */}
+                      <View
+                        style={{ flexDirection: "row", justifyContent: "space-around" }}
+                      >
+                        <Button title="Cancel" color={'black'} onPress={() => setIsAddingTransaction(false)}
+                        />
+                        <Button title="Save" color={'black'} onPress={handleSave} />
+                      </View>
+                    </Card>
+                )}
+                {/* Budget Form */}
+                {selectedTypeIndex === 2 && ( 
+                  <Card>
 
-              {categories.map((cat) => (
-                <CategoryButton
-                  key={cat.name}
-                  // @ts-ignore
-                  id={cat.id}
-                  title={cat.name}
-                  isSelected={typeSelected === cat.name}
-                  setTypeSelected={setTypeSelected}
-                  setCategoryId={setCategoryId}
-                />
-              ))}
+                  {/* AMOUNT */}
 
-            </Card>
-            
-
-            {/* Cancel and Save Button */}
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-around" }}
-            >
-              <Button title="Cancel" color={'black'} onPress={() => setIsAddingTransaction(false)}
-              />
-              <Button title="Save" color={'black'} onPress={handleSave} />
-            </View>
+                      <TextInput
+                        placeholder="$Amount"
+                        style={{ fontSize: 32, marginBottom: 15, fontWeight: "bold" }}
+                        keyboardType="numeric"
+                        onChangeText={(text) => {
+                          // Remove any non-numeric characters before setting the state
+                          const numericValue = text.replace(/[^0-9.]/g, "");
+                          setAmount(numericValue);
+                        }}
+                      />
+                  {/* Cancel and Save Button */}
+                  <View
+                    style={{ flexDirection: "row", justifyContent: "space-around" }}
+                  >
+                    <Button title="Cancel" color={'black'} onPress={() => setIsAddingTransaction(false)}
+                    />
+                    <Button title="Save" color={'black'} onPress={handleSaveGoal} />
+                  </View>
+                </Card>
+                )}
+               
           </View>
+
         ) : (
           <AddButton setIsAddingTransaction={setIsAddingTransaction} />
         )}
@@ -179,29 +295,6 @@ export default function AddTransaction ({
     );
 }
 
-
-// THE BUTTON FOR ADDING AN ENTRY
-function AddButton({
-    setIsAddingTransaction,
-}: {
-    setIsAddingTransaction: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
-    return (
-      <View style={{ 
-        position: 'absolute', 
-        bottom: 1, 
-        left: 20,
-        }}>
-        <TouchableOpacity
-            onPress={() => setIsAddingTransaction(true)}
-            activeOpacity={0.5}
-            
-        >
-            <AntDesign name="pluscircle" size={60} color={'black'} />
-        </TouchableOpacity>
-      </View>
-    )
-}
 // ENTRY TYPE PICKER
 function CategoryButton({
     id,
@@ -248,3 +341,11 @@ function CategoryButton({
 }
 
 
+const styles= StyleSheet.create({
+  container: {
+  flex: 1,
+  margin: 1,
+  padding: 10
+
+  }
+})

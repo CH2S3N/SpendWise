@@ -16,7 +16,7 @@ export interface Category {
 }
 
 export interface Goal {
-    id: number;
+    id?: number;
     name: string;
     amount: number;
 }

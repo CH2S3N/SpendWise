@@ -29,7 +29,7 @@ export default function TransactionList({
                                 (category) => category.id === transaction.category_id
                             )
                             return (
-                                <View>
+                                <View key={transaction.id}>
                                     <TransactionListItem 
                                     transaction={transaction} 
                                     categoryInfo={categoryForCurrentItem}
@@ -44,7 +44,7 @@ export default function TransactionList({
                                 (category) => category.id === transaction.category_id
                             )
                             return (
-                                <View>
+                                <View key={transaction.id}>
                                     <TransactionListItem 
                                     transaction={transaction} 
                                     categoryInfo={categoryForCurrentItem}

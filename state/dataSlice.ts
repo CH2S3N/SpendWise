@@ -1,13 +1,13 @@
 // src/state/data/dataSlice.ts
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Category, Transaction, Goal, User } from "@/types"; // Import your types
+import { Category, Transaction, Goal, User } from "@/types";
 
 interface DataState {
   categories: Category[];
   transactions: Transaction[];
   user: User[];
-  goal: Goal[];
+  goals: Goal[];
   loading: boolean;
   error: string | null;
 }
@@ -16,7 +16,7 @@ const initialState: DataState = {
   categories: [],
   transactions: [],
   user: [],
-  goal: [],
+  goals: [],
   loading: false,
   error: null,
 };
@@ -30,12 +30,12 @@ const dataSlice = createSlice({
     },
     setData(
       state,
-      action: PayloadAction<{ categories: Category[], transactions: Transaction[], user: User[], goal: Goal[] }>
+      action: PayloadAction<{ categories: Category[], transactions: Transaction[], user: User[], goals: Goal[] }>
     ) {
-      state.categories = action.payload.categories;
-      state.transactions = action.payload.transactions;
-      state.user = action.payload.user;
-      state.goal = action.payload.goal;
+      state.categories = action.payload.categories || [];
+      state.transactions = action.payload.transactions || [];
+      state.user = action.payload.user || [];
+      state.goals = action.payload.goals || [];
       state.loading = false;
     },
     setError(state, action: PayloadAction<string>) {
@@ -45,7 +45,7 @@ const dataSlice = createSlice({
     clearData(state) {
       state.categories = [];
       state.transactions = [];
-      state.goal = [];
+      state.goals = [];
       state.user = [];
     },
   },

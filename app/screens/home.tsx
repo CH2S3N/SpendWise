@@ -21,9 +21,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setData, setError, setLoading } from '@/state/dataSlice';
 
 
+
 export default function Home() {
   const dispatch = useDispatch<AppDispatch>();
-  const { categories, transactions, user, goal, loading, error } = useSelector(
+  const { categories, transactions, user, goals, loading, error } = useSelector(
     (state: RootState) => state.data
   );  // Access data from Redux store
   const db = useSQLiteContext();
@@ -49,7 +50,7 @@ export default function Home() {
           setData({
             transactions: transactionResult,
             categories: categoriesResult,
-            goal: goalsResult,
+            goals: goalsResult,
             user: userResult,
           })
         );
@@ -61,7 +62,7 @@ export default function Home() {
     getData();
   }, [db, dispatch]);
 
-// Handle inserting a transaction
+// Handles the inserting of transaction
   const insertTransaction = async (transaction: Transaction) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
@@ -76,12 +77,44 @@ export default function Home() {
           transaction.type,
         ]
       );
-
       // Reload data after inserting transaction
       const transactionResult = await db.getAllAsync<Transaction>('SELECT * FROM Transactions');
-      dispatch(setData({ transactions: transactionResult, categories, goal, user }));
+      dispatch(setData({ transactions: transactionResult, categories, goals, user }));
     });
   };
+
+
+
+  const insertGoal = async (goal: Goal) => {
+    await db.withTransactionAsync(async () => {
+      await db.runAsync(
+        `INSERT INTO Goals ( description, amount ) VALUES(?, ?)`,
+        [
+          goal.name,
+          goal.amount,
+        ]
+      );
+
+      // Reload data after inserting goal
+      const goalResult = await db.getAllAsync<Goal>('SELECT * FROM Goals');
+      dispatch(setData({ goals: goalResult, categories, transactions, user }));
+    });
+  };
+  // const insertBudget = async (user: User) => {
+  //   await db.withTransactionAsync(async () => {
+  //     await db.runAsync(
+  //       `INSERT INTO User ( userName, budget_Amount ) VALUES(?, ?)`,
+  //       [
+  //         user.userName,
+  //         user.budget_Amount,
+  //       ]
+  //     );
+
+  //     // Reload data after inserting goal
+  //     const budgetResult = await db.getAllAsync<User>('SELECT * FROM User');
+  //     dispatch(setData({ user: budgetResult, categories, transactions, user }));
+  //   });
+  // };
 
 
   return (
@@ -127,7 +160,8 @@ export default function Home() {
           </View >
 
         <View style={styles.btn}>
-          <AddTransaction insertTransaction={insertTransaction} />
+          <AddTransaction insertTransaction={insertTransaction} insertGoal={insertGoal} />
+        
         </View>
 
         {/* PopUp Screen */}
