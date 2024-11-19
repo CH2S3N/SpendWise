@@ -68,6 +68,12 @@ export default function CircularChart({
     return <Text>Error: {error}</Text>;
   }
 
+  function calcTotal() {
+    return transactions.reduce((total, transaction, totalSavings) => {
+      return total + totalSavings + (transaction.amount || 0);
+    }, 0);
+  }
+
   return (
     <View>
       <View style={styles.container}>
@@ -81,23 +87,24 @@ export default function CircularChart({
               />
         </View>
         <View style={styles.item2}>
-          <Text style={styles.title}>Legend</Text>
           <View style={styles.legendItem}>
-            <View style={[styles.colorBox, { backgroundColor: 'blue' }]} />
+            <View style={[styles.colorBox, { backgroundColor: '#FA812F' }]} />
             <Text>Essential: ₱{totalEssential}</Text>
           </View>
           <View style={styles.legendItem}>
-            <View style={[styles.colorBox, { backgroundColor: 'green' }]} />
+            <View style={[styles.colorBox, { backgroundColor: '#FA4032' }]} />
             <Text>Non-Essential: ₱{totalNonEssential}</Text>
           </View>
           <View style={styles.legendItem}>
-            <View style={[styles.colorBox, { backgroundColor: 'yellow' }]} />
-            <Text>Non-Essential: ₱{totalSavings}</Text>
+            <View style={[styles.colorBox, { backgroundColor: '#FAB12F' }]} />
+            <Text>Savings: ₱{totalSavings}</Text>
           </View>
         </View>
-        </View>
-
       </View>
+      <View style={styles.total}>
+          <Text style={styles.text}>Total ₱{calcTotal()}</Text>
+        </View>
+    </View>
   )
 }
 
@@ -106,7 +113,7 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    alignItems: 'flex-start',
+    alignItems: 'center',
   },
   item1: {
     justifyContent: 'center',
@@ -115,6 +122,7 @@ const styles = StyleSheet.create({
   },
   item2: {
     alignItems: 'flex-start',
+        justifyContent: 'center'
 
   },
   legendItem: {
@@ -132,6 +140,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
   },
+  total:{
+    position: 'absolute',
+    left: 60,
+    bottom: 70
+  },
+  text: {
+    fontWeight: 'bold'
+  }
 
 
 })

@@ -258,9 +258,9 @@ const styles= StyleSheet.create({
   },
   btn: {
     position: 'absolute',
-    justifyContent: 'center',
     bottom: 1,
-    left: 0,
-    right: 0
+    left: 10,
+    right: 0,
+    
   }
 })

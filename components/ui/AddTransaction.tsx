@@ -29,17 +29,18 @@ export default function AddTransaction ({
 
     // Return function of the Add transaction
     return (
-        <View>
+        <View style={styles.container}>
         {isAddingTransaction? (
-          <Card>
+          <View >
                <SegmentedControl
                   values={['Expense', 'Goal', 'Budget']}
                   selectedIndex={selectedTypeIndex}
                   onChange={(event) => setselectedTypeIndex(event.nativeEvent.selectedSegmentIndex)}
+                 
                 />
                 {/* Expense Form */}
                  {selectedTypeIndex === 0 && ( 
-                  <AddExpense setIsAddingTransaction={setIsAddingTransaction} insertTransaction={insertTransaction}/>
+                  <AddExpense setIsAddingTransaction={setIsAddingTransaction} insertTransaction={insertTransaction} />
                 )}
                   {/* Goal Form */}
                  {selectedTypeIndex === 1 && ( 
@@ -50,7 +51,7 @@ export default function AddTransaction ({
                  {selectedTypeIndex === 2 && ( 
                    <AddBudget setIsAddingTransaction={setIsAddingTransaction} insertBudget={insertBudget}/>
                 )}
-          </Card>
+          </View>
 
         ) : (
           <AddButton setIsAddingTransaction={setIsAddingTransaction} />
@@ -58,3 +59,14 @@ export default function AddTransaction ({
       </View>
     );
 }
+
+
+const styles = StyleSheet.create({
+  container: {
+    height: '100%',
+  },
+  item: {
+    height: '100%'
+  }
+})
+

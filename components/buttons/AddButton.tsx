@@ -8,11 +8,7 @@ export default function AddButton({
     setIsAddingTransaction: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
     return (
-      <View style={{ 
-        position: 'absolute', 
-        bottom: 1, 
-        left: 20,
-        }}>
+      <View>
         <TouchableOpacity
             onPress={() => setIsAddingTransaction(true)}
             activeOpacity={0.5}
