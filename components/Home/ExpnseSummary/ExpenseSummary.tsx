@@ -1,48 +1,24 @@
 // src/components/Home/ExpenseSummary.tsx
 
 import React, { useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/state/store'; 
 import { setLoading, setData, setError } from '../../../state/dataSlice';
 import { Category, Goal, Transaction, User } from '@/types';
 import { useSQLiteContext } from 'expo-sqlite/next';
 import TransactionList from './TransactionsList';
+import { useFetchData } from '@/hooks/useFetchData';
 
 export default function ExpenseSummary() {
-  const dispatch = useDispatch<AppDispatch>();
+  const { fetchData } = useFetchData();
   const { categories, transactions, loading, error } = useSelector(
     (state: RootState) => state.data
   );
-
   const db = useSQLiteContext();
-
-  const fetchData = async () => {
-    dispatch(setLoading());  // Set loading state before fetching data
-
-    try {
-      const transactionsResult = await db.getAllAsync<Transaction>('SELECT * FROM Transactions');
-      const categoriesResult = await db.getAllAsync<Category>('SELECT * FROM Categories');
-      const userResult = await db.getAllAsync<User>('SELECT * FROM User');
-      const goalResult = await db.getAllAsync<Goal>('SELECT * FROM Goals');
-
-      
-      dispatch(setData({
-        transactions: transactionsResult,
-        categories: categoriesResult,
-        user: userResult, 
-        goal: goalResult,
-      }));
-    } catch (err: any) {
-      dispatch(setError(err.message || 'Error fetching data'));
-    }
-  };
-
   useEffect(() => {
     fetchData();
-  }, [db, dispatch]); 
-
-
+  }, []); 
   async function deleteTransaction(id: number) {
     try {
       await db.withTransactionAsync(async () => {
@@ -53,32 +29,88 @@ export default function ExpenseSummary() {
       console.error('Error deleting transaction:', error);
     }
   }
-
   // Calculate the total expense
-  function calcTotalExpense() {
-    return transactions.reduce((total, transaction) => {
+  function calcTotalEssential() {
+    return essentialTransactions.reduce((total, transaction) => {
       return total + (transaction.amount || 0);
     }, 0);
   }
-
+  function calcTotalNonEssential() {
+    return nonEssentialTransactions.reduce((total, transaction) => {
+      return total + (transaction.amount || 0);
+    }, 0);
+  }
   // If loading, show a loading text
   if (loading) {
     return <Text>Loading...</Text>;
   }
-
   // If error occurs, display error message
   if (error) {
     return <Text>Error: {error}</Text>;
   }
 
+  const essentialTransactions = transactions.filter(
+    (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Essential"
+);
+const nonEssentialTransactions = transactions.filter(
+    (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Non_Essential"
+);
+
   return (
-    <View>
+    <View style={styles.container}>
+      <View style={styles.tableheader}>
+        <View style={styles.tabletitle}>
+          <Text style={styles.text}>Name</Text>
+          <Text style={styles.text}>Amount</Text>
+        </View>
+        <View style={styles.tabletitle}>
+          <Text style={styles.text}>Name</Text>
+          <Text style={styles.text}>Amount</Text>
+        </View>
+      </View>
       <TransactionList
         categories={categories}
         transactions={transactions}
         deleteTransaction={deleteTransaction}
       />
-      <Text>Total Expense: {calcTotalExpense()}</Text>
+      <View style={styles.tablefooter}>
+        <View style={styles.footeritem}>
+          <Text style={styles.text}>Total Expense: ₱{calcTotalEssential()}</Text>
+        </View >
+        <View style={styles.footeritem}>
+          <Text style={styles.text}>Total Expense: ₱{calcTotalNonEssential()}</Text>
+        </View>
+        
+      </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    height: '100%',
+  },
+  tableheader: {
+    flexDirection: 'row'
+  },
+  tablefooter: {
+    width: '100%',
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+   
+  },
+  footeritem: {
+    flex: 1,
+    paddingHorizontal: 10
+  },
+  tabletitle: {
+    flex: 1,
+    flexDirection: 'row',
+    paddingHorizontal: 10,
+    justifyContent: 'space-between'
+  },
+  text: {
+    fontWeight: 'bold'
+  }
+})

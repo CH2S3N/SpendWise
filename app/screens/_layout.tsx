@@ -2,8 +2,8 @@ import React from 'react'
 import { Stack } from 'expo-router'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
-import loadDatabase from '@/context/db';
 import { ActivityIndicator, Text, View } from 'react-native';
+import loadDatabase from '@/context/db';
 
 
 const _layout = () => {

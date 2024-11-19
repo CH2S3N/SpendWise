@@ -2,6 +2,7 @@ import { View, Text } from 'react-native'
 import React from 'react'
 import { StyleSheet } from 'react-native'
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { colors } from '@/constants/colors';
 
 
 
@@ -9,7 +10,7 @@ export default function Header() {
   return (
     <View  style={{
       padding: 20,
-      backgroundColor: 'black',
+      backgroundColor: colors.dark,
       height: 150,
       }}>
       <View style={styles.container}>

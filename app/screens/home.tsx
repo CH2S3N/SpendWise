@@ -12,13 +12,13 @@ import GoalsInfo from '@/components/Home/Goal/GoalsInfo';
 import DailyBudgetInfo from '@/components/Home/DailyBudget/DailyBudgetInfo';
 import SummaryInfo from '@/components/Home/ExpnseSummary/SummaryInfo';
 import ChartInfo from '@/components/Home/Chart/ChartInfo';
-import MainContainer from '@/components/Containers/MainContainer';
 import InfoContainer from '@/components/Containers/InfoContainer';
 import BigText from '@/components/Texts/BigText';
 import Budget from '@/components/Home/Budget/Budget';
 import { AppDispatch, RootState } from '@/state/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { setData, setError, setLoading } from '@/state/dataSlice';
+import { colors } from '@/constants/colors';
 
 
 
@@ -44,6 +44,9 @@ export default function Home() {
         const categoriesResult = await db.getAllAsync<Category>('SELECT * FROM Categories');
         const goalsResult = await db.getAllAsync<Goal>('SELECT * FROM Goals');
         const userResult = await db.getAllAsync<User>('SELECT * FROM User');
+        console.log(user);
+        // console.log(goals);
+        // console.log(transactions);
 
         // Dispatch fetched data to Redux
         dispatch(
@@ -62,7 +65,8 @@ export default function Home() {
     getData();
   }, [db, dispatch]);
 
-// Handles the inserting of transaction
+
+// Handles the inserting of Expenses
   const insertTransaction = async (transaction: Transaction) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
@@ -83,12 +87,11 @@ export default function Home() {
     });
   };
 
-
-
+// Handles the inserting of Goal
   const insertGoal = async (goal: Goal) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
-        `INSERT INTO Goals ( description, amount ) VALUES(?, ?)`,
+        `INSERT INTO Goals ( name, amount ) VALUES(?, ?)`,
         [
           goal.name,
           goal.amount,
@@ -100,25 +103,28 @@ export default function Home() {
       dispatch(setData({ goals: goalResult, categories, transactions, user }));
     });
   };
-  // const insertBudget = async (user: User) => {
-  //   await db.withTransactionAsync(async () => {
-  //     await db.runAsync(
-  //       `INSERT INTO User ( userName, budget_Amount ) VALUES(?, ?)`,
-  //       [
-  //         user.userName,
-  //         user.budget_Amount,
-  //       ]
-  //     );
 
-  //     // Reload data after inserting goal
-  //     const budgetResult = await db.getAllAsync<User>('SELECT * FROM User');
-  //     dispatch(setData({ user: budgetResult, categories, transactions, user }));
-  //   });
-  // };
+// Handles the inserting of Budget
+  const insertBudget = async (user: User,) => {
+    await db.withTransactionAsync(async () => {
 
+      await db.runAsync(
+       `UPDATE User SET budget_Amount = ? WHERE id = ?`,
+      [
+        user.budget_Amount,
 
+      ]
+      );
+
+      // Reload data after inserting goal
+      const budgetResult = await db.getAllAsync<User>('SELECT * FROM User');
+      dispatch(setData({ user: budgetResult, categories, transactions, goals }));
+    });
+  };
+
+  // Return Function
   return (
-      <MainContainer>
+      <View style={styles.maincontainer}>
           <Header/>
           <View style={styles.container}>
               <View>
@@ -153,14 +159,14 @@ export default function Home() {
                   title={<BigText content="Chart"/>}
                   content={
                     <TouchableOpacity onPress={() => setChartModalVisible(true)}>
-                      <CircularChart />
+                      <CircularChart transactions={transactions} categories={categories}/>
                     </TouchableOpacity>
                   }
               />
           </View >
 
         <View style={styles.btn}>
-          <AddTransaction insertTransaction={insertTransaction} insertGoal={insertGoal} />
+          <AddTransaction insertTransaction={insertTransaction} insertGoal={insertGoal} insertBudget={insertBudget}/>
         
         </View>
 
@@ -206,7 +212,7 @@ export default function Home() {
             />
           </View>
         </Modal>
-      </MainContainer>
+      </View>
 
 
   )
@@ -216,6 +222,10 @@ export default function Home() {
 const styles= StyleSheet.create({
   safeArea: {
     flex: 1,
+  },
+  maincontainer: {
+    flex: 1,
+    backgroundColor: colors.background,
   },
   container: {
     flex: 1,

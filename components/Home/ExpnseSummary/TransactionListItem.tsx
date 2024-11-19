@@ -8,12 +8,27 @@ interface TransactionListItemProps{
 }
 
 export default function TransactionListItem({ transaction, categoryInfo}: TransactionListItemProps) {
+
     return (
-        <View>  
-            <Text>{transaction?.description} amount: {transaction.amount}</Text>
+        <View style={styles.container}>  
+            <View>
+                <Text style={styles.text}>{transaction.description}</Text>
+            </View>
+            <View>
+                <Text style={styles.text}>{transaction.amount}</Text>
+            </View>
         </View>
 
     )
 }
 
-
+const styles = StyleSheet.create({
+    text: {
+        fontSize: 15,
+    },
+    container: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+})

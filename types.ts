@@ -1,5 +1,5 @@
 export interface Transaction {
-    id: number;
+    id?: number;
     category_id: number;
     description: string;
     frequency: "Daily" | "Weekly" | "Bi-Weekly" | "Monthly";
@@ -10,7 +10,7 @@ export interface Transaction {
 }
 
 export interface Category {
-    id: number;
+    id?: number;
     name: string;
     type: "Essential" | "Non_Essential";
 }
@@ -22,7 +22,6 @@ export interface Goal {
 }
 
 export interface User {
-    id: number;
-    userName: string;
+    id?: number;
     budget_Amount: number;
 }

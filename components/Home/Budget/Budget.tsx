@@ -1,41 +1,31 @@
 import { View, Text } from 'react-native'
-import React from 'react'
-import { User } from '@/types';
-import { useSQLiteContext } from 'expo-sqlite';
+import React, { useEffect } from 'react'
+import { useSelector } from 'react-redux';
+import { RootState } from '@/state/store';
+import BudgetList from './BudgetList';
 
-const Budget = () => {
-    const [budget, setbudget] = React.useState<User[]>([]);
-    const db = useSQLiteContext();
+export default function Budget() {
 
-  React.useEffect(() => {
-    db.withTransactionAsync(async () => {
-      await getData();
-    });
-  }, [db])
-
-  async function getData() {
-    const result = await db.getAllAsync<User>('SELECT * FROM User');
-    setbudget(result);
-    
+  const { user, loading, error, } = useSelector(
+    (state: RootState) => state.data
+  );
+  
+  
+  // If loading, show a loading text
+  if (loading) {
+    return <Text>Loading...</Text>;
   }
 
-  async function deleteBudget(id:number) {
-    db.withTransactionAsync(async () => {
-      await db.runAsync('DELETE FROM budget WHERE id = ?;', [1])
-      await getData();
-    }) 
+  // If error occurs, display error message
+  if (error) {
+    return <Text>Error: {error}</Text>;
   }
 
-  function calcTotalBudget() {
-    return budget.reduce((total, budget) => {
-      return total + (budget.budget_Amount || 0);
-    }, 0)
-  }
   return (
     <View>
-      <Text>Budget: {calcTotalBudget()}</Text>
+      
+      <BudgetList user={user}/>
+
     </View>
   )
 }
-
-export default Budget

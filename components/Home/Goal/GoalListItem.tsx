@@ -8,11 +8,22 @@ interface GoalListItemProps{
 
 export default function GoalListItem({goal}: GoalListItemProps) {
     return (
-        <View>           
-            <Text>{goal.name} amount: {goal.amount}</Text>  
+        <View style={styles.container}>           
+            <Text style={styles.text}>{goal.name}</Text>  
+            <Text>{goal.amount}</Text>  
         </View>
 
     )
-}
+};
 
+const styles = StyleSheet.create({
+    text: {
+        fontSize: 15,
+    },
+    container: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+})
 

@@ -10,9 +10,11 @@ const loadDatabase =async (dispatch: AppDispatch) => {
     const dbAsset = require("./../assets/mySQLiteDB.db");
     const dbUri =Asset.fromModule(dbAsset).uri;
     const dbFilePath = `${FileSystem.documentDirectory}SQLite/${dbName}`;
-  
+
+    //to reset the database
+    // await FileSystem.deleteAsync(dbFilePath, { idempotent: true }); 
+
     // making db if db doesnt exist
-    
     try {
       const fileInfo = await FileSystem.getInfoAsync(dbFilePath);
       if (!fileInfo.exists) {

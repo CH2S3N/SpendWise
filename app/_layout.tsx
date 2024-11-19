@@ -6,7 +6,6 @@ import { store } from '@/state/store';
 
 export default function RootLayout() {
   return (
-  
       <Provider store={store}>
         <SQLiteProvider databaseName="mySQLiteDB.db" useSuspense>
           <Stack>
@@ -14,6 +13,5 @@ export default function RootLayout() {
           </Stack>
         </SQLiteProvider>
       </Provider>
-    
   );
 }
