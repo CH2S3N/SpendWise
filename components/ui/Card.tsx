@@ -1,16 +1,16 @@
 
-import React from "react";
+import React, { ReactNode } from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
 
-interface CardProps extends React.PropsWithChildren {
+interface CardProps{
+  content: ReactNode;
   style?: ViewStyle;
 }
 
-export default function Card({ children, style = {} }: CardProps) {
+const Card: React.FC<CardProps> = ({style,content})=>{
   return (
-    <View style={styles.card}>
-
-      {children}
+    <View style={[styles.card, style]}>
+      {content}
     </View>
   );
 }
@@ -28,3 +28,6 @@ const styles = StyleSheet.create({
     flex: 1
   }
 })
+
+
+export default Card;

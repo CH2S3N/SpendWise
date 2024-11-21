@@ -1,4 +1,4 @@
-import { View,  StyleSheet, SafeAreaView, Modal, Text, Button, TouchableOpacity } from 'react-native';
+import { View,  StyleSheet, Button, TouchableOpacity } from 'react-native';
 import { useSQLiteContext } from 'expo-sqlite/next';
 import React, { useEffect, useState } from 'react';
 import Header from '../../components/Home/Header';
@@ -19,6 +19,8 @@ import { AppDispatch, RootState } from '@/state/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { setData, setError, setLoading } from '@/state/dataSlice';
 import { colors } from '@/constants/colors';
+import MainContainer from '@/components/Containers/MainContainer';
+import { Modal } from '@/components/Modal';
 
 
 
@@ -29,11 +31,12 @@ export default function Home() {
   );  // Access data from Redux store
   const db = useSQLiteContext();
 
+  // modals
+
   const [isGoalModalVisible, setGoalModalVisible] = useState(false);
   const [isDailyBudgetModalVisible, setDailyBudgetModalVisible] = useState(false);
   const [isSummaryModalVisible, setSummaryModalVisible] = useState(false);
   const [isChartModalVisible, setChartModalVisible] = useState(false);
-
 
   useEffect(() => {
     const getData = async () => {
@@ -64,7 +67,6 @@ export default function Home() {
 
     getData();
   }, [db, dispatch]);
-
 
 // Handles the inserting of Expenses
   const insertTransaction = async (transaction: Transaction) => {
@@ -124,97 +126,103 @@ export default function Home() {
 
   // Return Function
   return (
-      <View style={styles.maincontainer}>
-          <Header/>
-          <View style={styles.container}>
-              <View>
-                <Budget/>
-              </View>
-              <View style={styles.container1}>
-                <InfoContainer
-                  title={<BigText content="Goal"/>}
-                  content={
-                      <Goals/>
-                    }
-                />
-                  <InfoContainer
-                  title={<BigText content="Daily Budget"/>}
-                  content={
-                    <TouchableOpacity onPress={() => setDailyBudgetModalVisible(true)}>
-                      <DailyBudget />
-                    </TouchableOpacity>
+    <MainContainer>
+        <Header/>
+        <View style={styles.container}>
+            <View>
+              <Budget/>
+            </View>
+            <View style={styles.container1}>
+              <InfoContainer
+                header={
+                  <TouchableOpacity onPress={() => setGoalModalVisible(true)}>
+                    <BigText content="Goals"/>
+                  </TouchableOpacity>
+                  
                 }
-                />
- 
-              </View>
-              
-              <InfoContainer
-                  title={<BigText content="Expense Summary"/>}
-                  content={
-                      <ExpenseSummary />
-                  }
-                />
-              
-              <InfoContainer
-                  title={<BigText content="Chart"/>}
-                  content={
-                    <TouchableOpacity onPress={() => setChartModalVisible(true)}>
-                      <CircularChart transactions={transactions} categories={categories}/>
-                    </TouchableOpacity>
+                content={
+                    <Goals/>
                   }
               />
-          </View >
-
-        <View style={styles.btn}>
-          <AddTransaction insertTransaction={insertTransaction} insertGoal={insertGoal} insertBudget={insertBudget}/>
-        
-        </View>
-
-        {/* PopUp Screen */}
-        <Modal visible={isGoalModalVisible} >
-          <View style={styles.container}>
-            <GoalsInfo/>
-            
-            <Button 
-              title='Back' 
-              color= 'black'
-              onPress={() => setGoalModalVisible(false)}
+                <InfoContainer
+                header={
+                  <TouchableOpacity onPress={() => setDailyBudgetModalVisible(true)}>
+                    <BigText content="Daily Budget"/>
+                  </TouchableOpacity>
+              }
+                content={
+                    <DailyBudget />
+              }
+              />
+            </View>
+            <InfoContainer
+                header={
+                  <TouchableOpacity onPress={() => setSummaryModalVisible(true)}>
+                    <BigText content="Expense Summary"/>
+                  </TouchableOpacity>
+              }
+                content={
+                    <ExpenseSummary />
+                }
+              />
+            <InfoContainer
+                header={
+                  <TouchableOpacity onPress={() => setChartModalVisible(true)}>
+                    <BigText content="Chart"/>
+                  </TouchableOpacity>
+              }
+                content={
+                    <CircularChart transactions={transactions} categories={categories}/>
+                }
             />
-          </View>
-        </Modal>
-        <Modal visible={isDailyBudgetModalVisible} >
-          <View style={styles.container}>
-            <DailyBudgetInfo/>
-            <Button 
-              title='Back' 
-              color= 'black'
-              onPress={() => setDailyBudgetModalVisible(false)}
-            />
-          </View>
-        </Modal>
-        <Modal visible={isSummaryModalVisible} >
-          <View style={styles.container}>
-            <SummaryInfo/>
-            <Button 
-              title='Back' 
-              color='black'
-              onPress={() => setSummaryModalVisible(false)}
-            />
-          </View>
-        </Modal>
-        <Modal visible={isChartModalVisible} >
-          <View style={styles.container}>
-            <ChartInfo/>
-            <Button 
-              title='Back' 
-              color='black'
-              onPress={() => setChartModalVisible(false)}
-            />
-          </View>
-        </Modal>
+        </View >
+      <View style={styles.btn}>
+        <AddTransaction insertTransaction={insertTransaction} insertGoal={insertGoal} insertBudget={insertBudget}/>
       </View>
 
-
+      {/* PopUp Screen */}
+      <Modal isOpen={isGoalModalVisible} >
+        <View style={styles.container}>
+          <GoalsInfo/>
+          
+          <Button 
+            title='Back' 
+            color= 'black'
+            onPress={() => setGoalModalVisible(false)}
+          />
+        </View>
+      </Modal>
+      <Modal isOpen={isDailyBudgetModalVisible} >
+        <View style={styles.container}>
+          <DailyBudgetInfo/>
+          <Button 
+            title='Back' 
+            color= 'black'
+            onPress={() => setDailyBudgetModalVisible(false)}
+          />
+        </View>
+      </Modal>
+      <Modal isOpen={isSummaryModalVisible} >
+        <View style={styles.container}>
+          <SummaryInfo/>
+          <Button 
+            title='Back' 
+            color='black'
+            onPress={() => setSummaryModalVisible(false)}
+          />
+        </View>
+      </Modal>
+      <Modal isOpen={isChartModalVisible} >
+        <View style={styles.container}>
+          <ChartInfo/>
+          <Button 
+            title='Back' 
+            color='black'
+            onPress={() => setChartModalVisible(false)}
+          />
+        </View>
+      </Modal>
+    </MainContainer>
   )
 
 }
@@ -222,10 +230,6 @@ export default function Home() {
 const styles= StyleSheet.create({
   safeArea: {
     flex: 1,
-  },
-  maincontainer: {
-    flex: 1,
-    backgroundColor: colors.background,
   },
   container: {
     flex: 1,

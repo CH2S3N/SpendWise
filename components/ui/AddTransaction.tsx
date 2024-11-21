@@ -24,8 +24,6 @@ export default function AddTransaction ({
 }) {
     const [isAddingTransaction, setIsAddingTransaction] = React.useState<boolean>(false);
     const [selectedTypeIndex, setselectedTypeIndex] = React.useState<number>(0);
-  
-
 
     // Return function of the Add transaction
     return (
@@ -36,7 +34,6 @@ export default function AddTransaction ({
                   values={['Expense', 'Goal', 'Budget']}
                   selectedIndex={selectedTypeIndex}
                   onChange={(event) => setselectedTypeIndex(event.nativeEvent.selectedSegmentIndex)}
-                 
                 />
                 {/* Expense Form */}
                  {selectedTypeIndex === 0 && ( 

@@ -7,7 +7,7 @@ interface TransactionListItemProps{
     categoryInfo: Category | undefined;
 }
 
-export default function TransactionListItem({ transaction, categoryInfo}: TransactionListItemProps) {
+export default function TransactionListItem({ transaction}: TransactionListItemProps) {
 
     return (
         <View style={styles.container}>  

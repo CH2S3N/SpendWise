@@ -11,7 +11,7 @@ export default function TransactionList({
 }: {
     categories: Category[];
     transactions: Transaction[];
-    deleteTransaction: (id: number) => Promise<void>;
+    deleteTransaction?: (id: number) => Promise<void>;
 }) {
     const essentialTransactions = transactions.filter(
         (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Essential"

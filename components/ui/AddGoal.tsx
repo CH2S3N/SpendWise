@@ -30,32 +30,35 @@ export default function AddGoal({
     }
 
   return (
-    <Card>
-    {/* DESCRIPTION */}
-    <TextInput
-      placeholder="Provide an entry description"
-      style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
-      onChangeText={setName}
-    />
-    <TextInput
-      placeholder="₱Amount"
-      style={{ fontSize: 32, marginBottom: 15, fontWeight: "bold" }}
-      keyboardType="numeric"
-      onChangeText={(text) => {
-        // Remove any non-numeric characters before setting the state
-        const numericValue = text.replace(/[^0-9.]/g, "");
-        setAmount(numericValue);
-      }}
-    />
+    <Card content={
+      <>
+        {/* DESCRIPTION */}
+        <TextInput
+          placeholder="Provide an entry description"
+          style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
+          onChangeText={setName}
+        />
+        <TextInput
+          placeholder="₱Amount"
+          style={{ fontSize: 32, marginBottom: 15, fontWeight: "bold" }}
+          keyboardType="numeric"
+          onChangeText={(text) => {
+            // Remove any non-numeric characters before setting the state
+            const numericValue = text.replace(/[^0-9.]/g, "");
+            setAmount(numericValue);
+          }}
+        />
 
-    {/* Cancel and Save Button */}
-    <View
-      style={{ flexDirection: "row", justifyContent: "space-around" }}
-    >
-      <Button title="Cancel" color={'black'} onPress={() => setIsAddingTransaction(false)}
-      />
-      <Button title="Save" color={'black'} onPress={handleSaveExpense} />
-    </View>
+        {/* Cancel and Save Button */}
+        <View
+          style={{ flexDirection: "row", justifyContent: "space-around" }}
+        >
+          <Button title="Cancel" color={'black'} onPress={() => setIsAddingTransaction(false)}
+          />
+          <Button title="Save" color={'black'} onPress={handleSaveExpense} />
+        </View>
+      </>
+    }>
   </Card>
   )
 }

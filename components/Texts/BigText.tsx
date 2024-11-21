@@ -1,16 +1,20 @@
 import { colors } from "@/constants/colors";
 import React from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, StyleProp, TextStyle } from 'react-native';
 
+interface TextProps {
+    content: string;
+    style?: StyleProp<TextStyle>;
+}
 
-const BigText: React.FC<{content: string}> = ({content}) => {
-    return <Text style={styles.text}>{content}</Text>
+const BigText: React.FC<TextProps> = ({content, style}) => {
+    return <Text style={[styles.text, style]}>{content}</Text>
 };
 
 const styles = StyleSheet.create({
     text: {
         fontSize: 20,
-        color: colors.black,
+        color: colors.dark,
     }
 })
 export default BigText;

@@ -31,26 +31,29 @@ export default function AddBudget({
     
   return (
     
-    <Card>
-    <TextInput
-      placeholder="₱Amount"
-      style={{ fontSize: 32, marginBottom: 15, fontWeight: "bold" }}
-      keyboardType="numeric"
-      onChangeText={(text) => {
-        // Remove any non-numeric characters before setting the state
-        const numericValue = text.replace(/[^0-9.]/g, "");
-        setBudgetAmount(numericValue);
-      }}
-    />
+    <Card content={
+      <>
+        <TextInput
+          placeholder="₱Amount"
+          style={{ fontSize: 32, marginBottom: 15, fontWeight: "bold" }}
+          keyboardType="numeric"
+          onChangeText={(text) => {
+            // Remove any non-numeric characters before setting the state
+            const numericValue = text.replace(/[^0-9.]/g, "");
+            setBudgetAmount(numericValue);
+          }}
+        />
 
-    {/* Cancel and Save Button */}
-    <View
-      style={{ flexDirection: "row", justifyContent: "space-around" }}
-    >
-      <Button title="Cancel" color={'black'} onPress={() => setIsAddingTransaction(false)}
-      />
-      <Button title="Save" color={'black'} onPress={handleSaveExpense} />
-    </View>
+        {/* Cancel and Save Button */}
+        <View
+          style={{ flexDirection: "row", justifyContent: "space-around" }}
+        >
+          <Button title="Cancel" color={'black'} onPress={() => setIsAddingTransaction(false)}
+          />
+          <Button title="Save" color={'black'} onPress={handleSaveExpense} />
+        </View>
+      </>
+    }>
   </Card>
   )
 }

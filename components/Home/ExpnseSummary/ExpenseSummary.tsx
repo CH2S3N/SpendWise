@@ -11,24 +11,9 @@ import TransactionList from './TransactionsList';
 import { useFetchData } from '@/hooks/useFetchData';
 
 export default function ExpenseSummary() {
-  const { fetchData } = useFetchData();
   const { categories, transactions, loading, error } = useSelector(
     (state: RootState) => state.data
   );
-  const db = useSQLiteContext();
-  useEffect(() => {
-    fetchData();
-  }, []); 
-  async function deleteTransaction(id: number) {
-    try {
-      await db.withTransactionAsync(async () => {
-        await db.runAsync('DELETE FROM Transactions WHERE id = ?;', [id]);
-        await fetchData();
-      });
-    } catch (error) {
-      console.error('Error deleting transaction:', error);
-    }
-  }
   // Calculate the total expense
   function calcTotalEssential() {
     return essentialTransactions.reduce((total, transaction) => {
@@ -71,7 +56,6 @@ const nonEssentialTransactions = transactions.filter(
       <TransactionList
         categories={categories}
         transactions={transactions}
-        deleteTransaction={deleteTransaction}
       />
       <View style={styles.tablefooter}>
         <View style={styles.footeritem}>
