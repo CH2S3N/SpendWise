@@ -10,7 +10,7 @@ import AddTransaction from '../../components/ui/AddTransaction';
 import { Category, Goal, Transaction, User } from '@/types';
 import GoalsInfo from '@/components/Home/Goal/GoalsInfo';
 import DailyBudgetInfo from '@/components/Home/DailyBudget/DailyBudgetInfo';
-import SummaryInfo from '@/components/Home/ExpnseSummary/SummaryInfo';
+import SummaryInfo from '@/components/Home/ExpnseSummary/TransactionDetials/SummaryInfo';
 import ChartInfo from '@/components/Home/Chart/ChartInfo';
 import InfoContainer from '@/components/Containers/InfoContainer';
 import BigText from '@/components/Texts/BigText';
@@ -18,7 +18,6 @@ import Budget from '@/components/Home/Budget/Budget';
 import { AppDispatch, RootState } from '@/state/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { setData, setError, setLoading } from '@/state/dataSlice';
-import { colors } from '@/constants/colors';
 import MainContainer from '@/components/Containers/MainContainer';
 import { Modal } from '@/components/Modal';
 
@@ -147,7 +146,7 @@ export default function Home() {
                 <InfoContainer
                 header={
                   <TouchableOpacity onPress={() => setDailyBudgetModalVisible(true)}>
-                    <BigText content="Daily Budget"/>
+                    <BigText content="Budget Plan"/>
                   </TouchableOpacity>
               }
                 content={
@@ -168,7 +167,7 @@ export default function Home() {
             <InfoContainer
                 header={
                   <TouchableOpacity onPress={() => setChartModalVisible(true)}>
-                    <BigText content="Chart"/>
+                    <BigText content="Statistical Report"/>
                   </TouchableOpacity>
               }
                 content={

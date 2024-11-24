@@ -1,5 +1,5 @@
 export interface Transaction {
-    id?: number;
+    id: number;
     category_id: number;
     description: string;
     frequency: "Daily" | "Weekly" | "Bi-Weekly" | "Monthly";

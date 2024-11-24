@@ -24,7 +24,6 @@ export default function AddTransaction ({
 }) {
     const [isAddingTransaction, setIsAddingTransaction] = React.useState<boolean>(false);
     const [selectedTypeIndex, setselectedTypeIndex] = React.useState<number>(0);
-
     // Return function of the Add transaction
     return (
         <View style={styles.container}>
@@ -42,14 +41,12 @@ export default function AddTransaction ({
                   {/* Goal Form */}
                  {selectedTypeIndex === 1 && ( 
                   <AddGoal setIsAddingTransaction={setIsAddingTransaction} insertGoal={insertGoal}/>
-                 
                 )}
                 {/* Budget Form */}
                  {selectedTypeIndex === 2 && ( 
                    <AddBudget setIsAddingTransaction={setIsAddingTransaction} insertBudget={insertBudget}/>
                 )}
           </View>
-
         ) : (
           <AddButton setIsAddingTransaction={setIsAddingTransaction} />
         )}

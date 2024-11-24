@@ -1,14 +1,11 @@
 // src/components/Home/ExpenseSummary.tsx
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '@/state/store'; 
-import { setLoading, setData, setError } from '../../../state/dataSlice';
-import { Category, Goal, Transaction, User } from '@/types';
-import { useSQLiteContext } from 'expo-sqlite/next';
+import {  useSelector } from 'react-redux';
+import { RootState } from '@/state/store'; 
 import TransactionList from './TransactionsList';
-import { useFetchData } from '@/hooks/useFetchData';
+
 
 export default function ExpenseSummary() {
   const { categories, transactions, loading, error } = useSelector(
@@ -45,11 +42,11 @@ const nonEssentialTransactions = transactions.filter(
     <View style={styles.container}>
       <View style={styles.tableheader}>
         <View style={styles.tabletitle}>
-          <Text style={styles.text}>Name</Text>
+          <Text style={styles.text}>Essentials</Text>
           <Text style={styles.text}>Amount</Text>
         </View>
         <View style={styles.tabletitle}>
-          <Text style={styles.text}>Name</Text>
+          <Text style={styles.text}>Non Essentials</Text>
           <Text style={styles.text}>Amount</Text>
         </View>
       </View>

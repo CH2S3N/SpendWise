@@ -8,7 +8,6 @@ interface TransactionListItemProps{
 }
 
 export default function TransactionListItem({ transaction}: TransactionListItemProps) {
-
     return (
         <View style={styles.container}>  
             <View>
@@ -18,7 +17,6 @@ export default function TransactionListItem({ transaction}: TransactionListItemP
                 <Text style={styles.text}>{transaction.amount}</Text>
             </View>
         </View>
-
     )
 }
 

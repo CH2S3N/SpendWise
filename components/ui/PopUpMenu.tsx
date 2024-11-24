@@ -13,7 +13,7 @@ import Card from './Card';
 export default function PopUpMenu() {
     return (
       <MenuProvider>
-        <Card>
+        <Card content={
           <Menu>
             <MenuTrigger style={styles.button}
             text="Open menu" />
@@ -29,7 +29,8 @@ export default function PopUpMenu() {
               />
             </MenuOptions>
           </Menu>
-        </Card>
+        }/>
+          
       </MenuProvider>
     );
   
