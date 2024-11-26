@@ -1,1 +1,56 @@
-<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="mySQLiteDB.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="1"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="3048"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="User" custom_title="0" dock_id="1" table="4,4:mainUser"/><dock_state state="000000ff00000000fd0000000100000002000001f90000038ffc0100000001fb000000160064006f0063006b00420072006f00770073006500310100000000000001f90000011e00ffffff000001f90000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="Categories" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="35"/><column index="2" value="119"/><column index="3" value="111"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="User" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort><column index="1" mode="0"/></sort><column_widths><column index="1" value="65"/><column index="2" value="99"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1*">INSERT INTO &quot;User&quot; VALUES (1,'Sancho',15000);</sql><current_tab id="0"/></tab_sql></sqlb_project>
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="mySQLiteDB.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="1"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="3048"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="User" custom_title="0" dock_id="1" table="4,4:mainUser"/><dock_state state="000000ff00000000fd0000000100000002000001f90000038ffc0100000001fb000000160064006f0063006b00420072006f00770073006500310100000000000001f90000011e00ffffff000001f90000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="Categories" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="35"/><column index="2" value="119"/><column index="3" value="111"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="User" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort/><column_widths><column index="1" value="65"/><column index="2" value="35"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1*">BEGIN TRANSACTION;
+CREATE TABLE IF NOT EXISTS &quot;Categories&quot; (
+	&quot;id&quot;	INTEGER,
+	&quot;name&quot;	TEXT NOT NULL,
+	&quot;type&quot;	TEXT NOT NULL CHECK(&quot;type&quot; IN ('Essential', 'Non_Essential')),
+	PRIMARY KEY(&quot;id&quot; AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS &quot;Goals&quot; (
+	&quot;id&quot;	INTEGER,
+	&quot;name&quot;	TEXT NOT NULL,
+	&quot;amount&quot;	INTEGER NOT NULL,
+	PRIMARY KEY(&quot;id&quot; AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS &quot;Transactions&quot; (
+	&quot;id&quot;	INTEGER,
+	&quot;category_id&quot;	INTEGER,
+	&quot;description&quot;	TEXT,
+	&quot;frequency&quot;	TEXT NOT NULL CHECK(&quot;frequency&quot; IN ('Daily', 'Weekly', 'Bi-Weekly', 'Monthly')),
+	&quot;prioritization&quot;	TEXT NOT NULL CHECK(&quot;prioritization&quot; IN ('High', 'Medium', 'Low')),
+	&quot;isfixedamount&quot;	TEXT NOT NULL CHECK(&quot;isfixedamount&quot; IN ('Yes', 'No')),
+	&quot;amount&quot;	INTEGER,
+	&quot;type&quot;	TEXT NOT NULL CHECK(&quot;type&quot; IN ('Essential', 'Non_Essential')),
+	PRIMARY KEY(&quot;id&quot; AUTOINCREMENT),
+	FOREIGN KEY(&quot;category_id&quot;) REFERENCES &quot;Categories&quot;(&quot;id&quot;)
+);
+CREATE TABLE IF NOT EXISTS &quot;User&quot; (
+	&quot;userName&quot;	INTEGER NOT NULL,
+	&quot;id&quot;	INTEGER,
+	&quot;budget_Amount&quot;	INTEGER NOT NULL,
+	PRIMARY KEY(&quot;id&quot; AUTOINCREMENT)
+);
+INSERT INTO &quot;Categories&quot; VALUES (1,'Housing','Essential');
+INSERT INTO &quot;Categories&quot; VALUES (2,'Transportation','Essential');
+INSERT INTO &quot;Categories&quot; VALUES (3,'Food','Essential');
+INSERT INTO &quot;Categories&quot; VALUES (4,'Healthcare','Essential');
+INSERT INTO &quot;Categories&quot; VALUES (5,'Entertainment','Non_Essential');
+INSERT INTO &quot;Categories&quot; VALUES (6,'Dining out','Non_Essential');
+INSERT INTO &quot;Categories&quot; VALUES (7,'Shopping','Non_Essential');
+INSERT INTO &quot;Categories&quot; VALUES (8,'Travel','Non_Essential');
+INSERT INTO &quot;Categories&quot; VALUES (9,'Subscription','Non_Essential');
+INSERT INTO &quot;Goals&quot; VALUES (1,'new Phone',10000);
+INSERT INTO &quot;Goals&quot; VALUES (2,'clothing',1200);
+INSERT INTO &quot;Goals&quot; VALUES (3,'book',700);
+INSERT INTO &quot;Goals&quot; VALUES (4,'new shoes',1000);
+INSERT INTO &quot;Transactions&quot; VALUES (1,1,'rent','Monthly','High','Yes',1000,'Essential');
+INSERT INTO &quot;Transactions&quot; VALUES (2,2,'commute','Daily','High','Yes',40,'Essential');
+INSERT INTO &quot;Transactions&quot; VALUES (3,3,'food','Daily','High','Yes',100,'Essential');
+INSERT INTO &quot;Transactions&quot; VALUES (4,4,'medicine','Monthly','High','Yes',500,'Essential');
+INSERT INTO &quot;Transactions&quot; VALUES (5,5,'hobby','Weekly','Medium','Yes',700,'Non_Essential');
+INSERT INTO &quot;Transactions&quot; VALUES (6,6,'Eating out','Bi-Weekly','Low','Yes',400,'Non_Essential');
+INSERT INTO &quot;Transactions&quot; VALUES (7,7,'SMShopping','Monthly','Medium','Yes',1000,'Non_Essential');
+INSERT INTO &quot;Transactions&quot; VALUES (9,9,'netflix','Monthly','High','Yes',500,'Non_Essential');
+INSERT INTO &quot;Transactions&quot; VALUES (10,8,'RoadTrip','Monthly','High','Yes',1500,'Non_Essential');
+COMMIT;
+
+</sql><current_tab id="0"/></tab_sql></sqlb_project>
