@@ -1,4 +1,4 @@
-import { View,  StyleSheet, Button, TouchableOpacity } from 'react-native';
+import { View,  StyleSheet, Button, TouchableOpacity, StatusBar } from 'react-native';
 import { useSQLiteContext } from 'expo-sqlite/next';
 import React, { useEffect, useState } from 'react';
 import Header from '../../components/Home/Header';
@@ -87,6 +87,26 @@ export default function Home() {
       dispatch(setData({ transactions: transactionResult, categories, goals, user }));
     });
   };
+// Handles the inserting of Expenses
+  const updateTransaction = async (transaction: Transaction) => {
+    await db.withTransactionAsync(async () => {
+      await db.runAsync(
+        `UPDATE Transactions SET category_id = ?, description = ?, frequency = ?, prioritization = ?, isfixedamount = ?, amount = ?, type = ?  WHERE id = ?`,
+        [
+          transaction.category_id,
+          transaction.description,
+          transaction.frequency,
+          transaction.prioritization,
+          transaction.isfixedamount,
+          transaction.amount,
+          transaction.type,
+        ]
+      );
+      // Reload data after inserting transaction
+      const transactionResult = await db.getAllAsync<Transaction>('SELECT * FROM Transactions');
+      dispatch(setData({ transactions: transactionResult, categories, goals, user }));
+    });
+  };
 
 // Handles the inserting of Goal
   const insertGoal = async (goal: Goal) => {
@@ -110,10 +130,9 @@ export default function Home() {
     await db.withTransactionAsync(async () => {
 
       await db.runAsync(
-       `UPDATE User SET budget_Amount = ? WHERE id = ?`,
+       `UPDATE User SET budget_Amount = ? WHERE id = 1`,
       [
         user.budget_Amount,
-
       ]
       );
 
@@ -126,6 +145,7 @@ export default function Home() {
   // Return Function
   return (
     <MainContainer>
+      <StatusBar hidden/>
         <Header/>
         <View style={styles.container}>
             <View>
@@ -203,7 +223,7 @@ export default function Home() {
       </Modal>
       <Modal isOpen={isSummaryModalVisible} >
         <View style={styles.container}>
-          <SummaryInfo/>
+          <SummaryInfo updateTransaction={updateTransaction}/>
           <Button 
             title='Back' 
             color='black'
@@ -225,6 +245,8 @@ export default function Home() {
   )
 
 }
+
+
 
 const styles= StyleSheet.create({
   safeArea: {

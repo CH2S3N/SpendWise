@@ -9,8 +9,13 @@ import { useSelector } from 'react-redux';
 import Essential from './Essentials';
 import NonEssential from './NonEssentials';
 import Card from '@/components/ui/Card';
+import { Transaction } from '@/types';
 
-export default function SummaryInfo() {
+export default function SummaryInfo({
+  updateTransaction
+}: {
+  updateTransaction(transaction: Transaction): Promise<void>;
+}) {
   const { categories, transactions, loading, error } = useSelector(
     (state: RootState) => state.data
   );
@@ -74,6 +79,7 @@ const nonEssentialTransactions = transactions.filter(
                 categories={categories}
                 transactions={transactions}
                 deleteTransaction={deleteTransaction}
+                updateTransaction={updateTransaction}
               />
             </View>
             <View style={styles.footer}>
@@ -100,6 +106,8 @@ const nonEssentialTransactions = transactions.filter(
                 categories={categories}
                 transactions={transactions}
                 deleteTransaction={deleteTransaction}
+                updateTransaction={updateTransaction}
+
               />
             </View>
             <View style={styles.footer}>

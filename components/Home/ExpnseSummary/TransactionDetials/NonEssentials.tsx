@@ -1,22 +1,27 @@
 import { Category, Transaction } from "@/types";
 import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import TransactionDetails from "./TransactionDetails";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Modal } from "@/components/Modal";
 import Card from "@/components/ui/Card";
+import AddExpense from "@/components/ui/AddExpense";
+import UpdateExpense from "@/components/ui/UpdateExpense";
 
 
 export default function NonEssential({
     transactions,
     categories,
-    deleteTransaction
+    deleteTransaction,
+    updateTransaction
 }: {
     categories: Category[];
     transactions: Transaction[];
     deleteTransaction: (id: number) => void;
+    updateTransaction(transaction: Transaction): Promise<void>;
 }) {
-    const [isModalVisible, setModalVisible] = useState(false);
-
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isAddingTransaction, setIsAddingTransaction] = React.useState<boolean>(false);
+    const [isUpdatingTransaction, setIsUpdatingTransaction] = React.useState<boolean>(false);
     const nonEssentialTransactions = transactions.filter(
         (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Non_Essential"
     );
@@ -32,15 +37,18 @@ export default function NonEssential({
                                 (category) => category.id === transaction.category_id
                             )
                             return (
-                                     <TouchableOpacity onPress={() => setModalVisible(true)}>
                                 <View key={transaction.id} style={styles.item}>
+                                    <TouchableOpacity 
+                                        onPress={() => setIsModalVisible(true)}
+                                        onLongPress={() => deleteTransaction(transaction.id)}
+                                    >
                                         <TransactionDetails 
                                         transaction={transaction} 
                                         categoryInfo={categoryForCurrentItem}
 
                                         />
-                                </View>
                                     </TouchableOpacity>
+                                </View>
                             )
                         })}   
                     </View>
@@ -48,14 +56,14 @@ export default function NonEssential({
 
                     <Modal isOpen={isModalVisible} transparent={true}>
                         <View style={styles.modal}>
-                            <Text>Test</Text>
+                            <UpdateExpense setIsModalVisible={setIsModalVisible} updateTransaction={updateTransaction} setIsUpdatingTransaction={setIsAddingTransaction}/>
                             <Button 
                                 title='Back' 
                                 color= 'black'
-                                onPress={() => setModalVisible(false)}
+                                onPress={() => setIsModalVisible(false)}
                                
                             />
-                        </View>
+                      </View>
                             
                     </Modal>
                 </View>

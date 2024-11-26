@@ -10,6 +10,7 @@ export default function BudgetListItem({
 } : {
   user: User;
 }) {
+
   return (
     <View>
       <Text>Budget Amount: {user.budget_Amount}</Text>

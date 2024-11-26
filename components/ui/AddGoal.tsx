@@ -23,6 +23,7 @@ export default function AddGoal({
         await insertGoal({
           name,
           amount: Number(amount),
+          id: 0
         });
         setName("");
         setAmount("");

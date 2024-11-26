@@ -6,15 +6,15 @@ import { useSQLiteContext } from 'expo-sqlite';
 import { Category, Transaction } from '@/types';
 
 
-interface addExpenseProps {
-  setIsAddingTransaction: React.Dispatch<React.SetStateAction<boolean>>;
+interface Props {
   setIsUpdatingTransaction: React.Dispatch<React.SetStateAction<boolean>>;
-  insertTransaction(transaction: Transaction): Promise<void>;
+  setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  updateTransaction(transaction: Transaction): Promise<void>;
 }
 
-export default function AddExpense({
-    setIsAddingTransaction, insertTransaction, setIsUpdatingTransaction
-}: addExpenseProps) {
+export default function UpdateExpense({
+     updateTransaction, setIsUpdatingTransaction, setIsModalVisible
+}: Props) {
 
     const [currentTab, setCurrentTab] = React.useState<number>(0);
     const [categories, setCategories] = React.useState<Category[]>([]);
@@ -29,6 +29,8 @@ export default function AddExpense({
    
     const db = useSQLiteContext();
     const [selectedIndex, setSelectedIndex] = React.useState<number>(1);
+
+
 
     React.useEffect(() => {
         getExpenseType(currentTab);
@@ -57,7 +59,7 @@ export default function AddExpense({
         });
 
         // to insert transactions
-        await insertTransaction({
+        await updateTransaction({
           description,
           frequency: frequency as "Daily" | "Weekly" | "Bi-Weekly" | "Monthly",
           prioritization: prioritization as "High" | "Medium" | "Low",
@@ -74,7 +76,7 @@ export default function AddExpense({
         setAmount("");
         setCategoryId(1);
         setCurrentTab(0);
-        setIsAddingTransaction(false);
+       
     }
     
   return (
@@ -161,8 +163,8 @@ export default function AddExpense({
           <Button title="Cancel" color={'black'} 
           onPress={
             () => {
-              setIsAddingTransaction(false);
-              setIsUpdatingTransaction(false)
+              setIsModalVisible(false);
+              setIsUpdatingTransaction(false);
             }
            
           }

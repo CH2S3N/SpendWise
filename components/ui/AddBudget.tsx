@@ -12,17 +12,20 @@ export default function AddBudget({
     insertBudget(user: User): Promise<void>;
 }) {
     const [budget_Amount, setBudgetAmount] = React.useState<string>("");
+   
 
     async function handleSaveExpense() {
         console.log ({
           budget_Amount: Number(budget_Amount),
           id: 1,
+ 
         });
 
         // to insert Budget
         await insertBudget({
           budget_Amount: Number(budget_Amount),
           id: 1,
+          userName: ''
         });
         setBudgetAmount("");
         setIsAddingTransaction(false);

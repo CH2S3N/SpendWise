@@ -10,18 +10,19 @@ export interface Transaction {
 }
 
 export interface Category {
-    id?: number;
+    id: number;
     name: string;
     type: "Essential" | "Non_Essential";
 }
 
 export interface Goal {
-    id?: number;
+    id: number;
     name: string;
     amount: number;
 }
 
 export interface User {
-    id?: number;
+    id: number;
     budget_Amount: number;
+    userName: string;
 }

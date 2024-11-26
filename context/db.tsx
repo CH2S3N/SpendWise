@@ -1,10 +1,12 @@
 import * as FileSystem from 'expo-file-system';
 import { Asset} from 'expo-asset';
-import { AppDispatch } from '@/state/store';
+import { AppDispatch, RootState } from '@/state/store';
 import { setDbLoaded, setDbLoadedError } from '@/state/db/dbSlice';
+import { useSelector } from 'react-redux';
 
 // load the database
 const loadDatabase =async (dispatch: AppDispatch) => {
+
     // path of the database
     const dbName = "mySQLiteDB.db";
     const dbAsset = require("./../assets/mySQLiteDB.db");

@@ -142,8 +142,8 @@ const styles = StyleSheet.create({
   },
   total:{
     position: 'absolute',
-    left: 60,
-    bottom: 70
+    left: "17%",
+    bottom: "45%",
   },
   text: {
     fontWeight: 'bold'
