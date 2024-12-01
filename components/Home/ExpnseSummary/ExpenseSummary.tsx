@@ -5,6 +5,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import {  useSelector } from 'react-redux';
 import { RootState } from '@/state/store'; 
 import TransactionList from './TransactionsList';
+import { Transaction } from '@/types';
 
 
 export default function ExpenseSummary() {
@@ -51,6 +52,7 @@ const nonEssentialTransactions = transactions.filter(
         </View>
       </View>
       <TransactionList
+        
         categories={categories}
         transactions={transactions}
       />

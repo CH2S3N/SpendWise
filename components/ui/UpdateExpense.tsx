@@ -10,10 +10,11 @@ interface Props {
   setIsUpdatingTransaction: React.Dispatch<React.SetStateAction<boolean>>;
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   updateTransaction(transaction: Transaction): Promise<void>;
+  currentTransaction: Transaction;
 }
 
 export default function UpdateExpense({
-     updateTransaction, setIsUpdatingTransaction, setIsModalVisible
+     updateTransaction, setIsUpdatingTransaction, setIsModalVisible, currentTransaction,
 }: Props) {
 
     const [currentTab, setCurrentTab] = React.useState<number>(0);
@@ -30,7 +31,20 @@ export default function UpdateExpense({
     const db = useSQLiteContext();
     const [selectedIndex, setSelectedIndex] = React.useState<number>(1);
 
-
+    React.useEffect(() => {
+      if (currentTransaction) {
+        setAmount(String(currentTransaction.amount || ""));
+        setDescription(currentTransaction.description || "");
+        setFrequency(currentTransaction.frequency || "Daily");
+        setPrioritization(currentTransaction.prioritization || "High");
+        setIsFixedAmount(currentTransaction.isfixedamount || "Yes");
+        setCategory(currentTransaction.type || "Essential");
+        setCategoryId(currentTransaction.category_id || 1);
+        setCurrentTab(currentTransaction.type === "Essential" ? 0 : 1);
+        setTypeSelected(currentTransaction.type || "Essential");
+        setSelectedIndex(currentTransaction.isfixedamount === "Yes" ? 0 : 1);
+      }
+    }, [currentTransaction]);
 
     React.useEffect(() => {
         getExpenseType(currentTab);
@@ -49,6 +63,7 @@ export default function UpdateExpense({
 
     async function handleSaveExpense() {
         console.log ({
+            id: currentTransaction.id,
             description,
             frequency: frequency as "Daily" | "Weekly" | "Bi-Weekly" | "Monthly",
             prioritization: prioritization as "High" | "Medium" | "Low",
@@ -58,8 +73,9 @@ export default function UpdateExpense({
             type: category as "Essential" | "Non_Essential",
         });
 
-        // to insert transactions
+        // to update transactions
         await updateTransaction({
+          id: currentTransaction.id,
           description,
           frequency: frequency as "Daily" | "Weekly" | "Bi-Weekly" | "Monthly",
           prioritization: prioritization as "High" | "Medium" | "Low",
@@ -67,7 +83,6 @@ export default function UpdateExpense({
           amount: Number(amount),
           category_id: categoryId,
           type: category as "Essential" | "Non_Essential",
-          id: 0
         });
         setDescription("");
         setFrequency("Daily");
@@ -86,6 +101,7 @@ export default function UpdateExpense({
         <TextInput
           placeholder="Provide an entry description"
           style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
+          value={description}
           onChangeText={setDescription}
         />
 
@@ -95,6 +111,7 @@ export default function UpdateExpense({
           values={["Daily", "Weekly", "Bi-Weekly", "Monthly"]}
           style={{ marginBottom: 15 }}
           selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
+       
           onChange={(event) => {
             setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
           }}
@@ -123,6 +140,7 @@ export default function UpdateExpense({
             <TextInput
               placeholder="₱Amount"
               style={{ fontSize: 32, marginBottom: 15, fontWeight: "bold" }}
+              value={amount}
               keyboardType="numeric"
               onChangeText={(text) => {
                 // Remove any non-numeric characters before setting the state
@@ -166,7 +184,7 @@ export default function UpdateExpense({
               setIsModalVisible(false);
               setIsUpdatingTransaction(false);
             }
-           
+
           }
           />
           <Button title="Save" color={'black'} onPress={handleSaveExpense} />

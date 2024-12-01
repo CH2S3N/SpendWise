@@ -27,9 +27,9 @@ export default function AddTransaction ({
     const [selectedTypeIndex, setselectedTypeIndex] = React.useState<number>(0);
     // Return function of the Add transaction
     return (
-        <View style={styles.container}>
+        <View>
         {isAddingTransaction? (
-          <View >
+          <View>
                <SegmentedControl
                   values={['Expense', 'Goal', 'Budget']}
                   selectedIndex={selectedTypeIndex}
@@ -56,12 +56,4 @@ export default function AddTransaction ({
 }
 
 
-const styles = StyleSheet.create({
-  container: {
-    height: '100%',
-  },
-  item: {
-    height: '100%'
-  }
-})
 

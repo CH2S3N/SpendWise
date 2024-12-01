@@ -1,11 +1,9 @@
 import * as FileSystem from 'expo-file-system';
 import { Asset} from 'expo-asset';
-import { AppDispatch, RootState } from '@/state/store';
-import { setDbLoaded, setDbLoadedError } from '@/state/db/dbSlice';
-import { useSelector } from 'react-redux';
+
 
 // load the database
-const loadDatabase =async (dispatch: AppDispatch) => {
+const loadDatabase =async () => {
 
     // path of the database
     const dbName = "mySQLiteDB.db";
@@ -28,10 +26,10 @@ const loadDatabase =async (dispatch: AppDispatch) => {
         await FileSystem.downloadAsync(dbUri, dbFilePath);
       }
   
-      dispatch(setDbLoaded());
+  
     } catch (error: any) {
       console.error('Error loading database:', error.message);
-      dispatch(setDbLoadedError(error.message || 'Unknown error'));
+
     }
   };
 

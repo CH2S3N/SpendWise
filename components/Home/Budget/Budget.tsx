@@ -2,30 +2,19 @@ import { View, Text } from 'react-native'
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
-import BudgetList from './BudgetList';
+import { Transaction, User } from '@/types';
 
-export default function Budget() {
+export default function Budget({
+  user,
+}: {
+  user: User[];
+}) {
 
-  const { user, loading, error, } = useSelector(
-    (state: RootState) => state.data
-  );
+  const userBudget = user.length > 0 ? user[0].budget_Amount : 'No Budget Found';
   
-  
-  // If loading, show a loading text
-  if (loading) {
-    return <Text>Loading...</Text>;
-  }
-
-  // If error occurs, display error message
-  if (error) {
-    return <Text>Error: {error}</Text>;
-  }
-
   return (
     <View>
-      
-      <BudgetList user={user}/>
-
+       <Text>Budget Amount: {userBudget}</Text>
     </View>
   )
 }

@@ -23,6 +23,8 @@ export default function Essential({
     const essentialTransactions = transactions.filter(
         (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Essential"
     );
+
+    const [currentTransaction, setCurrentTransaction] = useState<Transaction | null>(null);
   
     return (
         <View style={styles.maincontainer}>
@@ -35,16 +37,20 @@ export default function Essential({
                                 )
                                 return (
                                     <View key={transaction.id} style={styles.item}>
-                                        <TouchableOpacity
-                                            onPress={() => setIsModalVisible(true)}
-                                            onLongPress={() => deleteTransaction(transaction.id)}
-                                        >
-                                            <TransactionDetails 
-                                            transaction={transaction} 
-                                            categoryInfo={categoryForCurrentItem}
-                                            />
-                                        </TouchableOpacity>
-                                    </View>
+                                    <TouchableOpacity 
+                                        onPress={() => {
+                                            setCurrentTransaction(transaction);
+                                            setIsModalVisible(true)
+                                        }}
+                                        onLongPress={() => deleteTransaction(transaction.id)}
+                                    >
+                                        <TransactionDetails 
+                                        transaction={transaction} 
+                                        categoryInfo={categoryForCurrentItem}
+
+                                        />
+                                    </TouchableOpacity>
+                                </View>
                                 )
                             })}   
                         </View>
@@ -52,13 +58,11 @@ export default function Essential({
 
                         <Modal isOpen={isModalVisible} transparent={true}>
                         <View style={styles.modal}>
-                            <UpdateExpense setIsModalVisible={setIsModalVisible} updateTransaction={updateTransaction} setIsUpdatingTransaction={setIsAddingTransaction}/>
-                            <Button 
-                                title='Back' 
-                                color= 'black'
-                                onPress={() => setIsModalVisible(false)}
-                               
-                            />
+                            {currentTransaction && (
+                                <UpdateExpense setIsModalVisible={setIsModalVisible} updateTransaction={updateTransaction} setIsUpdatingTransaction={setIsAddingTransaction}
+                                currentTransaction={currentTransaction}
+                                />
+                            )}
                       </View>
                             
                     </Modal>

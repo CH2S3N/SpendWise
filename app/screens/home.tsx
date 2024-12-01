@@ -46,7 +46,7 @@ export default function Home() {
         const categoriesResult = await db.getAllAsync<Category>('SELECT * FROM Categories');
         const goalsResult = await db.getAllAsync<Goal>('SELECT * FROM Goals');
         const userResult = await db.getAllAsync<User>('SELECT * FROM User');
-        console.log(user);
+        // console.log(user);
         // console.log(goals);
         // console.log(transactions);
 
@@ -93,6 +93,7 @@ export default function Home() {
       await db.runAsync(
         `UPDATE Transactions SET category_id = ?, description = ?, frequency = ?, prioritization = ?, isfixedamount = ?, amount = ?, type = ?  WHERE id = ?`,
         [
+          
           transaction.category_id,
           transaction.description,
           transaction.frequency,
@@ -100,6 +101,8 @@ export default function Home() {
           transaction.isfixedamount,
           transaction.amount,
           transaction.type,
+          transaction.id,
+          
         ]
       );
       // Reload data after inserting transaction
@@ -149,7 +152,7 @@ export default function Home() {
         <Header/>
         <View style={styles.container}>
             <View>
-              <Budget/>
+              <Budget user={user}/>
             </View>
             <View style={styles.container1}>
               <InfoContainer
@@ -181,7 +184,7 @@ export default function Home() {
                   </TouchableOpacity>
               }
                 content={
-                    <ExpenseSummary />
+                    <ExpenseSummary/>
                 }
               />
             <InfoContainer
@@ -191,7 +194,7 @@ export default function Home() {
                   </TouchableOpacity>
               }
                 content={
-                    <CircularChart transactions={transactions} categories={categories}/>
+                    <CircularChart user={user} transactions={transactions} categories={categories}/>
                 }
             />
         </View >
@@ -283,9 +286,9 @@ const styles= StyleSheet.create({
   },
   btn: {
     position: 'absolute',
-    bottom: 1,
+    bottom: 10,
     left: 10,
-    right: 0,
+    right: 10,
     
   }
 })

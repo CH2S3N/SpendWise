@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import PieChart from 'react-native-pie-chart';
-import { Category, Transaction } from '@/types';
+import { Category, Transaction, User } from '@/types';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
 
@@ -9,25 +9,23 @@ import { RootState } from '@/state/store';
 export default function CircularChart({
     transactions,
     categories,
+    user,
 } : {
     categories: Category[];
     transactions: Transaction[];
-    
+    user: User[],
 }) {
     const widthAndHeight=150;
     const [values,setValues]= useState([1]);
     const [sliceColor,setSliceColor] = useState(['black']);
-    const { loading, error } = useSelector(
-      (state: RootState) => state.data
-    );
+    const userBudget = user.length > 0 ? user[0].budget_Amount : 0;
 
   
-
-    const essentialTransactions = transactions.filter(
-      (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Essential"
+  const essentialTransactions = transactions.filter(
+    (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Essential"
   );
   const nonEssentialTransactions = transactions.filter(
-      (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Non_Essential"
+    (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Non_Essential"
   );
 
   function calcTotalEssentialExpense() {
@@ -40,12 +38,10 @@ export default function CircularChart({
       return total + (transaction.amount || 0);
     }, 0);
   }
- 
-  // need the greedy algorithm to calculate the savings
-  const totalSavings = 525 
   
   const totalEssential = calcTotalEssentialExpense();
   const totalNonEssential = calcTotalNonEssentialExpense();
+  const totalSavings = userBudget - (totalEssential + totalNonEssential)
   
   useEffect(() => {
     if (totalEssential + totalNonEssential + totalSavings> 0) {
@@ -55,25 +51,12 @@ export default function CircularChart({
       setValues([1]);
       setSliceColor(['#CCCCCC']);
     }
-    },[totalEssential, totalNonEssential])
-
-    
-  // If loading, show a loading text
-  if (loading) {
-    return <Text>Loading...</Text>;
-  }
-
-  // If error occurs, display error message
-  if (error) {
-    return <Text>Error: {error}</Text>;
-  }
-
+  },[totalEssential, totalNonEssential])
+  
+  
   function calcTotal() {
-    return transactions.reduce((total, transaction, totalSavings) => {
-      return total + totalSavings + (transaction.amount || 0);
-    }, 0);
+    return totalEssential + totalNonEssential + totalSavings
   }
-
   return (
     <View>
       <View style={styles.container}>

@@ -8,7 +8,6 @@ import { RootState } from '@/state/store';
 import { useSelector } from 'react-redux';
 import Essential from './Essentials';
 import NonEssential from './NonEssentials';
-import Card from '@/components/ui/Card';
 import { Transaction } from '@/types';
 
 export default function SummaryInfo({

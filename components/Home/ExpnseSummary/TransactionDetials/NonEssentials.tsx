@@ -22,10 +22,8 @@ export default function NonEssential({
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isAddingTransaction, setIsAddingTransaction] = React.useState<boolean>(false);
     const [isUpdatingTransaction, setIsUpdatingTransaction] = React.useState<boolean>(false);
-    const nonEssentialTransactions = transactions.filter(
-        (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Non_Essential"
-    );
-  
+    const nonEssentialTransactions = transactions.filter((transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Non_Essential");
+    const [currentTransaction, setCurrentTransaction] = useState<Transaction | null>(null);
     
     return (
         <View style={styles.maincontainer}>
@@ -39,7 +37,10 @@ export default function NonEssential({
                             return (
                                 <View key={transaction.id} style={styles.item}>
                                     <TouchableOpacity 
-                                        onPress={() => setIsModalVisible(true)}
+                                        onPress={() => {
+                                            setCurrentTransaction(transaction);
+                                            setIsModalVisible(true)
+                                        }}
                                         onLongPress={() => deleteTransaction(transaction.id)}
                                     >
                                         <TransactionDetails 
@@ -53,16 +54,14 @@ export default function NonEssential({
                         })}   
                     </View>
 
-
+                    
                     <Modal isOpen={isModalVisible} transparent={true}>
                         <View style={styles.modal}>
-                            <UpdateExpense setIsModalVisible={setIsModalVisible} updateTransaction={updateTransaction} setIsUpdatingTransaction={setIsAddingTransaction}/>
-                            <Button 
-                                title='Back' 
-                                color= 'black'
-                                onPress={() => setIsModalVisible(false)}
-                               
-                            />
+                            {currentTransaction && (
+                                <UpdateExpense setIsModalVisible={setIsModalVisible} updateTransaction={updateTransaction} setIsUpdatingTransaction={setIsAddingTransaction}
+                                currentTransaction={currentTransaction}
+                                />
+                            )}
                       </View>
                             
                     </Modal>
