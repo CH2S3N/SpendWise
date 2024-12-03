@@ -14,7 +14,10 @@ interface Props {
 }
 
 export default function UpdateExpense({
-     updateTransaction, setIsUpdatingTransaction, setIsModalVisible, currentTransaction,
+     updateTransaction, 
+     setIsUpdatingTransaction, 
+     setIsModalVisible, 
+     currentTransaction,
 }: Props) {
 
     const [currentTab, setCurrentTab] = React.useState<number>(0);
@@ -91,6 +94,8 @@ export default function UpdateExpense({
         setAmount("");
         setCategoryId(1);
         setCurrentTab(0);
+        setIsModalVisible(false);
+        setIsUpdatingTransaction(false);
        
     }
     

@@ -20,7 +20,6 @@ export default function NonEssential({
     updateTransaction(transaction: Transaction): Promise<void>;
 }) {
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [isAddingTransaction, setIsAddingTransaction] = React.useState<boolean>(false);
     const [isUpdatingTransaction, setIsUpdatingTransaction] = React.useState<boolean>(false);
     const nonEssentialTransactions = transactions.filter((transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Non_Essential");
     const [currentTransaction, setCurrentTransaction] = useState<Transaction | null>(null);
@@ -46,7 +45,6 @@ export default function NonEssential({
                                         <TransactionDetails 
                                         transaction={transaction} 
                                         categoryInfo={categoryForCurrentItem}
-
                                         />
                                     </TouchableOpacity>
                                 </View>
@@ -58,7 +56,7 @@ export default function NonEssential({
                     <Modal isOpen={isModalVisible} transparent={true}>
                         <View style={styles.modal}>
                             {currentTransaction && (
-                                <UpdateExpense setIsModalVisible={setIsModalVisible} updateTransaction={updateTransaction} setIsUpdatingTransaction={setIsAddingTransaction}
+                                <UpdateExpense setIsModalVisible={setIsModalVisible} updateTransaction={updateTransaction} setIsUpdatingTransaction={setIsUpdatingTransaction}
                                 currentTransaction={currentTransaction}
                                 />
                             )}

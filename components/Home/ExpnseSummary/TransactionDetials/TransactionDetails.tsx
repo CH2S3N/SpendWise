@@ -3,12 +3,12 @@ import { Category, Transaction } from "@/types"
 import { ScrollView, Text, View, StyleSheet } from "react-native";
 
 
-interface TransactionListItemProps{
+interface Props{
     transaction: Transaction;
     categoryInfo: Category | undefined;
 }
 
-export default function TransactionDetails({ transaction}: TransactionListItemProps) {
+export default function TransactionDetails({ transaction }: Props) {
     return (
         <Card content={
             <View style={styles.container}>  

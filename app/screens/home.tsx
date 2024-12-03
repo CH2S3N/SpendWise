@@ -8,7 +8,7 @@ import Goals from '../../components/Home/Goal/Goals';
 import DailyBudget from '../../components/Home/DailyBudget/DailyBudget';
 import AddTransaction from '../../components/ui/AddTransaction';
 import { Category, Goal, Transaction, User } from '@/types';
-import GoalsInfo from '@/components/Home/Goal/GoalsInfo';
+import GoalsInfo from '@/components/Home/Goal/GoalsDetails.tsx/GoalsInfo';
 import DailyBudgetInfo from '@/components/Home/DailyBudget/DailyBudgetInfo';
 import SummaryInfo from '@/components/Home/ExpnseSummary/TransactionDetials/SummaryInfo';
 import ChartInfo from '@/components/Home/Chart/ChartInfo';
@@ -31,7 +31,6 @@ export default function Home() {
   const db = useSQLiteContext();
 
   // modals
-
   const [isGoalModalVisible, setGoalModalVisible] = useState(false);
   const [isDailyBudgetModalVisible, setDailyBudgetModalVisible] = useState(false);
   const [isSummaryModalVisible, setSummaryModalVisible] = useState(false);
@@ -127,6 +126,22 @@ export default function Home() {
       dispatch(setData({ goals: goalResult, categories, transactions, user }));
     });
   };
+  const updateGoal = async (goal: Goal) => {
+    await db.withTransactionAsync(async () => {
+      await db.runAsync(
+        `UPDATE Goals SET name = ?, amount = ? WHERE id = ?`,
+        [
+          goal.name,
+          goal.amount,
+          goal.id
+        ]
+      );
+
+      // Reload data after inserting goal
+      const goalResult = await db.getAllAsync<Goal>('SELECT * FROM Goals');
+      dispatch(setData({ goals: goalResult, categories, transactions, user }));
+    });
+  };
 
 // Handles the inserting of Budget
   const insertBudget = async (user: User,) => {
@@ -205,7 +220,7 @@ export default function Home() {
       {/* PopUp Screen */}
       <Modal isOpen={isGoalModalVisible} >
         <View style={styles.container}>
-          <GoalsInfo/>
+          <GoalsInfo updateGoal={updateGoal}/>
           
           <Button 
             title='Back' 

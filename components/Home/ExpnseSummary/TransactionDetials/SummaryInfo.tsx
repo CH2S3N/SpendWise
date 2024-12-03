@@ -15,14 +15,12 @@ export default function SummaryInfo({
 }: {
   updateTransaction(transaction: Transaction): Promise<void>;
 }) {
-  const { categories, transactions, loading, error } = useSelector(
+  const { categories, transactions } = useSelector(
     (state: RootState) => state.data
   );
   const { fetchData } = useFetchData();
   const db = useSQLiteContext();
-  useEffect(() => {
-    fetchData();
-  }, []); 
+  
   async function deleteTransaction(id: number) {
     try {
       await db.withTransactionAsync(async () => {
