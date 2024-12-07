@@ -58,10 +58,10 @@ const nonEssentialTransactions = transactions.filter(
       />
       <View style={styles.tablefooter}>
         <View style={styles.footeritem}>
-          <Text style={styles.text}>Total Expense: ₱{calcTotalEssential()}</Text>
+          <Text style={styles.text}>Total: ₱{calcTotalEssential()}</Text>
         </View >
         <View style={styles.footeritem}>
-          <Text style={styles.text}>Total Expense: ₱{calcTotalNonEssential()}</Text>
+          <Text style={styles.text}>Total: ₱{calcTotalNonEssential()}</Text>
         </View>
         
       </View>
@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
   },
   footeritem: {
     flex: 1,
+    alignItems: 'flex-end',
     paddingHorizontal: 10
   },
   tabletitle: {
@@ -94,6 +95,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   text: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+   
   }
 })

@@ -1,59 +1,36 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import MainContainer from '@/components/Containers/MainContainer';
+import CircularChart from './CircularChart';
+import { Divider } from '@rneui/base';
 
 export default function ChartInfo() {
   return (
     <MainContainer>
      <View style={styles.header}>
-      <Text>Header</Text>
+      <Text style={styles.text}>Statistical Report</Text>
      </View>
-     <View style={styles.container}>
-      <View style={styles.item}> 
-        <Text>
-          Content: Fullfiled Goals
-        </Text></View>
-      <View style={styles.item}> 
-        <Text>
-          Content: Inprogreass Goals
-        </Text></View>
+     <Divider/>
+     <View style={styles.content}>
+      <CircularChart/>
      </View>
-     
-      {/* <InfoContainer 
-      header={
-        <Text>Fullfilled Goals</Text>
-      }
-      content={
-        <Text>Content</Text>
-      }/>
-      <InfoContainer 
-      header={
-        <Text>Fullfilled Goals</Text>
-      }
-      content={
-        <Text>Content</Text>
-      }/> */}
+     <Divider/>
     </MainContainer>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
+  content: {
     flex: 5,
-    backgroundColor: 'green',
-    padding: 5
+    paddingTop: 20
   },
   header: {
     flex:1,
-    backgroundColor: 'pink',
     justifyContent: 'center',
     alignItems: 'center'
   },
-  item: {
-    flex: 1,
-    backgroundColor: 'orange',
-    margin: 5,
-    justifyContent: 'center',
-    alignItems: 'center'
+  text: {
+    fontWeight: 'bold',
+    fontSize: 30
   }
 })

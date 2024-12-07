@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import Essential from './Essentials';
 import NonEssential from './NonEssentials';
 import { Transaction } from '@/types';
+import { Divider } from '@rneui/base';
 
 export default function SummaryInfo({
   updateTransaction
@@ -53,23 +54,18 @@ const nonEssentialTransactions = transactions.filter(
   return (
     <MainContainer>
       <View style={styles.header}>
-        <Text>Header</Text>
+        <Text style={styles.title}>Expense Summary</Text>
       </View>
+      <Divider/>
       <View style={styles.container}>
           <View style={styles.section}> 
             <View style={styles.tableheader}>
-                <View style={styles.tabletitle}>
-                  <Text>Name</Text>
-                  </View>
-                <View style={styles.tabletitle}>
-                  <Text>Frequency</Text>
-                  </View>
-                <View style={styles.tabletitle}>
-                  <Text>Priority</Text>
-                  </View>
-                <View style={styles.tabletitle}>
-                  <Text>Amount</Text>
-                  </View>
+              <View style={styles.headertitle}>
+                <Text style={styles.title}>Essentials</Text>
+              </View>
+              <View style={styles.headertotal}>
+              <Text style={styles.text}>Total: ₱{calcTotalEssential()}</Text>
+              </View>
             </View>
             <View style={styles.tablecontent}>
               <Essential
@@ -79,24 +75,16 @@ const nonEssentialTransactions = transactions.filter(
                 updateTransaction={updateTransaction}
               />
             </View>
-            <View style={styles.footer}>
-            <Text style={styles.text}>Total Expense: ₱{calcTotalEssential()}</Text>
-            </View>
           </View>
+          <Divider/>
           <View style={styles.section}> 
             <View style={styles.tableheader}>
-                <View style={styles.tabletitle}>
-                  <Text>Name</Text>
-                  </View>
-                <View style={styles.tabletitle}>
-                  <Text>Frequency</Text>
-                  </View>
-                <View style={styles.tabletitle}>
-                  <Text>Priority</Text>
-                  </View>
-                <View style={styles.tabletitle}>
-                  <Text>Amount</Text>
-                  </View>
+              <View style={styles.headertitle}>
+                <Text style={styles.title}>Non Essentials</Text>
+              </View>
+              <View style={styles.headertotal}>
+                <Text style={styles.text}>Total: ₱{calcTotalNonEssential()}</Text>
+              </View>
             </View>
             <View style={styles.tablecontent}>
               <NonEssential
@@ -104,11 +92,7 @@ const nonEssentialTransactions = transactions.filter(
                 transactions={transactions}
                 deleteTransaction={deleteTransaction}
                 updateTransaction={updateTransaction}
-
               />
-            </View>
-            <View style={styles.footer}>
-            <Text style={styles.text}>Total Expense: ₱{calcTotalNonEssential()}</Text>
             </View>
           </View>
       </View>
@@ -119,7 +103,7 @@ const nonEssentialTransactions = transactions.filter(
 
 const styles = StyleSheet.create({
   container: {
-    flex: 5,
+    flex: 8,
     gap: 10,
   },
   header: {
@@ -135,15 +119,27 @@ const styles = StyleSheet.create({
   tableheader: {
     flex: 1,
     flexDirection: 'row',
-    
+    paddingHorizontal: 5
+  
   },
-  tabletitle: {
+  headertitle: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'flex-start',
+    justifyContent:'center',
+    paddingHorizontal: 5,
+  },
+  headertotal: {
+    flex: 1,
+    alignItems: 'flex-end',
+    justifyContent:'center',
+    paddingHorizontal: 5,
   },
   text: {
     fontWeight: 'bold'
+  },
+  title: {
+    fontWeight: 'bold',
+    fontSize: 25
   },
   tablecontent: {
     flex: 10,

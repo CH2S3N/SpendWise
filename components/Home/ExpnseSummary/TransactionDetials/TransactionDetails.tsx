@@ -1,6 +1,6 @@
 import Card from "@/components/ui/Card";
 import { Category, Transaction } from "@/types"
-import { ScrollView, Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 
 
 interface Props{
@@ -8,21 +8,17 @@ interface Props{
     categoryInfo: Category | undefined;
 }
 
-export default function TransactionDetails({ transaction }: Props) {
+export default function TransactionDetails({ transaction, categoryInfo }: Props) {
     return (
         <Card content={
             <View style={styles.container}>  
                 <View style={styles.description}>
                     <Text style={styles.text}>{transaction.description}</Text>
-                </View>
-                <View style={styles.item}>
-                    <Text style={styles.text}>{transaction.frequency}</Text>
-                </View>
-                <View style={styles.item}>
-                    <Text style={styles.text}>{transaction.prioritization}</Text>
+                    <Text style={styles.text}>{categoryInfo?.name}</Text>
                 </View>
                 <View style={styles.item}>
                     <Text style={styles.text}>{transaction.amount}</Text>
+                    <Text style={styles.text}>{transaction.frequency}</Text>
                 </View>
             </View>
         }/>
@@ -44,7 +40,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     description: {
-        flex: 1,
+        flex: 2,
         alignItems: 'flex-start'
     }
 })

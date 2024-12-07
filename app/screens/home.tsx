@@ -36,36 +36,6 @@ export default function Home() {
   const [isSummaryModalVisible, setSummaryModalVisible] = useState(false);
   const [isChartModalVisible, setChartModalVisible] = useState(false);
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        dispatch(setLoading()); // Set loading state before fetching data
-        
-        const transactionResult = await db.getAllAsync<Transaction>('SELECT * FROM Transactions');
-        const categoriesResult = await db.getAllAsync<Category>('SELECT * FROM Categories');
-        const goalsResult = await db.getAllAsync<Goal>('SELECT * FROM Goals');
-        const userResult = await db.getAllAsync<User>('SELECT * FROM User');
-        // console.log(user);
-        // console.log(goals);
-        // console.log(transactions);
-
-        // Dispatch fetched data to Redux
-        dispatch(
-          setData({
-            transactions: transactionResult,
-            categories: categoriesResult,
-            goals: goalsResult,
-            user: userResult,
-          })
-        );
-      } catch (error: any) {
-        dispatch(setError(error.message || 'Failed to load data'));
-      }
-    };
-
-    getData();
-  }, [db, dispatch]);
-
 // Handles the inserting of Expenses
   const insertTransaction = async (transaction: Transaction) => {
     await db.withTransactionAsync(async () => {
@@ -209,7 +179,7 @@ export default function Home() {
                   </TouchableOpacity>
               }
                 content={
-                    <CircularChart user={user} transactions={transactions} categories={categories}/>
+                    <CircularChart/>
                 }
             />
         </View >

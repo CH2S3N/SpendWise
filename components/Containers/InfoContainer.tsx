@@ -1,4 +1,5 @@
 import { colors } from "@/constants/colors";
+import { Divider } from "@rneui/base";
 import React, { ReactNode } from 'react';
 import { StyleProp, TextStyle, ViewStyle } from "react-native";
 import { View, Text, StyleSheet } from 'react-native';
@@ -24,6 +25,7 @@ const InfoContainer: React.FC<InfoContainerProps> = ({
     return (
         <View style={[styles.container, style]}>
             <View style={[styles.header, contentStyle]}>{header}</View>
+            <Divider/>
             <View style={[styles.content, contentStyle]}>{content}</View>
         </View>
 

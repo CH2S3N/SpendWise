@@ -12,6 +12,7 @@ import { Goal } from '@/types';
 import GoalsLists from './GoalsDetailsList';
 import GoalsDetalsLists from './GoalsDetailsList';
 import GoalsDetailsList from './GoalsDetailsList';
+import { Card, Divider } from '@rneui/base';
 
 
 export default function GoalsInfo({
@@ -40,46 +41,36 @@ export default function GoalsInfo({
 
 
   function calcTotalGoal() {
-    return 
+    return goals.reduce((total, goals) => {
+      return total + (goals.amount || 0);
+    }, 0)
   };
   return (
     <MainContainer>
       <View style={styles.header}>
-        <Text>Header</Text>
+        <View style={styles.headercontent}>
+          <Text style={styles.text}>Total</Text>
+          <Text style={styles.text}>{calcTotalGoal()}</Text>
+        </View>
+        <View style={styles.headercontent}>
+          <Text style={styles.text}>Accomplished</Text>
+          <Text style={styles.text}>0/{goals.length}</Text>
+        </View>
       </View>
       <View style={styles.container}>
-          <View style={styles.section}> 
-            <View style={styles.tableheader}>
-                <View style={styles.tabletitle}>
-                  <Text>Name</Text>
-                  </View>
-                <View style={styles.tabletitle}>
-                  <Text>Amount</Text>
-                </View>
-            </View>
-            <View style={styles.tablecontent}>
-      
-            </View>
-            <View style={styles.footer}>
-              <Text style={styles.text}>Total Expense: ₱</Text>
-            </View>
+        <Divider/>
+        <Text style={styles.text}>In Progress</Text>
+        <View style={styles.section}> 
+          <View style={styles.tablecontent}>
+          <GoalsDetailsList goals={goals} deleteGoal={deleteGoal} updateGoal={updateGoal}/>
           </View>
-          <View style={styles.section}> 
-            <View style={styles.tableheader}>
-                <View style={styles.tabletitle}>
-                  <Text>Name</Text>
-                </View>
-                <View style={styles.tabletitle}>
-                  <Text>Amount</Text>
-                </View>
-            </View>
-            <View style={styles.tablecontent}>
-              <GoalsDetailsList goals={goals} deleteGoal={deleteGoal} updateGoal={updateGoal}/>
-            </View>
-            <View style={styles.footer}>
-              <Text style={styles.text}>Total Expense: ₱</Text>
-            </View>
+        </View>
+        <Divider/>
+        <Text style={styles.text}>Accomplished</Text>
+        <View style={styles.section}> 
+          <View style={styles.tablecontent}>
           </View>
+        </View>
       </View>
      
     </MainContainer>
@@ -88,28 +79,25 @@ export default function GoalsInfo({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 5,
+    flex: 7,
     gap: 10,
   },
   header: {
     flex:1,
+    flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+  },
+  headercontent: {
+    flex:1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   section: {
     flex: 1,
     alignItems: 'flex-start',
     paddingHorizontal: 5,
-  },
-  tableheader: {
-    flex: 1,
-    flexDirection: 'row',
-    
-  },
-  tabletitle: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    paddingVertical: 10
   },
   text: {
     fontWeight: 'bold'
@@ -118,7 +106,5 @@ const styles = StyleSheet.create({
     flex: 10,
     flexDirection: 'row',
   },
-  footer: {
-    flex: 1,
-  }
+
 })

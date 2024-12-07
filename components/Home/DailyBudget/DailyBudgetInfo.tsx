@@ -14,21 +14,6 @@ export default function DailyBudgetInfo() {
           Content: Inprogreass Goals
         </Text></View>
      </View>
-     
-      {/* <InfoContainer 
-      header={
-        <Text>Fullfilled Goals</Text>
-      }
-      content={
-        <Text>Content</Text>
-      }/>
-      <InfoContainer 
-      header={
-        <Text>Fullfilled Goals</Text>
-      }
-      content={
-        <Text>Content</Text>
-      }/> */}
     </MainContainer>
   )
 }

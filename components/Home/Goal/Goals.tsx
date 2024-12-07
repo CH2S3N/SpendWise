@@ -5,6 +5,7 @@ import GoalsList from './GoalsList';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
 import { useFetchData } from '@/hooks/useFetchData';
+import { Divider } from '@rneui/base';
 
 export default function Goals() {
   const { fetchData } = useFetchData();
@@ -54,7 +55,9 @@ export default function Goals() {
       </View>
       <View style={styles.container}>
           <GoalsList goals={goals} deleteGoal={deleteGoal} />
-          <Text style={styles.text}>Total Amount: ₱{calcTotalGoal()}</Text>
+          <View style={styles.total}>
+            <Text style={styles.text}>Total: ₱{calcTotalGoal()}</Text>
+          </View>
       </View>
     </View>
   )
@@ -78,6 +81,10 @@ const styles = StyleSheet.create({
       justifyContent: 'space-between'
     },
     text: {
-      fontWeight: 'bold'
+      fontWeight: 'bold',
+    },
+    total: {
+      alignItems: 'flex-end',
+      justifyContent: 'flex-end',
     }
 })

@@ -6,15 +6,9 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
 
 
-export default function CircularChart({
-    transactions,
-    categories,
-    user,
-} : {
-    categories: Category[];
-    transactions: Transaction[];
-    user: User[],
-}) {
+export default function CircularChart() {
+  const { categories, transactions, user, goals, loading, error } = useSelector(
+    (state: RootState) => state.data);
     const widthAndHeight=150;
     const [values,setValues]= useState([1]);
     const [sliceColor,setSliceColor] = useState(['black']);
@@ -32,19 +26,25 @@ export default function CircularChart({
     return essentialTransactions.reduce((total, transaction) => {
       return total + (transaction.amount || 0);
     }, 0);
-  }
+  };
   function calcTotalNonEssentialExpense() {
     return nonEssentialTransactions.reduce((total, transaction) => {
       return total + (transaction.amount || 0);
     }, 0);
-  }
-  
+  };
+  function calcTotalGoal() {
+    return goals.reduce((total, goals) => {
+      return total + (goals.amount || 0);
+    }, 0)
+  };
+
   const totalEssential = calcTotalEssentialExpense();
   const totalNonEssential = calcTotalNonEssentialExpense();
   const totalSavings = userBudget - (totalEssential + totalNonEssential)
-  
+  const totalGoals = calcTotalGoal()
+
   useEffect(() => {
-    if (totalEssential + totalNonEssential + totalSavings> 0) {
+    if (totalEssential + totalNonEssential + totalSavings > 0) {
       setValues([totalEssential, totalNonEssential, totalSavings]);
       setSliceColor(['#FA812F', '#FA4032', '#FAB12F']);
     } else {

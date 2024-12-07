@@ -52,5 +52,4 @@ const dataSlice = createSlice({
 });
 
 export const { setLoading, setData, setError, clearData } = dataSlice.actions;
-
 export default dataSlice.reducer;
