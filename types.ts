@@ -8,11 +8,22 @@ export interface Transaction {
     amount: number;
     type: "Essential" | "Non_Essential";
 }
+export interface Income {
+    id: number;
+    incomeCategory_id: number;
+    amount: number;
+    description: string;
+    frequency: "Daily" | "Weekly" | "Bi-Weekly" | "Monthly";
+}
 
 export interface Category {
     id: number;
     name: string;
     type: "Essential" | "Non_Essential";
+}
+export interface IncomeCategory {
+    id: number;
+    name: string;
 }
 
 export interface Goal {

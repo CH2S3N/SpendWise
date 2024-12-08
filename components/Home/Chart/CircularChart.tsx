@@ -7,7 +7,7 @@ import { RootState } from '@/state/store';
 
 
 export default function CircularChart() {
-  const { categories, transactions, user, goals, loading, error } = useSelector(
+  const { categories, transactions, user, goals, incomes, loading, error } = useSelector(
     (state: RootState) => state.data);
     const widthAndHeight=150;
     const [values,setValues]= useState([1]);
@@ -38,9 +38,16 @@ export default function CircularChart() {
     }, 0)
   };
 
+  function calcTotalBudget() {
+    return incomes.reduce((total, incomes) => {
+      return total + (incomes.amount || 0);
+    }, 0)
+  };
+
+  const totalBudget = calcTotalBudget()
   const totalEssential = calcTotalEssentialExpense();
   const totalNonEssential = calcTotalNonEssentialExpense();
-  const totalSavings = userBudget - (totalEssential + totalNonEssential)
+  const totalSavings = totalBudget - (totalEssential + totalNonEssential)
   const totalGoals = calcTotalGoal()
 
   useEffect(() => {

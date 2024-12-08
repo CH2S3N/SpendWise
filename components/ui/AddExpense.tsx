@@ -4,6 +4,8 @@ import Card from './Card';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { useSQLiteContext } from 'expo-sqlite';
 import { Category, Transaction } from '@/types';
+import { AppDispatch, RootState } from '@/state/store';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 interface addExpenseProps {
@@ -75,6 +77,7 @@ export default function AddExpense({
         setCategoryId(1);
         setCurrentTab(0);
         setIsAddingTransaction(false);
+
     }
     
   return (
@@ -87,6 +90,29 @@ export default function AddExpense({
             style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
             onChangeText={setDescription}
           />
+
+             {/* IS FIXED AMOUNT */}
+             <View>
+            <Text style={{ marginBottom: 6 }}>Is Fixed Amount?</Text>
+            <SegmentedControl
+              values={['Yes', 'No']}
+              selectedIndex={selectedIndex}
+              onChange={(event) => setSelectedIndex(event.nativeEvent.selectedSegmentIndex)}
+            />
+            {/* AMOUNT */}
+            {selectedIndex === 0 && ( 
+              <TextInput
+                placeholder="₱Amount"
+                style={{ marginBottom: 15, fontWeight: "bold", borderBottomWidth: 1, borderBottomColor: 'black' }}
+                keyboardType="numeric"
+                onChangeText={(text) => {
+                  // Remove any non-numeric characters before setting the state
+                  const numericValue = text.replace(/[^0-9.]/g, "");
+                  setAmount(numericValue);
+                }}
+              />
+            )}
+          </View>
 
           {/* FREQUENCY */}
           <Text style={{ marginBottom: 6 }}>Frequency</Text>
@@ -109,28 +135,7 @@ export default function AddExpense({
             }}
           />
 
-          {/* IS FIXED AMOUNT */}
-          <View>
-            <Text style={{ marginBottom: 6 }}>Is Fixed Amount?</Text>
-            <SegmentedControl
-              values={['Yes', 'No']}
-              selectedIndex={selectedIndex}
-              onChange={(event) => setSelectedIndex(event.nativeEvent.selectedSegmentIndex)}
-            />
-            {/* AMOUNT */}
-            {selectedIndex === 0 && ( 
-              <TextInput
-                placeholder="₱Amount"
-                style={{ fontSize: 32, marginBottom: 15, fontWeight: "bold" }}
-                keyboardType="numeric"
-                onChangeText={(text) => {
-                  // Remove any non-numeric characters before setting the state
-                  const numericValue = text.replace(/[^0-9.]/g, "");
-                  setAmount(numericValue);
-                }}
-              />
-            )}
-          </View>
+       
 
             {/* ENTRY TYPE, ESSENTIAL & NON ESSENTIAL */}
           <Text style={{ marginBottom: 6 }}>Select a Entry Type</Text>

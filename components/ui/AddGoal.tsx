@@ -41,7 +41,7 @@ export default function AddGoal({
         />
         <TextInput
           placeholder="₱Amount"
-          style={{ fontSize: 32, marginBottom: 15, fontWeight: "bold" }}
+          style={{ marginBottom: 15, fontWeight: "bold", borderBottomWidth: 1, borderBottomColor: 'black' }}
           keyboardType="numeric"
           onChangeText={(text) => {
             // Remove any non-numeric characters before setting the state

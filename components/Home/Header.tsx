@@ -11,7 +11,7 @@ export default function Header() {
     <View  style={{
       padding: 20,
       backgroundColor: colors.dark,
-      height: 150,
+      height: 100,
       }}>
       <View style={styles.container}>
         <View style={styles.item}></View>

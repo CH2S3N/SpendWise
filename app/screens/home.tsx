@@ -7,7 +7,7 @@ import ExpenseSummary from '../../components/Home/ExpnseSummary/ExpenseSummary';
 import Goals from '../../components/Home/Goal/Goals';
 import DailyBudget from '../../components/Home/DailyBudget/DailyBudget';
 import AddTransaction from '../../components/ui/AddTransaction';
-import { Category, Goal, Transaction, User } from '@/types';
+import { Category, Goal, Income, Transaction, User } from '@/types';
 import GoalsInfo from '@/components/Home/Goal/GoalsDetails.tsx/GoalsInfo';
 import DailyBudgetInfo from '@/components/Home/DailyBudget/DailyBudgetInfo';
 import SummaryInfo from '@/components/Home/ExpnseSummary/TransactionDetials/SummaryInfo';
@@ -25,7 +25,7 @@ import { Modal } from '@/components/Modal';
 
 export default function Home() {
   const dispatch = useDispatch<AppDispatch>();
-  const { categories, transactions, user, goals, loading, error } = useSelector(
+  const { categories, transactions, user, goals, incomes, loading, error } = useSelector(
     (state: RootState) => state.data
   );  // Access data from Redux store
   const db = useSQLiteContext();
@@ -36,7 +36,24 @@ export default function Home() {
   const [isSummaryModalVisible, setSummaryModalVisible] = useState(false);
   const [isChartModalVisible, setChartModalVisible] = useState(false);
 
-// Handles the inserting of Expenses
+
+  
+  const insertIncome = async (income: Income) => {
+    await db.withTransactionAsync(async () => {
+      await db.runAsync(
+        `INSERT INTO Income (incomeCategoryId, description, frequency, amount) VALUES(?, ?, ?, ?)`,
+        [
+          income.incomeCategory_id,
+          income.description,
+          income.frequency,
+          income.amount,
+        ]
+      );
+      // Reload data after inserting transaction
+      const incomeResult = await db.getAllAsync<Income>('SELECT * FROM Income');
+      dispatch(setData({ incomes: incomeResult, categories, goals, user, transactions }));
+    });
+  };
   const insertTransaction = async (transaction: Transaction) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
@@ -53,7 +70,7 @@ export default function Home() {
       );
       // Reload data after inserting transaction
       const transactionResult = await db.getAllAsync<Transaction>('SELECT * FROM Transactions');
-      dispatch(setData({ transactions: transactionResult, categories, goals, user }));
+      dispatch(setData({ transactions: transactionResult, categories, goals, user, incomes }));
     });
   };
 // Handles the inserting of Expenses
@@ -76,7 +93,7 @@ export default function Home() {
       );
       // Reload data after inserting transaction
       const transactionResult = await db.getAllAsync<Transaction>('SELECT * FROM Transactions');
-      dispatch(setData({ transactions: transactionResult, categories, goals, user }));
+      dispatch(setData({ transactions: transactionResult, categories, goals, user, incomes }));
     });
   };
 
@@ -93,7 +110,7 @@ export default function Home() {
 
       // Reload data after inserting goal
       const goalResult = await db.getAllAsync<Goal>('SELECT * FROM Goals');
-      dispatch(setData({ goals: goalResult, categories, transactions, user }));
+      dispatch(setData({ goals: goalResult, categories, transactions, user, incomes }));
     });
   };
   const updateGoal = async (goal: Goal) => {
@@ -109,7 +126,7 @@ export default function Home() {
 
       // Reload data after inserting goal
       const goalResult = await db.getAllAsync<Goal>('SELECT * FROM Goals');
-      dispatch(setData({ goals: goalResult, categories, transactions, user }));
+      dispatch(setData({ goals: goalResult, categories, transactions, user, incomes }));
     });
   };
 
@@ -126,7 +143,7 @@ export default function Home() {
 
       // Reload data after inserting goal
       const budgetResult = await db.getAllAsync<User>('SELECT * FROM User');
-      dispatch(setData({ user: budgetResult, categories, transactions, goals }));
+      dispatch(setData({ user: budgetResult, categories, transactions, goals, incomes }));
     });
   };
 
@@ -137,7 +154,7 @@ export default function Home() {
         <Header/>
         <View style={styles.container}>
             <View>
-              <Budget user={user}/>
+              <Budget income={incomes}/>
             </View>
             <View style={styles.container1}>
               <InfoContainer
@@ -184,7 +201,7 @@ export default function Home() {
             />
         </View >
       <View style={styles.btn}>
-        <AddTransaction insertTransaction={insertTransaction} insertGoal={insertGoal} insertBudget={insertBudget}/>
+        <AddTransaction  insertTransaction={insertTransaction} insertGoal={insertGoal} insertBudget={insertBudget} insertIncome={insertIncome}/>
       </View>
 
       {/* PopUp Screen */}

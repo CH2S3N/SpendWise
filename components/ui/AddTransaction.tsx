@@ -1,25 +1,23 @@
-import { Category, Goal, Transaction, User } from "@/types";
-import { useSQLiteContext } from "expo-sqlite";
+import { Goal, Income, Transaction, User } from "@/types";
 import * as React from "react";
-import { Button, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import Card from "./Card";
+import {  View } from "react-native";
 import SegmentedControl from "@react-native-segmented-control/segmented-control";
-import AntDesign from '@expo/vector-icons/AntDesign';
 import AddButton from "../buttons/AddButton";
 import AddExpense from "./AddExpense";
 import AddGoal from "./AddGoal";
 import AddBudget from "./AddBudget";
-
+import AddIncome from "./addIncome";
 
 
 
 
 export default function AddTransaction ({
-    insertTransaction, insertGoal, insertBudget, 
+    insertTransaction, insertGoal, insertBudget, insertIncome, 
 }: {
-    insertTransaction(transaction: Transaction): Promise<void>;
+    insertTransaction(transaction: Transaction ): Promise<void>;
     insertGoal(goal: Goal): Promise<void>;
     insertBudget(user: User): Promise<void>;
+    insertIncome(income: Income): Promise<void>;
    
 }) {
     const [isAddingTransaction, setIsAddingTransaction] = React.useState<boolean>(false);
@@ -31,7 +29,7 @@ export default function AddTransaction ({
         {isAddingTransaction? (
           <View>
                <SegmentedControl
-                  values={['Expense', 'Goal', 'Budget']}
+                  values={['Expense', 'Goal', 'Income']}
                   selectedIndex={selectedTypeIndex}
                   onChange={(event) => setselectedTypeIndex(event.nativeEvent.selectedSegmentIndex)}
                 />
@@ -45,7 +43,8 @@ export default function AddTransaction ({
                 )}
                 {/* Budget Form */}
                  {selectedTypeIndex === 2 && ( 
-                   <AddBudget setIsAddingTransaction={setIsAddingTransaction} insertBudget={insertBudget}/>
+                  //  <AddBudget setIsAddingTransaction={setIsAddingTransaction} insertBudget={insertBudget}/>
+                  <AddIncome setIsAddingTransaction={setIsAddingTransaction} setIsUpdatingTransaction={setIsUpdatingTransaction} insertIncome={insertIncome} />
                 )}
           </View>
         ) : (
