@@ -47,7 +47,7 @@ export default function UpdateGoal({
     }
 
   return (
-    <Card content={
+  <Card content={
       <>
         {/* DESCRIPTION */}
         <TextInput

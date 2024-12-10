@@ -3,6 +3,8 @@ import React from 'react'
 import MainContainer from '@/components/Containers/MainContainer';
 import CircularChart from './CircularChart';
 import { Divider } from '@rneui/base';
+import BigText from '@/components/Texts/BigText';
+import IncomeChart from './IncomeChart ';
 
 export default function ChartInfo() {
   return (
@@ -11,8 +13,19 @@ export default function ChartInfo() {
       <Text style={styles.text}>Statistical Report</Text>
      </View>
      <Divider/>
+     <BigText content='Expense By Category'/>
      <View style={styles.content}>
       <CircularChart/>
+     </View>
+     <Divider/>
+     <BigText content='Income By Category'/>
+     <View style={styles.content}>
+      <IncomeChart/>
+     </View>
+     <Divider/>
+     <BigText content='Future Prediction'/>
+     <View style={styles.content}>
+     <Text>Content</Text>
      </View>
      <Divider/>
     </MainContainer>
@@ -22,7 +35,8 @@ export default function ChartInfo() {
 const styles = StyleSheet.create({
   content: {
     flex: 5,
-    paddingTop: 20
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   header: {
     flex:1,
