@@ -2,28 +2,39 @@ import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import MainContainer from '@/components/Containers/MainContainer';
 import CircularChart from './CircularChart';
-import { Divider } from '@rneui/base';
 import BigText from '@/components/Texts/BigText';
 import IncomeChart from './IncomeChart ';
+import SegmentedControl from '@react-native-segmented-control/segmented-control';
+import { Divider } from '@rneui/base';
 
 export default function ChartInfo() {
+  const [frequency, setFrequency] = React.useState<string>("Daily");
   return (
     <MainContainer>
      <View style={styles.header}>
       <Text style={styles.text}>Statistical Report</Text>
      </View>
-     <Divider/>
-     <BigText content='Expense By Category'/>
+       {/* FREQUENCY */}
+          <SegmentedControl
+            values={["Daily", "Weekly", "Monthly", "Yearly"]}
+            style={{ marginBottom: 15 }}
+            selectedIndex={["Daily", "Weekly", "Monthly", "Yearly"].indexOf(frequency)}
+            onChange={(event) => {
+              setFrequency(["Daily", "Weekly", "Monthly", "Yearly"][event.nativeEvent.selectedSegmentIndex]);
+            }}
+          />
+     <BigText content='User Transactions'/>
+    <Divider/>
      <View style={styles.content}>
       <CircularChart/>
      </View>
+     <BigText content='Source of Income'/>
      <Divider/>
-     <BigText content='Income By Category'/>
      <View style={styles.content}>
       <IncomeChart/>
      </View>
-     <Divider/>
      <BigText content='Future Prediction'/>
+     <Divider/>
      <View style={styles.content}>
      <Text>Content</Text>
      </View>

@@ -4,6 +4,7 @@ import PieChart from 'react-native-pie-chart';
 import { Category, Transaction, User } from '@/types';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
+import { colors } from '@/constants/colors';
 
 
 export default function CircularChart() {
@@ -40,7 +41,7 @@ export default function CircularChart() {
 
   function calcTotalBudget() {
     return incomes.reduce((total, incomes) => {
-      return total + (incomes.amount || 0);
+      return total + calcTotalGoal() + (incomes.amount || 0);
     }, 0)
   };
 
@@ -51,9 +52,9 @@ export default function CircularChart() {
   const totalGoals = calcTotalGoal()
 
   useEffect(() => {
-    if (totalEssential + totalNonEssential + totalSavings > 0) {
-      setValues([totalEssential, totalNonEssential, totalSavings]);
-      setSliceColor(['#FA812F', '#FA4032', '#FAB12F']);
+    if (totalEssential + totalNonEssential + totalSavings + totalGoals > 0) {
+      setValues([totalEssential, totalNonEssential, totalSavings, totalGoals]);
+      setSliceColor(['#FA812F', '#FA4032', '#FAB12F', 'pink']);
     } else {
       setValues([1]);
       setSliceColor(['#CCCCCC']);
@@ -89,11 +90,17 @@ export default function CircularChart() {
             <View style={[styles.colorBox, { backgroundColor: '#FAB12F' }]} />
             <Text>Savings: ₱{totalSavings}</Text>
           </View>
+          <View style={styles.legendItem}>
+            <View style={[styles.colorBox, { backgroundColor: 'pink' }]} />
+            <Text>Goals: ₱{totalGoals}</Text>
+          </View>
+          <View style={styles.legendItem}>
+            <View style={[styles.colorBox, { backgroundColor: colors.dark }]} />
+            <Text>Funds: ₱{totalBudget}</Text>
+          </View>
         </View>
       </View>
-      <View style={styles.total}>
-          <Text style={styles.text}>Total ₱{calcTotal()}</Text>
-        </View>
+     
     </View>
   )
 }
@@ -132,10 +139,14 @@ const styles = StyleSheet.create({
   },
   total:{
     position: 'absolute',
-    left: "17%",
+    left: "20%",
     bottom: "45%",
+  
+
   },
   text: {
+    justifyContent: 'center',
+    alignItems: 'center',
     fontWeight: 'bold'
   }
 

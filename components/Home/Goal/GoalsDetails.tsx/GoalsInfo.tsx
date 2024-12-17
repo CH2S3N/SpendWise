@@ -1,16 +1,12 @@
 import { Text, View } from 'react-native'
-import React, { useEffect } from 'react'
-import InfoContainer from '@/components/Containers/InfoContainer';
+import React, { useEffect, useState } from 'react'
 import MainContainer from '@/components/Containers/MainContainer';
 import { StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
 import { useFetchData } from '@/hooks/useFetchData';
 import { useSQLiteContext } from 'expo-sqlite';
-import GoalsDetails from './GoalsDetails';
 import { Goal } from '@/types';
-import GoalsLists from './GoalsDetailsList';
-import GoalsDetalsLists from './GoalsDetailsList';
 import GoalsDetailsList from './GoalsDetailsList';
 import { Card, Divider } from '@rneui/base';
 
@@ -21,6 +17,7 @@ export default function GoalsInfo({
   updateGoal(goals: Goal): Promise<void>;
  
 }) {
+ 
 
   const { goals } = useSelector(
     (state: RootState) => state.data

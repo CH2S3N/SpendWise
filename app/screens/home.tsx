@@ -151,10 +151,10 @@ export default function Home() {
   return (
     <MainContainer>
       <StatusBar hidden/>
-        <Header/>
+        {/* <Header/> */}
         <View style={styles.container}>
             <View>
-              <Budget income={incomes}/>
+              {/* <Budget income={incomes}/> */}
             </View>
             <View style={styles.container1}>
               <InfoContainer

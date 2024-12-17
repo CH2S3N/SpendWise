@@ -27,9 +27,9 @@ export default function IncomeChart () {
  
 
   const totalBudget = 300
-  const totalAllowance = calcTotalAllowance();
-  const totalSalary = 200
-  const totalSavings = 100
+  const totalAllowance = 700
+  const totalSalary = 4500
+  const totalSavings = 2000
 
 
   useEffect(() => {
@@ -57,6 +57,9 @@ export default function IncomeChart () {
                   coverRadius={0.60}
                   coverFill={'#FFFFFF'}
               />
+          <View style={styles.total}>
+            <Text style={styles.text}>Total ₱{calcTotal()}</Text>
+          </View>
         </View>
         <View style={styles.item2}>
           <View style={styles.legendItem}>
@@ -73,9 +76,7 @@ export default function IncomeChart () {
           </View>
         </View>
       </View>
-      <View style={styles.total}>
-          <Text style={styles.text}>Total ₱{calcTotal()}</Text>
-        </View>
+      
     </View>
   )
 }
@@ -114,7 +115,7 @@ const styles = StyleSheet.create({
   },
   total:{
     position: 'absolute',
-    left: "17%",
+    left: "25%",
     bottom: "45%",
   },
   text: {

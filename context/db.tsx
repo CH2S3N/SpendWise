@@ -20,8 +20,6 @@ const loadDatabase =async () => {
         await FileSystem.makeDirectoryAsync(`${FileSystem.documentDirectory}SQLite`, {
           intermediates: true,
         });
-  
-
         await FileSystem.downloadAsync(dbUri, dbFilePath);
       }
   

@@ -1,5 +1,6 @@
 import Card from "@/components/ui/Card";
 import { Goal } from "@/types";
+import { Divider } from "@rneui/base";
 import { Text, View, StyleSheet } from "react-native";
 
 
@@ -10,13 +11,16 @@ interface Props{
 export default function GoalsDetails({ goal }: Props) {
     return (
         <Card content={
-            <View style={styles.container}>  
-                <View style={styles.description}>
-                    <Text style={styles.text}>{goal.name}</Text>
-                </View>
-                <View style={styles.item}>
-                    <Text style={styles.text}>{goal.amount}</Text>
-                </View>
+            <View >
+                <View style={styles.container}>
+                    <View style={styles.description}>
+                        <Text style={styles.text}>{goal.name}</Text>
+                    </View>
+                    <View style={styles.item}>
+                        <Text style={styles.text}>{goal.amount}</Text>
+                    </View>
+                </View>  
+                <Divider/>
             </View>
         }/>
     )

@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 30,
         fontWeight: 'bold',
-        color: colors.black,
+        color: colors.dark,
     }
 })
 export default RegularText;

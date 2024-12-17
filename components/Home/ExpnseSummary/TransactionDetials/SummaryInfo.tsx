@@ -11,6 +11,7 @@ import NonEssential from './NonEssentials';
 import { Transaction } from '@/types';
 import { Divider } from '@rneui/base';
 
+
 export default function SummaryInfo({
   updateTransaction
 }: {
@@ -95,6 +96,7 @@ const nonEssentialTransactions = transactions.filter(
               />
             </View>
           </View>
+          <Divider/>
       </View>
      
     </MainContainer>

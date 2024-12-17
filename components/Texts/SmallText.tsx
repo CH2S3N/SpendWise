@@ -10,7 +10,7 @@ const SmallText: React.FC<{content: string}> = ({content}) => {
 const styles = StyleSheet.create({
     text: {
         fontSize: 30,
-        color: colors.black,
+        color: colors.dark,
     }
 })
 export default SmallText;

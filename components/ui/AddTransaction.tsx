@@ -18,7 +18,6 @@ export default function AddTransaction ({
     insertGoal(goal: Goal): Promise<void>;
     insertBudget(user: User): Promise<void>;
     insertIncome(income: Income): Promise<void>;
-   
 }) {
     const [isAddingTransaction, setIsAddingTransaction] = React.useState<boolean>(false);
     const [isUpdatingTransaction, setIsUpdatingTransaction] = React.useState<boolean>(false);
@@ -53,6 +52,3 @@ export default function AddTransaction ({
       </View>
     );
 }
-
-
-

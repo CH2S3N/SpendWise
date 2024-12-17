@@ -1,30 +1,26 @@
-import { View, Text, StyleSheet } from 'react-native'
-import React from 'react'
-import MainContainer from '@/components/Containers/MainContainer';
+import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
 import { Divider } from '@rneui/base';
-import BigText from '@/components/Texts/BigText';
+import MainContainer from '@/components/Containers/MainContainer';
 
-export default function DailyBudgetInfo() {
+
+const profile = () => {
   return (
     <MainContainer>
     <View style={styles.header}>
-     <Text style={styles.text}>Budget Plan</Text>
+     <Text style={styles.text}>User Profile</Text>
     </View>
-    
-    <BigText content='Plan'/>
    <Divider/>
     <View style={styles.content}>
-    <Text>Content</Text>
+    <Text>User Information</Text>
     </View>
-    <BigText content='Plan'/>
     <Divider/>
     <View style={styles.content}>
-    <Text>Content</Text>
+    <Text>User Information</Text>
     </View>
-    <BigText content='Plan'/>
     <Divider/>
     <View style={styles.content}>
-    <Text>Content</Text>
+    <Text>User Information</Text>
     </View>
     <Divider/>
    </MainContainer>
@@ -47,3 +43,6 @@ const styles = StyleSheet.create({
    fontSize: 30
  }
 })
+
+export default profile
+

@@ -19,7 +19,7 @@ const StyledTextInput: FunctionComponent<InputProps> = ({icon, content, style, .
     return (
         <View style={[styles.InputWrapper, style]}>
             <View style={[styles.LeftIcon]}>
-                <MaterialCommunityIcons name={icon} size={30} color={colors.secondary}  />          </View>
+                <MaterialCommunityIcons name={icon} size={30} color={colors.gray}  />          </View>
             <SmallText content={content} />
             <TextInput style={[styles.InputField]} {...props}/>
         </View>
@@ -38,21 +38,21 @@ const styles = StyleSheet.create({
         left: 15,
         zIndex: 1,
         borderRightWidth: 2,
-        borderColor: colors.secondary,
+        borderColor: colors.gray,
         paddingRight: 10,
     },
     InputField: {
-        backgroundColor: colors.primary,
+        backgroundColor: colors.dark,
         height: 60,
         borderWidth: 2,
         borderRadius: 10,
-        borderColor: colors.secondary,
+        borderColor: colors.gray,
         marginVertical: 3,
         marginBottom: 10,
         paddingLeft:15,
         paddingRight: 15,
         fontSize: 16,
-        color: colors.black,
+        color: colors.dark,
     }
 })
 

@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 20,
         color: colors.dark,
+        fontWeight: 'bold',
     }
 })
 export default BigText;

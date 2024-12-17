@@ -5,7 +5,7 @@ import GoalsList from './GoalsList';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
 import { useFetchData } from '@/hooks/useFetchData';
-import { Divider } from '@rneui/base';
+
 
 export default function Goals() {
   const { fetchData } = useFetchData();
