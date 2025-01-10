@@ -19,12 +19,7 @@ export default function Budget({
       return total + (incomes.amount || 0);
     }, 0)
   };
-
-  // const userBudget = user.length > 0 ? user[0].budget_Amount : 'No Budget Found';
   
-  return (
-    <View>
-       <Text>Budget Amount: {calcTotalBudget()}</Text>
-    </View>
-  )
+  return <Text>{calcTotalBudget()}</Text>
+
 }

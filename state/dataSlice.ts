@@ -1,10 +1,11 @@
 // src/state/data/dataSlice.ts
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Category, Transaction, Goal, User, Income } from "@/types";
+import { Category, Transaction, Goal, User, Income, IncomeCategory } from "@/types";
 
 interface DataState {
   categories: Category[];
+  incomeCategories: IncomeCategory[];
   transactions: Transaction[];
   user: User[];
   goals: Goal[];
@@ -15,6 +16,7 @@ interface DataState {
 
 const initialState: DataState = {
   categories: [],
+  incomeCategories: [],
   transactions: [],
   user: [],
   goals: [],
@@ -32,9 +34,10 @@ const dataSlice = createSlice({
     },
     setData(
       state,
-      action: PayloadAction<{ categories: Category[], transactions: Transaction[], user: User[], goals: Goal[], incomes: Income[] }>
+      action: PayloadAction<{ categories: Category[], incomeCategories: IncomeCategory[], transactions: Transaction[], user: User[], goals: Goal[], incomes: Income[] }>
     ) {
       state.categories = action.payload.categories || [];
+      state.incomeCategories = action.payload.incomeCategories || [];
       state.transactions = action.payload.transactions || [];
       state.user = action.payload.user || [];
       state.goals = action.payload.goals || [];

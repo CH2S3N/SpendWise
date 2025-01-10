@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import MainContainer from '@/components/Containers/MainContainer';
 import { useFetchData } from '@/hooks/useFetchData';
 import { useSQLiteContext } from 'expo-sqlite';
-import TransactionList from './../TransactionsList';
 import { RootState } from '@/state/store';
 import { useSelector } from 'react-redux';
 import Essential from './Essentials';
@@ -28,29 +27,13 @@ export default function SummaryInfo({
       await db.withTransactionAsync(async () => {
         await db.runAsync('DELETE FROM Transactions WHERE id = ?;', [id]);
         await fetchData();
-      });
+      }); 
     } catch (error) {
       console.error('Error deleting transaction:', error);
     }
   }
 
-  function calcTotalEssential() {
-    return essentialTransactions.reduce((total, transaction) => {
-      return total + (transaction.amount || 0);
-    }, 0);
-  };
-  function calcTotalNonEssential() {
-    return nonEssentialTransactions.reduce((total, transaction) => {
-      return total + (transaction.amount || 0);
-    }, 0);
-  };
-
-  const essentialTransactions = transactions.filter(
-    (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Essential"
-);
-const nonEssentialTransactions = transactions.filter(
-    (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Non_Essential"
-);
+ 
 
   return (
     <MainContainer>
@@ -62,10 +45,7 @@ const nonEssentialTransactions = transactions.filter(
           <View style={styles.section}> 
             <View style={styles.tableheader}>
               <View style={styles.headertitle}>
-                <Text style={styles.title}>Essentials</Text>
-              </View>
-              <View style={styles.headertotal}>
-              <Text style={styles.text}>Total: ₱{calcTotalEssential()}</Text>
+                <Text style={styles.title}>Needs</Text>
               </View>
             </View>
             <View style={styles.tablecontent}>
@@ -81,10 +61,7 @@ const nonEssentialTransactions = transactions.filter(
           <View style={styles.section}> 
             <View style={styles.tableheader}>
               <View style={styles.headertitle}>
-                <Text style={styles.title}>Non Essentials</Text>
-              </View>
-              <View style={styles.headertotal}>
-                <Text style={styles.text}>Total: ₱{calcTotalNonEssential()}</Text>
+                <Text style={styles.title}>Wants</Text>
               </View>
             </View>
             <View style={styles.tablecontent}>

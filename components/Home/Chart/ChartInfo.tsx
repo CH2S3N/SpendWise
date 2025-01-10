@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import MainContainer from '@/components/Containers/MainContainer';
-import CircularChart from './CircularChart';
+import CircularChart from './ExpenseChart';
 import BigText from '@/components/Texts/BigText';
 import IncomeChart from './IncomeChart ';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
@@ -14,29 +14,15 @@ export default function ChartInfo() {
      <View style={styles.header}>
       <Text style={styles.text}>Statistical Report</Text>
      </View>
-       {/* FREQUENCY */}
-          <SegmentedControl
-            values={["Daily", "Weekly", "Monthly", "Yearly"]}
-            style={{ marginBottom: 15 }}
-            selectedIndex={["Daily", "Weekly", "Monthly", "Yearly"].indexOf(frequency)}
-            onChange={(event) => {
-              setFrequency(["Daily", "Weekly", "Monthly", "Yearly"][event.nativeEvent.selectedSegmentIndex]);
-            }}
-          />
-     <BigText content='User Transactions'/>
+     <BigText content='Expense Structure'/>
     <Divider/>
      <View style={styles.content}>
       <CircularChart/>
      </View>
-     <BigText content='Source of Income'/>
+     <BigText content='Income Structure'/>
      <Divider/>
      <View style={styles.content}>
       <IncomeChart/>
-     </View>
-     <BigText content='Future Prediction'/>
-     <Divider/>
-     <View style={styles.content}>
-     <Text>Content</Text>
      </View>
      <Divider/>
     </MainContainer>

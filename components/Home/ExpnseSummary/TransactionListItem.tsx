@@ -1,4 +1,5 @@
 import { Category, Transaction } from "@/types"
+import calculateMonthlyAmount from "@/utils/calcMonthlyAmount";
 import { ScrollView, Text, View, StyleSheet } from "react-native";
 
 
@@ -8,13 +9,15 @@ interface TransactionListItemProps{
 }
 
 export default function TransactionListItem({ transaction}: TransactionListItemProps) {
+    const monthlyAmount = calculateMonthlyAmount(transaction.amount, transaction.frequency);
+    
     return (
         <View style={styles.container}>  
             <View>
                 <Text style={styles.text}>{transaction.description}</Text>
             </View>
             <View>
-                <Text style={styles.text}>{transaction.amount}</Text>
+                <Text style={styles.text}>{monthlyAmount}</Text>
             </View>
         </View>
     )

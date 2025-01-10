@@ -1,51 +1,57 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import PieChart from 'react-native-pie-chart';
-import { Category, Transaction, User, IncomeCategory } from '@/types';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
+import { calculateTotal } from '@/utils/calcTotal';
+import { calculateTotalIncome } from '@/utils/calcTotalIncome';
+
 
 
 export default function IncomeChart () {
-  const { categories, transactions, user, goals, incomes, loading, error } = useSelector(
+  const { incomeCategories,  incomes } = useSelector(
     (state: RootState) => state.data);
     const widthAndHeight=150;
     const [values,setValues]= useState([1]);
     const [sliceColor,setSliceColor] = useState(['black']);
-    const userBudget = user.length > 0 ? user[0].budget_Amount : 0;
 
 
+    // Filtter Income Types
     const allowance = incomes.filter(
-      (income) => incomes.find((incomeCategory) => incomeCategory.id === income.incomeCategory_id)?.description ==="allowance"
-    );  
+      (income) =>
+        incomeCategories.find((incomeCategory) => incomeCategory.id === income.incomeCategory_id)
+          ?.name === 'allowance'
+    );
+    const salary = incomes.filter(
+      (income) =>
+        incomeCategories.find((incomeCategory) => incomeCategory.id === income.incomeCategory_id)
+          ?.name === 'salary'
+    );
+    const others = incomes.filter(
+      (income) =>
+        incomeCategories.find((incomeCategory) => incomeCategory.id === income.incomeCategory_id)
+          ?.name === 'others'
+    );
+  
 
-  function calcTotalAllowance() {
-    return allowance.reduce((total, income) => {
-      return total + (income.amount || 0);
-    }, 0)
-  };
+    
+  
+    const totalAllowance = calculateTotalIncome(allowance, incomeCategories, "Allowance")
+    const totalSalary = calculateTotalIncome(salary, incomeCategories, "Salary")
+    const totalOthers = calculateTotalIncome(others, incomeCategories, "Others")
  
 
-  const totalBudget = 300
-  const totalAllowance = 700
-  const totalSalary = 4500
-  const totalSavings = 2000
-
-
-  useEffect(() => {
-    if (totalAllowance + totalSalary + totalSavings > 0) {
-      setValues([totalAllowance, totalSalary, totalSavings]);
-      setSliceColor(['#FA812F', '#FA4032', '#FAB12F']);
-    } else {
-      setValues([1]);
-      setSliceColor(['#CCCCCC']);
-    }
-  },[totalAllowance, totalSalary])
+    useEffect(() => {
+      if (totalAllowance + totalSalary + totalOthers > 0) {
+        setValues([totalAllowance, totalSalary, totalOthers]);
+        setSliceColor(['#FA812F', '#FA4032', '#FAB12F']);
+      } else {
+        setValues([1]);
+        setSliceColor(['#CCCCCC']);
+      }
+    }, [totalAllowance, totalSalary, totalOthers]);
   
-  
-  function calcTotal() {
-    return totalAllowance + totalSalary + totalSavings
-  }
+
   return (
     <View>
       <View style={styles.container}>
@@ -57,9 +63,6 @@ export default function IncomeChart () {
                   coverRadius={0.60}
                   coverFill={'#FFFFFF'}
               />
-          <View style={styles.total}>
-            <Text style={styles.text}>Total ₱{calcTotal()}</Text>
-          </View>
         </View>
         <View style={styles.item2}>
           <View style={styles.legendItem}>
@@ -72,7 +75,7 @@ export default function IncomeChart () {
           </View>
           <View style={styles.legendItem}>
             <View style={[styles.colorBox, { backgroundColor: '#FAB12F' }]} />
-            <Text>Others: ₱{totalSavings}</Text>
+            <Text>Others: ₱{totalOthers}</Text>
           </View>
         </View>
       </View>

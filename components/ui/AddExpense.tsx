@@ -140,7 +140,7 @@ export default function AddExpense({
             {/* ENTRY TYPE, ESSENTIAL & NON ESSENTIAL */}
           <Text style={{ marginBottom: 6 }}>Select a Entry Type</Text>
           <SegmentedControl
-            values={["Essential", "Non Essential"]}
+            values={["Needs", "Wants"]}
             style={{ marginBottom: 15 }}
             selectedIndex={currentTab}
             onChange={(event) => {

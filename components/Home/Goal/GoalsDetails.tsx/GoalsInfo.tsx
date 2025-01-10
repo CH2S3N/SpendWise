@@ -42,6 +42,7 @@ export default function GoalsInfo({
       return total + (goals.amount || 0);
     }, 0)
   };
+
   return (
     <MainContainer>
       <View style={styles.header}>

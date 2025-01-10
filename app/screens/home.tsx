@@ -1,8 +1,8 @@
-import { View,  StyleSheet, Button, TouchableOpacity, StatusBar } from 'react-native';
+import { View,  StyleSheet, Button, TouchableOpacity, StatusBar, Text } from 'react-native';
 import { useSQLiteContext } from 'expo-sqlite/next';
 import React, { useEffect, useState } from 'react';
 import Header from '../../components/Home/Header';
-import CircularChart from '../../components/Home/Chart/CircularChart';
+import CircularChart from '../../components/Home/Chart/ExpenseChart';
 import ExpenseSummary from '../../components/Home/ExpnseSummary/ExpenseSummary';
 import Goals from '../../components/Home/Goal/Goals';
 import DailyBudget from '../../components/Home/DailyBudget/DailyBudget';
@@ -14,24 +14,27 @@ import SummaryInfo from '@/components/Home/ExpnseSummary/TransactionDetials/Summ
 import ChartInfo from '@/components/Home/Chart/ChartInfo';
 import InfoContainer from '@/components/Containers/InfoContainer';
 import BigText from '@/components/Texts/BigText';
-import Budget from '@/components/Home/Budget/Budget';
 import { AppDispatch, RootState } from '@/state/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { setData, setError, setLoading } from '@/state/dataSlice';
 import MainContainer from '@/components/Containers/MainContainer';
 import { Modal } from '@/components/Modal';
+import { colors } from '@/constants/colors';
+import Budget from '@/components/Home/Budget/totalIncome';
+import IncomeInfo from '@/components/Home/IncomeSummary/IncomeInfo';
 
 
 
 export default function Home() {
   const dispatch = useDispatch<AppDispatch>();
-  const { categories, transactions, user, goals, incomes, loading, error } = useSelector(
+  const { categories, transactions, user, goals, incomes, incomeCategories, loading, error } = useSelector(
     (state: RootState) => state.data
   );  // Access data from Redux store
   const db = useSQLiteContext();
 
   // modals
   const [isGoalModalVisible, setGoalModalVisible] = useState(false);
+  const [isIncomeInfoModalVisible, setIncomeInfoModalVisible] = useState(false);
   const [isDailyBudgetModalVisible, setDailyBudgetModalVisible] = useState(false);
   const [isSummaryModalVisible, setSummaryModalVisible] = useState(false);
   const [isChartModalVisible, setChartModalVisible] = useState(false);
@@ -51,7 +54,7 @@ export default function Home() {
       );
       // Reload data after inserting transaction
       const incomeResult = await db.getAllAsync<Income>('SELECT * FROM Income');
-      dispatch(setData({ incomes: incomeResult, categories, goals, user, transactions }));
+      dispatch(setData({ incomes: incomeResult, categories, incomeCategories, goals, user, transactions }));
     });
   };
   const insertTransaction = async (transaction: Transaction) => {
@@ -70,10 +73,9 @@ export default function Home() {
       );
       // Reload data after inserting transaction
       const transactionResult = await db.getAllAsync<Transaction>('SELECT * FROM Transactions');
-      dispatch(setData({ transactions: transactionResult, categories, goals, user, incomes }));
+      dispatch(setData({ transactions: transactionResult, categories, incomeCategories, goals, user, incomes }));
     });
   };
-// Handles the inserting of Expenses
   const updateTransaction = async (transaction: Transaction) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
@@ -93,11 +95,32 @@ export default function Home() {
       );
       // Reload data after inserting transaction
       const transactionResult = await db.getAllAsync<Transaction>('SELECT * FROM Transactions');
-      dispatch(setData({ transactions: transactionResult, categories, goals, user, incomes }));
+      dispatch(setData({ transactions: transactionResult, categories, incomeCategories, goals, user, incomes }));
+    });
+  };
+  const updateIncome = async (income: Income) => {
+    await db.withTransactionAsync(async () => {
+      await db.runAsync(
+        `UPDATE Income SET incomeCategoryId = ?, amount = ?, description = ?, frequency = ?, type = ?  WHERE id = ?`,
+        [
+          
+          income.incomeCategory_id,
+          income.amount,
+          income.description,
+          income.frequency,
+          income.type,
+          income.id,
+          
+          
+        ]
+      );
+      // Reload data after inserting transaction
+      const transactionResult = await db.getAllAsync<Income>('SELECT * FROM Income');
+      dispatch(setData({ incomes: transactionResult, categories, incomeCategories, goals, user, transactions }));
     });
   };
 
-// Handles the inserting of Goal
+
   const insertGoal = async (goal: Goal) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
@@ -110,7 +133,7 @@ export default function Home() {
 
       // Reload data after inserting goal
       const goalResult = await db.getAllAsync<Goal>('SELECT * FROM Goals');
-      dispatch(setData({ goals: goalResult, categories, transactions, user, incomes }));
+      dispatch(setData({ goals: goalResult, categories, incomeCategories, transactions, user, incomes }));
     });
   };
   const updateGoal = async (goal: Goal) => {
@@ -126,11 +149,9 @@ export default function Home() {
 
       // Reload data after inserting goal
       const goalResult = await db.getAllAsync<Goal>('SELECT * FROM Goals');
-      dispatch(setData({ goals: goalResult, categories, transactions, user, incomes }));
+      dispatch(setData({ goals: goalResult, categories, incomeCategories, transactions, user, incomes }));
     });
   };
-
-// Handles the inserting of Budget
   const insertBudget = async (user: User,) => {
     await db.withTransactionAsync(async () => {
 
@@ -143,7 +164,7 @@ export default function Home() {
 
       // Reload data after inserting goal
       const budgetResult = await db.getAllAsync<User>('SELECT * FROM User');
-      dispatch(setData({ user: budgetResult, categories, transactions, goals, incomes }));
+      dispatch(setData({ user: budgetResult, categories, incomeCategories, transactions, goals, incomes }));
     });
   };
 
@@ -153,9 +174,18 @@ export default function Home() {
       <StatusBar hidden/>
         {/* <Header/> */}
         <View style={styles.container}>
-            <View>
-              {/* <Budget income={incomes}/> */}
+          <View style={styles.cardcon}>
+            <View style={styles.card}>
+              <TouchableOpacity onPress={() => setIncomeInfoModalVisible(true)}>
+                <Text>Income: <Budget income={incomes}/></Text>   
+              </TouchableOpacity>
             </View>
+            <View style={styles.card}>
+              <TouchableOpacity onPress={() => setSummaryModalVisible(true)}>
+                <Text>Expense: </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
             <View style={styles.container1}>
               <InfoContainer
                 header={
@@ -182,7 +212,7 @@ export default function Home() {
             <InfoContainer
                 header={
                   <TouchableOpacity onPress={() => setSummaryModalVisible(true)}>
-                    <BigText content="Expense Summary"/>
+                    <BigText content="Monthly Expense Summary"/>
                   </TouchableOpacity>
               }
                 content={
@@ -205,6 +235,17 @@ export default function Home() {
       </View>
 
       {/* PopUp Screen */}
+      <Modal isOpen={isIncomeInfoModalVisible} >
+        <View style={styles.container}>
+          <IncomeInfo updateIncome={updateIncome}/>
+          
+          <Button 
+            title='Back' 
+            color= 'black'
+            onPress={() => setIncomeInfoModalVisible(false)}
+          />
+        </View>
+      </Modal>
       <Modal isOpen={isGoalModalVisible} >
         <View style={styles.container}>
           <GoalsInfo updateGoal={updateGoal}/>
@@ -292,5 +333,25 @@ const styles= StyleSheet.create({
     left: 10,
     right: 10,
     
+  },
+  card: {
+    flex: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    backgroundColor: colors.light,
+    borderRadius: 15,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowRadius: 8,
+    shadowOffset: { height: 6, width: 0 },
+    shadowOpacity: 0.15,
+    padding: 10,
+    marginHorizontal: 5
+  },
+  cardcon: {
+    alignItems: 'center',
+    justifyContent:'center',
+    width: '100%',
+    flexDirection: 'row',
   }
 })

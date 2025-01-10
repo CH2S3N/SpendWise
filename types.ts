@@ -14,6 +14,7 @@ export interface Income {
     amount: number;
     description: string;
     frequency: "Daily" | "Weekly" | "Bi-Weekly" | "Monthly";
+    type: "Allowance" | "Salary" | "Others",
 }
 
 export interface Category {
@@ -24,6 +25,7 @@ export interface Category {
 export interface IncomeCategory {
     id: number;
     name: string;
+    type: "Allowance" | "Salary" | "Others";
 }
 
 export interface Goal {

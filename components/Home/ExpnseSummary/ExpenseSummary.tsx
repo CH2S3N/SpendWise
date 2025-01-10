@@ -5,49 +5,46 @@ import { View, Text, StyleSheet } from 'react-native';
 import {  useSelector } from 'react-redux';
 import { RootState } from '@/state/store'; 
 import TransactionList from './TransactionsList';
-import { Transaction } from '@/types';
+import calculateMonthlyAmount from '@/utils/calcMonthlyAmount';
+
 
 
 export default function ExpenseSummary() {
-  const { categories, transactions, loading, error } = useSelector(
+  const { categories, transactions } = useSelector(
     (state: RootState) => state.data
   );
-  // Calculate the total expense
-  function calcTotalEssential() {
-    return essentialTransactions.reduce((total, transaction) => {
-      return total + (transaction.amount || 0);
+  const essentialTransactions = transactions.filter(
+    (transaction) =>
+      categories.find((category) => category.id === transaction.category_id)?.type === 'Essential'
+  );
+
+  const nonEssentialTransactions = transactions.filter(
+    (transaction) =>
+      categories.find((category) => category.id === transaction.category_id)?.type === 'Non_Essential'
+  );
+
+  // Calculate the monthly amount using calculateMonthlyAmount
+  function calcMonthAmount(transactions: typeof essentialTransactions) {
+    return transactions.reduce((total, transaction) => {
+      return (
+        total +
+        calculateMonthlyAmount(transaction.amount || 0, transaction.frequency || 'Monthly')
+      );
     }, 0);
-  }
-  function calcTotalNonEssential() {
-    return nonEssentialTransactions.reduce((total, transaction) => {
-      return total + (transaction.amount || 0);
-    }, 0);
-  }
-  // If loading, show a loading text
-  if (loading) {
-    return <Text>Loading...</Text>;
-  }
-  // If error occurs, display error message
-  if (error) {
-    return <Text>Error: {error}</Text>;
   }
 
-  const essentialTransactions = transactions.filter(
-    (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Essential"
-);
-const nonEssentialTransactions = transactions.filter(
-    (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Non_Essential"
-);
+  const essentialMonthlyTotal = calcMonthAmount(essentialTransactions);
+  const nonEssentialMonthlyTotal = calcMonthAmount(nonEssentialTransactions);
 
   return (
     <View style={styles.container}>
       <View style={styles.tableheader}>
         <View style={styles.tabletitle}>
-          <Text style={styles.text}>Essentials</Text>
+          <Text style={styles.text}>Needs</Text>
           <Text style={styles.text}>Amount</Text>
         </View>
         <View style={styles.tabletitle}>
-          <Text style={styles.text}>Non Essentials</Text>
+          <Text style={styles.text}>Wants</Text>
           <Text style={styles.text}>Amount</Text>
         </View>
       </View>
@@ -58,10 +55,10 @@ const nonEssentialTransactions = transactions.filter(
       />
       <View style={styles.tablefooter}>
         <View style={styles.footeritem}>
-          <Text style={styles.text}>Total: ₱{calcTotalEssential()}</Text>
+          <Text style={styles.text}>Total: ₱{essentialMonthlyTotal}</Text>
         </View >
         <View style={styles.footeritem}>
-          <Text style={styles.text}>Total: ₱{calcTotalNonEssential()}</Text>
+          <Text style={styles.text}>Total: ₱{nonEssentialMonthlyTotal}</Text>
         </View>
         
       </View>
