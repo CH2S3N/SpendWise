@@ -31,7 +31,7 @@ export default function IncomeList({
                 
                 {incomes.map((income) => {
                   const categoryForCurrentItem = incomeCategories.find(
-                    (incomeCategory) => incomeCategory.id === income.incomeCategory_id
+                    (incomeCategory) => incomeCategory.id === income.incomeCategoryId
                   );
                   return (
                     <View key={income.id} style={styles.item}>

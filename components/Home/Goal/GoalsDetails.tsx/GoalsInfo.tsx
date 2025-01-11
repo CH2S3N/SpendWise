@@ -7,8 +7,9 @@ import { RootState } from '@/state/store';
 import { useFetchData } from '@/hooks/useFetchData';
 import { useSQLiteContext } from 'expo-sqlite';
 import { Goal } from '@/types';
-import GoalsDetailsList from './GoalsDetailsList';
-import { Card, Divider } from '@rneui/base';
+import { Divider } from '@rneui/base';
+import InProgressList from './InProgressList';
+import AccomplishedList from './AccomplishedList';
 
 
 export default function GoalsInfo({
@@ -25,6 +26,8 @@ export default function GoalsInfo({
   const { fetchData } = useFetchData();
   const db = useSQLiteContext();
 
+
+  // Delete Function
   async function deleteGoal(id: number) {
     try {
       await db.withTransactionAsync(async () => {
@@ -43,6 +46,11 @@ export default function GoalsInfo({
     }, 0)
   };
 
+
+ 
+  const accomplishedGoals = goals.filter(goal => goal.currentAmount === goal.amount);
+
+
   return (
     <MainContainer>
       <View style={styles.header}>
@@ -52,7 +60,7 @@ export default function GoalsInfo({
         </View>
         <View style={styles.headercontent}>
           <Text style={styles.text}>Accomplished</Text>
-          <Text style={styles.text}>0/{goals.length}</Text>
+          <Text style={styles.text}>{accomplishedGoals.length}/{goals.length}</Text>
         </View>
       </View>
       <View style={styles.container}>
@@ -60,13 +68,14 @@ export default function GoalsInfo({
         <Text style={styles.text}>In Progress</Text>
         <View style={styles.section}> 
           <View style={styles.tablecontent}>
-          <GoalsDetailsList goals={goals} deleteGoal={deleteGoal} updateGoal={updateGoal}/>
+          <InProgressList deleteGoal={deleteGoal} updateGoal={updateGoal} goals={goals}/>
           </View>
         </View>
         <Divider/>
         <Text style={styles.text}>Accomplished</Text>
         <View style={styles.section}> 
           <View style={styles.tablecontent}>
+          <AccomplishedList deleteGoal={deleteGoal} updateGoal={updateGoal} goals={goals}/>
           </View>
         </View>
       </View>

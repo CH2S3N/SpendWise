@@ -49,7 +49,6 @@ export default function ExpenseSummary() {
         </View>
       </View>
       <TransactionList
-        
         categories={categories}
         transactions={transactions}
       />

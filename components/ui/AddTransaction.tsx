@@ -5,18 +5,16 @@ import SegmentedControl from "@react-native-segmented-control/segmented-control"
 import AddButton from "../buttons/AddButton";
 import AddExpense from "./AddExpense";
 import AddGoal from "./AddGoal";
-import AddBudget from "./AddBudget";
 import AddIncome from "./addIncome";
 
 
 
 
 export default function AddTransaction ({
-    insertTransaction, insertGoal, insertBudget, insertIncome, 
+    insertTransaction, insertGoal, insertIncome, 
 }: {
     insertTransaction(transaction: Transaction ): Promise<void>;
     insertGoal(goal: Goal): Promise<void>;
-    insertBudget(user: User): Promise<void>;
     insertIncome(income: Income): Promise<void>;
 }) {
     const [isAddingTransaction, setIsAddingTransaction] = React.useState<boolean>(false);
@@ -42,7 +40,6 @@ export default function AddTransaction ({
                 )}
                 {/* Budget Form */}
                  {selectedTypeIndex === 2 && ( 
-                  //  <AddBudget setIsAddingTransaction={setIsAddingTransaction} insertBudget={insertBudget}/>
                   <AddIncome setIsAddingTransaction={setIsAddingTransaction} setIsUpdatingTransaction={setIsUpdatingTransaction} insertIncome={insertIncome} />
                 )}
           </View>

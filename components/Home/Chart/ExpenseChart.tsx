@@ -3,19 +3,19 @@ import React, { useEffect, useState } from 'react'
 import PieChart from 'react-native-pie-chart';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
-import { calculateTotal } from '@/utils/calcTotal';
+import { calculateTotalExpense } from '@/utils/calcTotalExpense';
 
 
 
 
 export default function ExpenseChart() {
-  const { categories, transactions, user, goals, incomes } = useSelector(
+  const { categories, transactions, incomes } = useSelector(
     (state: RootState) => state.data);
     const widthAndHeight=150;
     const [values,setValues]= useState([1]);
     const [sliceColor,setSliceColor] = useState(['black']);
 
-  
+  // Filter Expense Type
   const essentialTransactions = transactions.filter(
     (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Essential"
   );
@@ -31,8 +31,8 @@ export default function ExpenseChart() {
   };
 
   const totalBudget = calcTotalSavings()
-  const totalEssential = calculateTotal(essentialTransactions, categories, "Essential");
-const totalNonEssential = calculateTotal(nonEssentialTransactions, categories, "Non_Essential");
+  const totalEssential = calculateTotalExpense(essentialTransactions, categories, "Essential");
+const totalNonEssential = calculateTotalExpense(nonEssentialTransactions, categories, "Non_Essential");
   const totalSavings = totalBudget - (totalEssential + totalNonEssential)
 
 
@@ -44,9 +44,10 @@ const totalNonEssential = calculateTotal(nonEssentialTransactions, categories, "
       setValues([1]);
       setSliceColor(['#CCCCCC']);
     }
-  },[totalEssential, totalNonEssential])
+  },[totalEssential, totalNonEssential, totalSavings])
   
   
+
   return (
     <View>
       <View style={styles.container}>

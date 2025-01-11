@@ -6,14 +6,12 @@ import { Goal } from "@/types";
 
 export default function GoalsList({
     goals,
-    deleteGoal,
 }: {
     goals: Goal[];
-    deleteGoal: (id: number) => Promise<void>;
 }) {
   return (
     <ScrollView>
-        {goals.map((goal, deleteGoal) => (
+        {goals.map((goal) => (
         <View key={goal.id}>
           <GoalListItem goal={goal}/>
         </View>

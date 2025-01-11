@@ -4,11 +4,9 @@ import MainContainer from '@/components/Containers/MainContainer';
 import CircularChart from './ExpenseChart';
 import BigText from '@/components/Texts/BigText';
 import IncomeChart from './IncomeChart ';
-import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { Divider } from '@rneui/base';
 
 export default function ChartInfo() {
-  const [frequency, setFrequency] = React.useState<string>("Daily");
   return (
     <MainContainer>
      <View style={styles.header}>

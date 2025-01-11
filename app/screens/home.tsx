@@ -1,13 +1,12 @@
 import { View,  StyleSheet, Button, TouchableOpacity, StatusBar, Text } from 'react-native';
 import { useSQLiteContext } from 'expo-sqlite/next';
-import React, { useEffect, useState } from 'react';
-import Header from '../../components/Home/Header';
+import React, { useState } from 'react';
 import CircularChart from '../../components/Home/Chart/ExpenseChart';
 import ExpenseSummary from '../../components/Home/ExpnseSummary/ExpenseSummary';
 import Goals from '../../components/Home/Goal/Goals';
 import DailyBudget from '../../components/Home/DailyBudget/DailyBudget';
 import AddTransaction from '../../components/ui/AddTransaction';
-import { Category, Goal, Income, Transaction, User } from '@/types';
+import { Goal, Income, Transaction, User } from '@/types';
 import GoalsInfo from '@/components/Home/Goal/GoalsDetails.tsx/GoalsInfo';
 import DailyBudgetInfo from '@/components/Home/DailyBudget/DailyBudgetInfo';
 import SummaryInfo from '@/components/Home/ExpnseSummary/TransactionDetials/SummaryInfo';
@@ -16,22 +15,25 @@ import InfoContainer from '@/components/Containers/InfoContainer';
 import BigText from '@/components/Texts/BigText';
 import { AppDispatch, RootState } from '@/state/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { setData, setError, setLoading } from '@/state/dataSlice';
+import { setData } from '@/state/dataSlice';
 import MainContainer from '@/components/Containers/MainContainer';
 import { Modal } from '@/components/Modal';
 import { colors } from '@/constants/colors';
 import Budget from '@/components/Home/Budget/totalIncome';
 import IncomeInfo from '@/components/Home/IncomeSummary/IncomeInfo';
+import calculateMonthlyAmount from '@/utils/calcMonthlyAmount';
 
 
 
 export default function Home() {
   const dispatch = useDispatch<AppDispatch>();
-  const { categories, transactions, user, goals, incomes, incomeCategories, loading, error } = useSelector(
+  const { categories, transactions, user, goals, incomes, incomeCategories } = useSelector(
     (state: RootState) => state.data
   );  // Access data from Redux store
   const db = useSQLiteContext();
-
+  // console.log(incomeCategories)
+  // console.log(categories)
+  // console.log(incomes)
   // modals
   const [isGoalModalVisible, setGoalModalVisible] = useState(false);
   const [isIncomeInfoModalVisible, setIncomeInfoModalVisible] = useState(false);
@@ -39,19 +41,20 @@ export default function Home() {
   const [isSummaryModalVisible, setSummaryModalVisible] = useState(false);
   const [isChartModalVisible, setChartModalVisible] = useState(false);
 
-
   
   const insertIncome = async (income: Income) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
-        `INSERT INTO Income (incomeCategoryId, description, frequency, amount) VALUES(?, ?, ?, ?)`,
+        `INSERT INTO Income (incomeCategoryId, description, frequency, amount, type) VALUES(?, ?, ?, ?, ?)`,
         [
-          income.incomeCategory_id,
+          income.incomeCategoryId,
           income.description,
           income.frequency,
           income.amount,
+          income.type,
         ]
       );
+      
       // Reload data after inserting transaction
       const incomeResult = await db.getAllAsync<Income>('SELECT * FROM Income');
       dispatch(setData({ incomes: incomeResult, categories, incomeCategories, goals, user, transactions }));
@@ -104,7 +107,7 @@ export default function Home() {
         `UPDATE Income SET incomeCategoryId = ?, amount = ?, description = ?, frequency = ?, type = ?  WHERE id = ?`,
         [
           
-          income.incomeCategory_id,
+          income.incomeCategoryId,
           income.amount,
           income.description,
           income.frequency,
@@ -128,6 +131,7 @@ export default function Home() {
         [
           goal.name,
           goal.amount,
+          goal.currentAmount,
         ]
       );
 
@@ -139,10 +143,11 @@ export default function Home() {
   const updateGoal = async (goal: Goal) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
-        `UPDATE Goals SET name = ?, amount = ? WHERE id = ?`,
+        `UPDATE Goals SET name = ?, amount = ?, currentAmount = ? WHERE id = ?`,
         [
           goal.name,
           goal.amount,
+          goal.currentAmount,
           goal.id
         ]
       );
@@ -152,21 +157,73 @@ export default function Home() {
       dispatch(setData({ goals: goalResult, categories, incomeCategories, transactions, user, incomes }));
     });
   };
-  const insertBudget = async (user: User,) => {
-    await db.withTransactionAsync(async () => {
 
-      await db.runAsync(
-       `UPDATE User SET budget_Amount = ? WHERE id = 1`,
-      [
-        user.budget_Amount,
-      ]
+
+
+
+  // DELETE GOAL FUNCTION
+
+//   const deleteGoal = async (goalId: number) => {
+//     try {
+//         // Start a transaction to delete the goal
+//         await db.withTransactionAsync(async () => {
+//             // Delete goal by ID
+//             await db.runAsync("DELETE FROM Goals WHERE id = ?", [goalId]);
+
+//             // Reload data after deleting the goal
+//             const goalResult = await db.getAllAsync<Goal>('SELECT * FROM Goals');
+//             dispatch(setData({ goals: goalResult, categories, incomeCategories, transactions, user, incomes }));
+//         });
+//     } catch (error) {
+//         console.error("Error deleting goal:", error);
+//     }
+// };
+
+
+
+// INSERT BUDGET FUNCTION
+  // const insertBudget = async (user: User,) => {
+  //   await db.withTransactionAsync(async () => {
+
+  //     await db.runAsync(
+  //      `UPDATE User SET budget_Amount = ? WHERE id = 1`,
+  //     [
+  //       user.budget_Amount,
+  //     ]
+  //     );
+
+  //     // Reload data after inserting goal
+  //     const budgetResult = await db.getAllAsync<User>('SELECT * FROM User');
+  //     dispatch(setData({ user: budgetResult, categories, incomeCategories, transactions, goals, incomes }));
+  //   });
+  // };
+
+
+
+
+  const essentialTransactions = transactions.filter(
+    (transaction) =>
+      categories.find((category) => category.id === transaction.category_id)?.type === 'Essential'
+  );
+
+  const nonEssentialTransactions = transactions.filter(
+    (transaction) =>
+      categories.find((category) => category.id === transaction.category_id)?.type === 'Non_Essential'
+  );
+
+  // Calculate the monthly amount using calculateMonthlyAmount
+  function calcMonthAmount(transactions: typeof essentialTransactions) {
+    return transactions.reduce((total, transaction) => {
+      return (
+        total +
+        calculateMonthlyAmount(transaction.amount || 0, transaction.frequency || 'Monthly')
       );
+    }, 0);
+  }
 
-      // Reload data after inserting goal
-      const budgetResult = await db.getAllAsync<User>('SELECT * FROM User');
-      dispatch(setData({ user: budgetResult, categories, incomeCategories, transactions, goals, incomes }));
-    });
-  };
+  const essentialMonthlyTotal = calcMonthAmount(essentialTransactions);
+  const nonEssentialMonthlyTotal = calcMonthAmount(nonEssentialTransactions);
+  const totalExpenses = essentialMonthlyTotal + nonEssentialMonthlyTotal
 
   // Return Function
   return (
@@ -175,14 +232,14 @@ export default function Home() {
         {/* <Header/> */}
         <View style={styles.container}>
           <View style={styles.cardcon}>
-            <View style={styles.card}>
+            <View style={styles.cardIncome}>
               <TouchableOpacity onPress={() => setIncomeInfoModalVisible(true)}>
                 <Text>Income: <Budget income={incomes}/></Text>   
               </TouchableOpacity>
             </View>
-            <View style={styles.card}>
+            <View style={styles.cardExpense}>
               <TouchableOpacity onPress={() => setSummaryModalVisible(true)}>
-                <Text>Expense: </Text>
+                <Text>Expense: {totalExpenses}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -231,7 +288,7 @@ export default function Home() {
             />
         </View >
       <View style={styles.btn}>
-        <AddTransaction  insertTransaction={insertTransaction} insertGoal={insertGoal} insertBudget={insertBudget} insertIncome={insertIncome}/>
+        <AddTransaction  insertTransaction={insertTransaction} insertGoal={insertGoal}  insertIncome={insertIncome}/>
       </View>
 
       {/* PopUp Screen */}
@@ -334,11 +391,25 @@ const styles= StyleSheet.create({
     right: 10,
     
   },
-  card: {
+  cardIncome: {
     flex: 1,
     alignItems: 'flex-start',
     justifyContent: 'center',
-    backgroundColor: colors.light,
+    backgroundColor: '#73EC8B',
+    borderRadius: 15,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowRadius: 8,
+    shadowOffset: { height: 6, width: 0 },
+    shadowOpacity: 0.15,
+    padding: 10,
+    marginHorizontal: 5
+  },
+  cardExpense: {
+    flex: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    backgroundColor: '#F5004F',
     borderRadius: 15,
     elevation: 5,
     shadowColor: "#000",

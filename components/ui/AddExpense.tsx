@@ -56,6 +56,7 @@ export default function AddExpense({
             amount: Number(amount),
             category_id: categoryId,
             type: category as "Essential" | "Non_Essential",
+            id: 0
         });
 
         // to insert transactions

@@ -2,11 +2,12 @@ import { Category, Goal, Transaction } from "@/types";
 import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
 import { Modal } from "@/components/Modal";
-import GoalsDetails from "./GoalsDetails";
+import GoalsDetails from "./GoalsDetailsInProgress";
 import UpdateGoal from "@/components/ui/UpdateGoal";
+import InProgress from "./GoalsDetailsInProgress";
 
 
-export default function GoalsDetailsList({
+export default function InProgressList({
     goals,
     deleteGoal,
     updateGoal
@@ -34,13 +35,14 @@ export default function GoalsDetailsList({
                                         }}
                                         onLongPress={() => deleteGoal(goal.id)}
                                     >
-                                        <GoalsDetails goal={goal}/>
+                                        <InProgress goal={goal}/>
                                     </TouchableOpacity>
                                 </View>
                             )
                         })}   
                     </View>
 
+                    
                     
                     <Modal isOpen={isModalVisible} transparent={true}>
                         <View style={styles.modal}>

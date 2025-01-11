@@ -2,6 +2,7 @@ import { View, TextInput, Button } from 'react-native'
 import React from 'react'
 import Card from './Card';
 import { Goal } from '@/types';
+import { Divider } from '@rneui/base';
 
 export default function UpdateGoal({
     updateGoal,
@@ -15,12 +16,14 @@ export default function UpdateGoal({
     currentGoal: Goal;
 }) {
     const [amount, setAmount] = React.useState<string>("");
+    const [accumulatedAmount, setAccumulatedAmount] = React.useState<string>("");
     const [name, setName] = React.useState<string>("");
 
     React.useEffect(() => {
       if (currentGoal) {
         setName(currentGoal.name || "");
         setAmount(String(currentGoal.amount || ""));
+        setAccumulatedAmount(String(currentGoal.currentAmount || ""));
        
       }
     }, [currentGoal]);
@@ -32,6 +35,7 @@ export default function UpdateGoal({
             id: currentGoal.id,
             name,
             amount: Number(amount),
+            accumulatedAmount: Number(accumulatedAmount)
         });
 
         // to insert transactions
@@ -39,9 +43,11 @@ export default function UpdateGoal({
           id: currentGoal.id,
           name,
           amount: Number(amount),
+          currentAmount: Number(accumulatedAmount)
         });
         setName("");
         setAmount("");
+        setAccumulatedAmount("")
         setIsUpdatingGoal(false);
         setIsModalVisible(false);
     }
@@ -56,6 +62,7 @@ export default function UpdateGoal({
           value={name}
           onChangeText={setName}
         />
+        {/* AMOUNT */}
         <TextInput
           placeholder="₱Amount"
           style={{ fontSize: 32, marginBottom: 15, fontWeight: "bold" }}
@@ -65,6 +72,19 @@ export default function UpdateGoal({
             // Remove any non-numeric characters before setting the state
             const numericValue = text.replace(/[^0-9.]/g, "");
             setAmount(numericValue);
+          }}
+        />
+        <Divider/>
+        {/* ACCUMULATED AMOUNT */}
+        <TextInput
+          placeholder="ACCUMULATED AMOUNT"
+          style={{ fontSize: 32, marginBottom: 15, fontWeight: "bold" }}
+          value={accumulatedAmount}
+          keyboardType="numeric"
+          onChangeText={(text) => {
+            // Remove any non-numeric characters before setting the state
+            const numericValue = text.replace(/[^0-9.]/g, "");
+            setAccumulatedAmount(numericValue);
           }}
         />
 

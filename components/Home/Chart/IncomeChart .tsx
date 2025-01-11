@@ -3,42 +3,26 @@ import React, { useEffect, useState } from 'react'
 import PieChart from 'react-native-pie-chart';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
-import { calculateTotal } from '@/utils/calcTotal';
 import { calculateTotalIncome } from '@/utils/calcTotalIncome';
 
 
 
 export default function IncomeChart () {
-  const { incomeCategories,  incomes } = useSelector(
+  const { incomes } = useSelector(
     (state: RootState) => state.data);
     const widthAndHeight=150;
     const [values,setValues]= useState([1]);
     const [sliceColor,setSliceColor] = useState(['black']);
 
-
     // Filtter Income Types
-    const allowance = incomes.filter(
-      (income) =>
-        incomeCategories.find((incomeCategory) => incomeCategory.id === income.incomeCategory_id)
-          ?.name === 'allowance'
-    );
-    const salary = incomes.filter(
-      (income) =>
-        incomeCategories.find((incomeCategory) => incomeCategory.id === income.incomeCategory_id)
-          ?.name === 'salary'
-    );
-    const others = incomes.filter(
-      (income) =>
-        incomeCategories.find((incomeCategory) => incomeCategory.id === income.incomeCategory_id)
-          ?.name === 'others'
-    );
-  
-
+    const allowance = incomes.filter((income) => income.type === "Allowance");
+    const salary = incomes.filter((income) => income.type === "Salary");
+    const others = incomes.filter((income) => income.type === "Others");
     
-  
-    const totalAllowance = calculateTotalIncome(allowance, incomeCategories, "Allowance")
-    const totalSalary = calculateTotalIncome(salary, incomeCategories, "Salary")
-    const totalOthers = calculateTotalIncome(others, incomeCategories, "Others")
+    
+    const totalAllowance = calculateTotalIncome(allowance, "Allowance")
+    const totalSalary = calculateTotalIncome(salary, "Salary")
+    const totalOthers = calculateTotalIncome(others, "Others")
  
 
     useEffect(() => {

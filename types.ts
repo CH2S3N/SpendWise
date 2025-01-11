@@ -10,7 +10,7 @@ export interface Transaction {
 }
 export interface Income {
     id: number;
-    incomeCategory_id: number;
+    incomeCategoryId: number;
     amount: number;
     description: string;
     frequency: "Daily" | "Weekly" | "Bi-Weekly" | "Monthly";
@@ -32,6 +32,7 @@ export interface Goal {
     id: number;
     name: string;
     amount: number;
+    currentAmount: number;
 }
 
 export interface User {

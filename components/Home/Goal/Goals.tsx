@@ -9,7 +9,7 @@ import { useFetchData } from '@/hooks/useFetchData';
 
 export default function Goals() {
   const { fetchData } = useFetchData();
-  const { goals, loading, error } = useSelector(
+  const { goals } = useSelector(
     (state: RootState) => state.data
   );
   const db = useSQLiteContext();
@@ -18,32 +18,13 @@ export default function Goals() {
     fetchData();
   }, []); 
 
-  async function deleteGoal(id: number) {
-    try {
-      await db.withTransactionAsync(async () => {
-        await db.runAsync('DELETE FROM Goals WHERE id = ?;', [id]);
-        await fetchData();
-      });
-    } catch (error) {
-      console.error('Error deleting Goal:', error);
-    }
-  }
+ 
   function calcTotalGoal() {
     return goals.reduce((total, goals) => {
       return total + (goals.amount || 0);
     }, 0)
   }
   
-  
-  // If loading, show a loading text
-  if (loading) {
-    return <Text>Loading...</Text>;
-  }
-
-  // If error occurs, display error message
-  if (error) {
-    return <Text>Error: {error}</Text>;
-  }
 
   return (
     <View style={styles.maincontainer}>
@@ -54,7 +35,7 @@ export default function Goals() {
         </View>
       </View>
       <View style={styles.container}>
-          <GoalsList goals={goals} deleteGoal={deleteGoal} />
+          <GoalsList goals={goals}/>
           <View style={styles.total}>
             <Text style={styles.text}>Total: ₱{calcTotalGoal()}</Text>
           </View>

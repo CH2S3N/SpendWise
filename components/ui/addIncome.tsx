@@ -25,7 +25,7 @@ export default function AddIncome({
     const [amount, setAmount] = React.useState<string>("");
     const [description, setDescription] = React.useState<string>("");
     const [frequency, setFrequency] = React.useState<string>("Daily");
-    const [incomeCategory, setincomeCategory] = React.useState<string>("Daily");
+    const [incomeCategory, setIncomeCategory] = React.useState<string>("Allowance");
     const [incomeCategoryId, setIncomeCategoryId] = React.useState<number>(1);
 
     const db = useSQLiteContext();
@@ -45,6 +45,8 @@ export default function AddIncome({
             description,
             frequency: frequency as "Daily" | "Weekly" | "Bi-Weekly" | "Monthly",
             incomeCategory_id: incomeCategoryId,
+            type: incomeCategory as "Allowance" | "Salary" | "Others",
+            id: 0
         });
 
         // to insert transactions
@@ -52,13 +54,14 @@ export default function AddIncome({
             amount: Number(amount),
             description,
             frequency: frequency as "Daily" | "Weekly" | "Bi-Weekly" | "Monthly",
-            incomeCategory_id: incomeCategoryId,
+            incomeCategoryId: incomeCategoryId,
             type: incomeCategory as "Allowance" | "Salary" | "Others",
             id: 0
         });
         setDescription("");
         setFrequency("Daily");
         setAmount("");
+        setIncomeCategory("Allowance");
         setIsAddingTransaction(false);
 
     }
