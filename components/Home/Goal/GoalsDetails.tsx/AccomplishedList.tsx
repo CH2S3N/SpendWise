@@ -6,6 +6,7 @@ import GoalsDetails from "./GoalsDetailsInProgress";
 import UpdateGoal from "@/components/ui/UpdateGoal";
 import InProgress from "./GoalsDetailsInProgress";
 import Accomplished from "./GoalsDetailsAccomplished";
+import CustomModal from "@/components/Modal/CustomModal";
 
 
 export default function AccomplishedList({
@@ -45,16 +46,13 @@ export default function AccomplishedList({
 
                     
                     
-                    <Modal isOpen={isModalVisible} transparent={true}>
-                        <View style={styles.modal}>
+                    <CustomModal isOpen={isModalVisible}>
                             {currentGoal && (
                                 <UpdateGoal setIsModalVisible={setIsModalVisible} updateGoal={updateGoal} setIsUpdatingGoal={setIsUpdatingGoal}
                                 currentGoal={currentGoal}
                                 />
                             )}
-                      </View>
-                            
-                    </Modal>
+                    </CustomModal>
                 </View>
             </ScrollView>
         </View>

@@ -9,7 +9,7 @@ import { calculateTotalExpense } from '@/utils/calcTotalExpense';
 
 
 export default function ExpenseChart() {
-  const { categories, transactions, incomes } = useSelector(
+  const { categories, transactions, incomes, goals } = useSelector(
     (state: RootState) => state.data);
     const widthAndHeight=150;
     const [values,setValues]= useState([1]);
@@ -24,27 +24,29 @@ export default function ExpenseChart() {
   );
   
 
-  function calcTotalSavings() {
-    return incomes.reduce((total, incomes) => {
-      return total + (incomes.amount || 0);
+  function calcTotalGoal() {
+    return goals.reduce((total, goals) => {
+      return total + (goals.currentAmount || 0);
     }, 0)
+
   };
 
-  const totalBudget = calcTotalSavings()
+
+  const totalGoal = calcTotalGoal()
   const totalEssential = calculateTotalExpense(essentialTransactions, categories, "Essential");
-const totalNonEssential = calculateTotalExpense(nonEssentialTransactions, categories, "Non_Essential");
-  const totalSavings = totalBudget - (totalEssential + totalNonEssential)
+  const totalNonEssential = calculateTotalExpense(nonEssentialTransactions, categories, "Non_Essential");
+  
 
 
   useEffect(() => {
-    if (totalEssential + totalNonEssential + totalSavings > 0) {
-      setValues([totalEssential, totalNonEssential, totalSavings ]);
-      setSliceColor(['#FA812F', '#FA4032', '#FAB12F']);
+    if (totalEssential + totalNonEssential + totalGoal  > 0) {
+      setValues([totalEssential, totalNonEssential, totalGoal ]);
+      setSliceColor(['#FC2947', '#FE6244', '#FFDEB9']);
     } else {
       setValues([1]);
       setSliceColor(['#CCCCCC']);
     }
-  },[totalEssential, totalNonEssential, totalSavings])
+  },[totalEssential, totalNonEssential, totalGoal])
   
   
 
@@ -62,17 +64,18 @@ const totalNonEssential = calculateTotalExpense(nonEssentialTransactions, catego
         </View>
         <View style={styles.item2}>
           <View style={styles.legendItem}>
-            <View style={[styles.colorBox, { backgroundColor: '#FA812F' }]} />
+            <View style={[styles.colorBox, { backgroundColor: '#FC2947' }]} />
             <Text>Needs: ₱{totalEssential}</Text>
           </View>
           <View style={styles.legendItem}>
-            <View style={[styles.colorBox, { backgroundColor: '#FA4032' }]} />
+            <View style={[styles.colorBox, { backgroundColor: '#FE6244' }]} />
             <Text>Wants: ₱{totalNonEssential}</Text>
           </View>
           <View style={styles.legendItem}>
-            <View style={[styles.colorBox, { backgroundColor: '#FAB12F' }]} />
-            <Text>Savings: ₱{totalSavings}</Text>
+            <View style={[styles.colorBox, { backgroundColor: '#FFDEB9' }]} />
+            <Text>Goals: ₱{totalGoal}</Text>
           </View>
+         
         </View>
       </View>
      

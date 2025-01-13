@@ -1,8 +1,10 @@
-import { View, TextInput, Button } from 'react-native'
+import { View, TextInput, Button, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import Card from './Card';
 import { Goal } from '@/types';
 import { Divider } from '@rneui/base';
+import { RootState } from '@/state/store';
+import { useSelector } from 'react-redux';
 
 export default function UpdateGoal({
     updateGoal,
@@ -15,6 +17,10 @@ export default function UpdateGoal({
     updateGoal(goal: Goal): Promise<void>;
     currentGoal: Goal;
 }) {
+  const { goals } = useSelector(
+    (state: RootState) => state.data
+  );
+
     const [amount, setAmount] = React.useState<string>("");
     const [accumulatedAmount, setAccumulatedAmount] = React.useState<string>("");
     const [name, setName] = React.useState<string>("");
@@ -52,20 +58,31 @@ export default function UpdateGoal({
         setIsModalVisible(false);
     }
 
+    function remainingAmount() {
+      return goals.reduce((total, goals) => {
+        return total + (goals.amount || 0)- (goals.currentAmount || 0);
+      }, 0)
+    }
+
   return (
-  <Card content={
-      <>
+    <View >
+      <View style={styles.header}>
+        <Text style={styles.title}>Update Goal</Text>
+      </View>
+      <Text style={styles.textTitle}>Item</Text>
         {/* DESCRIPTION */}
         <TextInput
           placeholder="Provide an entry description"
-          style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
+          style={{ }}
           value={name}
           onChangeText={setName}
         />
+        <Divider/>
+        <Text style={styles.textTitle}>Total Amount</Text>
         {/* AMOUNT */}
         <TextInput
           placeholder="₱Amount"
-          style={{ fontSize: 32, marginBottom: 15, fontWeight: "bold" }}
+          style={{}}
           value={amount}
           keyboardType="numeric"
           onChangeText={(text) => {
@@ -75,10 +92,11 @@ export default function UpdateGoal({
           }}
         />
         <Divider/>
+        <Text style={styles.textTitle}>Accumulated Amount</Text>
         {/* ACCUMULATED AMOUNT */}
         <TextInput
-          placeholder="ACCUMULATED AMOUNT"
-          style={{ fontSize: 32, marginBottom: 15, fontWeight: "bold" }}
+          placeholder="Enter Amount"
+          style={{}}
           value={accumulatedAmount}
           keyboardType="numeric"
           onChangeText={(text) => {
@@ -87,6 +105,8 @@ export default function UpdateGoal({
             setAccumulatedAmount(numericValue);
           }}
         />
+        <Divider/>
+        <Text style={styles.foot}>To be Collected: <Text>{remainingAmount()}</Text></Text>
 
         {/* Cancel and Save Button */}
         <View
@@ -99,9 +119,24 @@ export default function UpdateGoal({
           />
           <Button title="Save" color={'black'} onPress={handleUpdateGoal} />
         </View>
-      </>
-    }>
-  </Card>
+    </View>
   )
 }
 
+const styles = StyleSheet.create({
+  header:{
+    width: "100%",
+    alignItems: "center",
+    justifyContent:'center'
+  },
+  title:{
+    fontSize: 20,
+    fontWeight: 'bold'
+  },
+  textTitle:{
+    fontWeight: 'bold'
+  },
+  foot:{
+    marginVertical: 15
+  }
+})

@@ -33,9 +33,6 @@ export default function IncomeInfo({
 
   return (
     <MainContainer>
-      <View style={styles.header}>
-        <Text style={styles.title}>Income</Text>
-      </View>
       <Divider/>
       <View style={styles.container}>
           <View style={styles.section}> 

@@ -22,7 +22,8 @@ import { colors } from '@/constants/colors';
 import Budget from '@/components/Home/Budget/totalIncome';
 import IncomeInfo from '@/components/Home/IncomeSummary/IncomeInfo';
 import calculateMonthlyAmount from '@/utils/calcMonthlyAmount';
-
+import AntDesign from '@expo/vector-icons/AntDesign';
+import MainModal from '@/components/Modal/MainModal';
 
 
 export default function Home() {
@@ -292,58 +293,91 @@ export default function Home() {
       </View>
 
       {/* PopUp Screen */}
+      {/* Income */}
       <Modal isOpen={isIncomeInfoModalVisible} >
-        <View style={styles.container}>
+        <View style={styles.modalcontainer}>
+        <View style={styles.modalheader}>
+            <View style={styles.icon}>
+                <TouchableOpacity onPress={() => setIncomeInfoModalVisible(false)}>
+                    <AntDesign name="leftcircle" size={24} color="black" />
+                </TouchableOpacity>
+            </View>
+                <Text style={styles.title}>Income</Text>
+        </View >
+        <View style={styles.modalcontent}>
           <IncomeInfo updateIncome={updateIncome}/>
-          
-          <Button 
-            title='Back' 
-            color= 'black'
-            onPress={() => setIncomeInfoModalVisible(false)}
-          />
+        </View>
         </View>
       </Modal>
+
+      {/* Goal */}
       <Modal isOpen={isGoalModalVisible} >
-        <View style={styles.container}>
+        <View style={styles.modalcontainer}>
+        <View style={styles.modalheader}>
+            <View style={styles.icon}>
+                <TouchableOpacity onPress={() => setGoalModalVisible(false)}>
+                    <AntDesign name="leftcircle" size={24} color="black" />
+                </TouchableOpacity>
+            </View>
+                <Text style={styles.title}>Goal</Text>
+        </View >
+        <View style={styles.modalcontent}>
           <GoalsInfo updateGoal={updateGoal}/>
-          
-          <Button 
-            title='Back' 
-            color= 'black'
-            onPress={() => setGoalModalVisible(false)}
-          />
+        </View>
         </View>
       </Modal>
+
+      {/* Budget Plan */}
       <Modal isOpen={isDailyBudgetModalVisible} >
-        <View style={styles.container}>
-          <DailyBudgetInfo/>
-          <Button 
-            title='Back' 
-            color= 'black'
-            onPress={() => setDailyBudgetModalVisible(false)}
-          />
+        <View style={styles.modalcontainer}>
+        <View style={styles.modalheader}>
+            <View style={styles.icon}>
+                <TouchableOpacity onPress={() => setDailyBudgetModalVisible(false)}>
+                    <AntDesign name="leftcircle" size={24} color="black" />
+                </TouchableOpacity>
+            </View>
+                <Text style={styles.title}>Budget Plan</Text>
+        </View >
+        <View style={styles.modalcontent}>
+          <DailyBudget/>
+        </View>
         </View>
       </Modal>
+
+      {/* Expense Summary */}
       <Modal isOpen={isSummaryModalVisible} >
-        <View style={styles.container}>
+        <View style={styles.modalcontainer}>
+        <View style={styles.modalheader}>
+            <View style={styles.icon}>
+                <TouchableOpacity onPress={() => setSummaryModalVisible(false)}>
+                    <AntDesign name="leftcircle" size={24} color="black" />
+                </TouchableOpacity>
+            </View>
+                <Text style={styles.title}>Expense</Text>
+        </View >
+        <View style={styles.modalcontent}>
           <SummaryInfo updateTransaction={updateTransaction}/>
-          <Button 
-            title='Back' 
-            color='black'
-            onPress={() => setSummaryModalVisible(false)}
-          />
+        </View>
         </View>
       </Modal>
+
+      {/* Statistics */}
       <Modal isOpen={isChartModalVisible} >
-        <View style={styles.container}>
+        <View style={styles.modalcontainer}>
+        <View style={styles.modalheader}>
+            <View style={styles.icon}>
+                <TouchableOpacity onPress={() => setChartModalVisible(false)}>
+                    <AntDesign name="leftcircle" size={24} color="black" />
+                </TouchableOpacity>
+            </View>
+                <Text style={styles.title}>Statistics</Text>
+        </View >
+        <View style={styles.modalcontent}>
           <ChartInfo/>
-          <Button 
-            title='Back' 
-            color='black'
-            onPress={() => setChartModalVisible(false)}
-          />
+        </View>
         </View>
       </Modal>
+
     </MainContainer>
   )
 
@@ -424,5 +458,28 @@ const styles= StyleSheet.create({
     justifyContent:'center',
     width: '100%',
     flexDirection: 'row',
+  },
+  modalcontainer:{
+    flex:1,
+    paddingHorizontal: 10
+  },
+  modalheader:{
+    flex:1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    
+  },
+  modalcontent:{
+    flex:10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    
+  },
+  icon:{
+    paddingRight: 10
+  },
+  title:{
+    fontSize: 20,
+    fontWeight:'bold'
   }
 })

@@ -9,9 +9,6 @@ import { Divider } from '@rneui/base';
 export default function ChartInfo() {
   return (
     <MainContainer>
-     <View style={styles.header}>
-      <Text style={styles.text}>Statistical Report</Text>
-     </View>
      <BigText content='Expense Structure'/>
     <Divider/>
      <View style={styles.content}>

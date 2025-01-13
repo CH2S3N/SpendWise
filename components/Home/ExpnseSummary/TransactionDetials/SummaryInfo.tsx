@@ -37,9 +37,6 @@ export default function SummaryInfo({
 
   return (
     <MainContainer>
-      <View style={styles.header}>
-        <Text style={styles.title}>Expense Summary</Text>
-      </View>
       <Divider/>
       <View style={styles.container}>
           <View style={styles.section}> 

@@ -6,6 +6,7 @@ import { Modal } from "@/components/Modal";
 import Card from "@/components/ui/Card";
 import AddExpense from "@/components/ui/AddExpense";
 import UpdateExpense from "@/components/ui/UpdateExpense";
+import CustomModal from "@/components/Modal/CustomModal";
 
 
 export default function NonEssential({
@@ -53,16 +54,16 @@ export default function NonEssential({
                     </View>
 
                     
-                    <Modal isOpen={isModalVisible} transparent={true}>
-                        <View style={styles.modal}>
+                    <CustomModal isOpen={isModalVisible}>
+                        
                             {currentTransaction && (
                                 <UpdateExpense setIsModalVisible={setIsModalVisible} updateTransaction={updateTransaction} setIsUpdatingTransaction={setIsUpdatingTransaction}
                                 currentTransaction={currentTransaction}
                                 />
                             )}
-                      </View>
+                
                             
-                    </Modal>
+                    </CustomModal>
                 </View>
             </ScrollView>
         </View>

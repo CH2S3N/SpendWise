@@ -14,7 +14,7 @@ export default function TransactionListItem({ transaction}: TransactionListItemP
     return (
         <View style={styles.container}>  
             <View>
-                <Text style={styles.text}>{transaction.description}</Text>
+                <Text style={styles.text}>{transaction.description.charAt(0).toUpperCase() + transaction.description.slice(1)}</Text>
             </View>
             <View>
                 <Text style={styles.text}>{monthlyAmount}</Text>

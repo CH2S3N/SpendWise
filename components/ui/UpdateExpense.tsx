@@ -100,8 +100,7 @@ export default function UpdateExpense({
     }
     
   return (
-    <Card content={
-      <>
+      <View>
         {/* DESCRIPTION */}
         <TextInput
           placeholder="Provide an entry description"
@@ -194,9 +193,8 @@ export default function UpdateExpense({
           />
           <Button title="Save" color={'black'} onPress={handleSaveExpense} />
         </View>
-          </>
-        }>
-  </Card>
+      </View>
+      
   )
 }
 

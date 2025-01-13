@@ -13,11 +13,11 @@ export default function TransactionDetails({ transaction, categoryInfo }: Props)
         <Card content={
             <View style={styles.container}>  
                 <View style={styles.description}>
-                    <Text style={styles.text}>{transaction.description}</Text>
+                    <Text style={styles.btext}>{transaction.description.charAt(0).toUpperCase() + transaction.description.slice(1)}</Text>
                     <Text style={styles.text}>{categoryInfo?.name}</Text>
                 </View>
                 <View style={styles.item}>
-                    <Text style={styles.text}>{transaction.amount}</Text>
+                    <Text style={styles.btext}>{transaction.amount}</Text>
                     <Text style={styles.text}>{transaction.frequency}</Text>
                 </View>
             </View>
@@ -27,6 +27,10 @@ export default function TransactionDetails({ transaction, categoryInfo }: Props)
 
 const styles = StyleSheet.create({
     text: {
+        fontSize: 15,
+    },
+    btext: {
+        fontWeight: 'bold',
         fontSize: 15,
     },
     container: {

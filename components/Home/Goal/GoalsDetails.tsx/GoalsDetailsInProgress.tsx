@@ -23,7 +23,7 @@ export default function InProgress({ goal }: Props) {
                 <View>
                     <View style={styles.container}>
                         <View style={styles.description}>
-                            <Text style={styles.text}>{goal.name}</Text>
+                            <Text style={styles.text}>{goal.name.charAt(0).toUpperCase() + goal.name.slice(1)}</Text>
                         </View>
                         <View style={styles.item}>
                             <Text style={styles.text}>
@@ -40,6 +40,7 @@ export default function InProgress({ goal }: Props) {
 
 const styles = StyleSheet.create({
     text: {
+        fontWeight: 'bold',
         fontSize: 15,
     },
     container: {

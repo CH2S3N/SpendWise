@@ -4,6 +4,7 @@ import TransactionDetails from "./TransactionDetails";
 import { Modal } from "@/components/Modal";
 import UpdateExpense from "@/components/ui/UpdateExpense";
 import React, { useState } from "react";
+import CustomModal from "@/components/Modal/CustomModal";
 
 
 export default function Essential({
@@ -56,16 +57,14 @@ export default function Essential({
                         </View>
 
 
-                        <Modal isOpen={isModalVisible} transparent={true}>
-                        <View style={styles.modal}>
+                        <CustomModal isOpen={isModalVisible}>
                             {currentTransaction && (
                                 <UpdateExpense setIsModalVisible={setIsModalVisible} updateTransaction={updateTransaction} setIsUpdatingTransaction={setIsAddingTransaction}
                                 currentTransaction={currentTransaction}
                                 />
                             )}
-                      </View>
-                            
-                    </Modal>
+                    </CustomModal>
+                    
                 </View>
             </ScrollView>
         </View>
