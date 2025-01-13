@@ -28,7 +28,7 @@ export default function IncomeChart () {
     useEffect(() => {
       if (totalAllowance + totalSalary + totalOthers > 0) {
         setValues([totalAllowance, totalSalary, totalOthers]);
-        setSliceColor(['#FA812F', '#FA4032', '#FAB12F']);
+        setSliceColor(['#059212', '#06D001', '#9BEC00']);
       } else {
         setValues([1]);
         setSliceColor(['#CCCCCC']);
@@ -50,15 +50,15 @@ export default function IncomeChart () {
         </View>
         <View style={styles.item2}>
           <View style={styles.legendItem}>
-            <View style={[styles.colorBox, { backgroundColor: '#FA812F' }]} />
+            <View style={[styles.colorBox, { backgroundColor: '#059212' }]} />
             <Text>Allowance: ₱{totalAllowance}</Text>
           </View>
           <View style={styles.legendItem}>
-            <View style={[styles.colorBox, { backgroundColor: '#FA4032' }]} />
+            <View style={[styles.colorBox, { backgroundColor: '#06D001' }]} />
             <Text>Salary: ₱{totalSalary}</Text>
           </View>
           <View style={styles.legendItem}>
-            <View style={[styles.colorBox, { backgroundColor: '#FAB12F' }]} />
+            <View style={[styles.colorBox, { backgroundColor: '#9BEC00' }]} />
             <Text>Others: ₱{totalOthers}</Text>
           </View>
         </View>

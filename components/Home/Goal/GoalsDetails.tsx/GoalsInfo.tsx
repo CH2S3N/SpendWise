@@ -10,6 +10,8 @@ import { Goal } from '@/types';
 import { Divider } from '@rneui/base';
 import InProgressList from './InProgressList';
 import AccomplishedList from './AccomplishedList';
+import Card from '@/components/ui/Card';
+
 
 
 export default function GoalsInfo({
@@ -55,8 +57,8 @@ export default function GoalsInfo({
     <MainContainer>
       <View style={styles.header}>
         <View style={styles.headercontent}>
-          <Text style={styles.text}>Total</Text>
-          <Text style={styles.text}>{calcTotalGoal()}</Text>
+              <Text style={styles.text}>Total</Text>
+              <Text style={styles.text}>{calcTotalGoal()}</Text>
         </View>
         <View style={styles.headercontent}>
           <Text style={styles.text}>Accomplished</Text>
@@ -94,6 +96,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'pink'
   },
   headercontent: {
     flex:1,

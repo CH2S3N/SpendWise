@@ -9,7 +9,7 @@ interface GoalListItemProps{
 export default function GoalListItem({goal}: GoalListItemProps) {
     return (
         <View style={styles.container}>           
-            <Text style={styles.text}>{goal.name}</Text>  
+            <Text style={styles.text}>{goal.name.charAt(0).toUpperCase() + goal.name.slice(1)}</Text>  
             <Text>{goal.amount}</Text>  
         </View>
 

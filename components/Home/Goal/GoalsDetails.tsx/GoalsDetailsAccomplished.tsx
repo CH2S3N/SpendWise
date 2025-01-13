@@ -12,6 +12,7 @@ interface Props {
 export default function Accomplished({ goal }: Props) {
     const accumulatedAmount = goal.currentAmount;
     const progress = accumulatedAmount / goal.amount;
+    const progressPercentage = (progress * 100);
 
     if (accumulatedAmount !== goal.amount) {
         return null;
@@ -25,11 +26,11 @@ export default function Accomplished({ goal }: Props) {
                     <View style={styles.container}>
                         <View style={styles.description}>
                             <Text style={styles.text}>{goal.name.charAt(0).toUpperCase() + goal.name.slice(1)}</Text>
+                            <Text >{accumulatedAmount}</Text>
                         </View>
                         <View style={styles.item}>
-                            <Text style={styles.text}>
-                                {accumulatedAmount} / {goal.amount}
-                            </Text>
+                            <Text style={styles.text}>{goal.amount}</Text>
+                            <Text >{progressPercentage}%</Text>
                         </View>
                     </View>
                     <ProgressBar progress={progress} theme={{ colors: { primary: colors.dark } }} />

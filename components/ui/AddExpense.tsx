@@ -82,29 +82,34 @@ export default function AddExpense({
     }
     
   return (
-    <View>
-      <Card content={
-        <>
+    <View style={styles.container}>
+      <View style={styles.content}>
           {/* DESCRIPTION */}
+          <Text style={styles.btext}>Item</Text>
           <TextInput
             placeholder="Provide an entry description"
-            style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
+            style={{ marginBottom: 15, marginTop: 10, borderBottomWidth: 1, borderBottomColor: 'black'}}
             onChangeText={setDescription}
           />
+      </View>
 
-             {/* IS FIXED AMOUNT */}
-             <View>
-            <Text style={{ marginBottom: 6 }}>Is Fixed Amount?</Text>
-            <SegmentedControl
-              values={['Yes', 'No']}
-              selectedIndex={selectedIndex}
-              onChange={(event) => setSelectedIndex(event.nativeEvent.selectedSegmentIndex)}
-            />
+      <View style={styles.content}>
+          {/* IS FIXED AMOUNT */}
+          
+        <Text style={{fontWeight: 'bold', marginBottom:10}}>Is Fixed Amount?</Text>
+        <SegmentedControl
+          values={['Yes', 'No']}
+          selectedIndex={selectedIndex}
+          onChange={(event) => setSelectedIndex(event.nativeEvent.selectedSegmentIndex)}
+        />
+      </View>
+      
+      <View style={styles.content}>
             {/* AMOUNT */}
             {selectedIndex === 0 && ( 
               <TextInput
-                placeholder="₱Amount"
-                style={{ marginBottom: 15, fontWeight: "bold", borderBottomWidth: 1, borderBottomColor: 'black' }}
+                placeholder="Enter Amount"
+                style={{ marginBottom: 15, marginTop: 10, borderBottomWidth: 1, borderBottomColor: 'black' }}
                 keyboardType="numeric"
                 onChangeText={(text) => {
                   // Remove any non-numeric characters before setting the state
@@ -113,72 +118,76 @@ export default function AddExpense({
                 }}
               />
             )}
-          </View>
+      </View>
 
+      <View style={styles.content}>
           {/* FREQUENCY */}
-          <Text style={{ marginBottom: 6 }}>Frequency</Text>
+          <Text style={styles.btext}>Frequency</Text>
           <SegmentedControl
             values={["Daily", "Weekly", "Bi-Weekly", "Monthly"]}
-            style={{ marginBottom: 15 }}
+            style={{ marginBottom: 15, marginTop: 10, }}
             selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
             onChange={(event) => {
               setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
             }}
           />
+      </View>
+      
+      <View style={styles.content}>
           {/* PRIORITIZATION */}
-          <Text style={{ marginBottom: 6 }}>Prioritization</Text>
+          <Text style={styles.btext}>Prioritization</Text>
           <SegmentedControl
             values={["High", "Medium", "Low"]}
-            style={{ marginBottom: 15 }}
+            style={{ marginBottom: 15, marginTop: 10, }}
             selectedIndex={["High", "Medium", "Low"].indexOf(prioritization)}
             onChange={(event) => {
               setPrioritization(["High", "Medium", "Low"][event.nativeEvent.selectedSegmentIndex]);
             }}
           />
+      </View>
 
-       
+      <View style={styles.content}>
+        {/* ENTRY TYPE, ESSENTIAL & NON ESSENTIAL */}
+        <Text style={styles.btext}>Select a Entry Type</Text>
+        <SegmentedControl
+          values={["Needs", "Wants"]}
+          style={{ marginBottom: 15, marginTop: 10, }}
+          selectedIndex={currentTab}
+          onChange={(event) => {
+            setCurrentTab(event.nativeEvent.selectedSegmentIndex);
+          }}
+        />
 
-            {/* ENTRY TYPE, ESSENTIAL & NON ESSENTIAL */}
-          <Text style={{ marginBottom: 6 }}>Select a Entry Type</Text>
-          <SegmentedControl
-            values={["Needs", "Wants"]}
-            style={{ marginBottom: 15 }}
-            selectedIndex={currentTab}
-            onChange={(event) => {
-              setCurrentTab(event.nativeEvent.selectedSegmentIndex);
-            }}
+        {categories.map((cat) => (
+          <CategoryButton
+          key={cat.name}
+          // @ts-ignore
+          id={cat.id}
+          title={cat.name}
+          isSelected={typeSelected === cat.name}
+          setTypeSelected={setTypeSelected}
+          setCategoryId={setCategoryId}
           />
-
-          {categories.map((cat) => (
-            <CategoryButton
-              key={cat.name}
-              // @ts-ignore
-              id={cat.id}
-              title={cat.name}
-              isSelected={typeSelected === cat.name}
-              setTypeSelected={setTypeSelected}
-              setCategoryId={setCategoryId}
-            />
-          ))}
+        ))}
+      </View>
 
           {/* Cancel and Save Button */}
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-around" }}
-          >
-            <Button title="Cancel" color={'black'} 
-            onPress={
-              () => {
-                setIsAddingTransaction(false);
-                setIsUpdatingTransaction(false)
+          <View style={styles.btn}>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-around" }}
+            >
+              <Button title="Cancel" color={'black'} 
+              onPress={
+                () => {
+                  setIsAddingTransaction(false);
+                  setIsUpdatingTransaction(false)
+                }
+              
               }
-            
-            }
-            />
-            <Button title="Save" color={'black'} onPress={handleSaveExpense} />
+              />
+              <Button title="Save" color={'black'} onPress={handleSaveExpense} />
+            </View>
           </View>
-            </>
-          }>
-      </Card>
     </View>
   )
 }
@@ -229,3 +238,19 @@ function CategoryButton({
     )
 }
 
+const styles = StyleSheet.create({
+  container:{
+    height: '100%',
+  },
+  btn:{
+    flex: 1,
+    flexDirection: 'column-reverse',
+    paddingBottom: 20
+  },
+  content:{
+    paddingTop: 10
+  },
+  btext:{
+    fontWeight: 'bold'
+  }
+})

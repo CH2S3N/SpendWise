@@ -58,12 +58,6 @@ export default function UpdateGoal({
         setIsModalVisible(false);
     }
 
-    function remainingAmount() {
-      return goals.reduce((total, goals) => {
-        return total + (goals.amount || 0)- (goals.currentAmount || 0);
-      }, 0)
-    }
-
   return (
     <View >
       <View style={styles.header}>
@@ -96,7 +90,7 @@ export default function UpdateGoal({
         {/* ACCUMULATED AMOUNT */}
         <TextInput
           placeholder="Enter Amount"
-          style={{}}
+          style={{ }}
           value={accumulatedAmount}
           keyboardType="numeric"
           onChangeText={(text) => {
@@ -105,8 +99,8 @@ export default function UpdateGoal({
             setAccumulatedAmount(numericValue);
           }}
         />
-        <Divider/>
-        <Text style={styles.foot}>To be Collected: <Text>{remainingAmount()}</Text></Text>
+        <Divider style={{marginBottom: 20}}/>
+       
 
         {/* Cancel and Save Button */}
         <View

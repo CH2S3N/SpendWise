@@ -24,6 +24,7 @@ import IncomeInfo from '@/components/Home/IncomeSummary/IncomeInfo';
 import calculateMonthlyAmount from '@/utils/calcMonthlyAmount';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import MainModal from '@/components/Modal/MainModal';
+import Card from '@/components/ui/Card';
 
 
 export default function Home() {
@@ -37,6 +38,7 @@ export default function Home() {
   // console.log(incomes)
   // modals
   const [isGoalModalVisible, setGoalModalVisible] = useState(false);
+  const [isAddingTransaction, setIsAddingTransaction] = useState(false);
   const [isIncomeInfoModalVisible, setIncomeInfoModalVisible] = useState(false);
   const [isDailyBudgetModalVisible, setDailyBudgetModalVisible] = useState(false);
   const [isSummaryModalVisible, setSummaryModalVisible] = useState(false);
@@ -233,24 +235,25 @@ export default function Home() {
         {/* <Header/> */}
         <View style={styles.container}>
           <View style={styles.cardcon}>
-            <View style={styles.cardIncome}>
-              <TouchableOpacity onPress={() => setIncomeInfoModalVisible(true)}>
-                <Text>Income: <Budget income={incomes}/></Text>   
+
+              <TouchableOpacity onPress={() => setIncomeInfoModalVisible(true)} style={styles.cardIncome}>
+                <AntDesign name="pluscircle" size={20} color="white" style={{ paddingRight: 10}}/>
+                <Text style={styles.cardInExText}>INCOME: <Budget income={incomes}/></Text>   
               </TouchableOpacity>
-            </View>
-            <View style={styles.cardExpense}>
-              <TouchableOpacity onPress={() => setSummaryModalVisible(true)}>
-                <Text>Expense: {totalExpenses}</Text>
+
+              <TouchableOpacity onPress={() => setSummaryModalVisible(true)} style={styles.cardExpense}>
+                <AntDesign name="minuscircle" size={20} color="white" style={{ paddingRight: 10}}/>
+                <Text style={styles.cardInExText}>EXPENSE: {totalExpenses}</Text>
               </TouchableOpacity>
-            </View>
+
           </View>
+
             <View style={styles.container1}>
               <InfoContainer
                 header={
                   <TouchableOpacity onPress={() => setGoalModalVisible(true)}>
-                    <BigText content="Goals"/>
+                    <BigText content="GOALS"/>
                   </TouchableOpacity>
-                  
                 }
                 content={
                     <Goals/>
@@ -259,7 +262,7 @@ export default function Home() {
                 <InfoContainer
                 header={
                   <TouchableOpacity onPress={() => setDailyBudgetModalVisible(true)}>
-                    <BigText content="Budget Plan"/>
+                    <BigText content="BUDGET PLAN"/>
                   </TouchableOpacity>
               }
                 content={
@@ -270,7 +273,7 @@ export default function Home() {
             <InfoContainer
                 header={
                   <TouchableOpacity onPress={() => setSummaryModalVisible(true)}>
-                    <BigText content="Monthly Expense Summary"/>
+                    <BigText content="SUMMARY"/>
                   </TouchableOpacity>
               }
                 content={
@@ -280,7 +283,7 @@ export default function Home() {
             <InfoContainer
                 header={
                   <TouchableOpacity onPress={() => setChartModalVisible(true)}>
-                    <BigText content="Statistical Report"/>
+                    <BigText content="STATISTICS"/>
                   </TouchableOpacity>
               }
                 content={
@@ -289,8 +292,23 @@ export default function Home() {
             />
         </View >
       <View style={styles.btn}>
-        <AddTransaction  insertTransaction={insertTransaction} insertGoal={insertGoal}  insertIncome={insertIncome}/>
+        <TouchableOpacity
+            onPress={() => setIsAddingTransaction(true)}
+            activeOpacity={0.5}
+          >
+            <AntDesign name="pluscircle" size={60} color={colors.dark} />
+          </TouchableOpacity>
       </View>
+
+      <Modal isOpen={isAddingTransaction} transparent={true} >
+    
+        <View style={styles.modalAddContent}>
+            <AddTransaction  insertTransaction={insertTransaction} insertGoal={insertGoal}  insertIncome={insertIncome} setIsAddingTransaction={setIsAddingTransaction} />
+        </View>
+
+      </Modal>
+
+
 
       {/* PopUp Screen */}
       {/* Income */}
@@ -302,7 +320,7 @@ export default function Home() {
                     <AntDesign name="leftcircle" size={24} color="black" />
                 </TouchableOpacity>
             </View>
-                <Text style={styles.title}>Income</Text>
+                <Text style={styles.title}>INCOME</Text>
         </View >
         <View style={styles.modalcontent}>
           <IncomeInfo updateIncome={updateIncome}/>
@@ -319,7 +337,7 @@ export default function Home() {
                     <AntDesign name="leftcircle" size={24} color="black" />
                 </TouchableOpacity>
             </View>
-                <Text style={styles.title}>Goal</Text>
+                <Text style={styles.title}>GOALS</Text>
         </View >
         <View style={styles.modalcontent}>
           <GoalsInfo updateGoal={updateGoal}/>
@@ -336,7 +354,7 @@ export default function Home() {
                     <AntDesign name="leftcircle" size={24} color="black" />
                 </TouchableOpacity>
             </View>
-                <Text style={styles.title}>Budget Plan</Text>
+                <Text style={styles.title}>BUDGET PLAN</Text>
         </View >
         <View style={styles.modalcontent}>
           <DailyBudget/>
@@ -353,7 +371,7 @@ export default function Home() {
                     <AntDesign name="leftcircle" size={24} color="black" />
                 </TouchableOpacity>
             </View>
-                <Text style={styles.title}>Expense</Text>
+                <Text style={styles.title}>EXPENSE</Text>
         </View >
         <View style={styles.modalcontent}>
           <SummaryInfo updateTransaction={updateTransaction}/>
@@ -370,7 +388,7 @@ export default function Home() {
                     <AntDesign name="leftcircle" size={24} color="black" />
                 </TouchableOpacity>
             </View>
-                <Text style={styles.title}>Statistics</Text>
+                <Text style={styles.title}>STATISTICS</Text>
         </View >
         <View style={styles.modalcontent}>
           <ChartInfo/>
@@ -427,9 +445,10 @@ const styles= StyleSheet.create({
   },
   cardIncome: {
     flex: 1,
-    alignItems: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#73EC8B',
+    backgroundColor: '#06D001',
     borderRadius: 15,
     elevation: 5,
     shadowColor: "#000",
@@ -441,9 +460,10 @@ const styles= StyleSheet.create({
   },
   cardExpense: {
     flex: 1,
-    alignItems: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#F5004F',
+    backgroundColor: '#FC2947',
     borderRadius: 15,
     elevation: 5,
     shadowColor: "#000",
@@ -452,6 +472,11 @@ const styles= StyleSheet.create({
     shadowOpacity: 0.15,
     padding: 10,
     marginHorizontal: 5
+  },
+  cardInExText:{
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: 'white'
   },
   cardcon: {
     alignItems: 'center',
@@ -474,6 +499,18 @@ const styles= StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     
+  },
+  modalAddContent:{
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 15,
+    backgroundColor: 'white',
+    elevation: 5,
+    shadowColor: "#000",
+    shadowRadius: 8,
+    shadowOffset: { height: 6, width: 0 },
+    shadowOpacity: 0.15,
   },
   icon:{
     paddingRight: 10

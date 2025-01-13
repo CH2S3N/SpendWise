@@ -67,71 +67,80 @@ export default function AddIncome({
     }
     
   return (
-    <View>
-      <Card content={
-        <>
-          {/* DESCRIPTION */}
-          <TextInput
-            placeholder="Provide an entry description"
-            style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
-            onChangeText={setDescription}
-          />
+    <View style={styles.container}>
 
+      <View style={styles.content}>
+      {/* DESCRIPTION */}
+      <Text style={styles.btext}>Item</Text>
+        <TextInput
+          placeholder="Provide an entry description"
+          style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
+          onChangeText={setDescription}
+        />
+      </View>
 
-            {/* AMOUNT */}
-            <TextInput
-                placeholder="₱Amount"
-                style={{ marginBottom: 15, fontWeight: "bold", borderBottomWidth: 1, borderBottomColor: 'black' }}
-                keyboardType="numeric"
-                
-                onChangeText={(text) => {
-                    // Remove any non-numeric characters before setting the state
-                    const numericValue = text.replace(/[^0-9.]/g, "");
-                    setAmount(numericValue);
-                }}
-            />
-
-            {/* FREQUENCY */}
-            <Text style={{ marginBottom: 6 }}>Frequency</Text>
-            <SegmentedControl
-                values={["Daily", "Weekly", "Bi-Weekly", "Monthly"]}
-                style={{ marginBottom: 15 }}
-                selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
-                onChange={(event) => {
-                setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
-                }}
-            />
-
-          <Text style={{ marginBottom: 6 }}>Select a Entry Type</Text>
-          {incomeCategories.map((cat) => (
-            <CategoryButton
-              key={cat.name}
-              id={cat.id}
-              title={cat.name}
-              isSelected={typeSelected === cat.name}
-              setTypeSelected={setTypeSelected}
-              setIncomeCategoryId={setIncomeCategoryId}
-            />
-          ))}
-
-          {/* Cancel and Save Button */}
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-around" }}
-          >
-            <Button title="Cancel" color={'black'} 
-            onPress={
-              () => {
-                setIsAddingTransaction(false);
-                setIsUpdatingTransaction(false)
-              }
+      <View style={styles.content}>
+        {/* AMOUNT */}
+        <Text style={styles.btext}>Amount</Text>
+        <TextInput
+            placeholder="Enter Amount"
+            style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
+            keyboardType="numeric"
             
+            onChangeText={(text) => {
+                // Remove any non-numeric characters before setting the state
+                const numericValue = text.replace(/[^0-9.]/g, "");
+                setAmount(numericValue);
+            }}
+        />
+      </View>
+
+      <View style={styles.content}>
+        {/* FREQUENCY */}
+        <Text style={styles.btext}>Frequency</Text>
+
+        <SegmentedControl
+            values={["Daily", "Weekly", "Bi-Weekly", "Monthly"]}
+            style={{ marginBottom: 10, marginTop:10 }}
+            selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
+            onChange={(event) => {
+            setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
+            }}
+        />
+      </View>
+
+      <View style={styles.content}>
+        <Text style={styles.btext}>Select a Entry Type</Text>
+        {incomeCategories.map((cat) => (
+          <CategoryButton
+            key={cat.name}
+            id={cat.id}
+            title={cat.name}
+            isSelected={typeSelected === cat.name}
+            setTypeSelected={setTypeSelected}
+            setIncomeCategoryId={setIncomeCategoryId}
+          />
+        ))}
+      </View>
+
+      {/* Cancel and Save Button */}
+      <View style={styles.btn}>
+        <View
+          style={{ flexDirection: "row", justifyContent: "space-around" }}
+        >
+          <Button title="Cancel" color={'black'} 
+          onPress={
+            () => {
+              setIsAddingTransaction(false);
+              setIsUpdatingTransaction(false)
             }
-            />
-            <Button title="Save" color={'black'} onPress={handleSaveIncome} />
-          </View>
-            </>
-          }>
-      </Card>
+          
+          }
+          />
+          <Button title="Save" color={'black'} onPress={handleSaveIncome} />
+        </View>
+      </View>
+
     </View>
   )
 }
@@ -181,3 +190,19 @@ function CategoryButton({
     )
 }
 
+const styles = StyleSheet.create({
+  container:{
+    height: '100%',
+  },
+  btn:{
+    flex: 1,
+    flexDirection: 'column-reverse',
+    paddingBottom: 20
+  },
+  content:{
+    paddingTop: 10
+  },
+  btext:{
+    fontWeight: 'bold'
+  }
+})
