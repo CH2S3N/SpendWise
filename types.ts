@@ -1,12 +1,18 @@
 export interface Transaction {
     id: number;
     category_id: number;
+    recurrence_id: number;
     description: string;
-    frequency: "Daily" | "Weekly" | "Bi-Weekly" | "Monthly";
+    frequency: "Daily" | "Weekly" | "Monthly";
     prioritization: "High" | "Medium" | "Low";
     isfixedamount: "Yes" | "No";
     amount: number;
     type: "Essential" | "Non_Essential";
+    periodicity: number;
+}
+export interface Recurrence {
+    id: number;
+    name: string;
 }
 export interface Income {
     id: number;
@@ -22,9 +28,10 @@ export interface Category {
     name: string;
     type: "Essential" | "Non_Essential";
 }
+
 export interface IncomeCategory {
     id: number;
-    name: string;
+    day: string;
     type: "Allowance" | "Salary" | "Others";
 }
 

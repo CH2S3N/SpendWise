@@ -1,10 +1,11 @@
 // src/state/data/dataSlice.ts
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Category, Transaction, Goal, User, Income, IncomeCategory } from "@/types";
+import { Category, Transaction, Goal, User, Income, IncomeCategory, Recurrence } from "@/types";
 
 interface DataState {
   categories: Category[];
+  recurrence: Recurrence[];
   incomeCategories: IncomeCategory[];
   transactions: Transaction[];
   user: User[];
@@ -16,6 +17,7 @@ interface DataState {
 
 const initialState: DataState = {
   categories: [],
+  recurrence: [],
   incomeCategories: [],
   transactions: [],
   user: [],
@@ -34,9 +36,10 @@ const dataSlice = createSlice({
     },
     setData(
       state,
-      action: PayloadAction<{ categories: Category[], incomeCategories: IncomeCategory[], transactions: Transaction[], user: User[], goals: Goal[], incomes: Income[] }>
+      action: PayloadAction<{ categories: Category[], incomeCategories: IncomeCategory[], transactions: Transaction[], user: User[], goals: Goal[], incomes: Income[], recurrence: Recurrence[] }>
     ) {
       state.categories = action.payload.categories || [];
+      state.recurrence = action.payload.recurrence || [];
       state.incomeCategories = action.payload.incomeCategories || [];
       state.transactions = action.payload.transactions || [];
       state.user = action.payload.user || [];
@@ -49,7 +52,6 @@ const dataSlice = createSlice({
       state.loading = false;
     },
     clearData(state) {
-      state.categories = [];
       state.transactions = [];
       state.goals = [];
       state.user = [];

@@ -1,11 +1,9 @@
 import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet } from 'react-native'
 import React from 'react'
-import Card from './Card';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { useSQLiteContext } from 'expo-sqlite';
 import { Category, Transaction } from '@/types';
-import { AppDispatch, RootState } from '@/state/store';
-import { useDispatch, useSelector } from 'react-redux';
+
 
 
 interface addExpenseProps {
@@ -22,12 +20,16 @@ export default function AddExpense({
     const [categories, setCategories] = React.useState<Category[]>([]);
     const [typeSelected, setTypeSelected] = React.useState<string>("");
     const [amount, setAmount] = React.useState<string>("");
+    const [periodicity, setPeriodicity] = React.useState<string>("1");
     const [description, setDescription] = React.useState<string>("");
     const [frequency, setFrequency] = React.useState<string>("Daily");
     const [prioritization, setPrioritization] = React.useState<string>("High");
+    const [recurrence, setRecurrence] = React.useState<string>("Sun");
     const [isfixedamount, setIsFixedAmount] = React.useState<string>("Yes");
     const [category, setCategory] = React.useState<string>("Essential");
     const [categoryId, setCategoryId] = React.useState<number>(1);
+    const [recurrenceId, setRecurrenceId] = React.useState<number>(1);
+    const [id, setId] = React.useState<number>(0);
    
     const db = useSQLiteContext();
     const [selectedIndex, setSelectedIndex] = React.useState<number>(1);
@@ -56,29 +58,38 @@ export default function AddExpense({
             amount: Number(amount),
             category_id: categoryId,
             type: category as "Essential" | "Non_Essential",
-            id: 0
+            recurrence: recurrence as "Sun" | "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat",
+            periodicity: Number(periodicity),
+            recurrence_id: recurrenceId,
+            id,
         });
 
         // to insert transactions
         await insertTransaction({
           description,
-          frequency: frequency as "Daily" | "Weekly" | "Bi-Weekly" | "Monthly",
+          frequency: frequency as "Daily" | "Weekly" | "Monthly",
           prioritization: prioritization as "High" | "Medium" | "Low",
           isfixedamount: isfixedamount as "Yes" | "No",
           amount: Number(amount),
           category_id: categoryId,
           type: category as "Essential" | "Non_Essential",
-          id: 0
+          recurrence_id: recurrenceId,
+          periodicity: Number(periodicity),
+          id,
+     
         });
         setDescription("");
         setFrequency("Daily");
         setPrioritization("High");
         setIsFixedAmount("Yes");
         setAmount("");
+        setRecurrence("");
         setCategoryId(1);
+        setRecurrenceId(1);
         setCurrentTab(0);
         setIsAddingTransaction(false);
 
+        
     }
     
   return (
@@ -93,46 +104,93 @@ export default function AddExpense({
           />
       </View>
 
-      <View style={styles.content}>
-          {/* IS FIXED AMOUNT */}
-          
-        <Text style={{fontWeight: 'bold', marginBottom:10}}>Is Fixed Amount?</Text>
-        <SegmentedControl
-          values={['Yes', 'No']}
-          selectedIndex={selectedIndex}
-          onChange={(event) => setSelectedIndex(event.nativeEvent.selectedSegmentIndex)}
-        />
-      </View>
-      
-      <View style={styles.content}>
-            {/* AMOUNT */}
-            {selectedIndex === 0 && ( 
-              <TextInput
-                placeholder="Enter Amount"
-                style={{ marginBottom: 15, marginTop: 10, borderBottomWidth: 1, borderBottomColor: 'black' }}
-                keyboardType="numeric"
-                onChangeText={(text) => {
-                  // Remove any non-numeric characters before setting the state
-                  const numericValue = text.replace(/[^0-9.]/g, "");
-                  setAmount(numericValue);
-                }}
-              />
-            )}
+      {/* IS FIXED AMOUNT */}
+      <View>
+        <View style={styles.content}>
+          <Text style={{fontWeight: 'bold', marginBottom:10}}>Is Fixed Amount?</Text>
+          <SegmentedControl
+            values={['Yes', 'No']}
+            selectedIndex={selectedIndex}
+            onChange={(event) => setSelectedIndex(event.nativeEvent.selectedSegmentIndex)}
+          />
+        </View>
+        <View style={styles.content}>
+          {/* AMOUNT */}
+          {selectedIndex === 0 && ( 
+            <TextInput
+              placeholder="Enter Amount"
+              style={{ marginBottom: 15, marginTop: 10, borderBottomWidth: 1, borderBottomColor: 'black' }}
+              keyboardType="numeric"
+              onChangeText={(text) => {
+                // Remove any non-numeric characters before setting the state
+                const numericValue = text.replace(/[^0-9.]/g, "");
+                setAmount(numericValue);
+              }}
+            />
+          )}
+        </View>
       </View>
 
-      <View style={styles.content}>
-          {/* FREQUENCY */}
-          <Text style={styles.btext}>Frequency</Text>
-          <SegmentedControl
-            values={["Daily", "Weekly", "Bi-Weekly", "Monthly"]}
-            style={{ marginBottom: 15, marginTop: 10, }}
-            selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
-            onChange={(event) => {
-              setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
-            }}
-          />
+      {/* FREQUENCY */}
+      <View>
+        <View style={styles.content}>
+            <Text style={styles.btext}>Frequency</Text>
+            <SegmentedControl
+              values={["Daily", "Weekly", "Monthly"]}
+              style={{ marginTop: 10, }}
+              selectedIndex={["Daily", "Weekly", "Monthly"].indexOf(frequency)}
+              onChange={(event) => {
+                setFrequency(["Daily", "Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
+              }}
+            />
+        </View>
+        <View style={styles.content}>
+            {frequency === 'Daily' && (
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text>Every</Text>
+              <TextInput
+               value={periodicity}
+              style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
+              keyboardType="numeric"
+              onChangeText={(text) => {
+                // Remove any non-numeric characters before setting the state
+                const numericValue = text.replace(/[^0-9.]/g, "");
+                setPeriodicity(numericValue);
+              }}
+            />
+            <Text>Day</Text>
+              </View>
+            )}
+           {frequency === 'Weekly' && (
+             <Text>Weekly</Text>
+          
+            
+            )}
+
+            {frequency === 'Monthly' && (
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text>Every</Text>
+              <TextInput
+              value={periodicity}
+              style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
+              keyboardType="numeric"
+              onChangeText={(text) => {
+                // Remove any non-numeric characters before setting the state
+                const numericValue = text.replace(/[^0-9.]/g, "");
+                setPeriodicity(numericValue);
+              }}
+            />
+            <Text>Month</Text>
+              </View>
+            )}
+        </View>
       </View>
       
+
+
+
+
+
       <View style={styles.content}>
           {/* PRIORITIZATION */}
           <Text style={styles.btext}>Prioritization</Text>
@@ -252,5 +310,38 @@ const styles = StyleSheet.create({
   },
   btext:{
     fontWeight: 'bold'
-  }
+  },
+
+
+
+
+
+// Weekly Recurrence
+  dayContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginVertical: 10,
+  },
+  dayButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    margin: 5,
+  },
+  selectedDayButton: {
+    backgroundColor: '#007BFF',
+    borderColor: '#007BFF',
+  },
+  dayButtonText: {
+    color: '#000',
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  selectedDayButtonText: {
+    color: '#fff',
+  },
+
 })

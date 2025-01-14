@@ -5,10 +5,7 @@ import SegmentedControl from "@react-native-segmented-control/segmented-control"
 import AddExpense from "./AddExpense";
 import AddGoal from "./AddGoal";
 import AddIncome from "./addIncome";
-import AddButton from "../buttons/AddButton";
-import { AntDesign } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { colors } from "@/constants/colors";
+
 
 
 

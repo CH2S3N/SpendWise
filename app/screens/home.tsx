@@ -29,7 +29,7 @@ import Card from '@/components/ui/Card';
 
 export default function Home() {
   const dispatch = useDispatch<AppDispatch>();
-  const { categories, transactions, user, goals, incomes, incomeCategories } = useSelector(
+  const { categories, transactions, user, goals, incomes, incomeCategories, recurrence } = useSelector(
     (state: RootState) => state.data
   );  // Access data from Redux store
   const db = useSQLiteContext();
@@ -60,15 +60,16 @@ export default function Home() {
       
       // Reload data after inserting transaction
       const incomeResult = await db.getAllAsync<Income>('SELECT * FROM Income');
-      dispatch(setData({ incomes: incomeResult, categories, incomeCategories, goals, user, transactions }));
+      dispatch(setData({ incomes: incomeResult, categories, incomeCategories, goals, user, transactions, recurrence }));
     });
   };
   const insertTransaction = async (transaction: Transaction) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
-        `INSERT INTO Transactions (category_id, description, frequency, prioritization, isfixedamount, amount, type) VALUES(?, ?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO Transactions (category_id, recurrence_id, description, frequency, prioritization, isfixedamount, amount, type) VALUES(?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           transaction.category_id,
+          transaction.recurrence_id,
           transaction.description,
           transaction.frequency,
           transaction.prioritization,
@@ -79,13 +80,13 @@ export default function Home() {
       );
       // Reload data after inserting transaction
       const transactionResult = await db.getAllAsync<Transaction>('SELECT * FROM Transactions');
-      dispatch(setData({ transactions: transactionResult, categories, incomeCategories, goals, user, incomes }));
+      dispatch(setData({ transactions: transactionResult, categories, incomeCategories, goals, user, incomes, recurrence }));
     });
   };
   const updateTransaction = async (transaction: Transaction) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
-        `UPDATE Transactions SET category_id = ?, description = ?, frequency = ?, prioritization = ?, isfixedamount = ?, amount = ?, type = ?  WHERE id = ?`,
+        `UPDATE Transactions SET category_id = ?, recurrence_id = ?, description = ?, frequency = ?, prioritization = ?, isfixedamount = ?, amount = ?, type = ?  WHERE id = ?`,
         [
           
           transaction.category_id,
@@ -95,13 +96,14 @@ export default function Home() {
           transaction.isfixedamount,
           transaction.amount,
           transaction.type,
+          transaction.recurrence_id,
           transaction.id,
           
         ]
       );
       // Reload data after inserting transaction
       const transactionResult = await db.getAllAsync<Transaction>('SELECT * FROM Transactions');
-      dispatch(setData({ transactions: transactionResult, categories, incomeCategories, goals, user, incomes }));
+      dispatch(setData({ transactions: transactionResult, categories, incomeCategories, goals, user, incomes, recurrence }));
     });
   };
   const updateIncome = async (income: Income) => {
@@ -122,7 +124,7 @@ export default function Home() {
       );
       // Reload data after inserting transaction
       const transactionResult = await db.getAllAsync<Income>('SELECT * FROM Income');
-      dispatch(setData({ incomes: transactionResult, categories, incomeCategories, goals, user, transactions }));
+      dispatch(setData({ incomes: transactionResult, categories, incomeCategories, goals, user, transactions, recurrence }));
     });
   };
 
@@ -140,7 +142,7 @@ export default function Home() {
 
       // Reload data after inserting goal
       const goalResult = await db.getAllAsync<Goal>('SELECT * FROM Goals');
-      dispatch(setData({ goals: goalResult, categories, incomeCategories, transactions, user, incomes }));
+      dispatch(setData({ goals: goalResult, categories, incomeCategories, transactions, user, incomes, recurrence }));
     });
   };
   const updateGoal = async (goal: Goal) => {
@@ -157,7 +159,7 @@ export default function Home() {
 
       // Reload data after inserting goal
       const goalResult = await db.getAllAsync<Goal>('SELECT * FROM Goals');
-      dispatch(setData({ goals: goalResult, categories, incomeCategories, transactions, user, incomes }));
+      dispatch(setData({ goals: goalResult, categories, incomeCategories, transactions, user, incomes, recurrence }));
     });
   };
 
