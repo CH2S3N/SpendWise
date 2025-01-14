@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Button } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet } from 'react-native'
 import React from 'react'
 import Card from './Card';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
@@ -19,7 +19,8 @@ export default function UpdateExpense({
      setIsModalVisible, 
      currentTransaction,
 }: Props) {
-
+    const [periodicity, setPeriodicity] = React.useState<string>("");
+    const [recurrenceId, setRecurrenceId] = React.useState<number>(1);
     const [currentTab, setCurrentTab] = React.useState<number>(0);
     const [categories, setCategories] = React.useState<Category[]>([]);
     const [typeSelected, setTypeSelected] = React.useState<string>("");
@@ -64,6 +65,17 @@ export default function UpdateExpense({
         setCategories(result);
     }
 
+
+    function validateFields() {
+      if (!description || !periodicity || !frequency || !category || !prioritization || !typeSelected ) {
+        return false;
+      }
+      
+      return true;
+    }
+
+
+
     async function handleSaveExpense() {
         console.log ({
             id: currentTransaction.id,
@@ -74,18 +86,22 @@ export default function UpdateExpense({
             amount: Number(amount),
             category_id: categoryId,
             type: category as "Essential" | "Non_Essential",
+            periodicity: Number(periodicity),
+            recurrence_id: recurrenceId,
         });
 
         // to update transactions
         await updateTransaction({
           id: currentTransaction.id,
           description,
-          frequency: frequency as "Daily" | "Weekly" | "Bi-Weekly" | "Monthly",
+          frequency: frequency as "Daily" | "Weekly" | "Monthly",
           prioritization: prioritization as "High" | "Medium" | "Low",
           isfixedamount: isfixedamount as "Yes" | "No",
           amount: Number(amount),
           category_id: categoryId,
           type: category as "Essential" | "Non_Essential",
+          periodicity: Number(periodicity),
+          recurrence_id: recurrenceId,
         });
         setDescription("");
         setFrequency("Daily");
@@ -110,16 +126,82 @@ export default function UpdateExpense({
         />
 
         {/* FREQUENCY */}
-        <Text style={{ marginBottom: 6 }}>Frequency</Text>
-        <SegmentedControl
-          values={["Daily", "Weekly", "Bi-Weekly", "Monthly"]}
-          style={{ marginBottom: 15 }}
-          selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
-       
-          onChange={(event) => {
-            setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
-          }}
-        />
+        <View>
+          <View style={styles.content}>
+              <Text style={styles.btext}>Frequency</Text>
+              <SegmentedControl
+                values={["Daily", "Weekly", "Monthly"]}
+                style={{ marginTop: 10, }}
+                selectedIndex={["Daily", "Weekly", "Monthly"].indexOf(frequency)}
+                onChange={(event) => {
+                  setFrequency(["Daily", "Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
+                }}
+              />
+          </View>
+          <View style={styles.content}>
+              {frequency === 'Daily' && (
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text>Every</Text>
+                <TextInput
+                placeholder='0'
+                  value={periodicity}
+                style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
+                keyboardType="numeric"
+                onChangeText={(text) => {
+                  // Remove any non-numeric characters before setting the state
+                  const numericValue = text.replace(/[^0-9.]/g, "");
+                  setPeriodicity(numericValue);
+                }}
+              />
+              <Text>Day</Text>
+                </View>
+              )}
+              {frequency === 'Weekly' && (
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <TextInput
+                placeholder='0'
+                value={periodicity}
+                style={{borderBottomWidth: 1, borderBottomColor: 'black', paddingHorizontal: 5, textAlign: 'center'}}
+                keyboardType="numeric"
+                onChangeText={(text) => setPeriodicity(text)} // Update text as user types
+                onBlur={() => {
+                  const numericValue = parseInt(periodicity);
+                  if (numericValue > 7) {
+                    setPeriodicity("7"); 
+                  }
+                  if (numericValue < 1) {
+                    setPeriodicity("1");  
+                  }
+                }}
+              />
+              <Text>Day/s in a Week</Text>
+                </View>
+                
+              
+              )}
+  
+              {frequency === 'Monthly' && (
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text>Every</Text>
+                <TextInput
+                placeholder='0'
+                value={periodicity}
+                style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
+                keyboardType="numeric"
+                onChangeText={(text) => {
+                  // Remove any non-numeric characters before setting the state
+                  const numericValue = text.replace(/[^0-9.]/g, "");
+                  setPeriodicity(numericValue);
+                }}
+              />
+              <Text>Month</Text>
+                </View>
+              )}
+          </View>
+        </View>
+
+
+
         {/* PRIORITIZATION */}
         <Text style={{ marginBottom: 6 }}>Prioritization</Text>
         <SegmentedControl
@@ -191,7 +273,7 @@ export default function UpdateExpense({
 
           }
           />
-          <Button title="Save" color={'black'} onPress={handleSaveExpense} />
+          <Button title="Save" color={'black'} onPress={handleSaveExpense} disabled={!validateFields()}/>
         </View>
       </View>
       
@@ -243,3 +325,22 @@ function CategoryButton({
         </TouchableOpacity>
     )
 }
+
+
+const styles = StyleSheet.create({
+  container:{
+    height: '100%',
+  },
+  btn:{
+    flex: 1,
+    flexDirection: 'column-reverse',
+    paddingBottom: 20
+  },
+  content:{
+    paddingTop: 10
+  },
+  btext:{
+    fontWeight: 'bold'
+  },
+
+})

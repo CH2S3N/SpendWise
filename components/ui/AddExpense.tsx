@@ -2,7 +2,8 @@ import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet } from 'rea
 import React from 'react'
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { useSQLiteContext } from 'expo-sqlite';
-import { Category, Transaction } from '@/types';
+import { Category, Recurrence, Transaction } from '@/types';
+import MultiSelect from 'react-native-multiple-select';
 
 
 
@@ -18,13 +19,13 @@ export default function AddExpense({
 
     const [currentTab, setCurrentTab] = React.useState<number>(0);
     const [categories, setCategories] = React.useState<Category[]>([]);
+    const [recurrence, setRecurrence] = React.useState<Recurrence[]>([]);
     const [typeSelected, setTypeSelected] = React.useState<string>("");
     const [amount, setAmount] = React.useState<string>("");
-    const [periodicity, setPeriodicity] = React.useState<string>("1");
+    const [periodicity, setPeriodicity] = React.useState<string>("");
     const [description, setDescription] = React.useState<string>("");
     const [frequency, setFrequency] = React.useState<string>("Daily");
     const [prioritization, setPrioritization] = React.useState<string>("High");
-    const [recurrence, setRecurrence] = React.useState<string>("Sun");
     const [isfixedamount, setIsFixedAmount] = React.useState<string>("Yes");
     const [category, setCategory] = React.useState<string>("Essential");
     const [categoryId, setCategoryId] = React.useState<number>(1);
@@ -49,6 +50,15 @@ export default function AddExpense({
         setCategories(result);
     }
 
+    function validateFields() {
+      if (!description || !periodicity || !frequency || !category || !prioritization || !typeSelected ) {
+        return false;
+      }
+      
+      return true;
+    }
+
+
     async function handleSaveExpense() {
         console.log ({
             description,
@@ -58,7 +68,6 @@ export default function AddExpense({
             amount: Number(amount),
             category_id: categoryId,
             type: category as "Essential" | "Non_Essential",
-            recurrence: recurrence as "Sun" | "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat",
             periodicity: Number(periodicity),
             recurrence_id: recurrenceId,
             id,
@@ -83,7 +92,6 @@ export default function AddExpense({
         setPrioritization("High");
         setIsFixedAmount("Yes");
         setAmount("");
-        setRecurrence("");
         setCategoryId(1);
         setRecurrenceId(1);
         setCurrentTab(0);
@@ -92,6 +100,9 @@ export default function AddExpense({
         
     }
     
+
+    
+
   return (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -149,6 +160,7 @@ export default function AddExpense({
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Text>Every</Text>
               <TextInput
+              placeholder='0'
                value={periodicity}
               style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
               keyboardType="numeric"
@@ -162,8 +174,26 @@ export default function AddExpense({
               </View>
             )}
            {frequency === 'Weekly' && (
-             <Text>Weekly</Text>
-          
+             <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <TextInput
+              placeholder='0'
+              value={periodicity}
+              style={{borderBottomWidth: 1, borderBottomColor: 'black', paddingHorizontal: 5, textAlign: 'center'}}
+              keyboardType="numeric"
+              onChangeText={(text) => setPeriodicity(text)} // Update text as user types
+              onBlur={() => {
+                const numericValue = parseInt(periodicity);
+                if (numericValue > 7) {
+                  setPeriodicity("7"); 
+                }
+                if (numericValue < 1) {
+                  setPeriodicity("1");  
+                }
+              }}
+            />
+           <Text>Day/s in a Week</Text>
+             </View>
+              
             
             )}
 
@@ -171,6 +201,7 @@ export default function AddExpense({
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Text>Every</Text>
               <TextInput
+              placeholder='0'
               value={periodicity}
               style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
               keyboardType="numeric"
@@ -243,7 +274,7 @@ export default function AddExpense({
               
               }
               />
-              <Button title="Save" color={'black'} onPress={handleSaveExpense} />
+              <Button title="Save" color={'black'} onPress={handleSaveExpense} disabled={!validateFields()} />
             </View>
           </View>
     </View>

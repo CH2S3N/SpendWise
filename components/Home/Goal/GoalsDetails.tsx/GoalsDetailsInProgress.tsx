@@ -12,7 +12,7 @@ interface Props {
 export default function InProgress({ goal }: Props) {
     const accumulatedAmount = goal.currentAmount;
     const progress = accumulatedAmount / goal.amount;
-    const progressPercentage = (progress * 100);
+    const progressPercentage = (progress * 100).toFixed(2);
     if (accumulatedAmount === goal.amount) {
         return null; 
     }

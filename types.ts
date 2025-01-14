@@ -19,8 +19,9 @@ export interface Income {
     incomeCategoryId: number;
     amount: number;
     description: string;
-    frequency: "Daily" | "Weekly" | "Bi-Weekly" | "Monthly";
-    type: "Allowance" | "Salary" | "Others",
+    frequency: "Daily" | "Weekly" | "Monthly";
+    type: "Allowance" | "Salary" | "Others";
+    periodicity: number;
 }
 
 export interface Category {
@@ -31,7 +32,7 @@ export interface Category {
 
 export interface IncomeCategory {
     id: number;
-    day: string;
+    name: string;
     type: "Allowance" | "Salary" | "Others";
 }
 

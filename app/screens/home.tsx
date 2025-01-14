@@ -23,8 +23,6 @@ import Budget from '@/components/Home/Budget/totalIncome';
 import IncomeInfo from '@/components/Home/IncomeSummary/IncomeInfo';
 import calculateMonthlyAmount from '@/utils/calcMonthlyAmount';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import MainModal from '@/components/Modal/MainModal';
-import Card from '@/components/ui/Card';
 
 
 export default function Home() {
@@ -44,13 +42,14 @@ export default function Home() {
   const [isSummaryModalVisible, setSummaryModalVisible] = useState(false);
   const [isChartModalVisible, setChartModalVisible] = useState(false);
 
-  
+  // Insert Transaction
   const insertIncome = async (income: Income) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
-        `INSERT INTO Income (incomeCategoryId, description, frequency, amount, type) VALUES(?, ?, ?, ?, ?)`,
+        `INSERT INTO Income (incomeCategoryId, periodicity, description, frequency, amount, type) VALUES(?, ?, ?, ?, ?, ?)`,
         [
           income.incomeCategoryId,
+          income.periodicity,
           income.description,
           income.frequency,
           income.amount,
@@ -83,52 +82,6 @@ export default function Home() {
       dispatch(setData({ transactions: transactionResult, categories, incomeCategories, goals, user, incomes, recurrence }));
     });
   };
-  const updateTransaction = async (transaction: Transaction) => {
-    await db.withTransactionAsync(async () => {
-      await db.runAsync(
-        `UPDATE Transactions SET category_id = ?, recurrence_id = ?, description = ?, frequency = ?, prioritization = ?, isfixedamount = ?, amount = ?, type = ?  WHERE id = ?`,
-        [
-          
-          transaction.category_id,
-          transaction.description,
-          transaction.frequency,
-          transaction.prioritization,
-          transaction.isfixedamount,
-          transaction.amount,
-          transaction.type,
-          transaction.recurrence_id,
-          transaction.id,
-          
-        ]
-      );
-      // Reload data after inserting transaction
-      const transactionResult = await db.getAllAsync<Transaction>('SELECT * FROM Transactions');
-      dispatch(setData({ transactions: transactionResult, categories, incomeCategories, goals, user, incomes, recurrence }));
-    });
-  };
-  const updateIncome = async (income: Income) => {
-    await db.withTransactionAsync(async () => {
-      await db.runAsync(
-        `UPDATE Income SET incomeCategoryId = ?, amount = ?, description = ?, frequency = ?, type = ?  WHERE id = ?`,
-        [
-          
-          income.incomeCategoryId,
-          income.amount,
-          income.description,
-          income.frequency,
-          income.type,
-          income.id,
-          
-          
-        ]
-      );
-      // Reload data after inserting transaction
-      const transactionResult = await db.getAllAsync<Income>('SELECT * FROM Income');
-      dispatch(setData({ incomes: transactionResult, categories, incomeCategories, goals, user, transactions, recurrence }));
-    });
-  };
-
-
   const insertGoal = async (goal: Goal) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
@@ -143,6 +96,54 @@ export default function Home() {
       // Reload data after inserting goal
       const goalResult = await db.getAllAsync<Goal>('SELECT * FROM Goals');
       dispatch(setData({ goals: goalResult, categories, incomeCategories, transactions, user, incomes, recurrence }));
+    });
+  };
+
+  // Update Transaction
+  const updateTransaction = async (transaction: Transaction) => {
+    await db.withTransactionAsync(async () => {
+      await db.runAsync(
+        `UPDATE Transactions SET category_id = ?, description = ?, frequency = ?, prioritization = ?, isfixedamount = ?, amount = ?, type = ?, recurrence_id = ?, periodicity = ?  WHERE id = ?`,
+        [
+          
+          transaction.category_id,
+          transaction.description,
+          transaction.frequency,
+          transaction.prioritization,
+          transaction.isfixedamount,
+          transaction.amount,
+          transaction.type,
+          transaction.recurrence_id,
+          transaction.periodicity,
+          transaction.id,
+          
+        ]
+      );
+      // Reload data after inserting transaction
+      const transactionResult = await db.getAllAsync<Transaction>('SELECT * FROM Transactions');
+      dispatch(setData({ transactions: transactionResult, categories, incomeCategories, goals, user, incomes, recurrence }));
+    });
+  };
+  const updateIncome = async (income: Income) => {
+    await db.withTransactionAsync(async () => {
+      await db.runAsync(
+        `UPDATE Income SET incomeCategoryId = ?, amount = ?, description = ?, frequency = ?, type = ?, periodicity = ?  WHERE id = ?`,
+        [
+          
+          income.incomeCategoryId,
+          income.amount,
+          income.description,
+          income.frequency,
+          income.type,
+          income.periodicity,
+          income.id,
+          
+          
+        ]
+      );
+      // Reload data after inserting transaction
+      const transactionResult = await db.getAllAsync<Income>('SELECT * FROM Income');
+      dispatch(setData({ incomes: transactionResult, categories, incomeCategories, goals, user, transactions, recurrence }));
     });
   };
   const updateGoal = async (goal: Goal) => {
@@ -162,48 +163,6 @@ export default function Home() {
       dispatch(setData({ goals: goalResult, categories, incomeCategories, transactions, user, incomes, recurrence }));
     });
   };
-
-
-
-
-  // DELETE GOAL FUNCTION
-
-//   const deleteGoal = async (goalId: number) => {
-//     try {
-//         // Start a transaction to delete the goal
-//         await db.withTransactionAsync(async () => {
-//             // Delete goal by ID
-//             await db.runAsync("DELETE FROM Goals WHERE id = ?", [goalId]);
-
-//             // Reload data after deleting the goal
-//             const goalResult = await db.getAllAsync<Goal>('SELECT * FROM Goals');
-//             dispatch(setData({ goals: goalResult, categories, incomeCategories, transactions, user, incomes }));
-//         });
-//     } catch (error) {
-//         console.error("Error deleting goal:", error);
-//     }
-// };
-
-
-
-// INSERT BUDGET FUNCTION
-  // const insertBudget = async (user: User,) => {
-  //   await db.withTransactionAsync(async () => {
-
-  //     await db.runAsync(
-  //      `UPDATE User SET budget_Amount = ? WHERE id = 1`,
-  //     [
-  //       user.budget_Amount,
-  //     ]
-  //     );
-
-  //     // Reload data after inserting goal
-  //     const budgetResult = await db.getAllAsync<User>('SELECT * FROM User');
-  //     dispatch(setData({ user: budgetResult, categories, incomeCategories, transactions, goals, incomes }));
-  //   });
-  // };
-
-
 
 
   const essentialTransactions = transactions.filter(
@@ -302,101 +261,105 @@ export default function Home() {
           </TouchableOpacity>
       </View>
 
-      <Modal isOpen={isAddingTransaction} transparent={true} >
-    
-        <View style={styles.modalAddContent}>
-            <AddTransaction  insertTransaction={insertTransaction} insertGoal={insertGoal}  insertIncome={insertIncome} setIsAddingTransaction={setIsAddingTransaction} />
-        </View>
-
-      </Modal>
 
 
 
       {/* PopUp Screen */}
-      {/* Income */}
-      <Modal isOpen={isIncomeInfoModalVisible} >
-        <View style={styles.modalcontainer}>
-        <View style={styles.modalheader}>
-            <View style={styles.icon}>
-                <TouchableOpacity onPress={() => setIncomeInfoModalVisible(false)}>
-                    <AntDesign name="leftcircle" size={24} color="black" />
-                </TouchableOpacity>
-            </View>
-                <Text style={styles.title}>INCOME</Text>
-        </View >
-        <View style={styles.modalcontent}>
-          <IncomeInfo updateIncome={updateIncome}/>
-        </View>
-        </View>
-      </Modal>
+      <>
+        {/* Add Transaction */}
+        <Modal isOpen={isAddingTransaction} transparent={true} >
+      
+          <View style={styles.modalAddContent}>
+              <AddTransaction  insertTransaction={insertTransaction} insertGoal={insertGoal}  insertIncome={insertIncome} setIsAddingTransaction={setIsAddingTransaction} />
+          </View>
 
-      {/* Goal */}
-      <Modal isOpen={isGoalModalVisible} >
-        <View style={styles.modalcontainer}>
-        <View style={styles.modalheader}>
-            <View style={styles.icon}>
-                <TouchableOpacity onPress={() => setGoalModalVisible(false)}>
-                    <AntDesign name="leftcircle" size={24} color="black" />
-                </TouchableOpacity>
-            </View>
-                <Text style={styles.title}>GOALS</Text>
-        </View >
-        <View style={styles.modalcontent}>
-          <GoalsInfo updateGoal={updateGoal}/>
-        </View>
-        </View>
-      </Modal>
+        </Modal>
 
-      {/* Budget Plan */}
-      <Modal isOpen={isDailyBudgetModalVisible} >
-        <View style={styles.modalcontainer}>
-        <View style={styles.modalheader}>
-            <View style={styles.icon}>
-                <TouchableOpacity onPress={() => setDailyBudgetModalVisible(false)}>
-                    <AntDesign name="leftcircle" size={24} color="black" />
-                </TouchableOpacity>
-            </View>
-                <Text style={styles.title}>BUDGET PLAN</Text>
-        </View >
-        <View style={styles.modalcontent}>
-          <DailyBudget/>
-        </View>
-        </View>
-      </Modal>
+        {/* Income */}
+        <Modal isOpen={isIncomeInfoModalVisible} >
+          <View style={styles.modalcontainer}>
+          <View style={styles.modalheader}>
+              <View style={styles.icon}>
+                  <TouchableOpacity onPress={() => setIncomeInfoModalVisible(false)}>
+                      <AntDesign name="leftcircle" size={24} color="black" />
+                  </TouchableOpacity>
+              </View>
+                  <Text style={styles.title}>INCOME</Text>
+          </View >
+          <View style={styles.modalcontent}>
+            <IncomeInfo updateIncome={updateIncome}/>
+          </View>
+          </View>
+        </Modal>
 
-      {/* Expense Summary */}
-      <Modal isOpen={isSummaryModalVisible} >
-        <View style={styles.modalcontainer}>
-        <View style={styles.modalheader}>
-            <View style={styles.icon}>
-                <TouchableOpacity onPress={() => setSummaryModalVisible(false)}>
-                    <AntDesign name="leftcircle" size={24} color="black" />
-                </TouchableOpacity>
-            </View>
-                <Text style={styles.title}>EXPENSE</Text>
-        </View >
-        <View style={styles.modalcontent}>
-          <SummaryInfo updateTransaction={updateTransaction}/>
-        </View>
-        </View>
-      </Modal>
+        {/* Goal */}
+        <Modal isOpen={isGoalModalVisible} >
+          <View style={styles.modalcontainer}>
+          <View style={styles.modalheader}>
+              <View style={styles.icon}>
+                  <TouchableOpacity onPress={() => setGoalModalVisible(false)}>
+                      <AntDesign name="leftcircle" size={24} color="black" />
+                  </TouchableOpacity>
+              </View>
+                  <Text style={styles.title}>GOALS</Text>
+          </View >
+          <View style={styles.modalcontent}>
+            <GoalsInfo updateGoal={updateGoal}/>
+          </View>
+          </View>
+        </Modal>
 
-      {/* Statistics */}
-      <Modal isOpen={isChartModalVisible} >
-        <View style={styles.modalcontainer}>
-        <View style={styles.modalheader}>
-            <View style={styles.icon}>
-                <TouchableOpacity onPress={() => setChartModalVisible(false)}>
-                    <AntDesign name="leftcircle" size={24} color="black" />
-                </TouchableOpacity>
-            </View>
-                <Text style={styles.title}>STATISTICS</Text>
-        </View >
-        <View style={styles.modalcontent}>
-          <ChartInfo/>
-        </View>
-        </View>
-      </Modal>
+        {/* Budget Plan */}
+        <Modal isOpen={isDailyBudgetModalVisible} >
+          <View style={styles.modalcontainer}>
+          <View style={styles.modalheader}>
+              <View style={styles.icon}>
+                  <TouchableOpacity onPress={() => setDailyBudgetModalVisible(false)}>
+                      <AntDesign name="leftcircle" size={24} color="black" />
+                  </TouchableOpacity>
+              </View>
+                  <Text style={styles.title}>BUDGET PLAN</Text>
+          </View >
+          <View style={styles.modalcontent}>
+            <DailyBudget/>
+          </View>
+          </View>
+        </Modal>
+
+        {/* Expense Summary */}
+        <Modal isOpen={isSummaryModalVisible} >
+          <View style={styles.modalcontainer}>
+          <View style={styles.modalheader}>
+              <View style={styles.icon}>
+                  <TouchableOpacity onPress={() => setSummaryModalVisible(false)}>
+                      <AntDesign name="leftcircle" size={24} color="black" />
+                  </TouchableOpacity>
+              </View>
+                  <Text style={styles.title}>EXPENSE</Text>
+          </View >
+          <View style={styles.modalcontent}>
+            <SummaryInfo updateTransaction={updateTransaction}/>
+          </View>
+          </View>
+        </Modal>
+
+        {/* Statistics */}
+        <Modal isOpen={isChartModalVisible} >
+          <View style={styles.modalcontainer}>
+          <View style={styles.modalheader}>
+              <View style={styles.icon}>
+                  <TouchableOpacity onPress={() => setChartModalVisible(false)}>
+                      <AntDesign name="leftcircle" size={24} color="black" />
+                  </TouchableOpacity>
+              </View>
+                  <Text style={styles.title}>STATISTICS</Text>
+          </View >
+          <View style={styles.modalcontent}>
+            <ChartInfo/>
+          </View>
+          </View>
+        </Modal>
+      </>
 
     </MainContainer>
   )

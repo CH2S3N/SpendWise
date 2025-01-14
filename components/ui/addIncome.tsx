@@ -18,7 +18,7 @@ interface addIncomeProps {
 export default function AddIncome({
     setIsAddingTransaction, insertIncome, setIsUpdatingTransaction
 }: addIncomeProps) {
-
+    const [periodicity, setPeriodicity] = React.useState<string>("");
     const [currentTab, setCurrentTab] = React.useState<number>(0);
     const [incomeCategories, setIncomeCategories] = React.useState<IncomeCategory[]>([]);
     const [typeSelected, setTypeSelected] = React.useState<string>("");
@@ -38,6 +38,16 @@ export default function AddIncome({
         fetchIncomeCategories();
       }, []);
 
+      
+
+      function validateFields() {
+        if ( !description || !amount || !typeSelected || !periodicity) {
+          return false;
+        }
+        
+        return true;
+      }
+  
 
     async function handleSaveIncome() {
         console.log ({
@@ -46,6 +56,7 @@ export default function AddIncome({
             frequency: frequency as "Daily" | "Weekly" | "Bi-Weekly" | "Monthly",
             incomeCategory_id: incomeCategoryId,
             type: incomeCategory as "Allowance" | "Salary" | "Others",
+            periodicity: Number(periodicity),
             id: 0
         });
 
@@ -53,9 +64,10 @@ export default function AddIncome({
         await insertIncome({
             amount: Number(amount),
             description,
-            frequency: frequency as "Daily" | "Weekly" | "Bi-Weekly" | "Monthly",
+            frequency: frequency as "Daily" | "Weekly" | "Monthly",
             incomeCategoryId: incomeCategoryId,
             type: incomeCategory as "Allowance" | "Salary" | "Others",
+            periodicity: Number(periodicity),
             id: 0
         });
         setDescription("");
@@ -80,7 +92,7 @@ export default function AddIncome({
       </View>
 
       <View style={styles.content}>
-        {/* AMOUNT */}
+      {/* AMOUNT */}
         <Text style={styles.btext}>Amount</Text>
         <TextInput
             placeholder="Enter Amount"
@@ -94,19 +106,79 @@ export default function AddIncome({
             }}
         />
       </View>
-
-      <View style={styles.content}>
-        {/* FREQUENCY */}
-        <Text style={styles.btext}>Frequency</Text>
-
-        <SegmentedControl
-            values={["Daily", "Weekly", "Bi-Weekly", "Monthly"]}
-            style={{ marginBottom: 10, marginTop:10 }}
-            selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
-            onChange={(event) => {
-            setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
-            }}
-        />
+      {/* Frequency */}
+      <View>
+          <View style={styles.content}>
+              <Text style={styles.btext}>Frequency</Text>
+              <SegmentedControl
+                values={["Daily", "Weekly", "Monthly"]}
+                style={{ marginTop: 10, }}
+                selectedIndex={["Daily", "Weekly", "Monthly"].indexOf(frequency)}
+                onChange={(event) => {
+                  setFrequency(["Daily", "Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
+                }}
+              />
+          </View>
+          <View style={styles.content}>
+                    {frequency === 'Daily' && (
+                      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <Text>Every</Text>
+                      <TextInput
+                      placeholder='0'
+                      value={periodicity}
+                      style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
+                      keyboardType="numeric"
+                      onChangeText={(text) => {
+                        // Remove any non-numeric characters before setting the state
+                        const numericValue = text.replace(/[^0-9.]/g, "");
+                        setPeriodicity(numericValue);
+                      }}
+                    />
+                    <Text>Day</Text>
+                      </View>
+                    )}
+                  {frequency === 'Weekly' && (
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <TextInput
+                      placeholder='0'
+                      value={periodicity}
+                      style={{borderBottomWidth: 1, borderBottomColor: 'black', paddingHorizontal: 5, textAlign: 'center'}}
+                      keyboardType="numeric"
+                      onChangeText={(text) => setPeriodicity(text)} // Update text as user types
+                      onBlur={() => {
+                        const numericValue = parseInt(periodicity);
+                        if (numericValue > 7) {
+                          setPeriodicity("7"); 
+                        }
+                        if (numericValue < 1) {
+                          setPeriodicity("1");  
+                        }
+                      }}
+                    />
+                  <Text>Day/s in a Week</Text>
+                    </View>
+                      
+                    
+                    )}
+        
+                    {frequency === 'Monthly' && (
+                      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <Text>Every</Text>
+                      <TextInput
+                      placeholder='0'
+                      value={periodicity}
+                      style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
+                      keyboardType="numeric"
+                      onChangeText={(text) => {
+                        // Remove any non-numeric characters before setting the state
+                        const numericValue = text.replace(/[^0-9.]/g, "");
+                        setPeriodicity(numericValue);
+                      }}
+                    />
+                    <Text>Month</Text>
+                      </View>
+                    )}
+          </View>
       </View>
 
       <View style={styles.content}>
@@ -137,7 +209,7 @@ export default function AddIncome({
           
           }
           />
-          <Button title="Save" color={'black'} onPress={handleSaveIncome} />
+          <Button title="Save" color={'black'} onPress={handleSaveIncome} disabled={!validateFields()} />
         </View>
       </View>
 

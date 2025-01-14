@@ -34,7 +34,13 @@ export default function UpdateGoal({
       }
     }, [currentGoal]);
 
-
+    function validateFields() {
+      if ( !amount || !name || !accumulatedAmount ) {
+        return false;
+      }
+      
+      return true;
+    }
 
     async function handleUpdateGoal() {
         console.log ({
@@ -98,6 +104,14 @@ export default function UpdateGoal({
             const numericValue = text.replace(/[^0-9.]/g, "");
             setAccumulatedAmount(numericValue);
           }}
+          onBlur={() => {
+            const numericAccumulatedAmount = parseFloat(accumulatedAmount);
+            const numericAmount = parseFloat(amount);
+
+            if (numericAccumulatedAmount > numericAmount) {
+              setAccumulatedAmount(amount);
+            }
+          }}
         />
         <Divider style={{marginBottom: 20}}/>
        
@@ -111,7 +125,7 @@ export default function UpdateGoal({
             setIsModalVisible(false);
           }}
           />
-          <Button title="Save" color={'black'} onPress={handleUpdateGoal} />
+          <Button title="Save" color={'black'} onPress={handleUpdateGoal}  disabled={!validateFields()}/>
         </View>
     </View>
   )

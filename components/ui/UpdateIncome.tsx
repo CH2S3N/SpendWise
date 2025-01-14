@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Button } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet } from 'react-native'
 import React, { useEffect } from 'react'
 import Card from './Card';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
@@ -19,7 +19,7 @@ export default function UpdateIncome({
      setIsModalVisible, 
      currentIncome,
 }: Props) {
-
+    const [periodicity, setPeriodicity] = React.useState<string>("");
     const [currentTab, setCurrentTab] = React.useState<number>(0);
     const [incomeCategories, setIncomeCategories] = React.useState<IncomeCategory[]>([]);
     const [typeSelected, setTypeSelected] = React.useState<string>("");
@@ -32,13 +32,22 @@ export default function UpdateIncome({
     const db = useSQLiteContext();
     const [selectedIndex, setSelectedIndex] = React.useState<number>(1);
 
+    function validateFields() {
+      if ( !description || !amount || !typeSelected || !periodicity) {
+        return false;
+      }
+      
+      return true;
+    }
+
+
     React.useEffect(() => {
           if (currentIncome) {
             setAmount(String(currentIncome.amount || ""));
             setDescription(currentIncome.description || "");
             setFrequency(currentIncome.frequency || "Daily");
             setIncomeCategory(currentIncome.type || "Allowance");
-            setIncomeCategoryId(currentIncome.incomeCategory_id || 1);
+            setIncomeCategoryId(currentIncome.incomeCategoryId || 1);
           }
         }, [currentIncome]);
 
@@ -59,6 +68,7 @@ export default function UpdateIncome({
           amount: Number(amount),
           category_id: incomeCategoryId,
           type: incomeCategory as "Allowance" | "Salary" | "Others",
+          periodicity: Number(periodicity),
         });
 
       
@@ -66,10 +76,11 @@ export default function UpdateIncome({
         await updateIncome({
           id: currentIncome.id,
           description,
-          frequency: frequency as "Daily" | "Weekly" | "Bi-Weekly" | "Monthly",
+          frequency: frequency as "Daily" | "Weekly" | "Monthly",
           amount: Number(amount),
-          incomeCategory_id: incomeCategoryId,
+          incomeCategoryId: incomeCategoryId,
           type: incomeCategory as "Allowance" | "Salary" | "Others",
+          periodicity: Number(periodicity),
         });
         setDescription("");
         setFrequency("Daily");
@@ -106,16 +117,80 @@ export default function UpdateIncome({
               }}
           />
 
-          {/* FREQUENCY */}
-          <Text style={{ marginBottom: 6 }}>Frequency</Text>
-          <SegmentedControl
-              values={["Daily", "Weekly", "Bi-Weekly", "Monthly"]}
-              style={{ marginBottom: 15 }}
-              selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
-              onChange={(event) => {
-              setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
-              }}
-          />
+        {/* Frequency */}
+        <View>
+            <View style={styles.content}>
+                <Text style={styles.btext}>Frequency</Text>
+                <SegmentedControl
+                  values={["Daily", "Weekly", "Monthly"]}
+                  style={{ marginTop: 10, }}
+                  selectedIndex={["Daily", "Weekly", "Monthly"].indexOf(frequency)}
+                  onChange={(event) => {
+                    setFrequency(["Daily", "Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
+                  }}
+                />
+            </View>
+            <View style={styles.content}>
+                      {frequency === 'Daily' && (
+                        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <Text>Every</Text>
+                        <TextInput
+                        placeholder='0'
+                        value={periodicity}
+                        style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
+                        keyboardType="numeric"
+                        onChangeText={(text) => {
+                          // Remove any non-numeric characters before setting the state
+                          const numericValue = text.replace(/[^0-9.]/g, "");
+                          setPeriodicity(numericValue);
+                        }}
+                      />
+                      <Text>Day/s</Text>
+                        </View>
+                      )}
+                    {frequency === 'Weekly' && (
+                      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <TextInput
+                        placeholder='0'
+                        value={periodicity}
+                        style={{borderBottomWidth: 1, borderBottomColor: 'black', paddingHorizontal: 5, textAlign: 'center'}}
+                        keyboardType="numeric"
+                        onChangeText={(text) => setPeriodicity(text)} // Update text as user types
+                        onBlur={() => {
+                          const numericValue = parseInt(periodicity);
+                          if (numericValue > 7) {
+                            setPeriodicity("7"); 
+                          }
+                          if (numericValue < 1) {
+                            setPeriodicity("1");  
+                          }
+                        }}
+                      />
+                    <Text>Day/s in a Week</Text>
+                      </View>
+                        
+                      
+                      )}
+          
+                      {frequency === 'Monthly' && (
+                        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <Text>Every</Text>
+                        <TextInput
+                        placeholder='0'
+                        value={periodicity}
+                        style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
+                        keyboardType="numeric"
+                        onChangeText={(text) => {
+                          // Remove any non-numeric characters before setting the state
+                          const numericValue = text.replace(/[^0-9.]/g, "");
+                          setPeriodicity(numericValue);
+                        }}
+                      />
+                      <Text>Month</Text>
+                        </View>
+                      )}
+            </View>
+        </View>
 
         <Text style={{ marginBottom: 6 }}>Select a Entry Type</Text>
         {incomeCategories.map((cat) => (
@@ -142,7 +217,7 @@ export default function UpdateIncome({
           
           }
           />
-          <Button title="Save" color={'black'} onPress={handleSaveIncome} />
+          <Button title="Save" color={'black'} onPress={handleSaveIncome} disabled={!validateFields()}/>
         </View>
           </>
         }>
@@ -195,3 +270,21 @@ function CategoryButton({
         </TouchableOpacity>
     )
 }
+
+
+const styles = StyleSheet.create({
+  container:{
+    height: '100%',
+  },
+  btn:{
+    flex: 1,
+    flexDirection: 'column-reverse',
+    paddingBottom: 20
+  },
+  content:{
+    paddingTop: 10
+  },
+  btext:{
+    fontWeight: 'bold'
+  }
+})

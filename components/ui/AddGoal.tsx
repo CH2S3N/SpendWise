@@ -14,6 +14,16 @@ export default function AddGoal({
     const [currentAmount, setCurrentAmount] = React.useState<string>("");
     const [name, setName] = React.useState<string>("");
 
+    function validateFields() {
+      if ( !amount || !name ) {
+        return false;
+      }
+      
+      return true;
+    }
+
+
+
     async function handleSaveExpense() {
         console.log ({
             name,
@@ -81,7 +91,7 @@ export default function AddGoal({
         >
           <Button title="Cancel" color={'black'} onPress={() => setIsAddingTransaction(false)}
           />
-          <Button title="Save" color={'black'} onPress={handleSaveExpense} />
+          <Button title="Save" color={'black'} onPress={handleSaveExpense}  disabled={!validateFields()}/>
         </View>
       </View>
     </View>
