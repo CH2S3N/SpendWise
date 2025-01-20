@@ -3,24 +3,20 @@ import React from 'react'
 import Card from './Card';
 import { Goal } from '@/types';
 import { Divider } from '@rneui/base';
-import { RootState } from '@/state/store';
-import { useSelector } from 'react-redux';
+import { UseTransactionService } from '@/hooks/editData/TransactionService';
 
 export default function UpdateGoal({
-    updateGoal,
     setIsUpdatingGoal, 
     setIsModalVisible,
     currentGoal,
 }: {
     setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
     setIsUpdatingGoal: React.Dispatch<React.SetStateAction<boolean>>;
-    updateGoal(goal: Goal): Promise<void>;
     currentGoal: Goal;
 }) {
-  const { goals } = useSelector(
-    (state: RootState) => state.data
-  );
 
+    const { updateGoal } = UseTransactionService();
+    
     const [amount, setAmount] = React.useState<string>("");
     const [accumulatedAmount, setAccumulatedAmount] = React.useState<string>("");
     const [name, setName] = React.useState<string>("");

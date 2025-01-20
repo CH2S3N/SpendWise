@@ -10,25 +10,7 @@ import { Income, IncomeCategory } from '@/types';
 import IncomeList from './IncomeList';
 
 
-export default function IncomeInfo({
-  updateIncome
-}: {
-  updateIncome(income: Income): Promise<void>;
-}) {
-    const { fetchData } = useFetchData();
-    const db = useSQLiteContext();
-    
-    async function deleteIncome(id: number) {
-      try {
-        await db.withTransactionAsync(async () => {
-          await db.runAsync('DELETE FROM Income WHERE id = ?;', [id]);
-          await fetchData();
-        });
-      } catch (error) {
-        console.error('Error deleting transaction:', error);
-      }
-    }
-  
+export default function IncomeInfo() {
 
 
   return (
@@ -40,10 +22,7 @@ export default function IncomeInfo({
     
             </View>
             <View style={styles.tablecontent}>
-              <IncomeList
-                deleteIncome={deleteIncome}
-                updateIncome={updateIncome}
-              />
+              <IncomeList/>
             </View>
           </View>
           <Divider/>

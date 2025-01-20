@@ -19,5 +19,6 @@ export default function Card({ children, style = {} }: Props) {
 const styles = StyleSheet.create({
   card: {
     flex: 1,
+    backgroundColor: colors.background
   }
 })

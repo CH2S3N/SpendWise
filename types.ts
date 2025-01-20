@@ -3,12 +3,13 @@ export interface Transaction {
     category_id: number;
     recurrence_id: number;
     description: string;
-    frequency: "Daily" | "Weekly" | "Monthly";
+    frequency: "Daily" | "Weekly" | "Bi-Weekly" | "Monthly";
     prioritization: "High" | "Medium" | "Low";
     isfixedamount: "Yes" | "No";
     amount: number;
     type: "Essential" | "Non_Essential";
-    periodicity: number;
+    interval: number;
+    subtype: "Weekends" | "Weekdays" | "All" | "Custom"
 }
 export interface Recurrence {
     id: number;
@@ -19,15 +20,17 @@ export interface Income {
     incomeCategoryId: number;
     amount: number;
     description: string;
-    frequency: "Daily" | "Weekly" | "Monthly";
+    frequency: "Daily" | "Weekly" | "Bi-Weekly" | "Monthly";
     type: "Allowance" | "Salary" | "Others";
-    periodicity: number;
+    interval: number;
+    subtype: "Weekends" | "Weekdays" | "All" | "Custom"
 }
 
 export interface Category {
     id: number;
     name: string;
     type: "Essential" | "Non_Essential";
+    proportion: number;
 }
 
 export interface IncomeCategory {

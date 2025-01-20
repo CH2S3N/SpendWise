@@ -23,7 +23,7 @@ export default function ExpenseSummary() {
       categories.find((category) => category.id === transaction.category_id)?.type === 'Non_Essential'
   );
 
-  // Calculate the monthly amount using calculateMonthlyAmount
+  // Calculate the monthly amount
   function calcMonthAmount(transactions: typeof essentialTransactions) {
     return transactions.reduce((total, transaction) => {
       return (

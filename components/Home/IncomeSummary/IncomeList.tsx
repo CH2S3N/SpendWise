@@ -6,16 +6,12 @@ import IncomeDetails from "./IncomeDetails";
 import UpdateIncome from "@/components/ui/UpdateIncome";
 import { RootState } from "@/state/store";
 import { useSelector } from "react-redux";
+import { UseTransactionService } from "@/hooks/editData/TransactionService";
 
 
-export default function IncomeList({
-    deleteIncome,
-    updateIncome
-}: {
-    deleteIncome: (id: number) => void;
-    updateIncome(income: Income): Promise<void>;
-}) {
+export default function IncomeList() {
 
+    const { deleteIncome } = UseTransactionService();
      const { incomeCategories, incomes } = useSelector(
           (state: RootState) => state.data
         );
@@ -52,17 +48,14 @@ export default function IncomeList({
                 })}
               </View>
     
-              <Modal isOpen={isModalVisible} transparent={true}>
-                <View style={styles.modal}>
+              <Modal isOpen={isModalVisible} transparent={true} style={styles.modal}>
                   {currentIncome && (
                     <UpdateIncome
                       setIsModalVisible={setIsModalVisible}
-                      updateIncome={updateIncome}
                       setIsUpdatingIncome={setIsUpdatingIncome}
                       currentIncome={currentIncome}
                     />
                   )}
-                </View>
               </Modal>
             </View>
           </ScrollView>

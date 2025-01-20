@@ -11,12 +11,10 @@ import AddIncome from "./addIncome";
 
 
 export default function AddTransaction ({
-    insertTransaction, insertGoal, insertIncome, setIsAddingTransaction
+    setIsAddingTransaction,
 }: {
-    insertTransaction(transaction: Transaction ): Promise<void>;
-    insertGoal(goal: Goal): Promise<void>;
-    insertIncome(income: Income): Promise<void>;
     setIsAddingTransaction: React.Dispatch<React.SetStateAction<boolean>>;
+    
 }) {
     const [isAddingTransaction, ] = React.useState<boolean>(false);
     const [isUpdatingTransaction, setIsUpdatingTransaction] = React.useState<boolean>(false);
@@ -31,15 +29,15 @@ export default function AddTransaction ({
                 />
                 {/* Expense Form */}
                  {selectedTypeIndex === 0 && ( 
-                  <AddExpense setIsAddingTransaction={setIsAddingTransaction} insertTransaction={insertTransaction} setIsUpdatingTransaction={setIsUpdatingTransaction}/>
+                  <AddExpense setIsAddingTransaction={setIsAddingTransaction} setIsUpdatingTransaction={setIsUpdatingTransaction}/>
                 )}
                   {/* Goal Form */}
                  {selectedTypeIndex === 1 && ( 
-                  <AddGoal setIsAddingTransaction={setIsAddingTransaction} insertGoal={insertGoal}/>
+                  <AddGoal setIsAddingTransaction={setIsAddingTransaction} />
                 )}
                 {/* Budget Form */}
                  {selectedTypeIndex === 2 && ( 
-                  <AddIncome setIsAddingTransaction={setIsAddingTransaction} setIsUpdatingTransaction={setIsUpdatingTransaction} insertIncome={insertIncome} />
+                  <AddIncome setIsAddingTransaction={setIsAddingTransaction} setIsUpdatingTransaction={setIsUpdatingTransaction} />
                 )}
           </View>
     );
@@ -48,7 +46,7 @@ export default function AddTransaction ({
 const styles = StyleSheet.create({
   container:{
   width: '95%',
-  height: '90%',
+  height: '97%',
 
   }
 })

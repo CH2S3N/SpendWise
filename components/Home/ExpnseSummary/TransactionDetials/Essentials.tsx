@@ -4,20 +4,19 @@ import TransactionDetails from "./TransactionDetails";
 import { Modal } from "@/components/Modal";
 import UpdateExpense from "@/components/ui/UpdateExpense";
 import React, { useState } from "react";
-import CustomModal from "@/components/Modal/CustomModal";
+import { UseTransactionService } from "@/hooks/editData/TransactionService";
 
 
 export default function Essential({
     transactions,
     categories,
-    deleteTransaction,
-    updateTransaction
 }: {
     categories: Category[];
     transactions: Transaction[];
-    deleteTransaction: (id: number) => void;
-    updateTransaction(transaction: Transaction): Promise<void>;
 }) {
+
+      const { deleteTransaction } = UseTransactionService();
+    
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isAddingTransaction, setIsAddingTransaction] = React.useState<boolean>(false);
     const [isUpdatingTransaction, setIsUpdatingTransaction] = React.useState<boolean>(false);
@@ -57,13 +56,13 @@ export default function Essential({
                         </View>
 
 
-                        <CustomModal isOpen={isModalVisible}>
+                        <Modal isOpen={isModalVisible} style={styles.modal}>
                             {currentTransaction && (
-                                <UpdateExpense setIsModalVisible={setIsModalVisible} updateTransaction={updateTransaction} setIsUpdatingTransaction={setIsAddingTransaction}
+                                <UpdateExpense setIsModalVisible={setIsModalVisible} setIsUpdatingTransaction={setIsAddingTransaction}
                                 currentTransaction={currentTransaction}
                                 />
                             )}
-                    </CustomModal>
+                    </Modal>
                     
                 </View>
             </ScrollView>

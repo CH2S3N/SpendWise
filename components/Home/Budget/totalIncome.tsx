@@ -3,23 +3,22 @@ import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
 import { Income, Transaction, User } from '@/types';
+import calculateMonthlyAmount from '@/utils/calcMonthlyAmount';
 
-export default function Budget({
-  income,
-}: {
-  income: Income[];
-}) {
+export default function Budget() {
+ const incomes: Income[] = useSelector((state: RootState) => state.data.incomes);
 
-  const { incomes } = useSelector(
-    (state: RootState) => state.data
-  );
-
-  function calcTotalBudget() {
-    return incomes.reduce((total, incomes) => {
-      return total + (incomes.amount || 0);
-    }, 0)
+  // Calculate the total monthly amount
+  const calcMonthAmount = (incomes: Income[]): number => {
+    return incomes.reduce((total: number, income: Income) => {
+      const amount = income.amount || 0;
+      const frequency = income.frequency || 'Monthly';
+      return total + calculateMonthlyAmount(amount, frequency);
+    }, 0);
   };
+
+  const monthlyAmount = calcMonthAmount(incomes);
   
-  return <Text>{calcTotalBudget()}</Text>
+  return <Text>{monthlyAmount}</Text>
 
 }

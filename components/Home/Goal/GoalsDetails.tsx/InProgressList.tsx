@@ -6,17 +6,17 @@ import GoalsDetails from "./GoalsDetailsInProgress";
 import UpdateGoal from "@/components/ui/UpdateGoal";
 import InProgress from "./GoalsDetailsInProgress";
 import CustomModal from "@/components/Modal/CustomModal";
+import { UseTransactionService } from "@/hooks/editData/TransactionService";
 
 
 export default function InProgressList({
     goals,
-    deleteGoal,
-    updateGoal
 }: {
     goals: Goal[];
-    deleteGoal: (id: number) => void;
-    updateGoal(goal: Goal): Promise<void>;
 }) {
+
+    const { deleteGoal } = UseTransactionService();
+
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isUpdatingGoal, setIsUpdatingGoal] = React.useState<boolean>(false);
     const [currentGoal, setCurrentGoal] = useState<Goal | null>(null);
@@ -45,7 +45,7 @@ export default function InProgressList({
 
                     <CustomModal isOpen={isModalVisible} >
                     {currentGoal && (
-                                <UpdateGoal setIsModalVisible={setIsModalVisible} updateGoal={updateGoal} setIsUpdatingGoal={setIsUpdatingGoal}
+                                <UpdateGoal setIsModalVisible={setIsModalVisible}  setIsUpdatingGoal={setIsUpdatingGoal}
                                 currentGoal={currentGoal}
                                 />
                             )}

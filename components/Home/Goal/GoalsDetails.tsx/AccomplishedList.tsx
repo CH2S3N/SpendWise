@@ -12,11 +12,9 @@ import CustomModal from "@/components/Modal/CustomModal";
 export default function AccomplishedList({
     goals,
     deleteGoal,
-    updateGoal
 }: {
     goals: Goal[];
     deleteGoal: (id: number) => void;
-    updateGoal(goal: Goal): Promise<void>;
 }) {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isUpdatingGoal, setIsUpdatingGoal] = React.useState<boolean>(false);
@@ -48,7 +46,7 @@ export default function AccomplishedList({
                     
                     <CustomModal isOpen={isModalVisible}>
                             {currentGoal && (
-                                <UpdateGoal setIsModalVisible={setIsModalVisible} updateGoal={updateGoal} setIsUpdatingGoal={setIsUpdatingGoal}
+                                <UpdateGoal setIsModalVisible={setIsModalVisible} setIsUpdatingGoal={setIsUpdatingGoal}
                                 currentGoal={currentGoal}
                                 />
                             )}

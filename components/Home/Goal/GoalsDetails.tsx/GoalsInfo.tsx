@@ -11,35 +11,19 @@ import { Divider } from '@rneui/base';
 import InProgressList from './InProgressList';
 import AccomplishedList from './AccomplishedList';
 import Card from '@/components/ui/Card';
+import { UseTransactionService } from '@/hooks/editData/TransactionService';
 
 
 
-export default function GoalsInfo({
-  updateGoal,
-} : {
-  updateGoal(goals: Goal): Promise<void>;
- 
-}) {
+export default function GoalsInfo() {
  
 
   const { goals } = useSelector(
     (state: RootState) => state.data
   );
-  const { fetchData } = useFetchData();
-  const db = useSQLiteContext();
 
+  const { deleteGoal } = UseTransactionService();
 
-  // Delete Function
-  async function deleteGoal(id: number) {
-    try {
-      await db.withTransactionAsync(async () => {
-        await db.runAsync('DELETE FROM Goals WHERE id = ?;', [id]);
-        await fetchData();
-      });
-    } catch (error) {
-      console.error('Error deleting goal:', error);
-    }
-  }
 
 
   function calcTotalGoal() {
@@ -70,14 +54,14 @@ export default function GoalsInfo({
         <Text style={styles.text}>In Progress</Text>
         <View style={styles.section}> 
           <View style={styles.tablecontent}>
-          <InProgressList deleteGoal={deleteGoal} updateGoal={updateGoal} goals={goals}/>
+          <InProgressList goals={goals}/>
           </View>
         </View>
         <Divider/>
         <Text style={styles.text}>Accomplished</Text>
         <View style={styles.section}> 
           <View style={styles.tablecontent}>
-          <AccomplishedList deleteGoal={deleteGoal} updateGoal={updateGoal} goals={goals}/>
+          <AccomplishedList deleteGoal={deleteGoal} goals={goals}/>
           </View>
         </View>
       </View>

@@ -2,17 +2,21 @@ import { View, TextInput, Button, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import Card from './Card';
 import { Goal } from '@/types';
+import { UseTransactionService } from '@/hooks/editData/TransactionService';
 
 export default function AddGoal({
     setIsAddingTransaction, 
-    insertGoal,
 }: {
     setIsAddingTransaction: React.Dispatch<React.SetStateAction<boolean>>;
-    insertGoal(goal: Goal): Promise<void>;
 }) {
+      const { insertGoal } = UseTransactionService();
+    
+
+
     const [amount, setAmount] = React.useState<string>("");
     const [currentAmount, setCurrentAmount] = React.useState<string>("");
     const [name, setName] = React.useState<string>("");
+
 
     function validateFields() {
       if ( !amount || !name ) {
@@ -91,7 +95,7 @@ export default function AddGoal({
         >
           <Button title="Cancel" color={'black'} onPress={() => setIsAddingTransaction(false)}
           />
-          <Button title="Save" color={'black'} onPress={handleSaveExpense}  disabled={!validateFields()}/>
+          <Button title="Save" color={'black'} onPress={handleSaveExpense} disabled={!validateFields()}/>
         </View>
       </View>
     </View>

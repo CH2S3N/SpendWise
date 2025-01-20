@@ -11,11 +11,7 @@ import { Transaction } from '@/types';
 import { Divider } from '@rneui/base';
 
 
-export default function SummaryInfo({
-  updateTransaction
-}: {
-  updateTransaction(transaction: Transaction): Promise<void>;
-}) {
+export default function SummaryInfo() {
   const { categories, transactions } = useSelector(
     (state: RootState) => state.data
   );
@@ -49,8 +45,6 @@ export default function SummaryInfo({
               <Essential
                 categories={categories}
                 transactions={transactions}
-                deleteTransaction={deleteTransaction}
-                updateTransaction={updateTransaction}
               />
             </View>
           </View>
@@ -65,8 +59,6 @@ export default function SummaryInfo({
               <NonEssential
                 categories={categories}
                 transactions={transactions}
-                deleteTransaction={deleteTransaction}
-                updateTransaction={updateTransaction}
               />
             </View>
           </View>

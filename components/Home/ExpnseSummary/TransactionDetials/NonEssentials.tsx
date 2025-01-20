@@ -3,23 +3,21 @@ import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "re
 import TransactionDetails from "./TransactionDetails";
 import React, { useState } from "react";
 import { Modal } from "@/components/Modal";
-import Card from "@/components/ui/Card";
-import AddExpense from "@/components/ui/AddExpense";
 import UpdateExpense from "@/components/ui/UpdateExpense";
-import CustomModal from "@/components/Modal/CustomModal";
+import { UseTransactionService } from "@/hooks/editData/TransactionService";
 
 
 export default function NonEssential({
     transactions,
     categories,
-    deleteTransaction,
-    updateTransaction
 }: {
     categories: Category[];
     transactions: Transaction[];
-    deleteTransaction: (id: number) => void;
-    updateTransaction(transaction: Transaction): Promise<void>;
 }) {
+
+      const { deleteTransaction } = UseTransactionService();
+    
+
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isUpdatingTransaction, setIsUpdatingTransaction] = React.useState<boolean>(false);
     const nonEssentialTransactions = transactions.filter((transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Non_Essential");
@@ -54,16 +52,13 @@ export default function NonEssential({
                     </View>
 
                     
-                    <CustomModal isOpen={isModalVisible}>
-                        
+                    <Modal isOpen={isModalVisible} style={styles.modal}>
                             {currentTransaction && (
-                                <UpdateExpense setIsModalVisible={setIsModalVisible} updateTransaction={updateTransaction} setIsUpdatingTransaction={setIsUpdatingTransaction}
+                                <UpdateExpense setIsModalVisible={setIsModalVisible} setIsUpdatingTransaction={setIsUpdatingTransaction}
                                 currentTransaction={currentTransaction}
                                 />
                             )}
-                
-                            
-                    </CustomModal>
+                    </Modal>
                 </View>
             </ScrollView>
         </View>

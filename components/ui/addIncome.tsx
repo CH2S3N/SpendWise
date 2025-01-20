@@ -7,24 +7,29 @@ import { Category, Income, IncomeCategory, Transaction } from '@/types';
 import { AppDispatch, RootState } from '@/state/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLoading } from '@/state/dataSlice';
+import { UseTransactionService } from '@/hooks/editData/TransactionService';
 
 
 interface addIncomeProps {
   setIsAddingTransaction: React.Dispatch<React.SetStateAction<boolean>>;
   setIsUpdatingTransaction: React.Dispatch<React.SetStateAction<boolean>>;
-  insertIncome(income: Income): Promise<void>;
 }
 
 export default function AddIncome({
-    setIsAddingTransaction, insertIncome, setIsUpdatingTransaction
+    setIsAddingTransaction, setIsUpdatingTransaction
 }: addIncomeProps) {
-    const [periodicity, setPeriodicity] = React.useState<string>("");
+
+    const { insertIncome } = UseTransactionService();
+  
+
+    const [interval, setInterval] = React.useState<string>("");
     const [currentTab, setCurrentTab] = React.useState<number>(0);
     const [incomeCategories, setIncomeCategories] = React.useState<IncomeCategory[]>([]);
-    const [typeSelected, setTypeSelected] = React.useState<string>("");
+    const [typeSelected, setTypeSelected] = React.useState<string>("Allowance");
     const [amount, setAmount] = React.useState<string>("");
     const [description, setDescription] = React.useState<string>("");
-    const [frequency, setFrequency] = React.useState<string>("Daily");
+    const [subType, setSubType] = React.useState<string>("Weekends");
+    const [frequency, setFrequency] = React.useState<string>("Weekends");
     const [incomeCategory, setIncomeCategory] = React.useState<string>("Allowance");
     const [incomeCategoryId, setIncomeCategoryId] = React.useState<number>(1);
 
@@ -41,7 +46,7 @@ export default function AddIncome({
       
 
       function validateFields() {
-        if ( !description || !amount || !typeSelected || !periodicity) {
+        if ( !description || !amount || !typeSelected || (frequency == 'Daily' && !interval) || (subType === 'Custom' && !interval) || (frequency == 'Monthly' && !interval))  {
           return false;
         }
         
@@ -56,7 +61,8 @@ export default function AddIncome({
             frequency: frequency as "Daily" | "Weekly" | "Bi-Weekly" | "Monthly",
             incomeCategory_id: incomeCategoryId,
             type: incomeCategory as "Allowance" | "Salary" | "Others",
-            periodicity: Number(periodicity),
+            interval: Number(interval),
+            subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
             id: 0
         });
 
@@ -67,7 +73,8 @@ export default function AddIncome({
             frequency: frequency as "Daily" | "Weekly" | "Monthly",
             incomeCategoryId: incomeCategoryId,
             type: incomeCategory as "Allowance" | "Salary" | "Others",
-            periodicity: Number(periodicity),
+            interval: Number(interval),
+            subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
             id: 0
         });
         setDescription("");
@@ -78,6 +85,8 @@ export default function AddIncome({
 
     }
     
+
+
   return (
     <View style={styles.container}>
 
@@ -106,80 +115,113 @@ export default function AddIncome({
             }}
         />
       </View>
-      {/* Frequency */}
-      <View>
-          <View style={styles.content}>
-              <Text style={styles.btext}>Frequency</Text>
-              <SegmentedControl
-                values={["Daily", "Weekly", "Monthly"]}
-                style={{ marginTop: 10, }}
-                selectedIndex={["Daily", "Weekly", "Monthly"].indexOf(frequency)}
-                onChange={(event) => {
-                  setFrequency(["Daily", "Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
-                }}
-              />
-          </View>
-          <View style={styles.content}>
-                    {frequency === 'Daily' && (
-                      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+
+       {/* FREQUENCY */}
+            <View>
+              <View style={styles.content}>
+                  <Text style={styles.btext}>Frequency</Text>
+                  <SegmentedControl
+                    values={["Daily", "Weekly", "Bi-Weekly", "Monthly"]}
+                    style={{ marginTop: 10, }}
+                    selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
+                    onChange={(event) => {
+                      setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
+                      setInterval('')
+                    }}
+                  />
+              </View>
+              <View style={styles.content}>
+                  {frequency === 'Daily' && (
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <Text>Every</Text>
                       <TextInput
-                      placeholder='0'
-                      value={periodicity}
-                      style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
-                      keyboardType="numeric"
-                      onChangeText={(text) => {
-                        // Remove any non-numeric characters before setting the state
-                        const numericValue = text.replace(/[^0-9.]/g, "");
-                        setPeriodicity(numericValue);
+                        placeholder='0'
+                        value={interval}
+                        style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
+                        keyboardType="numeric"
+                        onChangeText={(text) => {
+                          // Remove any non-numeric characters before setting the state
+                          const numericValue = text.replace(/[^0-9.]/g, "");
+                          setInterval(numericValue);
+                        }}
+                      />
+                      <Text>Day/s</Text>
+                    </View>
+                  )}
+                  {frequency === 'Weekly' && (
+                    <SegmentedControl
+                      values={["Weekends", "Weekdays", "All", "Custom"]}
+                      style={{ marginTop: 10, }}
+                      selectedIndex={["Weekends", "Weekdays", "All", "Custom"].indexOf(subType)}
+                      onChange={(event) => {
+                        setSubType(["Weekends", "Weekdays", "All", "Custom"][event.nativeEvent.selectedSegmentIndex]);
                       }}
                     />
-                    <Text>Day</Text>
-                      </View>
-                    )}
-                  {frequency === 'Weekly' && (
+                    
+                  )}
+                  {frequency === 'Weekly' && subType === 'Custom' && (
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <TextInput
+                    placeholder='0'
+                     value={interval}
+                    style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
+                    keyboardType="numeric"
+                    onChangeText={(text) => {
+                      // Remove any non-numeric characters before setting the state
+                      const numericValue = text.replace(/[^0-9.]/g, "");
+                      setInterval(numericValue);
+                    }}
+                    />
+                    <Text>Time/s in a Week</Text>
+                    </View>
+                  )}
+      
+                  {frequency === 'Bi-Weekly' && (
+                    <SegmentedControl
+                      values={["Weekends", "Weekdays", "All", "Custom"]}
+                      style={{ marginTop: 10, }}
+                      selectedIndex={["Weekends", "Weekdays", "All", "Custom"].indexOf(subType)}
+                      onChange={(event) => {
+                        setSubType(["Weekends", "Weekdays", "All", "Custom"][event.nativeEvent.selectedSegmentIndex]);
+                      }}
+                    />
+                    
+                  )}
+                  {frequency === 'Bi-Weekly' && subType === 'Custom' && (
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <TextInput
+                    placeholder='0'
+                     value={interval}
+                    style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
+                    keyboardType="numeric"
+                    onChangeText={(text) => {
+                      // Remove any non-numeric characters before setting the state
+                      const numericValue = text.replace(/[^0-9.]/g, "");
+                      setInterval(numericValue);
+                    }}
+                    />
+                    <Text>Time/s in a Bi-Week</Text>
+                    </View>
+                  )}
+      
+                  {frequency === 'Monthly' && (
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <TextInput
-                      placeholder='0'
-                      value={periodicity}
-                      style={{borderBottomWidth: 1, borderBottomColor: 'black', paddingHorizontal: 5, textAlign: 'center'}}
-                      keyboardType="numeric"
-                      onChangeText={(text) => setPeriodicity(text)} // Update text as user types
-                      onBlur={() => {
-                        const numericValue = parseInt(periodicity);
-                        if (numericValue > 7) {
-                          setPeriodicity("7"); 
-                        }
-                        if (numericValue < 1) {
-                          setPeriodicity("1");  
-                        }
-                      }}
-                    />
-                  <Text>Day/s in a Week</Text>
+                        placeholder='0'
+                        value={interval}
+                        style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
+                        keyboardType="numeric"
+                        onChangeText={(text) => {
+                          // Remove any non-numeric characters before setting the state
+                          const numericValue = text.replace(/[^0-9.]/g, "");
+                          setInterval(numericValue);
+                        }}
+                      />
+                      <Text>Time/s in a Month</Text>
                     </View>
-                      
-                    
-                    )}
-        
-                    {frequency === 'Monthly' && (
-                      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <Text>Every</Text>
-                      <TextInput
-                      placeholder='0'
-                      value={periodicity}
-                      style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
-                      keyboardType="numeric"
-                      onChangeText={(text) => {
-                        // Remove any non-numeric characters before setting the state
-                        const numericValue = text.replace(/[^0-9.]/g, "");
-                        setPeriodicity(numericValue);
-                      }}
-                    />
-                    <Text>Month</Text>
-                      </View>
-                    )}
-          </View>
-      </View>
+                  )}
+              </View>
+            </View>
 
       <View style={styles.content}>
         <Text style={styles.btext}>Select a Entry Type</Text>
@@ -256,7 +298,7 @@ function CategoryButton({
                     marginLeft: 5,
                 }}
             >
-                {title}
+                {title.charAt(0).toLocaleUpperCase() + title.slice(1)}
             </Text>
         </TouchableOpacity>
     )

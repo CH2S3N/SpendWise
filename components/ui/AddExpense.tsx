@@ -4,33 +4,37 @@ import SegmentedControl from '@react-native-segmented-control/segmented-control'
 import { useSQLiteContext } from 'expo-sqlite';
 import { Category, Recurrence, Transaction } from '@/types';
 import MultiSelect from 'react-native-multiple-select';
+import { UseTransactionService } from '@/hooks/editData/TransactionService';
 
 
 
 interface addExpenseProps {
   setIsAddingTransaction: React.Dispatch<React.SetStateAction<boolean>>;
   setIsUpdatingTransaction: React.Dispatch<React.SetStateAction<boolean>>;
-  insertTransaction(transaction: Transaction): Promise<void>;
+ 
 }
 
 export default function AddExpense({
-    setIsAddingTransaction, insertTransaction, setIsUpdatingTransaction
+    setIsAddingTransaction, setIsUpdatingTransaction,
 }: addExpenseProps) {
+
+      const { insertTransaction } = UseTransactionService();
+    
 
     const [currentTab, setCurrentTab] = React.useState<number>(0);
     const [categories, setCategories] = React.useState<Category[]>([]);
-    const [recurrence, setRecurrence] = React.useState<Recurrence[]>([]);
     const [typeSelected, setTypeSelected] = React.useState<string>("");
     const [amount, setAmount] = React.useState<string>("");
-    const [periodicity, setPeriodicity] = React.useState<string>("");
+    const [interval, setInterval] = React.useState<string>("");
     const [description, setDescription] = React.useState<string>("");
     const [frequency, setFrequency] = React.useState<string>("Daily");
+    const [subType, setsubType] = React.useState<string>("Weekends");
     const [prioritization, setPrioritization] = React.useState<string>("High");
     const [isfixedamount, setIsFixedAmount] = React.useState<string>("Yes");
     const [category, setCategory] = React.useState<string>("Essential");
     const [categoryId, setCategoryId] = React.useState<number>(1);
     const [recurrenceId, setRecurrenceId] = React.useState<number>(1);
-    const [id, setId] = React.useState<number>(0);
+    const [id] = React.useState<number>(0);
    
     const db = useSQLiteContext();
     const [selectedIndex, setSelectedIndex] = React.useState<number>(1);
@@ -51,7 +55,7 @@ export default function AddExpense({
     }
 
     function validateFields() {
-      if (!description || !periodicity || !frequency || !category || !prioritization || !typeSelected ) {
+      if (!description || (frequency == 'Daily' && !interval) || (subType === 'Custom' && !interval) || (frequency == 'Monthly' && !interval) || !category || !prioritization || !typeSelected ) {
         return false;
       }
       
@@ -68,7 +72,8 @@ export default function AddExpense({
             amount: Number(amount),
             category_id: categoryId,
             type: category as "Essential" | "Non_Essential",
-            periodicity: Number(periodicity),
+            interval: Number(interval),
+            subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
             recurrence_id: recurrenceId,
             id,
         });
@@ -83,9 +88,9 @@ export default function AddExpense({
           category_id: categoryId,
           type: category as "Essential" | "Non_Essential",
           recurrence_id: recurrenceId,
-          periodicity: Number(periodicity),
+          interval: Number(interval),
+          subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
           id,
-     
         });
         setDescription("");
         setFrequency("Daily");
@@ -105,8 +110,9 @@ export default function AddExpense({
 
   return (
     <View style={styles.container}>
+      
+      {/* DESCRIPTION */}
       <View style={styles.content}>
-          {/* DESCRIPTION */}
           <Text style={styles.btext}>Item</Text>
           <TextInput
             placeholder="Provide an entry description"
@@ -147,11 +153,12 @@ export default function AddExpense({
         <View style={styles.content}>
             <Text style={styles.btext}>Frequency</Text>
             <SegmentedControl
-              values={["Daily", "Weekly", "Monthly"]}
+              values={["Daily", "Weekly", "Bi-Weekly", "Monthly"]}
               style={{ marginTop: 10, }}
-              selectedIndex={["Daily", "Weekly", "Monthly"].indexOf(frequency)}
+              selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
               onChange={(event) => {
-                setFrequency(["Daily", "Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
+                setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
+                setInterval('');
               }}
             />
         </View>
@@ -161,82 +168,85 @@ export default function AddExpense({
               <Text>Every</Text>
               <TextInput
               placeholder='0'
-               value={periodicity}
+               value={interval}
               style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
               keyboardType="numeric"
               onChangeText={(text) => {
                 // Remove any non-numeric characters before setting the state
                 const numericValue = text.replace(/[^0-9.]/g, "");
-                setPeriodicity(numericValue);
+                setInterval(numericValue);
               }}
             />
-            <Text>Day</Text>
+            <Text>Day/s</Text>
               </View>
             )}
-           {frequency === 'Weekly' && (
-             <View style={{flexDirection: 'row', alignItems: 'center'}}>
+
+            {frequency === 'Weekly' && (
+              <SegmentedControl
+                values={["Weekends", "Weekdays", "All", "Custom"]}
+                style={{ marginTop: 10, }}
+                selectedIndex={["Weekends", "Weekdays", "All", "Custom"].indexOf(subType)}
+                onChange={(event) => {
+                  setsubType(["Weekends", "Weekdays", "All", "Custom"][event.nativeEvent.selectedSegmentIndex]);
+                }}
+              />
+              
+            )}
+            {frequency === 'Weekly' && subType === 'Custom' && (
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TextInput
               placeholder='0'
-              value={periodicity}
-              style={{borderBottomWidth: 1, borderBottomColor: 'black', paddingHorizontal: 5, textAlign: 'center'}}
+               value={interval}
+              style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
               keyboardType="numeric"
-              onChangeText={(text) => setPeriodicity(text)} // Update text as user types
-              onBlur={() => {
-                const numericValue = parseInt(periodicity);
-                if (numericValue > 7) {
-                  setPeriodicity("7"); 
-                }
-                if (numericValue < 1) {
-                  setPeriodicity("1");  
-                }
+              onChangeText={(text) => {
+                // Remove any non-numeric characters before setting the state
+                const numericValue = text.replace(/[^0-9.]/g, "");
+                setInterval(numericValue);
               }}
-            />
-           <Text>Day/s in a Week</Text>
-             </View>
-              
-            
+              />
+              <Text>Time/s in a Week</Text>
+              </View>
+            )}
+
+            {frequency === 'Bi-Weekly' && (
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <TextInput
+              placeholder='0'
+               value={interval}
+              style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
+              keyboardType="numeric"
+              onChangeText={(text) => {
+                // Remove any non-numeric characters before setting the state
+                const numericValue = text.replace(/[^0-9.]/g, "");
+                setInterval(numericValue);
+              }}
+              />
+              <Text>Time/s in a Bi-Week</Text>
+              </View>
             )}
 
             {frequency === 'Monthly' && (
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text>Every</Text>
               <TextInput
               placeholder='0'
-              value={periodicity}
+              value={interval}
               style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
               keyboardType="numeric"
               onChangeText={(text) => {
                 // Remove any non-numeric characters before setting the state
                 const numericValue = text.replace(/[^0-9.]/g, "");
-                setPeriodicity(numericValue);
+                setInterval(numericValue);
               }}
             />
-            <Text>Month</Text>
+            <Text>in a Month/s</Text>
               </View>
             )}
         </View>
       </View>
-      
 
-
-
-
-
+      {/* ENTRY TYPE, ESSENTIAL & NON ESSENTIAL */}
       <View style={styles.content}>
-          {/* PRIORITIZATION */}
-          <Text style={styles.btext}>Prioritization</Text>
-          <SegmentedControl
-            values={["High", "Medium", "Low"]}
-            style={{ marginBottom: 15, marginTop: 10, }}
-            selectedIndex={["High", "Medium", "Low"].indexOf(prioritization)}
-            onChange={(event) => {
-              setPrioritization(["High", "Medium", "Low"][event.nativeEvent.selectedSegmentIndex]);
-            }}
-          />
-      </View>
-
-      <View style={styles.content}>
-        {/* ENTRY TYPE, ESSENTIAL & NON ESSENTIAL */}
         <Text style={styles.btext}>Select a Entry Type</Text>
         <SegmentedControl
           values={["Needs", "Wants"]}
@@ -250,7 +260,6 @@ export default function AddExpense({
         {categories.map((cat) => (
           <CategoryButton
           key={cat.name}
-          // @ts-ignore
           id={cat.id}
           title={cat.name}
           isSelected={typeSelected === cat.name}
@@ -274,7 +283,9 @@ export default function AddExpense({
               
               }
               />
-              <Button title="Save" color={'black'} onPress={handleSaveExpense} disabled={!validateFields()} />
+              <Button title="Save" color={'black'} 
+              onPress={()=>handleSaveExpense()} disabled={!validateFields()} 
+              />
             </View>
           </View>
     </View>
@@ -310,7 +321,6 @@ function CategoryButton({
             alignItems: "center",
             backgroundColor: isSelected? 'black' : 'white',
             borderRadius: 15,
-            marginBottom: 6,
           
         }}
         >
@@ -321,7 +331,7 @@ function CategoryButton({
                     marginLeft: 5,
                 }}
             >
-                {title}
+                {title.charAt(0).toLocaleUpperCase() + title.slice(1)}
             </Text>
         </TouchableOpacity>
     )

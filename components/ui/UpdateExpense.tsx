@@ -4,22 +4,25 @@ import Card from './Card';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { useSQLiteContext } from 'expo-sqlite';
 import { Category, Transaction } from '@/types';
+import { UseTransactionService } from '@/hooks/editData/TransactionService';
 
 
 interface Props {
   setIsUpdatingTransaction: React.Dispatch<React.SetStateAction<boolean>>;
   setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  updateTransaction(transaction: Transaction): Promise<void>;
   currentTransaction: Transaction;
 }
 
 export default function UpdateExpense({
-     updateTransaction, 
      setIsUpdatingTransaction, 
      setIsModalVisible, 
      currentTransaction,
 }: Props) {
-    const [periodicity, setPeriodicity] = React.useState<string>("");
+
+      const { updateTransaction } = UseTransactionService();
+    
+
+    const [interval, setInterval] = React.useState<string>("");
     const [recurrenceId, setRecurrenceId] = React.useState<number>(1);
     const [currentTab, setCurrentTab] = React.useState<number>(0);
     const [categories, setCategories] = React.useState<Category[]>([]);
@@ -27,6 +30,7 @@ export default function UpdateExpense({
     const [amount, setAmount] = React.useState<string>("");
     const [description, setDescription] = React.useState<string>("");
     const [frequency, setFrequency] = React.useState<string>("Daily");
+    const [subType, setSubType] = React.useState<string>("Daily");
     const [prioritization, setPrioritization] = React.useState<string>("High");
     const [isfixedamount, setIsFixedAmount] = React.useState<string>("Yes");
     const [category, setCategory] = React.useState<string>("Essential");
@@ -67,7 +71,7 @@ export default function UpdateExpense({
 
 
     function validateFields() {
-      if (!description || !periodicity || !frequency || !category || !prioritization || !typeSelected ) {
+      if (!description || !interval || !frequency || !category || !prioritization || !typeSelected ) {
         return false;
       }
       
@@ -86,7 +90,8 @@ export default function UpdateExpense({
             amount: Number(amount),
             category_id: categoryId,
             type: category as "Essential" | "Non_Essential",
-            periodicity: Number(periodicity),
+            interval: Number(interval),
+            subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
             recurrence_id: recurrenceId,
         });
 
@@ -94,13 +99,14 @@ export default function UpdateExpense({
         await updateTransaction({
           id: currentTransaction.id,
           description,
-          frequency: frequency as "Daily" | "Weekly" | "Monthly",
+          frequency: frequency as "Daily" | "Weekly" | "Bi-Weekly" | "Monthly",
           prioritization: prioritization as "High" | "Medium" | "Low",
           isfixedamount: isfixedamount as "Yes" | "No",
           amount: Number(amount),
           category_id: categoryId,
           type: category as "Essential" | "Non_Essential",
-          periodicity: Number(periodicity),
+          interval: Number(interval),
+          subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
           recurrence_id: recurrenceId,
         });
         setDescription("");
@@ -116,7 +122,9 @@ export default function UpdateExpense({
     }
     
   return (
-      <View>
+    <Card
+    content={
+      <>
         {/* DESCRIPTION */}
         <TextInput
           placeholder="Provide an entry description"
@@ -130,11 +138,11 @@ export default function UpdateExpense({
           <View style={styles.content}>
               <Text style={styles.btext}>Frequency</Text>
               <SegmentedControl
-                values={["Daily", "Weekly", "Monthly"]}
+                values={["Daily", "Weekly", "Bi-Weekly", "Monthly"]}
                 style={{ marginTop: 10, }}
-                selectedIndex={["Daily", "Weekly", "Monthly"].indexOf(frequency)}
+                selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
                 onChange={(event) => {
-                  setFrequency(["Daily", "Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
+                  setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
                 }}
               />
           </View>
@@ -144,13 +152,13 @@ export default function UpdateExpense({
                 <Text>Every</Text>
                 <TextInput
                 placeholder='0'
-                  value={periodicity}
+                  value={interval}
                 style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
                 keyboardType="numeric"
                 onChangeText={(text) => {
                   // Remove any non-numeric characters before setting the state
                   const numericValue = text.replace(/[^0-9.]/g, "");
-                  setPeriodicity(numericValue);
+                  setInterval(numericValue);
                 }}
               />
               <Text>Day</Text>
@@ -160,17 +168,17 @@ export default function UpdateExpense({
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <TextInput
                 placeholder='0'
-                value={periodicity}
+                value={interval}
                 style={{borderBottomWidth: 1, borderBottomColor: 'black', paddingHorizontal: 5, textAlign: 'center'}}
                 keyboardType="numeric"
-                onChangeText={(text) => setPeriodicity(text)} // Update text as user types
+                onChangeText={(text) => setInterval(text)} // Update text as user types
                 onBlur={() => {
-                  const numericValue = parseInt(periodicity);
+                  const numericValue = parseInt(interval);
                   if (numericValue > 7) {
-                    setPeriodicity("7"); 
+                    setInterval("7"); 
                   }
                   if (numericValue < 1) {
-                    setPeriodicity("1");  
+                    setInterval("1");  
                   }
                 }}
               />
@@ -185,13 +193,13 @@ export default function UpdateExpense({
                 <Text>Every</Text>
                 <TextInput
                 placeholder='0'
-                value={periodicity}
+                value={interval}
                 style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
                 keyboardType="numeric"
                 onChangeText={(text) => {
                   // Remove any non-numeric characters before setting the state
                   const numericValue = text.replace(/[^0-9.]/g, "");
-                  setPeriodicity(numericValue);
+                  setInterval(numericValue);
                 }}
               />
               <Text>Month</Text>
@@ -199,19 +207,6 @@ export default function UpdateExpense({
               )}
           </View>
         </View>
-
-
-
-        {/* PRIORITIZATION */}
-        <Text style={{ marginBottom: 6 }}>Prioritization</Text>
-        <SegmentedControl
-          values={["High", "Medium", "Low"]}
-          style={{ marginBottom: 15 }}
-          selectedIndex={["High", "Medium", "Low"].indexOf(prioritization)}
-          onChange={(event) => {
-            setPrioritization(["High", "Medium", "Low"][event.nativeEvent.selectedSegmentIndex]);
-          }}
-        />
 
         {/* IS FIXED AMOUNT */}
         <View>
@@ -275,7 +270,9 @@ export default function UpdateExpense({
           />
           <Button title="Save" color={'black'} onPress={handleSaveExpense} disabled={!validateFields()}/>
         </View>
-      </View>
+      </>
+    }
+    />
       
   )
 }
