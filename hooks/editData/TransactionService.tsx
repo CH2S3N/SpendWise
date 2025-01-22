@@ -98,7 +98,6 @@ export function UseTransactionService() {
           income.interval,
           income.id,
           
-          
         ]
       );
       // Reload data after inserting transaction
@@ -145,25 +144,23 @@ export function UseTransactionService() {
 
   // Update Expense
   const updateTransaction = async (transaction: Transaction) => {
-      await db.withTransactionAsync(async () => {
-        await db.runAsync(
-          `UPDATE Transactions SET category_id = ?, description = ?, frequency = ?, prioritization = ?, isfixedamount = ?, amount = ?, type = ?, recurrence_id = ?, interval = ?, subtype =?,  WHERE id = ?`,
-          [
-            
-            transaction.category_id,
-            transaction.description,
-            transaction.frequency,
-            transaction.prioritization,
-            transaction.isfixedamount,
-            transaction.amount,
-            transaction.type,
-            transaction.recurrence_id,
-            transaction.interval,
-            transaction.subtype,
-            transaction.id,
-            
-          ]
-        );
+    await db.withTransactionAsync(async () => {
+      await db.runAsync(
+        `UPDATE Transactions SET subtype = ?, category_id = ?, description = ?, frequency = ?, prioritization = ?, isfixedamount = ?, amount = ?, type = ?, recurrence_id = ?, interval = ? WHERE id = ?`,
+        [
+          transaction.subtype,
+          transaction.category_id,
+          transaction.description,
+          transaction.frequency,
+          transaction.prioritization,
+          transaction.isfixedamount,
+          transaction.amount,
+          transaction.type,
+          transaction.recurrence_id,
+          transaction.interval,
+          transaction.id,
+        ]
+      );
         // Reload data after inserting transaction
         const transactionResult = await db.getAllAsync<Transaction>('SELECT * FROM Transactions');
         dispatch(setData({ transactions: transactionResult, categories, incomeCategories, goals, user, incomes, recurrence }));
@@ -182,6 +179,8 @@ export function UseTransactionService() {
     }
   }
 
+
+  
 
   return {
     goals,

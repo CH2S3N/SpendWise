@@ -20,16 +20,13 @@ export default function AddIncome({
 }: addIncomeProps) {
 
     const { insertIncome } = UseTransactionService();
-  
-
     const [interval, setInterval] = React.useState<string>("");
-    const [currentTab, setCurrentTab] = React.useState<number>(0);
     const [incomeCategories, setIncomeCategories] = React.useState<IncomeCategory[]>([]);
     const [typeSelected, setTypeSelected] = React.useState<string>("Allowance");
     const [amount, setAmount] = React.useState<string>("");
     const [description, setDescription] = React.useState<string>("");
     const [subType, setSubType] = React.useState<string>("Weekends");
-    const [frequency, setFrequency] = React.useState<string>("Weekends");
+    const [frequency, setFrequency] = React.useState<string>("Daily");
     const [incomeCategory, setIncomeCategory] = React.useState<string>("Allowance");
     const [incomeCategoryId, setIncomeCategoryId] = React.useState<number>(1);
 
@@ -86,6 +83,22 @@ export default function AddIncome({
     }
     
 
+    
+  useEffect(() => {
+    if (frequency === 'Daily') {
+      setInterval('30'); 
+      setSubType('Custom')
+    }
+    if (frequency === 'Weekly' && subType === 'Weekend') {
+      setInterval('2'); 
+    }
+    if (frequency === 'Weekly' && subType === 'Weekdays') {
+      setInterval('5'); 
+    }
+    if (frequency === 'Weekly' && subType === 'All') {
+      setInterval('7'); 
+    }
+  }, [frequency, subType]);
 
   return (
     <View style={styles.container}>
@@ -133,19 +146,6 @@ export default function AddIncome({
               <View style={styles.content}>
                   {frequency === 'Daily' && (
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <Text>Every</Text>
-                      <TextInput
-                        placeholder='0'
-                        value={interval}
-                        style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
-                        keyboardType="numeric"
-                        onChangeText={(text) => {
-                          // Remove any non-numeric characters before setting the state
-                          const numericValue = text.replace(/[^0-9.]/g, "");
-                          setInterval(numericValue);
-                        }}
-                      />
-                      <Text>Day/s</Text>
                     </View>
                   )}
                   {frequency === 'Weekly' && (
@@ -175,30 +175,18 @@ export default function AddIncome({
                     <Text>Time/s in a Week</Text>
                     </View>
                   )}
-      
                   {frequency === 'Bi-Weekly' && (
-                    <SegmentedControl
-                      values={["Weekends", "Weekdays", "All", "Custom"]}
-                      style={{ marginTop: 10, }}
-                      selectedIndex={["Weekends", "Weekdays", "All", "Custom"].indexOf(subType)}
-                      onChange={(event) => {
-                        setSubType(["Weekends", "Weekdays", "All", "Custom"][event.nativeEvent.selectedSegmentIndex]);
-                      }}
-                    />
-                    
-                  )}
-                  {frequency === 'Bi-Weekly' && subType === 'Custom' && (
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <TextInput
-                    placeholder='0'
-                     value={interval}
-                    style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
-                    keyboardType="numeric"
-                    onChangeText={(text) => {
-                      // Remove any non-numeric characters before setting the state
-                      const numericValue = text.replace(/[^0-9.]/g, "");
-                      setInterval(numericValue);
-                    }}
+                      placeholder='0'
+                      value={interval}
+                      style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
+                      keyboardType="numeric"
+                      onChangeText={(text) => {
+                        // Remove any non-numeric characters before setting the state
+                        const numericValue = text.replace(/[^0-9.]/g, "");
+                        setInterval(numericValue);
+                      }}
                     />
                     <Text>Time/s in a Bi-Week</Text>
                     </View>
@@ -242,14 +230,14 @@ export default function AddIncome({
         <View
           style={{ flexDirection: "row", justifyContent: "space-around" }}
         >
+
           <Button title="Cancel" color={'black'} 
-          onPress={
-            () => {
-              setIsAddingTransaction(false);
-              setIsUpdatingTransaction(false)
+            onPress={
+              () => {
+                setIsAddingTransaction(false);
+                setIsUpdatingTransaction(false)
+              }
             }
-          
-          }
           />
           <Button title="Save" color={'black'} onPress={handleSaveIncome} disabled={!validateFields()} />
         </View>

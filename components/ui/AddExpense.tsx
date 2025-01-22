@@ -1,5 +1,5 @@
 import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { useSQLiteContext } from 'expo-sqlite';
 import { Category, Recurrence, Transaction } from '@/types';
@@ -37,7 +37,7 @@ export default function AddExpense({
     const [id] = React.useState<number>(0);
    
     const db = useSQLiteContext();
-    const [selectedIndex, setSelectedIndex] = React.useState<number>(1);
+    const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
 
     React.useEffect(() => {
         getExpenseType(currentTab);
@@ -55,12 +55,22 @@ export default function AddExpense({
     }
 
     function validateFields() {
-      if (!description || (frequency == 'Daily' && !interval) || (subType === 'Custom' && !interval) || (frequency == 'Monthly' && !interval) || !category || !prioritization || !typeSelected ) {
+      if (!description|| (subType === 'Custom' && !interval && frequency !== 'Daily') || (frequency == 'Monthly' && !interval) || !category || !prioritization || !typeSelected || (isfixedamount === 'Yes' && !amount)) {
         return false;
       }
       
       return true;
     }
+
+    useEffect(() => {
+      if (selectedIndex === 0) {
+        setIsFixedAmount('Yes');
+      } else {
+        setIsFixedAmount('No');
+        setAmount("");  
+      }
+    }, [selectedIndex]);
+    
 
 
     async function handleSaveExpense() {
@@ -105,6 +115,27 @@ export default function AddExpense({
         
     }
     
+     useEffect(() => {
+          if (frequency === 'Daily') {
+            setInterval('30'); 
+            setsubType('Custom')
+          }
+          if (frequency === 'Weekly' && subType === 'Weekends') {
+            setInterval('2'); 
+          }
+          if (frequency === 'Weekly' && subType === 'Weekdays') {
+            setInterval('5'); 
+          }
+          if (frequency === 'Weekly' && subType === 'All') {
+            setInterval('7'); 
+          }
+          if (frequency === 'Monthly'){
+            setInterval(interval); 
+          }
+          if (frequency === 'Bi-Weekly'){
+            setInterval(interval); 
+          }
+        }, [frequency, subType]);
 
     
 
@@ -128,7 +159,10 @@ export default function AddExpense({
           <SegmentedControl
             values={['Yes', 'No']}
             selectedIndex={selectedIndex}
-            onChange={(event) => setSelectedIndex(event.nativeEvent.selectedSegmentIndex)}
+            onChange={(event) => {
+              setSelectedIndex(event.nativeEvent.selectedSegmentIndex)
+
+            }}
           />
         </View>
         <View style={styles.content}>
@@ -142,6 +176,8 @@ export default function AddExpense({
                 // Remove any non-numeric characters before setting the state
                 const numericValue = text.replace(/[^0-9.]/g, "");
                 setAmount(numericValue);
+                setIsFixedAmount("Yes")
+
               }}
             />
           )}
@@ -165,19 +201,7 @@ export default function AddExpense({
         <View style={styles.content}>
             {frequency === 'Daily' && (
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text>Every</Text>
-              <TextInput
-              placeholder='0'
-               value={interval}
-              style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
-              keyboardType="numeric"
-              onChangeText={(text) => {
-                // Remove any non-numeric characters before setting the state
-                const numericValue = text.replace(/[^0-9.]/g, "");
-                setInterval(numericValue);
-              }}
-            />
-            <Text>Day/s</Text>
+
               </View>
             )}
 

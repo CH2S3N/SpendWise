@@ -23,10 +23,8 @@ const loadDatabase =async () => {
         await FileSystem.downloadAsync(dbUri, dbFilePath);
       }
   
-  
     } catch (error: any) {
-      console.error('Error loading database:', error.message);
-
+      console.error('Error loading database:', error.message)
     }
   };
 

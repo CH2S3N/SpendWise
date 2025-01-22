@@ -26,11 +26,10 @@ import styles from '@/components/Home/styles';
 
 
 export default function Home() {
-  const { categories, transactions, incomes } = useSelector(
+  const { categories, transactions } = useSelector(
     (state: RootState) => state.data
     
-  );  // Access data from Redux store
-  const db = useSQLiteContext();
+  );
 
   // modals
   const [isGoalModalVisible, setGoalModalVisible] = useState(false);
@@ -61,7 +60,6 @@ export default function Home() {
   const essentialMonthlyTotal = calcMonthAmount(essentialTransactions);
   const nonEssentialMonthlyTotal = calcMonthAmount(nonEssentialTransactions);
   const totalExpenses = essentialMonthlyTotal + nonEssentialMonthlyTotal
-
 
   // Return Function
   return (

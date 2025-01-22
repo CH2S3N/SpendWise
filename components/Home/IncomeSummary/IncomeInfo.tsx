@@ -1,12 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import MainContainer from '@/components/Containers/MainContainer';
-import { useFetchData } from '@/hooks/useFetchData';
-import { useSQLiteContext } from 'expo-sqlite';
-import { RootState } from '@/state/store';
-import { useSelector } from 'react-redux';
 import { Divider } from '@rneui/base';
-import { Income, IncomeCategory } from '@/types';
 import IncomeList from './IncomeList';
 
 

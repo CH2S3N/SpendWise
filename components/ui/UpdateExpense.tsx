@@ -1,10 +1,11 @@
 import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Card from './Card';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { useSQLiteContext } from 'expo-sqlite';
 import { Category, Transaction } from '@/types';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
+import { Alert } from 'react-native';
 
 
 interface Props {
@@ -38,14 +39,41 @@ export default function UpdateExpense({
    
     const db = useSQLiteContext();
     const [selectedIndex, setSelectedIndex] = React.useState<number>(1);
+   
+    useEffect(() => {
+      if (frequency === 'Daily') {
+        setInterval('1'); 
+        setSubType('Custom')
+      }
+      if (frequency === 'Weekly' && subType === 'Weekends') {
+        setInterval('2'); 
+      }
+      if (frequency === 'Weekly' && subType === 'Weekdays') {
+        setInterval('5'); 
+      }
+      if (frequency === 'Weekly' && subType === 'All') {
+        setInterval('7'); 
+      }
+      if (frequency === 'Monthly'){
+        setInterval(interval); 
+      }
+      if (frequency === 'Bi-Weekly'){
+        setInterval(interval); 
+      }
+    }, [frequency, subType]);
+
+
+
 
     React.useEffect(() => {
       if (currentTransaction) {
         setAmount(String(currentTransaction.amount || ""));
+        setInterval(String(currentTransaction.interval || ""));
         setDescription(currentTransaction.description || "");
         setFrequency(currentTransaction.frequency || "Daily");
         setPrioritization(currentTransaction.prioritization || "High");
         setIsFixedAmount(currentTransaction.isfixedamount || "Yes");
+        setSubType(currentTransaction.subtype || "")
         setCategory(currentTransaction.type || "Essential");
         setCategoryId(currentTransaction.category_id || 1);
         setCurrentTab(currentTransaction.type === "Essential" ? 0 : 1);
@@ -69,32 +97,37 @@ export default function UpdateExpense({
         setCategories(result);
     }
 
-
     function validateFields() {
-      if (!description || !interval || !frequency || !category || !prioritization || !typeSelected ) {
+      if (!description || (subType === 'Custom' && !interval && frequency !== 'Daily') || (frequency == 'Monthly' && !interval) || !category || !prioritization || !typeSelected ) {
         return false;
       }
       
       return true;
     }
 
-
+        useEffect(() => {
+          if (selectedIndex === 0) {
+            setIsFixedAmount('Yes');
+          } else {
+            setIsFixedAmount('No');
+          }
+        }, [selectedIndex]);
 
     async function handleSaveExpense() {
         console.log ({
-            id: currentTransaction.id,
-            description,
-            frequency: frequency as "Daily" | "Weekly" | "Bi-Weekly" | "Monthly",
-            prioritization: prioritization as "High" | "Medium" | "Low",
-            isfixedamount: isfixedamount as "Yes" | "No",
-            amount: Number(amount),
-            category_id: categoryId,
-            type: category as "Essential" | "Non_Essential",
-            interval: Number(interval),
-            subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
-            recurrence_id: recurrenceId,
+          id: currentTransaction.id,
+          description,
+          frequency: frequency as "Daily" | "Weekly" | "Bi-Weekly" | "Monthly",
+          prioritization: prioritization as "High" | "Medium" | "Low",
+          isfixedamount: isfixedamount as "Yes" | "No",
+          amount: Number(amount),
+          category_id: categoryId,
+          type: category as "Essential" | "Non_Essential",
+          interval: Number(interval),
+          subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
+          recurrence_id: recurrenceId,
         });
-
+  
         // to update transactions
         await updateTransaction({
           id: currentTransaction.id,
@@ -118,9 +151,11 @@ export default function UpdateExpense({
         setCurrentTab(0);
         setIsModalVisible(false);
         setIsUpdatingTransaction(false);
-       
+
     }
     
+    
+
   return (
     <Card
     content={
@@ -143,16 +178,35 @@ export default function UpdateExpense({
                 selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
                 onChange={(event) => {
                   setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
+                  setInterval(interval);
                 }}
               />
           </View>
           <View style={styles.content}>
+
               {frequency === 'Daily' && (
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Text>Every</Text>
+                  
+                </View>
+              )}
+
+              {frequency === 'Weekly' && (
+                <SegmentedControl
+                  values={["Weekends", "Weekdays", "All", "Custom"]}
+                  style={{ marginTop: 10, }}
+                  selectedIndex={["Weekends", "Weekdays", "All", "Custom"].indexOf(subType)}
+                  onChange={(event) => {
+                    setSubType(["Weekends", "Weekdays", "All", "Custom"][event.nativeEvent.selectedSegmentIndex]);
+                    setInterval(interval);
+                  }}
+                />
+                
+              )}
+              {frequency === 'Weekly' && subType === 'Custom' && (
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <TextInput
                 placeholder='0'
-                  value={interval}
+                value={interval}
                 style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
                 keyboardType="numeric"
                 onChangeText={(text) => {
@@ -160,37 +214,45 @@ export default function UpdateExpense({
                   const numericValue = text.replace(/[^0-9.]/g, "");
                   setInterval(numericValue);
                 }}
-              />
-              <Text>Day</Text>
+                onBlur={() => {
+                  const Interval = parseFloat(interval);
+      
+                  if (Interval > 7) {
+                    setInterval("7");
+                  }
+                }}
+                />
+                <Text>Time/s in a Week</Text>
                 </View>
               )}
-              {frequency === 'Weekly' && (
+
+              {frequency === 'Bi-Weekly' && (
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <TextInput
                 placeholder='0'
                 value={interval}
-                style={{borderBottomWidth: 1, borderBottomColor: 'black', paddingHorizontal: 5, textAlign: 'center'}}
+                style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
                 keyboardType="numeric"
-                onChangeText={(text) => setInterval(text)} // Update text as user types
+                onChangeText={(text) => {
+                  // Remove any non-numeric characters before setting the state
+                  const numericValue = text.replace(/[^0-9.]/g, "");
+                  setInterval(numericValue);
+                  setSubType("Custom")
+                }}
                 onBlur={() => {
-                  const numericValue = parseInt(interval);
-                  if (numericValue > 7) {
-                    setInterval("7"); 
-                  }
-                  if (numericValue < 1) {
-                    setInterval("1");  
+                  const Interval = parseFloat(interval);
+      
+                  if (Interval > 14) {
+                    setInterval("14");
                   }
                 }}
-              />
-              <Text>Day/s in a Week</Text>
+                />
+                <Text>Time/s in a Bi-Week</Text>
                 </View>
-                
-              
               )}
-  
+
               {frequency === 'Monthly' && (
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Text>Every</Text>
                 <TextInput
                 placeholder='0'
                 value={interval}
@@ -200,9 +262,10 @@ export default function UpdateExpense({
                   // Remove any non-numeric characters before setting the state
                   const numericValue = text.replace(/[^0-9.]/g, "");
                   setInterval(numericValue);
+                  setSubType("Custom")
                 }}
               />
-              <Text>Month</Text>
+              <Text>in a Month/s</Text>
                 </View>
               )}
           </View>
@@ -214,7 +277,13 @@ export default function UpdateExpense({
           <SegmentedControl
             values={['Yes', 'No']}
             selectedIndex={selectedIndex}
-            onChange={(event) => setSelectedIndex(event.nativeEvent.selectedSegmentIndex)}
+            onChange={(event) => {
+              setSelectedIndex(event.nativeEvent.selectedSegmentIndex)
+              if (selectedIndex === 1) {
+                setAmount('');
+                setIsFixedAmount('No')
+              }
+            }}
           />
           {/* AMOUNT */}
           {selectedIndex === 0 && ( 
@@ -227,6 +296,7 @@ export default function UpdateExpense({
                 // Remove any non-numeric characters before setting the state
                 const numericValue = text.replace(/[^0-9.]/g, "");
                 setAmount(numericValue);
+                setIsFixedAmount('Yes')
               }}
             />
           )}
@@ -246,7 +316,6 @@ export default function UpdateExpense({
         {categories.map((cat) => (
           <CategoryButton
             key={cat.name}
-            // @ts-ignore
             id={cat.id}
             title={cat.name}
             isSelected={typeSelected === cat.name}
