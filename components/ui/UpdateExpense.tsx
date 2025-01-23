@@ -56,9 +56,11 @@ export default function UpdateExpense({
       }
       if (frequency === 'Monthly'){
         setInterval(interval); 
+        setSubType('Custom')
       }
       if (frequency === 'Bi-Weekly'){
         setInterval(interval); 
+        setSubType('Custom')
       }
     }, [frequency, subType]);
 
@@ -98,7 +100,7 @@ export default function UpdateExpense({
     }
 
     function validateFields() {
-      if (!description || (subType === 'Custom' && !interval && frequency !== 'Daily') || (frequency == 'Monthly' && !interval) || !category || !prioritization || !typeSelected ) {
+      if (!description || (subType === 'Custom' && !interval) || !category || !prioritization || !typeSelected ) {
         return false;
       }
       

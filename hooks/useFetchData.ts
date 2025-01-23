@@ -26,6 +26,8 @@ export const useFetchData = () => {
           goals: goalsResult,
           user: userResult,
           incomes: incomeResult,
+          incomeCategories: [],
+          recurrence: []
         })
       );
     } catch (error: any) {

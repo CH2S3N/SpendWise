@@ -56,6 +56,14 @@ export default function UpdateIncome({
       if (frequency === 'Weekly' && subType === 'All') {
         setInterval('7'); 
       }
+      if (frequency === 'Monthly'){
+        setInterval(interval); 
+        setSubType('Custom')
+      }
+      if (frequency === 'Bi-Weekly'){
+        setInterval(interval); 
+        setSubType('Custom')
+      }
     }, [frequency, subType]);
 
 
