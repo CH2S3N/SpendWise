@@ -9,6 +9,8 @@ import { RootState } from '@/state/store'
 import calculateMonthlyAmount from '@/utils/calcMonthlyAmount'
 import Generate from '@/hooks/generateBudgetplan/Generate'
 import GenerateService from '@/hooks/generateBudgetplan/Generate'
+import GeneratedExpense from './Expense'
+import GeneratedIncome from './Income'
 
 export default function BudgetPlan() {
 
@@ -28,7 +30,7 @@ const { handleSaveExpense } = GenerateService();
                     <Text style={styles.txt}>Income</Text>
                 </View>
                 <View style={styles.container}>
-                    <InitialIncome/>
+                    <GeneratedIncome/>
                 </View>
 
 
@@ -38,7 +40,7 @@ const { handleSaveExpense } = GenerateService();
                     <Text style={styles.txt}>Expense</Text>
                 </View>
                 <View style={styles.container}>
-                    <InitialExpense/>
+                    <GeneratedExpense/>
                 </View>
 
 

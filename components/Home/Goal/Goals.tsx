@@ -8,15 +8,10 @@ import { useFetchData } from '@/hooks/useFetchData';
 
 
 export default function Goals() {
-  const { fetchData } = useFetchData();
   const { goals } = useSelector(
     (state: RootState) => state.data
   );
-  const db = useSQLiteContext();
 
-  useEffect(() => {
-    fetchData();
-  }, []); 
 
  
   function calcTotalGoal() {

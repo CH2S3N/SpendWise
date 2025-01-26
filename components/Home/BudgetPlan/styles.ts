@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cardContainer:{
-    flex:1,
+    flex:6,
   },
   card:{
     flex: 1,

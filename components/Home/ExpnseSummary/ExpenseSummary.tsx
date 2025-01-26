@@ -5,7 +5,6 @@ import { View, Text, StyleSheet } from 'react-native';
 import {  useSelector } from 'react-redux';
 import { RootState } from '@/state/store'; 
 import TransactionList from './TransactionsList';
-import calculateMonthlyAmount from '@/utils/calcMonthlyAmount';
 
 
 
@@ -27,8 +26,7 @@ export default function ExpenseSummary() {
   function calcMonthAmount(transactions: typeof essentialTransactions) {
     return transactions.reduce((total, transaction) => {
       return (
-        total +
-        calculateMonthlyAmount(transaction.amount || 0, transaction.frequency || 'Monthly')
+        total + (transaction.amount * transaction.interval) || 0
       );
     }, 0);
   }

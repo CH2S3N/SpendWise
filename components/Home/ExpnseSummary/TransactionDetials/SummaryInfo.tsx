@@ -1,13 +1,10 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import MainContainer from '@/components/Containers/MainContainer';
-import { useFetchData } from '@/hooks/useFetchData';
-import { useSQLiteContext } from 'expo-sqlite';
 import { RootState } from '@/state/store';
 import { useSelector } from 'react-redux';
 import Essential from './Essentials';
 import NonEssential from './NonEssentials';
-import { Transaction } from '@/types';
 import { Divider } from '@rneui/base';
 
 
@@ -15,20 +12,6 @@ export default function SummaryInfo() {
   const { categories, transactions } = useSelector(
     (state: RootState) => state.data
   );
-  const { fetchData } = useFetchData();
-  const db = useSQLiteContext();
-  
-  async function deleteTransaction(id: number) {
-    try {
-      await db.withTransactionAsync(async () => {
-        await db.runAsync('DELETE FROM Transactions WHERE id = ?;', [id]);
-        await fetchData();
-      }); 
-    } catch (error) {
-      console.error('Error deleting transaction:', error);
-    }
-  }
-
  
 
   return (

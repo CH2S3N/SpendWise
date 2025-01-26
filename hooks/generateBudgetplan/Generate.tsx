@@ -34,6 +34,7 @@ export default function GenerateService() {
     const budget = calcMonthAmount(incomes);
     const essentials = budget * 0.5;
     const nonEssentials = budget * 0.3;
+    const savings = budget * 0.20;
 
     const essentialTransactions = transactions.filter((transaction) =>
       categories.find((category) => category.id === transaction.category_id)?.type === "Essential"
@@ -62,10 +63,9 @@ export default function GenerateService() {
           : 0;
 
         for (const transaction of categoryTransactions) {
-          const isSubscription = transaction.category_id === 9; 
           const updatedTransaction = {
             ...transaction,
-            amount: isSubscription ? transaction.amount : amountPerTransaction, 
+            amount:Math.round(amountPerTransaction / transaction.interval), 
             isfixedamount: 'Yes' as 'Yes' | 'No',
           };
 
@@ -87,9 +87,10 @@ export default function GenerateService() {
         const amountPerTransaction = categoryTransactions.length > 0 ? Math.round(categoryAmount / categoryTransactions.length): 0;
 
         for (const transaction of categoryTransactions) {
+          const isSubscription = transaction.category_id === 9; 
           const updatedTransaction = {
             ...transaction,
-            amount: amountPerTransaction,
+            amount: Math.round(amountPerTransaction / transaction.interval),
             isfixedamount: 'Yes' as 'Yes' | 'No',
           };
 
@@ -103,7 +104,7 @@ export default function GenerateService() {
       }
       await fetchData(); // Re-fetch the latest data after the updates
 
-      alert('Expenses updated successfully!');
+      alert('Budget Plan Generated Successfully!');
     } catch (error) {
       console.error('Unexpected error while saving expenses:', error);
       alert('An unexpected error occurred while saving expenses.');

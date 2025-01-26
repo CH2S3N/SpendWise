@@ -6,7 +6,7 @@ import Card from '@/components/ui/Card';
 import styles from '../styles';
 import { Divider } from 'react-native-paper';
 
-export default function InitialIncome() {
+export default function GeneratedIncome() {
 
   const { incomes } = useSelector(
     (state: RootState) => state.data

@@ -19,6 +19,6 @@ export default function Budget() {
 
   const monthlyAmount = calcMonthAmount(incomes);
   
-  return <Text>{monthlyAmount}</Text>
+  return monthlyAmount
 
 }

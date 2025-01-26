@@ -6,41 +6,17 @@ import Card from '@/components/ui/Card';
 import { Divider } from 'react-native-paper';
 
 
-export default function InitialExpense() {
+export default function GeneratedExpense() {
   const { categories, transactions } = useSelector(
     (state: RootState) => state.data
   );
-
-    const essentialTransactions = transactions.filter((transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Essential");
-    const nonEssentialTransactions = transactions.filter((transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Non_Essential");
+  const essentialTransactions = transactions.filter((transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Essential");
+  const nonEssentialTransactions = transactions.filter((transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Non_Essential");
 
   return (
      <View style={styles.mainContainer}>
         <ScrollView>
-            {essentialTransactions.map((transaction) => {
-                const categoryForCurrentItem = categories.find(
-                    (category) => category.id === transaction.category_id
-                )
-                return (
-                    <View key={transaction.id}>
-                        <View style={styles.container}>  
-                            <View style={styles.item}>
-                                <View style={styles.itemA}>
-                                    <Text style={styles.title}>{transaction.description.charAt(0).toUpperCase() + transaction.description.slice(1)}</Text>
-                                    <Text style={styles.subTitle}>{categoryForCurrentItem?.name}</Text>
-                                </View>
-                            </View>
-                            <View style={styles.item}>
-                                <Text style={styles.text}>{transaction.amount}</Text>
-                            </View>
-                        </View>
-                        <Divider style={styles.dvd}/>
-                    </View>
-                )
-            })}   
-        </ScrollView>
-        <ScrollView>
-            {nonEssentialTransactions.map((transaction) => {
+            {transactions.map((transaction) => {
                 const categoryForCurrentItem = categories.find(
                     (category) => category.id === transaction.category_id
                 )

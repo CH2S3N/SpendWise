@@ -9,7 +9,7 @@ interface TransactionListItemProps{
 }
 
 export default function TransactionListItem({ transaction}: TransactionListItemProps) {
-    const monthlyAmount = calculateMonthlyAmount(transaction.amount, transaction.frequency);
+    const monthlyAmount = transaction.amount * transaction.interval
     
     return (
         <View style={styles.container}>  

@@ -10,6 +10,7 @@ import { calculateTotalIncome } from '@/utils/calcTotalIncome';
 export default function IncomeChart () {
   const { incomes } = useSelector(
     (state: RootState) => state.data);
+
     const widthAndHeight=150;
     const [values,setValues]= useState([1]);
     const [sliceColor,setSliceColor] = useState(['black']);

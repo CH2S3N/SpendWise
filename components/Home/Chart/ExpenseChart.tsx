@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react'
 import PieChart from 'react-native-pie-chart';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
-import { calculateTotalExpense } from '@/utils/calcTotalExpense';
+import Budget from '../Budget/totalIncome';
+import calculateMonthlyAmount from '@/utils/calcMonthlyAmount';
 
 
 
@@ -24,6 +25,18 @@ export default function ExpenseChart() {
   );
   
 
+  function calcEssentials() {
+    return essentialTransactions.reduce((total, transaction) => {
+      return total + (transaction.amount * transaction.interval) || 0
+    }, 0)
+
+  };
+  function calcNonEssentials() {
+    return nonEssentialTransactions.reduce((total, transaction) => {
+      return total + (transaction.amount  * transaction.interval) || 0
+    }, 0)
+
+  };
   function calcTotalGoal() {
     return goals.reduce((total, goals) => {
       return total + (goals.currentAmount || 0);
@@ -31,22 +44,23 @@ export default function ExpenseChart() {
 
   };
 
-
+   const totalIncome = Budget()
   const totalGoal = calcTotalGoal()
-  const totalEssential = calculateTotalExpense(essentialTransactions, categories, "Essential");
-  const totalNonEssential = calculateTotalExpense(nonEssentialTransactions, categories, "Non_Essential");
-  
+  const totalEssential = calcEssentials()
+  const totalNonEssential =calcNonEssentials()
+  const totalSavings = totalIncome - (totalGoal + totalEssential + totalNonEssential)
+  const totalSavingsNonNegative = totalSavings < 0 ? 0 : totalSavings;
 
 
   useEffect(() => {
-    if (totalEssential + totalNonEssential + totalGoal  > 0) {
-      setValues([totalEssential, totalNonEssential, totalGoal ]);
-      setSliceColor(['#FC2947', '#FE6244', '#FFDEB9']);
+    if (totalEssential + totalNonEssential + totalGoal + totalSavingsNonNegative  > 0) {
+      setValues([totalEssential, totalNonEssential, totalGoal,totalSavingsNonNegative ]);
+      setSliceColor(['#FC2947', '#FE6244', '#FFDEB9', '#F6DED8']);
     } else {
       setValues([1]);
       setSliceColor(['#CCCCCC']);
     }
-  },[totalEssential, totalNonEssential, totalGoal])
+  },[totalEssential, totalNonEssential, totalGoal, totalSavingsNonNegative])
   
   
 
@@ -75,6 +89,10 @@ export default function ExpenseChart() {
             <View style={[styles.colorBox, { backgroundColor: '#FFDEB9' }]} />
             <Text>Goals: ₱{totalGoal}</Text>
           </View>
+          <View style={styles.legendItem}>
+            <View style={[styles.colorBox, { backgroundColor: '#F6DED8' }]} />
+            <Text>Savings: ₱{totalSavingsNonNegative}</Text>
+          </View>
          
         </View>
       </View>
@@ -97,7 +115,7 @@ const styles = StyleSheet.create({
   },
   item2: {
     alignItems: 'flex-start',
-        justifyContent: 'center'
+    justifyContent: 'center'
 
   },
   legendItem: {
