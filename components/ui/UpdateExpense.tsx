@@ -42,7 +42,7 @@ export default function UpdateExpense({
    
     useEffect(() => {
       if (frequency === 'Daily') {
-        setInterval('1'); 
+        setInterval('30'); 
         setSubType('Custom')
       }
       if (frequency === 'Weekly' && subType === 'Weekends') {
@@ -54,12 +54,15 @@ export default function UpdateExpense({
       if (frequency === 'Weekly' && subType === 'All') {
         setInterval('7'); 
       }
+      if (frequency === 'Weekly' && subType === 'Custom') {
+        setInterval('1'); 
+      }
       if (frequency === 'Monthly'){
-        setInterval(interval); 
+        setInterval('1'); 
         setSubType('Custom')
       }
       if (frequency === 'Bi-Weekly'){
-        setInterval(interval); 
+        setInterval('1'); 
         setSubType('Custom')
       }
     }, [frequency, subType]);
@@ -288,7 +291,6 @@ export default function UpdateExpense({
             }}
           />
           {/* AMOUNT */}
-          {selectedIndex === 0 && ( 
             <TextInput
               placeholder="₱Amount"
               style={{ fontSize: 32, marginBottom: 15, fontWeight: "bold" }}
@@ -301,7 +303,6 @@ export default function UpdateExpense({
                 setIsFixedAmount('Yes')
               }}
             />
-          )}
         </View>
 
           {/* ENTRY TYPE, ESSENTIAL & NON ESSENTIAL */}

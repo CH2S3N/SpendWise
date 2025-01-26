@@ -1,4 +1,3 @@
-// src/state/data/dataSlice.ts
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Category, Transaction, Goal, User, Income, IncomeCategory, Recurrence } from "@/types";

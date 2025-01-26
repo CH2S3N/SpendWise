@@ -6,10 +6,13 @@ import { UseTransactionService } from '../editData/TransactionService';
 import { useFetchData } from '../useFetchData';
 
 export default function GenerateService() {
+  const { fetchData } = useFetchData();
+  
   const { categories, transactions, incomes } = useSelector((state: RootState) => state.data);
   const dispatch = useDispatch();
   const { updateTransaction } = UseTransactionService();
-  const { fetchData } = useFetchData();
+  const { needs, wants, savings } = useSelector((state: RootState) => state.budget); 
+  
 
   const calcMonthAmount = (incomes: Income[]): number => {
     return incomes.reduce((total: number, income: Income) => {
@@ -32,9 +35,9 @@ export default function GenerateService() {
 
   const handleSaveExpense = async () => {
     const budget = calcMonthAmount(incomes);
-    const essentials = budget * 0.5;
-    const nonEssentials = budget * 0.3;
-    const savings = budget * 0.20;
+    const essentials = budget * (needs / 100);
+    const nonEssentials = budget * (wants / 100);
+    const difference = budget * (savings / 100);
 
     const essentialTransactions = transactions.filter((transaction) =>
       categories.find((category) => category.id === transaction.category_id)?.type === "Essential"
@@ -44,11 +47,11 @@ export default function GenerateService() {
     );
 
     const adjustedEssentialCategories = adjustProportions(
-      categories.filter(cat => cat.type === "Essential" && cat.name !== "Subscription"),
+      categories.filter(cat => cat.type === "Essential"),
       essentialTransactions
     );
     const adjustedNonEssentialCategories = adjustProportions(
-      categories.filter(cat => cat.type === "Non_Essential" && cat.name !== "Subscription"),
+      categories.filter(cat => cat.type === "Non_Essential"),
       nonEssentialTransactions
     );
 
@@ -81,7 +84,6 @@ export default function GenerateService() {
       // Update all non-essential transactions
       for (const category of adjustedNonEssentialCategories) {
         const categoryTransactions = nonEssentialTransactions.filter(tx => tx.category_id === category.id);
-        const subscription = transactions.filter((transaction) => categories.find((category) => category.id === transaction.category_id)?.name === "Subscription");        
         const categoryAmount = Math.round(nonEssentials * (category.adjustedProportion / 100));
 
         const amountPerTransaction = categoryTransactions.length > 0 ? Math.round(categoryAmount / categoryTransactions.length): 0;
@@ -90,7 +92,7 @@ export default function GenerateService() {
           const isSubscription = transaction.category_id === 9; 
           const updatedTransaction = {
             ...transaction,
-            amount: Math.round(amountPerTransaction / transaction.interval),
+            amount: category.name === "Subscription" ?  transaction.amount: Math.round(amountPerTransaction / transaction.interval),
             isfixedamount: 'Yes' as 'Yes' | 'No',
           };
 

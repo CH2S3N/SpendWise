@@ -31,6 +31,21 @@ const styles= StyleSheet.create({
     shadowOffset: { height: 6, width: 0 },
     shadowOpacity: 0.15,
     padding: 10,
+
+    marginHorizontal: 5
+  },
+  regen: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.dark,
+    borderRadius: 45,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowRadius: 8,
+    shadowOffset: { height: 6, width: 0 },
+    shadowOpacity: 0.15,
+    padding: 15,
     marginHorizontal: 5
   },
   btnExpense: {

@@ -22,7 +22,7 @@ import BudgetPlan from '@/components/Home/BudgetPlan/BudgetPlan';
 import BudgetPlanInfo from '@/components/Home/BudgetPlan/BudgetPlanInfo';
 import styles from '@/components/Home/styles';
 import { useFetchData } from '@/hooks/useFetchData';
-
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 
 export default function Home() {
@@ -53,6 +53,7 @@ export default function Home() {
   const [isDailyBudgetModalVisible, setDailyBudgetModalVisible] = useState(false);
   const [isSummaryModalVisible, setSummaryModalVisible] = useState(false);
   const [isChartModalVisible, setChartModalVisible] = useState(false);
+  const [isGenerateModalVisible, setGenerateModalVisible] = useState(false);
 
   const essentialTransactions = transactions.filter(
     (transaction) =>
@@ -89,6 +90,9 @@ export default function Home() {
                     <AntDesign name="pluscircle" size={20} color="white" style={{ paddingRight: 10}}/>
                     <Text style={styles.btnTxt}>INCOME: <Budget/></Text>   
                   </TouchableOpacity>
+                  <TouchableOpacity onPress={() => setGenerateModalVisible(true)} style={styles.regen}>
+                  <FontAwesome5 name="redo-alt" size={24} color="white" />
+                  </TouchableOpacity>
                   <TouchableOpacity onPress={() => setSummaryModalVisible(true)} style={styles.btnExpense}>
                     <AntDesign name="minuscircle" size={20} color="white" style={{ paddingRight: 10}}/>
                     <Text style={styles.btnTxt}>EXPENSE: {totalExpenses}</Text>
@@ -107,21 +111,21 @@ export default function Home() {
                     content={<Goals/>}
                   />
                   {/* Budget Plan */}
-                    <InfoContainer
+                    {/* <InfoContainer
                     header={
                       <TouchableOpacity onPress={() => setDailyBudgetModalVisible(true)}>
                         <BigText content="BUDGET PLAN"/>
                       </TouchableOpacity>
                   }
                     content={<BudgetPlan/>}
-                  />
+                  /> */}
                 </View>
 
                 {/* Summary */}
                 <InfoContainer
                     header={
                       <TouchableOpacity onPress={() => setSummaryModalVisible(true)}>
-                        <BigText content="SUMMARY"/>
+                        <BigText content="Monthly Expenses"/>
                       </TouchableOpacity>
                     }
                     content={<ExpenseSummary/>}
@@ -160,7 +164,22 @@ export default function Home() {
               </View>
             </Modal>
 
-            {/* Income */}
+            {/* Generate */}
+            <Modal isOpen={isGenerateModalVisible} >
+              <View style={styles.modalcontainer}>
+              <View style={styles.modalheader}>
+                  <View style={styles.icon}>
+                      <TouchableOpacity onPress={() => setGenerateModalVisible(false)}>
+                          <AntDesign name="leftcircle" size={24} color="black" />
+                      </TouchableOpacity>
+                  </View>
+                      <Text style={styles.title}>Generate Budget Plan</Text>
+              </View >
+              <View style={styles.modalcontent}>
+                <BudgetPlanInfo setBudgetPlanGenerated={setBudgetPlanGenerated} setGenerateModalVisible={setGenerateModalVisible}/>
+              </View>
+              </View>
+            </Modal>
             <Modal isOpen={isIncomeInfoModalVisible} >
               <View style={styles.modalcontainer}>
               <View style={styles.modalheader}>
@@ -195,7 +214,7 @@ export default function Home() {
             </Modal>
 
             {/* Budget Plan */}
-            <Modal isOpen={isDailyBudgetModalVisible} >
+            {/* <Modal isOpen={isDailyBudgetModalVisible} >
               <View style={styles.modalcontainer}>
               <View style={styles.modalheader}>
                   <View style={styles.icon}>
@@ -209,7 +228,7 @@ export default function Home() {
                 <BudgetPlanInfo setBudgetPlanGenerated={setBudgetPlanGenerated}/>
               </View>
               </View>
-            </Modal>
+            </Modal> */}
 
             {/* Expense Summary */}
             <Modal isOpen={isSummaryModalVisible} >
@@ -248,7 +267,7 @@ export default function Home() {
         </>
       )}
       {isBudgetPlanGenerated === false && (
-        <BudgetPlanInfo setBudgetPlanGenerated={setBudgetPlanGenerated}/>
+        <BudgetPlanInfo setBudgetPlanGenerated={setBudgetPlanGenerated} setGenerateModalVisible={setGenerateModalVisible}/>
       )}
 
     </MainContainer>

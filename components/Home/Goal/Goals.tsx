@@ -24,10 +24,15 @@ export default function Goals() {
   return (
     <View style={styles.maincontainer}>
       <View style={styles.tableheader}>
-        <View style={styles.tabletitle}>
-          <Text style={styles.text}>Name</Text>
-          <Text style={styles.text}>Amount</Text>
-        </View>
+          <View style={styles.tabletitle}>
+            <Text style={styles.text}>Name</Text>
+          </View>
+          <View style={styles.tabletitle1}>
+            <Text style={styles.text}>Amount</Text>
+          </View>
+          <View style={styles.tabletitle1}>
+            <Text style={styles.text}>Cumulative Total</Text>
+          </View>
       </View>
       <View style={styles.container}>
           <GoalsList goals={goals}/>
@@ -54,8 +59,13 @@ const styles = StyleSheet.create({
     tabletitle: {
       flex: 1,
       flexDirection: 'row',
-      justifyContent: 'space-between'
+      alignItems: 'center'
     },
+    tabletitle1: {
+      flex: 1,
+      alignItems: 'center'
+    },
+
     text: {
       fontWeight: 'bold',
     },

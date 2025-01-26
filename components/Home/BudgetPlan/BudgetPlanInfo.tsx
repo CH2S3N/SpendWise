@@ -18,18 +18,25 @@ import ChartInfo from '../Chart/ChartInfo';
 import Summary from '../Chart/Summary';
 import { colors } from '@/constants/colors';
 import Card from '@/components/ui/Card';
-
+import Slider from '@react-native-community/slider';
+import { ProgressBar } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/state/store';
+import { setNeeds, setWants, setSavings } from '@/state/budgetSlice';
 
 
 
 export default function BudgetPlanInfo({
-  setBudgetPlanGenerated
+  setBudgetPlanGenerated,
+  setGenerateModalVisible
 }: {
   setBudgetPlanGenerated: React.Dispatch<React.SetStateAction<boolean>>;
+  setGenerateModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { handleSaveExpense } = GenerateService();
   
-
+  const dispatch = useDispatch();
+  const { needs, wants, savings } = useSelector((state: RootState) => state.budget); 
   
   const [isAddingTransaction, setIsAddingTransaction] = useState(false);
   const [isIncomeModalVisible, setIncomeModalVisible] = useState(false);
@@ -37,6 +44,28 @@ export default function BudgetPlanInfo({
   const [isSummaryModalVisible, setSummarisSummaryModalVisible] = useState(false);
   const [isGenerating, setGenerating] = useState(false);
 
+
+
+
+  // Function to handle slider changes while ensuring the sum is 100
+  const handleSliderChange = (sliderIndex: number, value: number) => {
+    if (sliderIndex === 1) {
+      const newSlider2 = 100 - value - savings;
+      dispatch(setNeeds(value));  // Dispatch action to update Needs
+      dispatch(setWants(newSlider2 >= 0 ? newSlider2 : 0));  // Dispatch action to update Wants
+      dispatch(setSavings(newSlider2 >= 0 ? savings : 0));  // Ensure Savings doesn't go negative
+    } else if (sliderIndex === 2) {
+      const newSlider1 = 100 - value - savings;
+      dispatch(setWants(value));  // Dispatch action to update Wants
+      dispatch(setNeeds(newSlider1 >= 0 ? newSlider1 : 0));  // Dispatch action to update Needs
+      dispatch(setSavings(newSlider1 >= 0 ? savings : 0));  // Ensure Savings doesn't go negative
+    } else {
+      const newSlider1 = 100 - value - wants;
+      dispatch(setSavings(value));  // Dispatch action to update Savings
+      dispatch(setNeeds(newSlider1 >= 0 ? newSlider1 : 0));  // Dispatch action to update Needs
+      dispatch(setWants(newSlider1 >= 0 ? wants : 0));  // Ensure Wants doesn't go negative
+    }
+  };
 
   return (
     <MainContainer>
@@ -66,6 +95,39 @@ export default function BudgetPlanInfo({
               </>
             }
           />
+          <Card
+            style={styles.card}
+            content={
+              <>
+              <Text>Needs: {needs}%</Text>
+              <Slider
+                value={needs}
+                onValueChange={(value) => handleSliderChange(1, value)}
+                minimumValue={0}
+                maximumValue={100}
+                step={1}
+              />
+
+              <Text>Wants: {wants}%</Text>
+              <Slider
+                value={wants}
+                onValueChange={(value) => handleSliderChange(2, value)}
+                minimumValue={0}
+                maximumValue={100}
+                step={1}
+              />
+
+              <Text>Savings: {savings}%</Text>
+              <Slider
+                value={savings}
+                onValueChange={(value) => handleSliderChange(3, value)}
+                minimumValue={0}
+                maximumValue={100}
+                step={1}
+              />
+            </>
+            }
+          />
 
         </View>
 
@@ -78,6 +140,7 @@ export default function BudgetPlanInfo({
             <TouchableOpacity style={styles.btn} onPress={()=> {
               handleSaveExpense();
               setBudgetPlanGenerated(true);
+              setGenerateModalVisible(false)
               }}>
               <Text style={styles.txt}>GENERATE</Text>   
             </TouchableOpacity>

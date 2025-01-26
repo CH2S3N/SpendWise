@@ -159,28 +159,25 @@ export default function AddExpense({
           <SegmentedControl
             values={['Yes', 'No']}
             selectedIndex={selectedIndex}
-            onChange={(event) => {
-              setSelectedIndex(event.nativeEvent.selectedSegmentIndex)
-
+            onChange={(event) => {setSelectedIndex(event.nativeEvent.selectedSegmentIndex)
             }}
           />
         </View>
         <View style={styles.content}>
           {/* AMOUNT */}
-          {selectedIndex === 0 && ( 
-            <TextInput
-              placeholder="Enter Amount"
-              style={{ marginBottom: 15, marginTop: 10, borderBottomWidth: 1, borderBottomColor: 'black' }}
-              keyboardType="numeric"
-              onChangeText={(text) => {
-                // Remove any non-numeric characters before setting the state
-                const numericValue = text.replace(/[^0-9.]/g, "");
-                setAmount(numericValue);
-                setIsFixedAmount("Yes")
+          <TextInput
+            placeholder="Enter Amount"
+            style={{ marginBottom: 15, marginTop: 10, borderBottomWidth: 1, borderBottomColor: 'black' }}
+            keyboardType="numeric"
+            onChangeText={(text) => {
+              // Remove any non-numeric characters before setting the state
+              const numericValue = text.replace(/[^0-9.]/g, "");
+              setAmount(numericValue);
+              setIsFixedAmount("Yes")
 
-              }}
-            />
-          )}
+            }}
+          />
+          
         </View>
       </View>
 

@@ -42,29 +42,33 @@ export default function UpdateIncome({
     }
 
 
-    useEffect(() => {
-      if (frequency === 'Daily') {
-        setInterval('1'); 
-        setSubType('Custom')
-      }
-      if (frequency === 'Weekly' && subType === 'Weekends') {
-        setInterval('2'); 
-      }
-      if (frequency === 'Weekly' && subType === 'Weekdays') {
-        setInterval('5'); 
-      }
-      if (frequency === 'Weekly' && subType === 'All') {
-        setInterval('7'); 
-      }
-      if (frequency === 'Monthly'){
-        setInterval(interval); 
-        setSubType('Custom')
-      }
-      if (frequency === 'Bi-Weekly'){
-        setInterval(interval); 
-        setSubType('Custom')
-      }
-    }, [frequency, subType]);
+   useEffect(() => {
+         if (frequency === 'Daily') {
+           setInterval('30'); 
+           setSubType('Custom')
+         }
+         if (frequency === 'Weekly' && subType === 'Weekends') {
+           setInterval('2'); 
+         }
+         if (frequency === 'Weekly' && subType === 'Weekdays') {
+           setInterval('5'); 
+         }
+         if (frequency === 'Weekly' && subType === 'All') {
+           setInterval('7'); 
+         }
+         if (frequency === 'Weekly' && subType === 'Custom') {
+           setInterval('1'); 
+         }
+         if (frequency === 'Monthly'){
+           setInterval('1'); 
+           setSubType('Custom')
+         }
+         if (frequency === 'Bi-Weekly'){
+           setInterval('1'); 
+           setSubType('Custom')
+         }
+       }, [frequency, subType]);
+   
 
 
 
