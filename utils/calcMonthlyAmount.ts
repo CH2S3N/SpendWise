@@ -1,7 +1,3 @@
-
-
-
-
 const calculateMonthlyAmount = (amount: number, frequency: string): number => {
     switch (frequency) {
         case "Daily":

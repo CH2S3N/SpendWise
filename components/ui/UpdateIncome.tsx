@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import Card from './Card';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { useSQLiteContext } from 'expo-sqlite';
-import { Category, Income, IncomeCategory } from '@/types';
+import { Income, IncomeCategory } from '@/types';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
 
 

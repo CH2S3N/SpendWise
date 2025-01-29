@@ -1,8 +1,6 @@
 import Card from "@/components/ui/Card";
-import { RootState } from "@/state/store";
 import { Income, IncomeCategory } from "@/types";
 import { Text, View, StyleSheet } from "react-native";
-import { useSelector } from "react-redux";
 
 interface Props {
   income: Income;

@@ -1,8 +1,7 @@
-import { View, Text } from 'react-native'
-import React, { useEffect } from 'react'
+
 import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
-import { Income, Transaction, User } from '@/types';
+import { Income } from '@/types';
 import calculateMonthlyAmount from '@/utils/calcMonthlyAmount';
 
 export default function Budget() {

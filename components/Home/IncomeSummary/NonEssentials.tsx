@@ -3,8 +3,6 @@ import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "re
 import TransactionDetails from "../ExpnseSummary/TransactionDetials/TransactionDetails";
 import React, { useState } from "react";
 import { Modal } from "@/components/Modal";
-import Card from "@/components/ui/Card";
-import AddExpense from "@/components/ui/AddExpense";
 import UpdateExpense from "@/components/ui/UpdateExpense";
 
 
@@ -56,7 +54,7 @@ export default function NonEssential({
                     <Modal isOpen={isModalVisible} transparent={true}>
                         <View style={styles.modal}>
                             {currentTransaction && (
-                                <UpdateExpense setIsModalVisible={setIsModalVisible} updateTransaction={updateTransaction} setIsUpdatingTransaction={setIsUpdatingTransaction}
+                                <UpdateExpense setIsModalVisible={setIsModalVisible} setIsUpdatingTransaction={setIsUpdatingTransaction}
                                 currentTransaction={currentTransaction}
                                 />
                             )}

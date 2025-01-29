@@ -1,7 +1,5 @@
 import React from "react";
-import { Modal, View, StyleSheet, TouchableOpacity, Text } from "react-native";
-import AntDesign from '@expo/vector-icons/AntDesign';
-import { colors } from "@/constants/colors";
+import { Modal, StyleSheet } from "react-native";
 
 interface CustomModalProps {
   isOpen: boolean;

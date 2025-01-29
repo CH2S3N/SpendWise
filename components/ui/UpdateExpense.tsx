@@ -5,7 +5,6 @@ import SegmentedControl from '@react-native-segmented-control/segmented-control'
 import { useSQLiteContext } from 'expo-sqlite';
 import { Category, Transaction } from '@/types';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
-import { Alert } from 'react-native';
 
 
 interface Props {

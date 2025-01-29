@@ -1,10 +1,6 @@
 import { Goal, Income, Transaction, User } from "@/types";
 import * as React from "react";
 import {  StyleSheet, View, Text } from "react-native";
-import SegmentedControl from "@react-native-segmented-control/segmented-control";
-import AddExpense from "./AddExpense";
-import AddGoal from "./AddGoal";
-import AddIncome from "./addIncome";
 import { Button } from "@rneui/base";
 
 

@@ -1,7 +1,6 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import MainContainer from '@/components/Containers/MainContainer';
-import { Goal, Income, Transaction } from '@/types';
 import { AntDesign } from '@expo/vector-icons';
 import InitialExpense from './GeneratedPlan/Expense';
 import InitialIncome from './GeneratedPlan/Income';
@@ -9,17 +8,11 @@ import AddTransaction from '@/components/ui/AddTransaction';
 import SummaryInfo from '../ExpnseSummary/TransactionDetials/SummaryInfo';
 import { Modal } from '@/components/Modal';
 import IncomeInfo from '../IncomeSummary/IncomeInfo';
-import BudgetPlan from './GeneratedPlan/GeneratedDetails.tsx/BudgetPlan';
 import GenerateService from '@/hooks/generateBudgetplan/Generate';
-import { Divider } from 'react-native-paper';
-import GeneratedIncome from './GeneratedPlan/GeneratedDetails.tsx/Income';
-import GeneratedExpense from './GeneratedPlan/GeneratedDetails.tsx/Expense';
 import ChartInfo from '../Chart/ChartInfo';
-import Summary from '../Chart/Summary';
 import { colors } from '@/constants/colors';
 import Card from '@/components/ui/Card';
 import Slider from '@react-native-community/slider';
-import { ProgressBar } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
 import { setNeeds, setWants, setSavings } from '@/state/budgetSlice';

@@ -4,7 +4,6 @@ import PieChart from 'react-native-pie-chart';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
 import Budget from '../Budget/totalIncome';
-import calculateMonthlyAmount from '@/utils/calcMonthlyAmount';
 
 
 

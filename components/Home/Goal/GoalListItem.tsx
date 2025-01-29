@@ -1,5 +1,5 @@
 import { Goal } from "@/types";
-import { ScrollView, Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 
 
 interface GoalListItemProps{

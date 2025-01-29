@@ -1,4 +1,3 @@
-import { colors } from "@/constants/colors";
 import { Modal as RNModal, ModalProps, View, ViewStyle, StyleSheet } from "react-native";
 
 type PROPS = ModalProps & {

@@ -1,12 +1,8 @@
 import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet } from 'react-native'
 import React, { useEffect } from 'react'
-import Card from './Card';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { useSQLiteContext } from 'expo-sqlite';
-import { Category, Income, IncomeCategory, Transaction } from '@/types';
-import { AppDispatch, RootState } from '@/state/store';
-import { useDispatch, useSelector } from 'react-redux';
-import { setLoading } from '@/state/dataSlice';
+import { IncomeCategory } from '@/types';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
 
 

@@ -1,5 +1,4 @@
-import { View,  StyleSheet, Button, TouchableOpacity, StatusBar, Text } from 'react-native';
-import { useSQLiteContext } from 'expo-sqlite/next';
+import { View, TouchableOpacity, Text } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import CircularChart from '../../components/Home/Chart/ExpenseChart';
 import ExpenseSummary from '../../components/Home/ExpnseSummary/ExpenseSummary';
@@ -10,27 +9,20 @@ import SummaryInfo from '@/components/Home/ExpnseSummary/TransactionDetials/Summ
 import ChartInfo from '@/components/Home/Chart/ChartInfo';
 import InfoContainer from '@/components/Containers/InfoContainer';
 import BigText from '@/components/Texts/BigText';
-import { AppDispatch, RootState } from '@/state/store';
-import { useDispatch, useSelector } from 'react-redux';
+import {  RootState } from '@/state/store';
+import {  useSelector } from 'react-redux';
 import MainContainer from '@/components/Containers/MainContainer';
 import { Modal } from '@/components/Modal';
 import { colors } from '@/constants/colors';
 import Budget from '@/components/Home/Budget/totalIncome';
 import IncomeInfo from '@/components/Home/IncomeSummary/IncomeInfo';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import BudgetPlan from '@/components/Home/BudgetPlan/BudgetPlan';
 import BudgetPlanInfo from '@/components/Home/BudgetPlan/BudgetPlanInfo';
 import styles from '@/components/Home/styles';
-import { useFetchData } from '@/hooks/useFetchData';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 
 export default function Home() {
-
-    const { fetchData } = useFetchData();
-    useEffect(() => {
-      fetchData();
-    }, []); 
   
   const { categories, transactions, incomes } = useSelector(
     (state: RootState) => state.data
@@ -50,7 +42,6 @@ export default function Home() {
   const [isGoalModalVisible, setGoalModalVisible] = useState(false);
   const [isAddingTransaction, setIsAddingTransaction] = useState(false);
   const [isIncomeInfoModalVisible, setIncomeInfoModalVisible] = useState(false);
-  const [isDailyBudgetModalVisible, setDailyBudgetModalVisible] = useState(false);
   const [isSummaryModalVisible, setSummaryModalVisible] = useState(false);
   const [isChartModalVisible, setChartModalVisible] = useState(false);
   const [isGenerateModalVisible, setGenerateModalVisible] = useState(false);

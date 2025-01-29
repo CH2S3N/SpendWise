@@ -1,15 +1,12 @@
 import 'react-native-gesture-handler';
-
-
-import React from 'react'
-import { Stack } from 'expo-router'
+import React, { useEffect } from 'react'
 import { ActivityIndicator, Text, View } from 'react-native';
 import loadDatabase from '@/context/db';
 import { Drawer } from 'expo-router/drawer';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { color } from '@rneui/base';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/constants/colors';
+import { useFetchData } from '@/hooks/useFetchData';
 
 
 const _layout = () => {
@@ -21,11 +18,16 @@ const _layout = () => {
       .catch((e) => console.error(e));
   }, []);
 
+  const { fetchData } = useFetchData();
+  useEffect(() => {
+    fetchData();
+  }, []); 
+
   // Show error screen if there is a loading error
   if (!isDbLoaded) {
     return (
       <View>
-        
+         <Text>Loading Database Error!</Text>
       </View>
     );
   }

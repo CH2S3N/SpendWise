@@ -1,4 +1,4 @@
-import { Income, IncomeCategory } from "@/types";
+import { Income } from "@/types";
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Modal } from "@/components/Modal";
 import React, { useState } from "react";

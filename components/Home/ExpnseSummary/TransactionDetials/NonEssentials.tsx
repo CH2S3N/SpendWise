@@ -1,5 +1,5 @@
 import { Category, Transaction } from "@/types";
-import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import TransactionDetails from "./TransactionDetails";
 import React, { useState } from "react";
 import { Modal } from "@/components/Modal";

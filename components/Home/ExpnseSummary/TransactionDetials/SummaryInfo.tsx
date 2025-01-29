@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import MainContainer from '@/components/Containers/MainContainer';
 import { RootState } from '@/state/store';
 import { useSelector } from 'react-redux';

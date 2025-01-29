@@ -1,10 +1,8 @@
 import { View, Text, StyleSheet } from 'react-native'
-import React, { useEffect } from 'react'
-import { useSQLiteContext } from 'expo-sqlite';
+import React from 'react'
 import GoalsList from './GoalsList';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
-import { useFetchData } from '@/hooks/useFetchData';
 
 
 export default function Goals() {

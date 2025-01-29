@@ -1,4 +1,3 @@
-import { Goal, Income, Transaction, User } from "@/types";
 import * as React from "react";
 import {  StyleSheet, View } from "react-native";
 import SegmentedControl from "@react-native-segmented-control/segmented-control";
@@ -16,7 +15,6 @@ export default function AddTransaction ({
     setIsAddingTransaction: React.Dispatch<React.SetStateAction<boolean>>;
     
 }) {
-    const [isAddingTransaction, ] = React.useState<boolean>(false);
     const [isUpdatingTransaction, setIsUpdatingTransaction] = React.useState<boolean>(false);
     const [selectedTypeIndex, setselectedTypeIndex] = React.useState<number>(0);
     // Return function of the Add transaction

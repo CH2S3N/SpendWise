@@ -1,8 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { RootState } from '@/state/store';
-import { useSelector } from 'react-redux';
-import Budget from '../Budget/totalIncome';
+import { StyleSheet, View } from 'react-native'
+import React from 'react';
 import ExpenseChart from './ExpenseChart';
 
 const Summary = () => {

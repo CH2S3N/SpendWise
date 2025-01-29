@@ -1,16 +1,12 @@
 import { Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import MainContainer from '@/components/Containers/MainContainer';
 import { StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
-import { useFetchData } from '@/hooks/useFetchData';
-import { useSQLiteContext } from 'expo-sqlite';
-import { Goal } from '@/types';
 import { Divider } from '@rneui/base';
 import InProgressList from './InProgressList';
 import AccomplishedList from './AccomplishedList';
-import Card from '@/components/ui/Card';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
 
 

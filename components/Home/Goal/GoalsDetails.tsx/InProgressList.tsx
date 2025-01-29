@@ -1,8 +1,6 @@
-import { Category, Goal, Transaction } from "@/types";
-import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Goal } from "@/types";
+import { Button, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
-import { Modal } from "@/components/Modal";
-import GoalsDetails from "./GoalsDetailsInProgress";
 import UpdateGoal from "@/components/ui/UpdateGoal";
 import InProgress from "./GoalsDetailsInProgress";
 import CustomModal from "@/components/Modal/CustomModal";

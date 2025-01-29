@@ -2,8 +2,7 @@ import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet } from 'rea
 import React, { useEffect } from 'react'
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { useSQLiteContext } from 'expo-sqlite';
-import { Category, Recurrence, Transaction } from '@/types';
-import MultiSelect from 'react-native-multiple-select';
+import { Category } from '@/types';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
 
 

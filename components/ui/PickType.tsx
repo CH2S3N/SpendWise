@@ -1,10 +1,8 @@
-import { Category, Goal, Transaction, User } from "@/types";
-import { useSQLiteContext } from "expo-sqlite";
+import { Goal, Transaction, User } from "@/types";
 import * as React from "react";
-import { Button, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Text, View } from "react-native";
 import Card from "./Card";
 import SegmentedControl from "@react-native-segmented-control/segmented-control";
-import AntDesign from '@expo/vector-icons/AntDesign';
 import AddButton from "../buttons/AddButton";
 import AddTransaction from "./AddTransaction";
 
@@ -33,7 +31,7 @@ export default function PickType ({
               />
 
               {selectedIndex === 0 && ( 
-               <AddTransaction insertTransaction={insertTransaction} insertBudget={insertBudget} insertGoal={insertGoal}/>
+               <AddTransaction setIsAddingTransaction={setIsAddingTransaction}/>
               )}
             </View>
             }/>

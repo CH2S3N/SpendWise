@@ -1,6 +1,5 @@
 import React from "react";
-import { Modal, View, StyleSheet, TouchableOpacity, Text } from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { Modal, View, StyleSheet } from "react-native";
 
 interface CustomModalProps {
   isOpen: boolean;

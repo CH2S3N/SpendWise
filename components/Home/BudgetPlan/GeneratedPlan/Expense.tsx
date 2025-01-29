@@ -2,7 +2,6 @@ import { View, Text, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { RootState } from '@/state/store';
 import { useSelector } from 'react-redux';
-import Card from '@/components/ui/Card';
 import styles from './styles';
 import { Divider } from 'react-native-paper';
 

@@ -1,5 +1,5 @@
 import { Category, Transaction } from "@/types";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import TransactionListItem from "./TransactionListItem";
 
 

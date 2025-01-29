@@ -1,6 +1,5 @@
 import { View, TextInput, Button, Text, StyleSheet } from 'react-native'
 import React from 'react'
-import Card from './Card';
 import { Goal } from '@/types';
 import { Divider } from '@rneui/base';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
