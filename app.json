@@ -12,16 +12,24 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "cli": {
+      "appVersionSource": "expo"
+    },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#ffffff",
+        "permissions": ["READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"]
       },
       "package": "com.chosan01.SpendWise"
     },
+    "assetBundlePatterns": [
+      "assets/**/*",
+      "assets/mySQLiteDB.db"
+    ],
     "web": {
       "bundler": "metro",
       "output": "static",
@@ -38,7 +46,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "18d70cef-dc7a-48ff-a266-1ef3e2e62987"
+        "projectId": "82274527-7cc7-419c-ae79-fb741f1a55c9"
       }
     }
   }

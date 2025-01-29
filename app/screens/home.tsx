@@ -20,10 +20,12 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import BudgetPlanInfo from '@/components/Home/BudgetPlan/BudgetPlanInfo';
 import styles from '@/components/Home/styles';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import { useFetchData } from '@/hooks/useFetchData';
 
 
 export default function Home() {
-  
+
+
   const { categories, transactions, incomes } = useSelector(
     (state: RootState) => state.data
     

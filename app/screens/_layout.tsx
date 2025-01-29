@@ -11,26 +11,17 @@ import { useFetchData } from '@/hooks/useFetchData';
 
 const _layout = () => {
   const [ isDbLoaded, setDbLoaded ] = React.useState<boolean>(false);
+  const { fetchData } = useFetchData();
+
   // Load the database on initial load
   React.useEffect(() => {
     loadDatabase()
       .then(() => setDbLoaded(true))
+      fetchData()
       .catch((e) => console.error(e));
   }, []);
 
-  const { fetchData } = useFetchData();
-  useEffect(() => {
-    fetchData();
-  }, []); 
 
-  // Show error screen if there is a loading error
-  if (!isDbLoaded) {
-    return (
-      <View>
-         <Text>Loading Database Error!</Text>
-      </View>
-    );
-  }
 
   // Show loading screen until database is loaded
   if (!isDbLoaded) {

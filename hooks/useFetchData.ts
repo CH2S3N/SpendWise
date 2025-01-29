@@ -9,6 +9,7 @@ export const useFetchData = () => {
 
   const fetchData = async () => {
     try {
+      console.log("Fetching data..."); 
       dispatch(setLoading()); // Set loading state
       const [transactionResult, categoriesResult, goalsResult, userResult, incomeResult] = await Promise.all([
         db.getAllAsync<Transaction>('SELECT * FROM Transactions'),
@@ -17,6 +18,12 @@ export const useFetchData = () => {
         db.getAllAsync<User>('SELECT * FROM User'),
         db.getAllAsync<Income>('SELECT * FROM Income'),
       ]);
+
+      console.log("Fetched Transactions:", transactionResult); 
+      console.log("Fetched Categories:", categoriesResult);
+      console.log("Fetched Incomes:", incomeResult);
+      console.log("Fetched Users:", userResult);
+      console.log("Fetched Goals:", goalsResult);
 
       // Dispatch data to Redux
       dispatch(
@@ -31,6 +38,7 @@ export const useFetchData = () => {
         })
       );
     } catch (error: any) {
+      console.error("Fetch Data Error:", error);
       dispatch(setError(error.message || 'Failed to fetch data'));
     }
   };

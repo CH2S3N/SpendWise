@@ -10,7 +10,9 @@ export function UseTransactionService() {
   const { categories, transactions, user, goals, incomes, incomeCategories, recurrence } = useSelector((state: RootState) => state.data);
   const { fetchData } = useFetchData();
   const db = useSQLiteContext();
-
+  if (!db) {
+    console.error('SQLite context is not initialized');
+  }
   // GOAL
   // Add Goal
   const insertGoal = async (goal: Goal) => {
@@ -26,6 +28,7 @@ export function UseTransactionService() {
 
       // Reload data after inserting goal
       const goalResult = await db.getAllAsync<Goal>('SELECT * FROM Goals');
+      console.log('Added Goal:', goalResult);
       dispatch(setData({ goals: goalResult, categories, incomeCategories, transactions, user, incomes, recurrence }));
     });
   };
@@ -45,6 +48,7 @@ export function UseTransactionService() {
   
         // Reload data after inserting goal
         const goalResult = await db.getAllAsync<Goal>('SELECT * FROM Goals');
+        console.log('Updated Goals:', goalResult);
         dispatch(setData({ goals: goalResult, categories, incomeCategories, transactions, user, incomes, recurrence }));
       });
     };
@@ -55,6 +59,7 @@ export function UseTransactionService() {
       await db.withTransactionAsync(async () => {
         await db.runAsync('DELETE FROM Goals WHERE id = ?;', [id]);
         await fetchData();
+        console.log(`Goal with id ${id} deleted`);
       });
     } catch (error) {
       console.error('Error deleting goal:', error);
@@ -80,6 +85,7 @@ export function UseTransactionService() {
       
       // Reload data after inserting transaction
       const incomeResult = await db.getAllAsync<Income>('SELECT * FROM Income');
+      console.log('Added Income:', incomeResult);
       dispatch(setData({ incomes: incomeResult, categories, incomeCategories, goals, user, transactions, recurrence }));
     });
   };
@@ -102,6 +108,7 @@ export function UseTransactionService() {
       );
       // Reload data after inserting transaction
       const transactionResult = await db.getAllAsync<Income>('SELECT * FROM Income');
+      console.log('Updated Income:', transactionResult);
       dispatch(setData({ incomes: transactionResult, categories, incomeCategories, goals, user, transactions, recurrence }));
     });
   };
@@ -111,6 +118,7 @@ export function UseTransactionService() {
       await db.withTransactionAsync(async () => {
         await db.runAsync('DELETE FROM Income WHERE id = ?;', [id]);
         await fetchData();
+        console.log(`Income with id ${id} deleted`);
       });
     } catch (error) {
       console.error('Error deleting transaction:', error);
@@ -138,6 +146,7 @@ export function UseTransactionService() {
       );
       // Reload data after inserting transaction
       const transactionResult = await db.getAllAsync<Transaction>('SELECT * FROM Transactions');
+      console.log('Added Expense:', transactionResult);
       dispatch(setData({ transactions: transactionResult, categories, incomeCategories, goals, user, incomes, recurrence }));
     });
   };
@@ -163,6 +172,7 @@ export function UseTransactionService() {
       );
         // Reload data after inserting transaction
         const transactionResult = await db.getAllAsync<Transaction>('SELECT * FROM Transactions');
+        console.log('Updated Expense:', transactionResult);
         dispatch(setData({ transactions: transactionResult, categories, incomeCategories, goals, user, incomes, recurrence }));
       });
   };
@@ -173,6 +183,7 @@ export function UseTransactionService() {
       await db.withTransactionAsync(async () => {
         await db.runAsync('DELETE FROM Transactions WHERE id = ?;', [id]);
         await fetchData();
+        console.log(`Expense with id ${id} deleted`);
       }); 
     } catch (error) {
       console.error('Error deleting transaction:', error);
