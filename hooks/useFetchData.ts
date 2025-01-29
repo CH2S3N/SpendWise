@@ -1,4 +1,4 @@
-import { useSQLiteContext } from 'expo-sqlite/next';
+import { useSQLiteContext } from 'expo-sqlite';
 import { useDispatch } from 'react-redux';
 import { setData, setError, setLoading } from '@/state/dataSlice';
 import { Transaction, Category, Goal, User, Income } from '@/types';

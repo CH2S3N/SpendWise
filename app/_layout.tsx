@@ -1,4 +1,4 @@
-import { SQLiteProvider } from 'expo-sqlite/next';
+import { SQLiteProvider } from 'expo-sqlite';
 import React from 'react';
 import { Stack } from 'expo-router';
 import { Provider } from 'react-redux';
