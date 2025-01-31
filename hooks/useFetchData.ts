@@ -2,6 +2,7 @@ import { useSQLiteContext } from 'expo-sqlite';
 import { useDispatch } from 'react-redux';
 import { setData, setError, setLoading } from '@/state/dataSlice';
 import { Transaction, Category, Goal, User, Income } from '@/types';
+import loadDatabase from '@/context/db';
 
 export const useFetchData = () => {
   const db = useSQLiteContext();
@@ -9,6 +10,8 @@ export const useFetchData = () => {
 
   const fetchData = async () => {
     try {
+      await loadDatabase()
+      
       console.log("Fetching data..."); 
       dispatch(setLoading()); // Set loading state
       const [transactionResult, categoriesResult, goalsResult, userResult, incomeResult] = await Promise.all([
@@ -19,11 +22,9 @@ export const useFetchData = () => {
         db.getAllAsync<Income>('SELECT * FROM Income'),
       ]);
 
-      console.log("Fetched Transactions:", transactionResult); 
-      console.log("Fetched Categories:", categoriesResult);
-      console.log("Fetched Incomes:", incomeResult);
-      console.log("Fetched Users:", userResult);
-      console.log("Fetched Goals:", goalsResult);
+      console.log("Data Fetched Successfully!"); 
+
+      
 
       // Dispatch data to Redux
       dispatch(

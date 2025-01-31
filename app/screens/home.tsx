@@ -21,15 +21,19 @@ import BudgetPlanInfo from '@/components/Home/BudgetPlan/BudgetPlanInfo';
 import styles from '@/components/Home/styles';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { useFetchData } from '@/hooks/useFetchData';
+import { ActivityIndicator } from 'react-native-paper';
+import * as SQLite from 'expo-sqlite';
+import * as FileSystem from 'expo-file-system';
+import { Asset } from 'expo-asset';
 
 
 export default function Home() {
-
 
   const { categories, transactions, incomes } = useSelector(
     (state: RootState) => state.data
     
   );
+  
   const [isBudgetPlanGenerated, setBudgetPlanGenerated] = useState(false);
 
   useEffect(() => {
