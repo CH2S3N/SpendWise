@@ -20,11 +20,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import BudgetPlanInfo from '@/components/Home/BudgetPlan/BudgetPlanInfo';
 import styles from '@/components/Home/styles';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import { useFetchData } from '@/hooks/useFetchData';
-import { ActivityIndicator } from 'react-native-paper';
-import * as SQLite from 'expo-sqlite';
-import * as FileSystem from 'expo-file-system';
-import { Asset } from 'expo-asset';
+import TotalExpense from '@/components/Home/Budget/totalExpense';
 
 
 export default function Home() {
@@ -52,26 +48,6 @@ export default function Home() {
   const [isChartModalVisible, setChartModalVisible] = useState(false);
   const [isGenerateModalVisible, setGenerateModalVisible] = useState(false);
 
-  const essentialTransactions = transactions.filter(
-    (transaction) =>
-      categories.find((category) => category.id === transaction.category_id)?.type === 'Essential'
-  );
-  const nonEssentialTransactions = transactions.filter(
-    (transaction) =>
-      categories.find((category) => category.id === transaction.category_id)?.type === 'Non_Essential'
-  );
-
-  // Calculate the monthly amount using calculateMonthlyAmount
-  function calcMonthAmount(transactions: typeof essentialTransactions) {
-    return transactions.reduce((total, transaction) => {
-      return (
-        total + transaction.amount || 0
-      );
-    }, 0);
-  }
-  const essentialMonthlyTotal = calcMonthAmount(essentialTransactions);
-  const nonEssentialMonthlyTotal = calcMonthAmount(nonEssentialTransactions);
-  const totalExpenses = essentialMonthlyTotal + nonEssentialMonthlyTotal
 
   // Return Function
   return (
@@ -92,7 +68,7 @@ export default function Home() {
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => setSummaryModalVisible(true)} style={styles.btnExpense}>
                     <AntDesign name="minuscircle" size={20} color="white" style={{ paddingRight: 10}}/>
-                    <Text style={styles.btnTxt}>EXPENSE: {totalExpenses}</Text>
+                    <Text style={styles.btnTxt}>EXPENSE: <TotalExpense/></Text>
                   </TouchableOpacity>
               </View>
 
@@ -209,23 +185,6 @@ export default function Home() {
               </View>
               </View>
             </Modal>
-
-            {/* Budget Plan */}
-            {/* <Modal isOpen={isDailyBudgetModalVisible} >
-              <View style={styles.modalcontainer}>
-              <View style={styles.modalheader}>
-                  <View style={styles.icon}>
-                      <TouchableOpacity onPress={() => setDailyBudgetModalVisible(false)}>
-                          <AntDesign name="leftcircle" size={24} color="black" />
-                      </TouchableOpacity>
-                  </View>
-                      <Text style={styles.title}>BUDGET PLAN</Text>
-              </View >
-              <View style={styles.modalcontent}>
-                <BudgetPlanInfo setBudgetPlanGenerated={setBudgetPlanGenerated}/>
-              </View>
-              </View>
-            </Modal> */}
 
             {/* Expense Summary */}
             <Modal isOpen={isSummaryModalVisible} >

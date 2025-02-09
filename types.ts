@@ -27,10 +27,12 @@ export interface Income {
 }
 
 export interface Category {
+    map(arg0: (category: any) => any): import("react").ReactNode;
     id: number;
     name: string;
     type: "Essential" | "Non_Essential";
     proportion: number;
+    initialProp: number;
 }
 
 export interface IncomeCategory {

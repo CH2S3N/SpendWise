@@ -15,7 +15,14 @@ import Card from '@/components/ui/Card';
 import Slider from '@react-native-community/slider';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
-import { setNeeds, setWants, setSavings } from '@/state/budgetSlice';
+import { setNeeds, setWants, setSavings, resetCat} from '@/state/budgetSlice';
+import { ScrollView } from 'react-native-gesture-handler';
+import { Button } from 'react-native-paper';
+import { UseTransactionService } from '@/hooks/editData/TransactionService';
+import SubCat from './SubCatNeeds';
+import { setData } from '@/state/dataSlice';
+import SubCatNeeds from './SubCatNeeds';
+import SubCatWants from './SubCatWants';
 
 
 
@@ -27,107 +34,200 @@ export default function BudgetPlanInfo({
   setGenerateModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { handleSaveExpense } = GenerateService();
-  
+  const { updateCategory } = UseTransactionService();
   const dispatch = useDispatch();
-  const { needs, wants, savings } = useSelector((state: RootState) => state.budget); 
+  const { needs, wants, savings} = useSelector((state: RootState) => state.budget); 
+  const { categories, transactions, incomeCategories, goals, user, incomes, recurrence } = useSelector((state: RootState) => state.data);
+
+
+
+  // modal
+  const [activeModal, setActiveModal] = useState<'income' | 'expense' | 'summary' | null>(null);
+  const closeModal = () => setActiveModal(null);
+  const openModal = (modalName: "income" | "expense" | "summary") => {
+    setActiveModal(modalName);
+  };
   
+
+
+  const [isAdvanceModalVisible, setAdvanceModalVisible] = useState(false);
   const [isAddingTransaction, setIsAddingTransaction] = useState(false);
-  const [isIncomeModalVisible, setIncomeModalVisible] = useState(false);
-  const [isExpenseModalVisible, setExpenseModalVisible] = useState(false);
-  const [isSummaryModalVisible, setSummarisSummaryModalVisible] = useState(false);
-  const [isGenerating, setGenerating] = useState(false);
+
+
+  // 
 
 
 
-
-  // Function to handle slider changes while ensuring the sum is 100
-  const handleSliderChange = (sliderIndex: number, value: number) => {
+  // Function to handle slider change
+  const handleCategorySliderChange = (sliderIndex: number, value: number) => {
     if (sliderIndex === 1) {
       const newSlider2 = 100 - value - savings;
-      dispatch(setNeeds(value));  // Dispatch action to update Needs
-      dispatch(setWants(newSlider2 >= 0 ? newSlider2 : 0));  // Dispatch action to update Wants
-      dispatch(setSavings(newSlider2 >= 0 ? savings : 0));  // Ensure Savings doesn't go negative
+      dispatch(setNeeds(value));  
+      dispatch(setWants(newSlider2 >= 0 ? newSlider2 : 0));  
+      dispatch(setSavings(newSlider2 >= 0 ? savings : 0));  
     } else if (sliderIndex === 2) {
       const newSlider1 = 100 - value - savings;
-      dispatch(setWants(value));  // Dispatch action to update Wants
-      dispatch(setNeeds(newSlider1 >= 0 ? newSlider1 : 0));  // Dispatch action to update Needs
-      dispatch(setSavings(newSlider1 >= 0 ? savings : 0));  // Ensure Savings doesn't go negative
+      dispatch(setWants(value));  
+      dispatch(setNeeds(newSlider1 >= 0 ? newSlider1 : 0));  
+      dispatch(setSavings(newSlider1 >= 0 ? savings : 0));  
     } else {
       const newSlider1 = 100 - value - wants;
-      dispatch(setSavings(value));  // Dispatch action to update Savings
-      dispatch(setNeeds(newSlider1 >= 0 ? newSlider1 : 0));  // Dispatch action to update Needs
-      dispatch(setWants(newSlider1 >= 0 ? wants : 0));  // Ensure Wants doesn't go negative
+      dispatch(setSavings(value));  
+      dispatch(setNeeds(newSlider1 >= 0 ? newSlider1 : 0)); 
+      dispatch(setWants(newSlider1 >= 0 ? wants : 0)); 
     }
   };
+
+
 
   return (
     <MainContainer>
       <>
         <View style={styles.mainCon}>
         <Text style={styles.title}>Generate A Budget Plan</Text>
-          <Card
-            style={styles.card}
-            content={
-              <>
-              <TouchableOpacity onPress={()=>setIncomeModalVisible(true)}>
-                  <Text style={styles.title}>INCOME</Text>
+        {/* Income & Expense Card */}
+        {isAdvanceModalVisible === false && (
+          <>
+            <Card
+              style={styles.card}
+              content={
+                <>
+                <TouchableOpacity onPress={() => openModal('income')}>
+                    <Text style={styles.title}>INCOME</Text>
+                  </TouchableOpacity>
+                    <InitialIncome />
+                </>
+              }
+            />
+
+            <Card
+              style={styles.card}
+              content={
+                <>
+                <TouchableOpacity onPress={() => openModal('expense')}>
+                  <Text style={styles.title}>EXPENSE</Text>
                 </TouchableOpacity>
-                  <InitialIncome />
-              </>
-            }
-          />
+                <InitialExpense />
+                </>
+              }
+            />
 
+            <Card
+              style={styles.card}
+              content={
+                <>
+                <Text style={{textAlign: 'center', textAlignVertical: 'center'}}>Categories</Text>
+                <ScrollView>
+                <Text>Needs: {needs}%</Text>
+                <Slider
+                  value={needs}
+                  onValueChange={(value) => handleCategorySliderChange(1, value)}
+                  minimumValue={0}
+                  maximumValue={100}
+                  step={1}
+                />
+
+                <Text>Wants: {wants}%</Text>
+                <Slider
+                  value={wants}
+                  onValueChange={(value) => handleCategorySliderChange(2, value)}
+                  minimumValue={0}
+                  maximumValue={100}
+                  step={1}
+                />
+
+                <Text>Savings: {savings}%</Text>
+                <Slider
+                  value={savings}
+                  onValueChange={(value) => handleCategorySliderChange(3, value)}
+                  minimumValue={0}
+                  maximumValue={100}
+                  step={1}
+                />
+                </ScrollView>
+                <TouchableOpacity style={{alignItems: 'flex-end'}} onPressOut={()=>  dispatch(resetCat())}><Text>reset</Text></TouchableOpacity>
+
+                </>
+              }
+            />
+            <Button onPress={()=> setAdvanceModalVisible(true)}>Advance</Button>
+          </>
+        )}
+
+
+        {isAdvanceModalVisible === true && (
+          <>
+          {/* Proportions */}
+          {/* 502030 */}
           <Card
-            style={styles.card}
-            content={
-              <>
-              <TouchableOpacity onPress={()=>setExpenseModalVisible(true)}>
-                <Text style={styles.title}>EXPENSE</Text>
-              </TouchableOpacity>
-              <InitialExpense />
-              </>
-            }
-          />
-          <Card
-            style={styles.card}
-            content={
-              <>
-              <Text>Needs: {needs}%</Text>
-              <Slider
-                value={needs}
-                onValueChange={(value) => handleSliderChange(1, value)}
-                minimumValue={0}
-                maximumValue={100}
-                step={1}
-              />
+              style={styles.card}
+              content={
+                <>
+                <Text style={{textAlign: 'center', textAlignVertical: 'center'}}>Categories</Text>
+                <ScrollView>
+                <Text>Needs: {needs}%</Text>
+                <Slider
+                  value={needs}
+                  onValueChange={(value) => handleCategorySliderChange(1, value)}
+                  minimumValue={0}
+                  maximumValue={100}
+                  step={1}
+                />
 
-              <Text>Wants: {wants}%</Text>
-              <Slider
-                value={wants}
-                onValueChange={(value) => handleSliderChange(2, value)}
-                minimumValue={0}
-                maximumValue={100}
-                step={1}
-              />
+                <Text>Wants: {wants}%</Text>
+                <Slider
+                  value={wants}
+                  onValueChange={(value) => handleCategorySliderChange(2, value)}
+                  minimumValue={0}
+                  maximumValue={100}
+                  step={1}
+                />
 
-              <Text>Savings: {savings}%</Text>
-              <Slider
-                value={savings}
-                onValueChange={(value) => handleSliderChange(3, value)}
-                minimumValue={0}
-                maximumValue={100}
-                step={1}
-              />
-            </>
-            }
-          />
+                <Text>Savings: {savings}%</Text>
+                <Slider
+                  value={savings}
+                  onValueChange={(value) => handleCategorySliderChange(3, value)}
+                  minimumValue={0}
+                  maximumValue={100}
+                  step={1}
+                />
+                </ScrollView>
+                <TouchableOpacity style={{alignItems: 'flex-end'}} onPressOut={()=>  dispatch(resetCat())}><Text>reset</Text></TouchableOpacity>
+
+                </>
+              }
+            />
+            {/* needs */}
+            <Card
+              style={styles.card}
+              content={
+                <>
+                    <Text style={{textAlign: 'center', textAlignVertical: 'center'}}>Needs</Text>
+                      <SubCatNeeds/>
+                </>
+              }
+            />
+            
+            {/* wants */}
+            <Card
+              style={styles.card}
+              content={
+                <>
+                  <Text style={{textAlign: 'center', textAlignVertical: 'center'}}>Wants</Text>
+                  <SubCatWants/>
+                </>
+              }
+            />
+             <Button onPress={()=> setAdvanceModalVisible(false)}>Go Back</Button>
+          </>
+        )}
 
         </View>
 
         {/* Buttons for Transactions and Generation */}
         <View style={styles.btncontainer}>
           <View style={styles.content}>
-            <TouchableOpacity style={styles.btn} onPress={()=> setIsAddingTransaction(true)}>
+            <TouchableOpacity style={styles.btn} onPress={() =>setIsAddingTransaction(true)}>
               <Text style={styles.txt}>ADD TRANSACTION</Text>   
             </TouchableOpacity>
             <TouchableOpacity style={styles.btn} onPress={()=> {
@@ -149,13 +249,12 @@ export default function BudgetPlanInfo({
             <AddTransaction setIsAddingTransaction={setIsAddingTransaction} />
         </View>
       </Modal>
-
       {/* Expense Summary */}
-      <Modal isOpen={isExpenseModalVisible} >
+      <Modal isOpen={activeModal === 'expense'} >
         <View style={styles.modalContainer}>
         <View style={styles.modalheader}>
             <View style={styles.icon}>
-                <TouchableOpacity onPress={() => setExpenseModalVisible(false)}>
+                <TouchableOpacity onPress={closeModal}>
                     <AntDesign name="leftcircle" size={24} color="black" />
                 </TouchableOpacity>
             </View>
@@ -166,13 +265,12 @@ export default function BudgetPlanInfo({
         </View>
         </View>
       </Modal>
-      
       {/* Income Summary */}
-      <Modal isOpen={isIncomeModalVisible} >
+      <Modal isOpen={activeModal === 'income'} >
         <View style={styles.modalContainer}>
         <View style={styles.modalheader}>
             <View style={styles.icon}>
-                <TouchableOpacity onPress={() => setIncomeModalVisible(false)}>
+                <TouchableOpacity onPress={closeModal}>
                     <AntDesign name="leftcircle" size={24} color="black" />
                 </TouchableOpacity>
             </View>
@@ -180,22 +278,6 @@ export default function BudgetPlanInfo({
         </View >
         <View style={styles.modalcontent}>
               <IncomeInfo/>
-        </View>
-        </View>
-      </Modal>
-      {/* Transactions Summary */}
-      <Modal isOpen={isSummaryModalVisible} >
-        <View style={styles.modalContainer}>
-        <View style={styles.modalheader}>
-            <View style={styles.icon}>
-                <TouchableOpacity onPress={() => setSummarisSummaryModalVisible(false)}>
-                    <AntDesign name="leftcircle" size={24} color="black" />
-                </TouchableOpacity>
-            </View>
-                <Text style={styles.title}>Summary</Text>
-        </View >
-        <View style={styles.modalcontent}>
-              <ChartInfo/>
         </View>
         </View>
       </Modal>
@@ -208,12 +290,14 @@ export default function BudgetPlanInfo({
 
 const styles = StyleSheet.create({
   mainCon:{
-    flex: 2,
+    flex: 4,
     paddingTop: 10
   },
   card:{
+    flex:1,
     marginHorizontal: 20,
     marginVertical: 10
+
   },
   container:{
     flex:1

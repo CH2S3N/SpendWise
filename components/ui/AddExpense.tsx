@@ -54,7 +54,7 @@ export default function AddExpense({
     }
 
     function validateFields() {
-      if (!description|| (subType === 'Custom' && !interval && frequency !== 'Daily') || (frequency == 'Monthly' && !interval) || !category || !prioritization || !typeSelected || (isfixedamount === 'Yes' && !amount)) {
+      if ( !description || (isfixedamount == 'Yes' && !amount) || !typeSelected || (frequency == 'Daily' && !interval) || (subType === 'Custom' && !interval) || (frequency == 'Monthly' && !interval))  {
         return false;
       }
       

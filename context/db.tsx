@@ -1,7 +1,5 @@
-import * as SQLite from 'expo-sqlite';
 import * as FileSystem from 'expo-file-system';
 import { Asset } from 'expo-asset';
-import { Category } from '@/types';
 
 // load the database
 const loadDatabase = async () => {

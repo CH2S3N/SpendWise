@@ -1,18 +1,14 @@
 import { View, Text, StyleSheet, Button } from 'react-native'
 import React from 'react'
 import { Divider } from '@rneui/base'
-import GenerateService from '@/hooks/generateBudgetplan/Generate'
 import GeneratedExpense from './Expense'
 import GeneratedIncome from './Income'
+import useGenerateService from '@/hooks/generateBudgetplan/Generate'
 
 export default function BudgetPlan() {
 
-
-const { handleSaveExpense } = GenerateService();
+const { handleSaveExpense } = useGenerateService();
     
-
-
-
   return (
         <View style={styles.mainContainer}>
             <View style={styles.card}>
@@ -43,10 +39,7 @@ const { handleSaveExpense } = GenerateService();
                     <Text style={styles.txt}>Savings</Text>
                 </View>
                 <View style={styles.container}>
-                <Button
-        title='Generate'
-        onPress={handleSaveExpense}
-        />
+                <Button title='Generate'onPress={handleSaveExpense}/>
                 </View>
 
 
@@ -90,3 +83,4 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     }
 })
+

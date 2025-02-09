@@ -1,12 +1,14 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { RootState } from '@/state/store';
+import { useSelector } from 'react-redux';
 
-const totalExpense = () => {
-  return (
-    <View>
-      <Text>totalExpense</Text>
-    </View>
-  )
+const TotalExpense = () => {
+  const { transactions } = useSelector((state: RootState) => state.data);
+  
+  const totalExpenses = transactions.reduce((total, transaction) => {
+    return (total + (transaction.amount * transaction.interval) || 0)
+  }, 0);
+
+  return totalExpenses
 };
 
-export default totalExpense;
+export default TotalExpense;

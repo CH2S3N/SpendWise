@@ -5,17 +5,23 @@ import CircularChart from './ExpenseChart';
 import BigText from '@/components/Texts/BigText';
 import IncomeChart from './IncomeChart ';
 import { Divider } from '@rneui/base';
+import Overview from './Overview';
 
 export default function ChartInfo() {
   return (
     <MainContainer>
-     <BigText content='Expense Structure'/>
     <Divider/>
+     <BigText content='Overview'/>
+     <View style={styles.overview}>
+      <Overview/>
+     </View>
+    <Divider/>
+     <BigText content='Expense Structure'/>
      <View style={styles.content}>
       <CircularChart/>
      </View>
-     <BigText content='Income Structure'/>
      <Divider/>
+     <BigText content='Income Structure'/>
      <View style={styles.content}>
       <IncomeChart/>
      </View>
@@ -25,15 +31,15 @@ export default function ChartInfo() {
 }
 
 const styles = StyleSheet.create({
-  content: {
-    flex: 5,
+  overview: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  header: {
-    flex:1,
+  content: {
+    flex: 2,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   text: {
     fontWeight: 'bold',

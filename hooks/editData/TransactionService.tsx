@@ -3,7 +3,7 @@ import { AppDispatch, RootState } from "@/state/store";
 import { useFetchData } from "../useFetchData";
 import { useSQLiteContext } from "expo-sqlite";
 import { setData } from "@/state/dataSlice";
-import { Goal, Income, Transaction } from "@/types";
+import { Category, Goal, Income, Transaction } from "@/types";
 
 export function UseTransactionService() {
   const dispatch = useDispatch<AppDispatch>();
@@ -188,7 +188,23 @@ export function UseTransactionService() {
     } catch (error) {
       console.error('Error deleting transaction:', error);
     }
-  }
+  };
+
+
+  const updateCategory = async (category: Category) => {
+    await db.withTransactionAsync(async () => {
+      await db.runAsync(
+        `UPDATE Categories SET name = ?, type = ?, initialProp = ?, proportion = ?  WHERE id = ?`,
+        [category.name, category.type, category.initialProp, category.proportion, category.id]
+      );
+  
+      // Reload data after updating
+      const categoryResult = await db.getAllAsync<Category>("SELECT * FROM Categories");
+      console.log("Updated Category:", categoryResult);
+      dispatch(setData({ categories: categoryResult, transactions, incomeCategories, goals, user, incomes, recurrence }));
+    });
+  };
+  
 
 
   
@@ -203,6 +219,7 @@ export function UseTransactionService() {
     deleteIncome,
     insertTransaction,
     updateTransaction,
-    deleteTransaction
+    deleteTransaction,
+    updateCategory
   };
 }

@@ -5,9 +5,8 @@ import { Income } from '@/types';
 import calculateMonthlyAmount from '@/utils/calcMonthlyAmount';
 
 export default function Budget() {
- const incomes: Income[] = useSelector((state: RootState) => state.data.incomes);
+  const { incomes } = useSelector((state: RootState) => state.data);
 
-  // Calculate the total monthly amount
   const calcMonthAmount = (incomes: Income[]): number => {
     return incomes.reduce((total: number, income: Income) => {
       const amount = income.amount || 0;
@@ -17,7 +16,5 @@ export default function Budget() {
   };
 
   const monthlyAmount = calcMonthAmount(incomes);
-  
-  return monthlyAmount
-
+  return monthlyAmount;
 }
