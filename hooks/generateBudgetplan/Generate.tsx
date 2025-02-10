@@ -19,7 +19,7 @@ export default function GenerateService() {
     }, 0);
   };
 
-  // Returns categories that actually have transactions and computes an adjusted proportion
+  // Returns subcategories with Transactions 
   const adjustProportions = (categories: Category[], transactions: any[]) => {
     const availableCategories = categories.filter(cat => transactions.some(tx => tx.category_id === cat.id));
     const totalProportion = availableCategories.reduce((total, cat) => total + cat.proportion, 0);
@@ -43,7 +43,7 @@ export default function GenerateService() {
       categories.find(category => category.id === tx.category_id)?.type === "Non_Essential"
     );
 
-    // Adjust proportions for subcategories with available transactions
+    // Adjust proportions for subcategories 
     const adjustedEssentialCategories = adjustProportions(
       categories.filter(cat => cat.type === "Essential"),
       essentialTransactions
@@ -59,11 +59,10 @@ export default function GenerateService() {
         const catTxs = essentialTransactions.filter(tx => tx.category_id === category.id);
         let categoryBudget = Math.round(essentialsAllocation * (category.adjustedProportion / 100));
 
-        // Process fixed-amount transactions first
         const fixedTxs = catTxs.filter(tx => tx.isfixedamount === "Yes");
         const variableTxs = catTxs.filter(tx => tx.isfixedamount !== "Yes");
 
-        // Allocate fixed transactions fully (or up to categoryBudget)
+        // Allocate fixed transactions fully 
         for (const tx of fixedTxs) {
           const allocation = Math.min(tx.amount, categoryBudget);
           categoryBudget -= allocation;
@@ -77,32 +76,49 @@ export default function GenerateService() {
         }
 
         //allocate remaining funds 
-        if (variableTxs.length > 0 && categoryBudget > 0) {
+        if (variableTxs.length > 0) {
           const equalShare = Math.floor(categoryBudget / variableTxs.length);
           let remainder = categoryBudget % variableTxs.length;
-          for (const tx of variableTxs) {
-            let allocation = equalShare;
-            if (remainder > 0) {
-              allocation += 1;
-              remainder--;
+          if (categoryBudget === 0){
+            for (const tx of variableTxs) {
+             
+              const updatedTx = {
+                ...tx, amount: 0
+              };
+              try {
+                await updateTransaction(updatedTx);
+              } catch (error) {
+                console.error(`Error updating variable essential transaction ${tx.id}:`, error);
+                alert(`An error occurred while saving expense ${tx.description}.`);
+              }
             }
-            // Subtract allocation from categoryBudget as we go (should reach 0 by end)
-            categoryBudget -= allocation;
-            const updatedTx = {
-              ...tx,
-              amount: Math.round(allocation / (tx.interval || 1)),
-            };
-            try {
-              await updateTransaction(updatedTx);
-            } catch (error) {
-              console.error(`Error updating variable essential transaction ${tx.id}:`, error);
-              alert(`An error occurred while saving expense ${tx.description}.`);
+          }
+          else{
+            for (const tx of variableTxs) {
+              let allocation = equalShare;
+              if (remainder > 0) {
+                allocation += 1;
+                remainder--;
+              }
+              // Subtract allocation from categoryBudget as we go (should reach 0 by end)
+              categoryBudget -= allocation;
+              const updatedTx = {
+                ...tx,
+                amount: Math.round(allocation / (tx.interval || 1)),
+              };
+              try {
+                await updateTransaction(updatedTx);
+              } catch (error) {
+                console.error(`Error updating variable essential transaction ${tx.id}:`, error);
+                alert(`An error occurred while saving expense ${tx.description}.`);
+              }
             }
           }
         }
+
       }
 
-      // --- GREEDY ALLOCATION FOR NON-ESSENTIALS ---
+      // NON-ESSENTIALS
       for (const category of adjustedNonEssentialCategories) {
         const catTxs = nonEssentialTransactions.filter(tx => tx.category_id === category.id);
         let categoryBudget = Math.round(nonEssentialsAllocation * (category.adjustedProportion / 100));
@@ -112,7 +128,7 @@ export default function GenerateService() {
 
         // Allocate fixed transactions
         for (const tx of fixedTxs) {
-          const allocation = Math.min(tx.amount, categoryBudget);
+          const allocation =  Math.min(tx.amount, categoryBudget);
           categoryBudget -= allocation;
           const updatedTx = { ...tx, amount: allocation };
           try {
@@ -124,25 +140,40 @@ export default function GenerateService() {
         }
 
         // Allocate remaining funds to variable transactions so that categoryBudget is fully used
-        if (variableTxs.length > 0 && categoryBudget > 0) {
+        if (variableTxs.length > 0) {
           const equalShare = Math.floor(categoryBudget / variableTxs.length);
           let remainder = categoryBudget % variableTxs.length;
-          for (const tx of variableTxs) {
-            let allocation = equalShare;
-            if (remainder > 0) {
-              allocation += 1;
-              remainder--;
+          if (categoryBudget === 0){
+            for (const tx of variableTxs) {
+             
+              const updatedTx = {
+                ...tx, amount: 0
+              };
+              try {
+                await updateTransaction(updatedTx);
+              } catch (error) {
+                console.error(`Error updating variable essential transaction ${tx.id}:`, error);
+                alert(`An error occurred while saving expense ${tx.description}.`);
+              }
             }
-            categoryBudget -= allocation;
-            const updatedTx = {
-              ...tx,
-              amount: Math.round(allocation / (tx.interval || 1)),
-            };
-            try {
-              await updateTransaction(updatedTx);
-            } catch (error) {
-              console.error(`Error updating variable non-essential transaction ${tx.id}:`, error);
-              alert(`An error occurred while saving expense ${tx.description}.`);
+          } else{
+            for (const tx of variableTxs) {
+              let allocation = equalShare;
+              if (remainder > 0) {
+                allocation += 1;
+                remainder--;
+              }
+              categoryBudget -= allocation;
+              const updatedTx = {
+                ...tx,
+                amount: Math.round(allocation / (tx.interval || 1)),
+              };
+              try {
+                await updateTransaction(updatedTx);
+              } catch (error) {
+                console.error(`Error updating variable non-essential transaction ${tx.id}:`, error);
+                alert(`An error occurred while saving expense ${tx.description}.`);
+              }
             }
           }
         }

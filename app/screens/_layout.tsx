@@ -42,7 +42,7 @@ const _layout = () => {
           <Drawer.Screen 
             name='home' 
             options={{
-              drawerLabel: 'Home',
+              drawerLabel: 'Main Dashboard',
               headerTitle: ' SpendWise',
               drawerIcon: ({size, color,}) => (
                 <Ionicons name='home-outline' size={size} color={color}/>

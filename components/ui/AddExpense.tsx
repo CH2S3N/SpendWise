@@ -269,7 +269,7 @@ export default function AddExpense({
       <View style={styles.content}>
         <Text style={styles.btext}>Select a Entry Type</Text>
         <SegmentedControl
-          values={["Needs", "Wants"]}
+          values={["Essentials", "Discretionary"]}
           style={{ marginBottom: 15, marginTop: 10, }}
           selectedIndex={currentTab}
           onChange={(event) => {

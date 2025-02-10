@@ -26,9 +26,7 @@ export default function SummaryInfo() {
       <View style={styles.container}>
           <View style={styles.section}> 
             <View style={styles.tableheader}>
-              <View style={styles.headertitle}>
-                <Text style={styles.title}>Needs</Text>
-              </View>
+                <Text style={styles.title}>Essentials</Text>
             </View>
             <View style={styles.tablecontent}>
               <Essential
@@ -40,9 +38,7 @@ export default function SummaryInfo() {
           <Divider/>
           <View style={styles.section}> 
             <View style={styles.tableheader}>
-              <View style={styles.headertitle}>
-                <Text style={styles.title}>Wants</Text>
-              </View>
+                <Text style={styles.title}>Discretionary</Text>
             </View>
             <View style={styles.tablecontent}>
               <NonEssential
@@ -94,15 +90,11 @@ const styles = StyleSheet.create({
   tableheader: {
     flex: 1,
     flexDirection: 'row',
-    paddingHorizontal: 5
+    paddingHorizontal: 5,
+    paddingBottom: 5
   
   },
-  headertitle: {
-    flex: 1,
-    alignItems: 'flex-start',
-    justifyContent:'center',
-    paddingHorizontal: 5,
-  },
+
   headertotal: {
     flex: 1,
     alignItems: 'flex-end',

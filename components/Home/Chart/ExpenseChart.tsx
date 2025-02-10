@@ -53,8 +53,8 @@ export default function ExpenseChart() {
 
   useEffect(() => {
     if (totalEssential + totalNonEssential + totalGoal + totalSavingsNonNegative  > 0) {
-      setValues([totalEssential, totalNonEssential, totalGoal,totalSavingsNonNegative ]);
-      setSliceColor(['#FC2947', '#FE6244', '#FFDEB9', '#F6DED8']);
+      setValues([totalEssential, totalNonEssential,totalSavingsNonNegative, totalGoal ]);
+      setSliceColor(['#FC2947', '#FE6244', '#FFD65A', '#EDF4C2' ]);
     } else {
       setValues([1]);
       setSliceColor(['#CCCCCC']);
@@ -85,14 +85,13 @@ export default function ExpenseChart() {
             <Text>Wants: ₱{totalNonEssential}</Text>
           </View>
           <View style={styles.legendItem}>
-            <View style={[styles.colorBox, { backgroundColor: '#FFDEB9' }]} />
-            <Text>Goals: ₱{totalGoal}</Text>
-          </View>
-          <View style={styles.legendItem}>
-            <View style={[styles.colorBox, { backgroundColor: '#F6DED8' }]} />
+            <View style={[styles.colorBox, { backgroundColor: '#FFD65A' }]} />
             <Text>Savings: ₱{totalSavingsNonNegative}</Text>
           </View>
-         
+          <View style={styles.legendItem}>
+            <View style={[styles.colorBox, { backgroundColor: '#EDF4C2' }]} />
+            <Text>Goals: ₱{totalGoal}</Text>
+          </View>
         </View>
       </View>
      

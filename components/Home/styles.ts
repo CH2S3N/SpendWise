@@ -6,7 +6,7 @@ const styles= StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    gap: 15,
+    gap: 10,
     justifyContent: 'space-evenly',
   },
 

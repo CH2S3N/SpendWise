@@ -1,31 +1,48 @@
-import { View, StyleSheet } from 'react-native'
-import React from 'react'
+import { View, StyleSheet, Text } from 'react-native'
+import React, { useState } from 'react'
 import MainContainer from '@/components/Containers/MainContainer';
 import CircularChart from './ExpenseChart';
 import BigText from '@/components/Texts/BigText';
 import IncomeChart from './IncomeChart ';
 import { Divider } from '@rneui/base';
 import Overview from './Overview';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function ChartInfo() {
+  const [isOverview, setOverview] = useState(false);
   return (
     <MainContainer>
-    <Divider/>
-     <BigText content='Overview'/>
-     <View style={styles.overview}>
-      <Overview/>
-     </View>
-    <Divider/>
-     <BigText content='Expense Structure'/>
-     <View style={styles.content}>
-      <CircularChart/>
-     </View>
-     <Divider/>
-     <BigText content='Income Structure'/>
-     <View style={styles.content}>
-      <IncomeChart/>
-     </View>
-     <Divider/>
+    {isOverview === false && (
+      <>
+        <Divider/>
+          <BigText content='Overview'/>
+        <View style={styles.overview}>
+          <Overview/>
+        </View>
+        <Divider/>
+        <BigText content='Expense Structure'/>
+        <View style={styles.content}>
+          <CircularChart/>
+        </View>
+        <Divider/>
+        <BigText content='Income Structure'/>
+        <View style={styles.content}>
+          <IncomeChart/>
+        </View>
+        <Divider/>
+      </>
+    )}
+    {isOverview === true && (
+      <>
+        <Divider/>
+        <TouchableOpacity onPress={() => setOverview(false)}>
+          <BigText content='Overview'/>
+        </TouchableOpacity>
+      
+        <Divider/>
+      </>
+    )}
+    
     </MainContainer>
   )
 }

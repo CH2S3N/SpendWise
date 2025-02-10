@@ -36,11 +36,11 @@ export default function ExpenseSummary() {
     <View style={styles.container}>
       <View style={styles.tableheader}>
         <View style={styles.tabletitle}>
-          <Text style={styles.text}>Needs</Text>
+          <Text style={styles.text}>Essentials</Text>
           <Text style={styles.text}>Amount</Text>
         </View>
         <View style={styles.tabletitle}>
-          <Text style={styles.text}>Wants</Text>
+          <Text style={styles.text}>Discretionary</Text>
           <Text style={styles.text}>Amount</Text>
         </View>
       </View>

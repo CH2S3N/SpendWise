@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.light,
         flex: 1,
         flexGrow: 1,
-        borderRadius: 15,
+        
         elevation: 5,
         shadowColor: "#000",
         shadowRadius: 8,
