@@ -53,19 +53,19 @@ export default function ExpenseChart() {
   const totalGoal = calcTotalGoal()
   const totalEssential = calcEssentials()
   const totalNonEssential =calcNonEssentials()
-  const totalSavings = totalIncome - (totalGoal + totalEssential + totalNonEssential)
+  const totalSavings = totalIncome - ( totalEssential + totalNonEssential)
   const totalSavingsNonNegative = totalSavings < 0 ? 0 : totalSavings;
 
 
   useEffect(() => {
     if (totalEssential + totalNonEssential + totalGoal + totalSavingsNonNegative  > 0) {
-      setValues([totalEssential, totalNonEssential,totalSavingsNonNegative, totalGoal ]);
-      setSliceColor(['#FC2947', '#FE6244', '#FFD65A', '#EDF4C2' ]);
+      setValues([totalEssential, totalNonEssential,totalSavingsNonNegative ]);
+      setSliceColor(['#FC2947', '#FE6244', '#FFD65A' ]);
     } else {
       setValues([1]);
       setSliceColor(['#CCCCCC']);
     }
-  },[totalEssential, totalNonEssential, totalGoal, totalSavingsNonNegative])
+  },[totalEssential, totalNonEssential, totalSavingsNonNegative])
   
   
 
@@ -94,10 +94,6 @@ export default function ExpenseChart() {
             <View style={[styles.colorBox, { backgroundColor: '#FFD65A' }]} />
             <Text>Savings: ₱{totalSavingsNonNegative}</Text>
           </View>
-          <View style={styles.legendItem}>
-            <View style={[styles.colorBox, { backgroundColor: '#EDF4C2' }]} />
-            <Text>Goals: ₱{totalGoal}</Text>
-          </View>
         </View>
       </View>
      
@@ -111,6 +107,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
+    paddingVertical: 15
   },
   item1: {
     justifyContent: 'center',

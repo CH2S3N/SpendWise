@@ -15,33 +15,23 @@ export default function IncomeInfo() {
   const [isUpdatingTransaction, setIsUpdatingTransaction] = React.useState<boolean>(false);
 
   return (
-    <MainContainer>
-      <Divider/>
+    <>
       <View style={styles.container}>
           <View style={styles.section}> 
-            <View style={styles.tableheader}>
-    
-            </View>
             <View style={styles.tablecontent}>
               <IncomeList/>
             </View>
           </View>
-          <Divider/>
-
-            {/* Add Transaction Button */}
-            <View style={styles.btn}>
-              <TouchableOpacity
-                  onPress={() => setIsAddingTransaction(true)}
-                  activeOpacity={0.5}
-                >
-                  <AntDesign name="pluscircle" size={60} color={colors.dark} />
-                </TouchableOpacity>
-            </View>
       </View>
-     
 
+      {/* Add Transaction Button */}
+      <View style={styles.btn}>
+        <TouchableOpacity onPress={() => setIsAddingTransaction(true)} style={styles.regen}>
+            <Text style={styles.btnTxt}>Add Income</Text>
+        </TouchableOpacity>
+      </View>
 
-      {/* Add Transaction */}
+      {/* Add Income Modal*/}
       <Modal isOpen={isAddingTransaction} transparent={true} >
         <View style={styles.modalAddContent}>
           <Text style={{textAlign: 'center', fontWeight: 'bold', fontSize:20, paddingTop: 10}}>Add a Source of Income</Text>
@@ -49,62 +39,22 @@ export default function IncomeInfo() {
           <AddIncome setIsAddingTransaction={setIsAddingTransaction} setIsUpdatingTransaction={setIsUpdatingTransaction} />
         </View>
       </Modal>
-    </MainContainer>
+    </>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 8,
-    gap: 10,
-  },
-  header: {
-    flex:1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    flex: 1,
   },
   section: {
     flex: 1,
     alignItems: 'flex-start',
     paddingHorizontal: 5,
   },
-  tableheader: {
-    flex: 1,
-    flexDirection: 'row',
-    paddingHorizontal: 5
-  
-  },
-  headertitle: {
-    flex: 1,
-    alignItems: 'flex-start',
-    justifyContent:'center',
-    paddingHorizontal: 5,
-  },
-  headertotal: {
-    flex: 1,
-    alignItems: 'flex-end',
-    justifyContent:'center',
-    paddingHorizontal: 5,
-  },
-  text: {
-    fontWeight: 'bold'
-  },
-  title: {
-    fontWeight: 'bold',
-    fontSize: 25
-  },
   tablecontent: {
     flex: 10,
     flexDirection: 'row',
-  },
-  footer: {
-    flex: 1,
-  },
-  btn: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 5
-    
   },
   modalAddContent:{
     flex: 1,
@@ -117,4 +67,34 @@ const styles = StyleSheet.create({
     shadowOffset: { height: 6, width: 0 },
     shadowOpacity: 0.15,
   },
+  regen: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.dark,
+    borderRadius: 15,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowRadius: 8,
+    shadowOffset: { height: 6, width: 0 },
+    shadowOpacity: 0.15,
+    padding: 15,
+    marginHorizontal: 5,
+    marginBottom: 10
+    
+
+  },
+  btnTxt:{
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: 'white'
+  },
+  btn: {
+    position: 'absolute',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    width: '100%',
+    height: '99%',
+    
+  }
 })

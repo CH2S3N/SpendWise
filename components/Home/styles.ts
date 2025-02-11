@@ -39,21 +39,22 @@ const styles= StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.dark,
-    borderRadius: 45,
+    borderRadius: 15,
     elevation: 5,
     shadowColor: "#000",
     shadowRadius: 8,
     shadowOffset: { height: 6, width: 0 },
     shadowOpacity: 0.15,
     padding: 15,
-    marginHorizontal: 5
+    marginHorizontal: 5,
+    marginBottom: 10
   },
   btnExpense: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FC2947',
+    backgroundColor: colors.dark,
     borderRadius: 15,
     elevation: 5,
     shadowColor: "#000",
@@ -111,11 +112,13 @@ const styles= StyleSheet.create({
   },
   btn: {
     position: 'absolute',
-    bottom: 10,
-    left: 10,
-    right: 10,
-    
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    width: '100%',
+    height: '99%',
   },
+  
+  
   btn2: {
     
     borderRadius: 45,

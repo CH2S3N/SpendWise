@@ -38,7 +38,7 @@ export default function IncomeChart () {
   
 
   return (
-    <View>
+    <View style={styles.mainContainer}>
       <View style={styles.container}>
         <View style={styles.item1}>
           <PieChart
@@ -70,6 +70,10 @@ export default function IncomeChart () {
 }
 
 const styles = StyleSheet.create({
+  mainContainer:{
+
+    paddingVertical: 15
+  },
   container: {
     width: '100%',
     flexDirection: 'row',

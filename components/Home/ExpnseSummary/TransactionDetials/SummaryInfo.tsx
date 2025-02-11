@@ -16,58 +16,59 @@ export default function SummaryInfo() {
   const { categories, transactions } = useSelector(
     (state: RootState) => state.data
   );
- 
-    const [isAddingTransaction, setIsAddingTransaction] = useState(false);
-    const [isUpdatingTransaction, setIsUpdatingTransaction] = React.useState<boolean>(false);
 
+  const essentialtx = transactions.filter(
+    (transaction) =>
+      categories.find((category) => category.id === transaction.category_id)?.type === 'Essential'
+  );
+
+  const nonEssentialtx = transactions.filter(
+    (transaction) =>
+      categories.find((category) => category.id === transaction.category_id)?.type === 'Non_Essential'
+  );
+  
+ 
   return (
     <MainContainer>
-      <Divider/>
       <View style={styles.container}>
-          <View style={styles.section}> 
-            <View style={styles.tableheader}>
-                <Text style={styles.title}>Essentials</Text>
+        {/* Needs */}
+        { essentialtx.length !== 0 && (
+          <>
+            <View style={styles.section}> 
+              <View style={styles.tableheader}>
+                  <Text style={styles.title}>Needs</Text>
+              </View>
+              <View style={styles.tablecontent}>
+                <Essential
+                  categories={categories}
+                  transactions={transactions}
+                />
+              </View>
             </View>
-            <View style={styles.tablecontent}>
-              <Essential
-                categories={categories}
-                transactions={transactions}
-              />
+            <Divider/>
+          </>
+        ) }
+        {/* Wants */}
+        {nonEssentialtx.length !== 0 && (
+          <>
+            <View style={styles.section}> 
+              <View style={styles.tableheader}>
+                  <Text style={styles.title}>Wants</Text>
+              </View>
+              <View style={styles.tablecontent}>
+                <NonEssential
+                  categories={categories}
+                  transactions={transactions}
+                />
+              </View>
             </View>
-          </View>
-          <Divider/>
-          <View style={styles.section}> 
-            <View style={styles.tableheader}>
-                <Text style={styles.title}>Discretionary</Text>
-            </View>
-            <View style={styles.tablecontent}>
-              <NonEssential
-                categories={categories}
-                transactions={transactions}
-              />
-            </View>
-          </View>
-          <Divider/>
-
-                    {/* Add Transaction Button */}
-          <View style={styles.btn}>
-            <TouchableOpacity
-                onPress={() => setIsAddingTransaction(true)}
-                activeOpacity={0.5}
-              >
-                <AntDesign name="pluscircle" size={60} color={colors.dark} />
-              </TouchableOpacity>
-          </View>
+            <Divider/>
+          </>
+        )}
       </View>
      
 
-           {/* Add Transaction */}
-           <Modal isOpen={isAddingTransaction} transparent={true} >
-             <View style={styles.modalAddContent}>
-                <Text style={{textAlign: 'center', fontWeight: 'bold', fontSize:20, paddingTop: 10}}>Add an Expense</Text>
-                 <AddExpense setIsAddingTransaction={setIsAddingTransaction} setIsUpdatingTransaction={setIsUpdatingTransaction} />
-             </View>
-           </Modal>
+
     </MainContainer>
   )
 }
@@ -76,6 +77,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 8,
     gap: 10,
+    paddingTop: 5
   },
   header: {
     flex:1,
@@ -89,24 +91,18 @@ const styles = StyleSheet.create({
   },
   tableheader: {
     flex: 1,
+    width: '100%',
+    alignContent: 'center',
+    alignItems: 'center',
     flexDirection: 'row',
     paddingHorizontal: 5,
-    paddingBottom: 5
-  
-  },
-
-  headertotal: {
-    flex: 1,
-    alignItems: 'flex-end',
-    justifyContent:'center',
-    paddingHorizontal: 5,
-  },
-  text: {
-    fontWeight: 'bold'
+    paddingBottom: 5,  
   },
   title: {
+    flex: 1,
+    textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: 25
+    fontSize: 25,
   },
   tablecontent: {
     flex: 10,

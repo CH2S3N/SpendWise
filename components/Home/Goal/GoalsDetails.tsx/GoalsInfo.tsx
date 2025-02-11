@@ -39,58 +39,59 @@ export default function GoalsInfo() {
   const [isUpdatingTransaction, setIsUpdatingTransaction] = React.useState<boolean>(false);
 
   return (
-    <MainContainer>
-      <View style={styles.header}>
-        <View style={styles.headercontent}>
-              <Text style={styles.text}>Total</Text>
-              <Text style={styles.text}>{calcTotalGoal()}</Text>
+    <>
+      <View style={styles.MainContainer}>
+        <View style={styles.header}>
+          <View style={styles.headercontent}>
+                <Text style={styles.text}>Total</Text>
+                <Text style={styles.text}>{calcTotalGoal()}</Text>
+          </View>
+          <View style={styles.headercontent}>
+            <Text style={styles.text}>Accomplished</Text>
+            <Text style={styles.text}>{accomplishedGoals.length}/{goals.length}</Text>
+          </View>
         </View>
-        <View style={styles.headercontent}>
+        <View style={styles.container}>
+          <Divider/>
+          <Text style={styles.text}>In Progress</Text>
+          <View style={styles.section}> 
+            <View style={styles.tablecontent}>
+            <InProgressList goals={goals}/>
+            </View>
+          </View>
+          <Divider/>
           <Text style={styles.text}>Accomplished</Text>
-          <Text style={styles.text}>{accomplishedGoals.length}/{goals.length}</Text>
-        </View>
-      </View>
-      <View style={styles.container}>
-        <Divider/>
-        <Text style={styles.text}>In Progress</Text>
-        <View style={styles.section}> 
-          <View style={styles.tablecontent}>
-          <InProgressList goals={goals}/>
+          <View style={styles.section}> 
+            <View style={styles.tablecontent}>
+            <AccomplishedList deleteGoal={deleteGoal} goals={goals}/>
+            </View>
           </View>
         </View>
-        <Divider/>
-        <Text style={styles.text}>Accomplished</Text>
-        <View style={styles.section}> 
-          <View style={styles.tablecontent}>
-          <AccomplishedList deleteGoal={deleteGoal} goals={goals}/>
-          </View>
-        </View>
-      </View>
-      <Divider/>
 
-      {/* Add Transaction Button */}
-      <View style={styles.btn}>
-        <TouchableOpacity
-            onPress={() => setIsAddingTransaction(true)}
-            activeOpacity={0.5}
-          >
-            <AntDesign name="pluscircle" size={60} color={colors.dark} />
+      </View>
+
+        {/* Add Transaction Button */}
+        <View style={styles.btn}>
+          <TouchableOpacity onPress={() => setIsAddingTransaction(true)} style={styles.regen}>
+            <Text style={styles.btnTxt}>Add Goals</Text>
           </TouchableOpacity>
-      </View>
-
-
-      {/* Add Transaction */}
-      <Modal isOpen={isAddingTransaction} transparent={true} >
-        <View style={styles.modalAddContent}>
-          <Text style={{textAlign: 'center', fontWeight: 'bold', fontSize:20, paddingTop: 10}}>Add a Goal</Text>
-            <AddGoal setIsAddingTransaction={setIsAddingTransaction} />
         </View>
-      </Modal>
-    </MainContainer>
+
+        {/* Add Goals Modal */}
+        <Modal isOpen={isAddingTransaction} transparent={true} >
+          <View style={styles.modalAddContent}>
+            <Text style={{textAlign: 'center', fontWeight: 'bold', fontSize:20, paddingTop: 10}}>Add a Goal</Text>
+              <AddGoal setIsAddingTransaction={setIsAddingTransaction} />
+          </View>
+        </Modal>
+    </>
   )
 }
 
 const styles = StyleSheet.create({
+  MainContainer: {
+    flex: 1,
+  },
   container: {
     flex: 7,
     gap: 10,
@@ -119,12 +120,6 @@ const styles = StyleSheet.create({
     flex: 10,
     flexDirection: 'row',
   },
-  btn: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: 5
-    
-  },
   modalAddContent:{
     flex: 1,
     justifyContent: 'center',
@@ -136,5 +131,32 @@ const styles = StyleSheet.create({
     shadowOffset: { height: 6, width: 0 },
     shadowOpacity: 0.15,
   },
+  regen: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.dark,
+    borderRadius: 15,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowRadius: 8,
+    shadowOffset: { height: 6, width: 0 },
+    shadowOpacity: 0.15,
+    padding: 15,
+    marginHorizontal: 5,
+    marginBottom: 10
+  },
+  btnTxt:{
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: 'white'
+  },
+  btn: {
+    position: 'absolute',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    width: '100%',
+    height: '99%',
+  }
 
 })

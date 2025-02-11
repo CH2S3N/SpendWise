@@ -1,13 +1,10 @@
 import 'react-native-gesture-handler';
 import React, { useEffect } from 'react'
 import { ActivityIndicator, Text, View } from 'react-native';
-import loadDatabase from '@/context/db';
-import { Drawer } from 'expo-router/drawer';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Ionicons } from '@expo/vector-icons';
+import { Tabs } from 'expo-router';
+import AntDesign from '@expo/vector-icons/AntDesign';import { useFetchData } from '@/hooks/useFetchData';
 import { colors } from '@/constants/colors';
-import { useFetchData } from '@/hooks/useFetchData';
-
 
 const _layout = () => {
   const { fetchData } = useFetchData();
@@ -28,60 +25,43 @@ const _layout = () => {
     }
     >
       <GestureHandlerRootView>
-        <Drawer
-           screenOptions={{
-            drawerStyle: {
-              backgroundColor: colors.dark, 
-            },
-            drawerInactiveTintColor: colors.light,
-            drawerActiveTintColor: colors.dark,
-            drawerActiveBackgroundColor: colors.light,
-           
-          }}
+        <Tabs
+              screenOptions={{
+                tabBarStyle: { 
+                  backgroundColor: colors.dark,
+                  paddingBottom: 10,
+                  paddingTop: 10,
+                  height: 70,
+                  marginHorizontal: 10,
+                  borderRadius: 10,
+                  marginBottom: 10
+                
+                }, 
+                headerShown: false,
+                tabBarActiveTintColor: '#00FF9C', 
+                tabBarInactiveTintColor: 'white', 
+              }}
         >
-          <Drawer.Screen 
-            name='home' 
-            options={{
-              drawerLabel: 'Main Dashboard',
-              headerTitle: ' SpendWise',
-              drawerIcon: ({size, color,}) => (
-                <Ionicons name='home-outline' size={size} color={color}/>
-              ),
-              headerStyle: {
-                backgroundColor: colors.dark, 
-              },
-              headerTintColor: colors.light,
-            }}
+          <Tabs.Screen 
+          name='goal' 
+          options={{ 
+            title: "GOALS",
+            tabBarIcon: ({ color }) => <AntDesign name="plussquareo" size={24} color={color} />, 
+          }}
           />
-          <Drawer.Screen 
-            name='profile' 
-            options={{
-              drawerLabel: 'Profile',
-              headerTitle: ' Profile',
-              drawerIcon: ({size, color,}) => (
-                <Ionicons name='person-outline' size={size} color={color}/>
-              ),
-              headerStyle: {
-                backgroundColor: colors.dark, 
-              },
-              headerTintColor: colors.light,
-            }}
+          <Tabs.Screen 
+          name='dashboard' 
+          options={{ title: "TRANSACTIONS",
+            tabBarIcon: ({ color }) => <AntDesign name="profile" size={24} color={color} />,
+          }}
           />
-          <Drawer.Screen 
-            name='settings' 
-            options={{
-              drawerLabel: 'Settings',
-              headerTitle: ' Settings',
-              drawerIcon: ({size, color,}) => (
-                <Ionicons name='settings-outline' size={size} color={color}/>
-              ),
-              headerStyle: {
-                backgroundColor: colors.dark, 
-              },
-              headerTintColor: colors.light,
-            }}
+          <Tabs.Screen 
+          name='budget' 
+          options={{ title: "WALLET",
+            tabBarIcon: ({ color }) => <AntDesign name="wallet" size={24} color={color} />,
+          }}
           />
-        </Drawer>
+        </Tabs>
       </GestureHandlerRootView>
 
     </React.Suspense>
