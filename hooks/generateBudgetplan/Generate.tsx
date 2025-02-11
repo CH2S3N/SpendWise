@@ -21,7 +21,7 @@ export default function GenerateService() {
 
   // Returns subcategories with Transactions 
   const adjustProportions = (categories: Category[], transactions: any[]) => {
-    const availableCategories = categories.filter(cat => transactions.some(tx => tx.category_id === cat.id));
+    const availableCategories = categories.filter(cat => transactions.some(transaction => transaction.category_id === cat.id));
     const totalProportion = availableCategories.reduce((total, cat) => total + cat.proportion, 0);
     return availableCategories.map(cat => ({
       ...cat,
@@ -56,31 +56,31 @@ export default function GenerateService() {
     try {
       //ESSENTIALS
       for (const category of adjustedEssentialCategories) {
-        const catTxs = essentialTransactions.filter(tx => tx.category_id === category.id);
+        const catTxs = essentialTransactions.filter(transaction => transaction.category_id === category.id);
         let categoryBudget = Math.round(essentialsAllocation * (category.adjustedProportion / 100));
 
-        const fixedTxs = catTxs.filter(tx => tx.isfixedamount === "Yes");
-        const variableTxs = catTxs.filter(tx => tx.isfixedamount !== "Yes");
+        const fixedTransactions = catTxs.filter(transaction => transaction.isfixedamount === "Yes");
+        const variableTransactions = catTxs.filter(transaction => transaction.isfixedamount !== "Yes");
 
-        // Allocate fixed transactions fully 
-        for (const tx of fixedTxs) {
-          const allocation = Math.min(tx.amount, categoryBudget);
+        // Allocate fixed transactions first 
+        for (const transaction of fixedTransactions) {
+          const allocation = Math.min(transaction.amount, categoryBudget);
           categoryBudget -= allocation;
-          const updatedTx = { ...tx, amount: allocation };
+          const updatedTx = { ...transaction, amount: allocation };
           try {
             await updateTransaction(updatedTx);
           } catch (error) {
-            console.error(`Error updating fixed essential transaction ${tx.id}:`, error);
-            alert(`An error occurred while saving expense ${tx.description}.`);
+            console.error(`Error updating fixed essential transaction ${transaction.id}:`, error);
+            alert(`An error occurred while saving expense ${transaction.description}.`);
           }
         }
 
         //allocate remaining funds 
-        if (variableTxs.length > 0) {
-          const equalShare = Math.floor(categoryBudget / variableTxs.length);
-          let remainder = categoryBudget % variableTxs.length;
+        if (variableTransactions.length > 0) {
+          const equalShare = Math.floor(categoryBudget / variableTransactions.length);
+          let remainder = categoryBudget % variableTransactions.length;
           if (categoryBudget === 0){
-            for (const tx of variableTxs) {
+            for (const tx of variableTransactions) {
              
               const updatedTx = {
                 ...tx, amount: 0
@@ -94,7 +94,7 @@ export default function GenerateService() {
             }
           }
           else{
-            for (const tx of variableTxs) {
+            for (const tx of variableTransactions) {
               let allocation = equalShare;
               if (remainder > 0) {
                 allocation += 1;
@@ -120,31 +120,31 @@ export default function GenerateService() {
 
       // NON-ESSENTIALS
       for (const category of adjustedNonEssentialCategories) {
-        const catTxs = nonEssentialTransactions.filter(tx => tx.category_id === category.id);
+        const catTxs = nonEssentialTransactions.filter(transaction => transaction.category_id === category.id);
         let categoryBudget = Math.round(nonEssentialsAllocation * (category.adjustedProportion / 100));
 
-        const fixedTxs = catTxs.filter(tx => tx.isfixedamount === "Yes");
-        const variableTxs = catTxs.filter(tx => tx.isfixedamount !== "Yes");
+        const fixedTransactions = catTxs.filter(transaction => transaction.isfixedamount === "Yes");
+        const variableTransactions = catTxs.filter(transaction => transaction.isfixedamount !== "Yes");
 
         // Allocate fixed transactions
-        for (const tx of fixedTxs) {
-          const allocation =  Math.min(tx.amount, categoryBudget);
+        for (const transaction of fixedTransactions) {
+          const allocation =  Math.min(transaction.amount, categoryBudget);
           categoryBudget -= allocation;
-          const updatedTx = { ...tx, amount: allocation };
+          const updatedTx = { ...transaction, amount: allocation };
           try {
             await updateTransaction(updatedTx);
           } catch (error) {
-            console.error(`Error updating fixed non-essential transaction ${tx.id}:`, error);
-            alert(`An error occurred while saving expense ${tx.description}.`);
+            console.error(`Error updating fixed non-essential transaction ${transaction.id}:`, error);
+            alert(`An error occurred while saving expense ${transaction.description}.`);
           }
         }
 
         // Allocate remaining funds to variable transactions so that categoryBudget is fully used
-        if (variableTxs.length > 0) {
-          const equalShare = Math.floor(categoryBudget / variableTxs.length);
-          let remainder = categoryBudget % variableTxs.length;
+        if (variableTransactions.length > 0) {
+          const equalShare = Math.floor(categoryBudget / variableTransactions.length);
+          let remainder = categoryBudget % variableTransactions.length;
           if (categoryBudget === 0){
-            for (const tx of variableTxs) {
+            for (const tx of variableTransactions) {
              
               const updatedTx = {
                 ...tx, amount: 0
@@ -157,7 +157,7 @@ export default function GenerateService() {
               }
             }
           } else{
-            for (const tx of variableTxs) {
+            for (const tx of variableTransactions) {
               let allocation = equalShare;
               if (remainder > 0) {
                 allocation += 1;

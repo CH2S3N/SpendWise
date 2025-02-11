@@ -7,14 +7,11 @@ import calculateMonthlyAmount from '@/utils/calcMonthlyAmount';
 export default function Budget() {
   const { incomes } = useSelector((state: RootState) => state.data);
 
-  const calcMonthAmount = (incomes: Income[]): number => {
-    return incomes.reduce((total: number, income: Income) => {
-      const amount = income.amount || 0;
+  const totalIncome =  incomes.reduce((total: number, income: Income) => {
+      const amount = (income.amount * income.interval) || 0;
       const frequency = income.frequency || 'Monthly';
       return total + calculateMonthlyAmount(amount, frequency);
     }, 0);
-  };
 
-  const monthlyAmount = calcMonthAmount(incomes);
-  return monthlyAmount;
+  return totalIncome;
 }

@@ -1,15 +1,14 @@
 const calculateMonthlyAmount = (amount: number, frequency: string): number => {
     switch (frequency) {
         case "Daily":
-            return amount * 30; // Approximate days in a month
+            return amount * 28; 
         case "Weekly":
-            return amount * 4; // Approximate weeks in a month
+            return amount * 4; 
         case "Bi-Weekly":
-            return amount * 2; // Bi-weekly occurs twice in a month
+            return amount * 2; 
         case "Monthly":
-            return amount; // Already a monthly value
         default:
-            return amount; // Fallback in case of invalid frequency
+            return amount; 
     }
   };
 export default calculateMonthlyAmount;

@@ -4,6 +4,7 @@ import PieChart from 'react-native-pie-chart';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
 import Budget from '../Budget/totalIncome';
+import calculateMonthlyAmount from '@/utils/calcMonthlyAmount';
 
 
 
@@ -26,14 +27,19 @@ export default function ExpenseChart() {
 
   function calcEssentials() {
     return essentialTransactions.reduce((total, transaction) => {
-      return total + (transaction.amount * transaction.interval) || 0
+      const amount = (transaction.amount * transaction.interval) || 0;
+      const frequency = transaction.frequency || 'Monthly';
+      return total + calculateMonthlyAmount(amount, frequency);    
     }, 0)
 
   };
   function calcNonEssentials() {
     return nonEssentialTransactions.reduce((total, transaction) => {
-      return total + (transaction.amount  * transaction.interval) || 0
+      const amount = (transaction.amount * transaction.interval) || 0;
+      const frequency = transaction.frequency || 'Monthly';
+      return total + calculateMonthlyAmount(amount, frequency);    
     }, 0)
+
 
   };
   function calcTotalGoal() {

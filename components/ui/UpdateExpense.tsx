@@ -41,7 +41,7 @@ export default function UpdateExpense({
    
     useEffect(() => {
       if (frequency === 'Daily') {
-        setInterval('30'); 
+        setInterval('1'); 
         setSubType('Custom')
       }
       if (frequency === 'Weekly' && subType === 'Weekends') {
@@ -226,7 +226,7 @@ export default function UpdateExpense({
                   }
                 }}
                 />
-                <Text>Time/s in a Week</Text>
+                <Text>Day(s) per Week</Text>
                 </View>
               )}
 
@@ -251,7 +251,7 @@ export default function UpdateExpense({
                   }
                 }}
                 />
-                <Text>Time/s in a Bi-Week</Text>
+                <Text>Day(s) per Bi-Week</Text>
                 </View>
               )}
 
@@ -269,7 +269,7 @@ export default function UpdateExpense({
                   setSubType("Custom")
                 }}
               />
-              <Text>in a Month/s</Text>
+              <Text>Day(s) per Month</Text>
                 </View>
               )}
           </View>

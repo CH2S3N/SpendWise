@@ -24,7 +24,7 @@ export default function AddExpense({
     const [categories, setCategories] = React.useState<Category[]>([]);
     const [typeSelected, setTypeSelected] = React.useState<string>("");
     const [amount, setAmount] = React.useState<string>("");
-    const [interval, setInterval] = React.useState<string>("");
+    const [isrecurrence, setRecurrence] = React.useState<string>("");
     const [description, setDescription] = React.useState<string>("");
     const [frequency, setFrequency] = React.useState<string>("Daily");
     const [subType, setsubType] = React.useState<string>("Weekends");
@@ -54,7 +54,7 @@ export default function AddExpense({
     }
 
     function validateFields() {
-      if ( !description || (isfixedamount == 'Yes' && !amount) || !typeSelected || (frequency == 'Daily' && !interval) || (subType === 'Custom' && !interval) || (frequency == 'Monthly' && !interval))  {
+      if ( !description || (isfixedamount == 'Yes' && !amount) || !typeSelected || (frequency == 'Daily' && !isrecurrence) || (subType === 'Custom' && !isrecurrence) || (frequency == 'Monthly' && !isrecurrence))  {
         return false;
       }
       
@@ -81,7 +81,7 @@ export default function AddExpense({
             amount: Number(amount),
             category_id: categoryId,
             type: category as "Essential" | "Non_Essential",
-            interval: Number(interval),
+            isrecurrence: Number(isrecurrence),
             subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
             recurrence_id: recurrenceId,
             id,
@@ -97,7 +97,7 @@ export default function AddExpense({
           category_id: categoryId,
           type: category as "Essential" | "Non_Essential",
           recurrence_id: recurrenceId,
-          interval: Number(interval),
+          interval: Number(isrecurrence),
           subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
           id,
         });
@@ -116,25 +116,28 @@ export default function AddExpense({
     
      useEffect(() => {
           if (frequency === 'Daily') {
-            setInterval('30'); 
+            setRecurrence('1'); 
             setsubType('Custom')
           }
           if (frequency === 'Weekly' && subType === 'Weekends') {
-            setInterval('2'); 
+            setRecurrence('2'); 
           }
           if (frequency === 'Weekly' && subType === 'Weekdays') {
-            setInterval('5'); 
+            setRecurrence('5'); 
           }
           if (frequency === 'Weekly' && subType === 'All') {
-            setInterval('7'); 
+            setRecurrence('7'); 
+          }
+          if (frequency === 'Weekly' && subType === 'Custom') {
+            setRecurrence(isrecurrence); 
           }
           if (frequency === 'Monthly'){
-            setInterval(interval); 
+            setRecurrence(isrecurrence); 
           }
           if (frequency === 'Bi-Weekly'){
-            setInterval(interval); 
+            setRecurrence(isrecurrence); 
           }
-        }, [frequency, subType]);
+        }, [frequency, subType, isrecurrence]);
 
     
 
@@ -145,7 +148,7 @@ export default function AddExpense({
       <View style={styles.content}>
           <Text style={styles.btext}>Item</Text>
           <TextInput
-            placeholder="Provide an entry description"
+            placeholder="Entry  description"
             style={{ marginBottom: 15, marginTop: 10, borderBottomWidth: 1, borderBottomColor: 'black'}}
             onChangeText={setDescription}
           />
@@ -154,7 +157,7 @@ export default function AddExpense({
       {/* IS FIXED AMOUNT */}
       <View>
         <View style={styles.content}>
-          <Text style={{fontWeight: 'bold', marginBottom:10}}>Is Fixed Amount?</Text>
+          <Text style={{fontWeight: 'bold', marginBottom:10}}>Is this a fixed amount?</Text>
           <SegmentedControl
             values={['Yes', 'No']}
             selectedIndex={selectedIndex}
@@ -164,6 +167,7 @@ export default function AddExpense({
         </View>
         <View style={styles.content}>
           {/* AMOUNT */}
+          <Text style={{fontWeight: 'bold', marginBottom:10}}>Amount</Text>
           <TextInput
             placeholder="Enter Amount"
             style={{ marginBottom: 15, marginTop: 10, borderBottomWidth: 1, borderBottomColor: 'black' }}
@@ -190,7 +194,7 @@ export default function AddExpense({
               selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
               onChange={(event) => {
                 setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
-                setInterval('');
+                setRecurrence('');
               }}
             />
         </View>
@@ -216,16 +220,16 @@ export default function AddExpense({
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TextInput
               placeholder='0'
-               value={interval}
+               value={isrecurrence}
               style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
               keyboardType="numeric"
               onChangeText={(text) => {
                 // Remove any non-numeric characters before setting the state
                 const numericValue = text.replace(/[^0-9.]/g, "");
-                setInterval(numericValue);
+                setRecurrence(numericValue);
               }}
               />
-              <Text>Time/s in a Week</Text>
+              <Text>Day(s) per Week</Text>
               </View>
             )}
 
@@ -233,16 +237,16 @@ export default function AddExpense({
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TextInput
               placeholder='0'
-               value={interval}
+               value={isrecurrence}
               style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
               keyboardType="numeric"
               onChangeText={(text) => {
                 // Remove any non-numeric characters before setting the state
                 const numericValue = text.replace(/[^0-9.]/g, "");
-                setInterval(numericValue);
+                setRecurrence(numericValue);
               }}
               />
-              <Text>Time/s in a Bi-Week</Text>
+              <Text>Day(s) per Bi-Week</Text>
               </View>
             )}
 
@@ -250,16 +254,16 @@ export default function AddExpense({
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TextInput
               placeholder='0'
-              value={interval}
+              value={isrecurrence}
               style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
               keyboardType="numeric"
               onChangeText={(text) => {
                 // Remove any non-numeric characters before setting the state
                 const numericValue = text.replace(/[^0-9.]/g, "");
-                setInterval(numericValue);
+                setRecurrence(numericValue);
               }}
             />
-            <Text>in a Month/s</Text>
+            <Text>Day(s) per Month</Text>
               </View>
             )}
         </View>
@@ -267,9 +271,9 @@ export default function AddExpense({
 
       {/* ENTRY TYPE, ESSENTIAL & NON ESSENTIAL */}
       <View style={styles.content}>
-        <Text style={styles.btext}>Select a Entry Type</Text>
+        <Text style={styles.btext}>Select an Expense Type</Text>
         <SegmentedControl
-          values={["Essentials", "Discretionary"]}
+          values={["Needs", "Wants"]}
           style={{ marginBottom: 15, marginTop: 10, }}
           selectedIndex={currentTab}
           onChange={(event) => {

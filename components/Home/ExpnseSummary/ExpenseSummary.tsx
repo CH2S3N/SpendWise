@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import {  useSelector } from 'react-redux';
 import { RootState } from '@/state/store'; 
 import TransactionList from './TransactionsList';
+import calculateMonthlyAmount from '@/utils/calcMonthlyAmount';
 
 
 
@@ -20,12 +21,13 @@ export default function ExpenseSummary() {
       categories.find((category) => category.id === transaction.category_id)?.type === 'Non_Essential'
   );
 
+
   // Calculate the monthly amount
   function calcMonthAmount(transactions: typeof essentialTransactions) {
     return transactions.reduce((total, transaction) => {
-      return (
-        total + (transaction.amount * transaction.interval) || 0
-      );
+      const amount = (transaction.amount * transaction.interval) || 0;
+      const frequency = transaction.frequency || 'Monthly';
+      return total + calculateMonthlyAmount(amount, frequency);
     }, 0);
   }
 

@@ -198,7 +198,7 @@ export default function UpdateIncome({
                               setInterval(numericValue);
                             }}
                             />
-                            <Text>Time/s in a Week</Text>
+                            <Text>Day(s) per Week</Text>
                             </View>
                           )}
                           {frequency === 'Bi-Weekly' && (
@@ -214,7 +214,7 @@ export default function UpdateIncome({
                                 setInterval(numericValue);
                               }}
                             />
-                            <Text>Time/s in a Bi-Week</Text>
+                            <Text>Day(s) per Bi-Week</Text>
                             </View>
                           )}
               
@@ -231,7 +231,7 @@ export default function UpdateIncome({
                                   setInterval(numericValue);
                                 }}
                               />
-                              <Text>Time/s in a Month</Text>
+                              <Text>Day(s) per Month</Text>
                             </View>
                           )}
                       </View>

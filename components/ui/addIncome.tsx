@@ -16,7 +16,7 @@ export default function AddIncome({
 }: addIncomeProps) {
 
     const { insertIncome } = UseTransactionService();
-    const [interval, setInterval] = React.useState<string>("");
+    const [isrecurrence, setRecurrence] = React.useState<string>("");
     const [incomeCategories, setIncomeCategories] = React.useState<IncomeCategory[]>([]);
     const [typeSelected, setTypeSelected] = React.useState<string>("Allowance");
     const [amount, setAmount] = React.useState<string>("");
@@ -39,7 +39,7 @@ export default function AddIncome({
       
 
       function validateFields() {
-        if ( !description || !amount || !typeSelected || (frequency == 'Daily' && !interval) || (subType === 'Custom' && !interval) || (frequency == 'Monthly' && !interval))  {
+        if ( !description || !amount || !typeSelected || (frequency == 'Daily' && !isrecurrence) || (subType === 'Custom' && !isrecurrence) || (frequency == 'Monthly' && !isrecurrence))  {
           return false;
         }
         
@@ -54,7 +54,7 @@ export default function AddIncome({
             frequency: frequency as "Daily" | "Weekly" | "Bi-Weekly" | "Monthly",
             incomeCategory_id: incomeCategoryId,
             type: incomeCategory as "Allowance" | "Salary" | "Others",
-            interval: Number(interval),
+            isrecurrence: Number(isrecurrence),
             subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
             id: 0
         });
@@ -66,7 +66,7 @@ export default function AddIncome({
             frequency: frequency as "Daily" | "Weekly" | "Monthly",
             incomeCategoryId: incomeCategoryId,
             type: incomeCategory as "Allowance" | "Salary" | "Others",
-            interval: Number(interval),
+            interval: Number(isrecurrence),
             subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
             id: 0
         });
@@ -80,21 +80,30 @@ export default function AddIncome({
     
 
     
-  useEffect(() => {
-    if (frequency === 'Daily') {
-      setInterval('30'); 
-      setSubType('Custom')
-    }
-    if (frequency === 'Weekly' && subType === 'Weekend') {
-      setInterval('2'); 
-    }
-    if (frequency === 'Weekly' && subType === 'Weekdays') {
-      setInterval('5'); 
-    }
-    if (frequency === 'Weekly' && subType === 'All') {
-      setInterval('7'); 
-    }
-  }, [frequency, subType]);
+     useEffect(() => {
+          if (frequency === 'Daily') {
+            setRecurrence('1'); 
+            setSubType('Custom')
+          }
+          if (frequency === 'Weekly' && subType === 'Weekends') {
+            setRecurrence('2'); 
+          }
+          if (frequency === 'Weekly' && subType === 'Weekdays') {
+            setRecurrence('5'); 
+          }
+          if (frequency === 'Weekly' && subType === 'All') {
+            setRecurrence('7'); 
+          }
+          if (frequency === 'Weekly' && subType === 'Custom') {
+            setRecurrence(isrecurrence); 
+          }
+          if (frequency === 'Monthly'){
+            setRecurrence(isrecurrence); 
+          }
+          if (frequency === 'Bi-Weekly'){
+            setRecurrence(isrecurrence); 
+          }
+        }, [frequency, subType, isrecurrence]);
 
   return (
     <View style={styles.container}>
@@ -135,7 +144,7 @@ export default function AddIncome({
                     selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
                     onChange={(event) => {
                       setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
-                      setInterval('')
+                      setRecurrence('')
                     }}
                   />
               </View>
@@ -159,29 +168,29 @@ export default function AddIncome({
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <TextInput
                     placeholder='0'
-                     value={interval}
+                     value={isrecurrence}
                     style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
                     keyboardType="numeric"
                     onChangeText={(text) => {
                       // Remove any non-numeric characters before setting the state
                       const numericValue = text.replace(/[^0-9.]/g, "");
-                      setInterval(numericValue);
+                      setRecurrence(numericValue);
                     }}
                     />
-                    <Text>Time/s in a Week</Text>
+                    <Text>Day(s) per Week</Text>
                     </View>
                   )}
                   {frequency === 'Bi-Weekly' && (
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <TextInput
                       placeholder='0'
-                      value={interval}
+                      value={isrecurrence}
                       style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
                       keyboardType="numeric"
                       onChangeText={(text) => {
                         // Remove any non-numeric characters before setting the state
                         const numericValue = text.replace(/[^0-9.]/g, "");
-                        setInterval(numericValue);
+                        setRecurrence(numericValue);
                       }}
                     />
                     <Text>Time/s in a Bi-Week</Text>
@@ -192,13 +201,13 @@ export default function AddIncome({
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <TextInput
                         placeholder='0'
-                        value={interval}
+                        value={isrecurrence}
                         style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
                         keyboardType="numeric"
                         onChangeText={(text) => {
                           // Remove any non-numeric characters before setting the state
                           const numericValue = text.replace(/[^0-9.]/g, "");
-                          setInterval(numericValue);
+                          setRecurrence(numericValue);
                         }}
                       />
                       <Text>Time/s in a Month</Text>

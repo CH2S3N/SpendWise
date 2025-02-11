@@ -1,5 +1,8 @@
+import { RootState } from "@/state/store";
 import { Category, Transaction } from "@/types"
+import calculateMonthlyAmount from "@/utils/calcMonthlyAmount";
 import { Text, View, StyleSheet } from "react-native";
+import { useSelector } from "react-redux";
 
 
 interface TransactionListItemProps{
@@ -8,7 +11,15 @@ interface TransactionListItemProps{
 }
 
 export default function TransactionListItem({ transaction}: TransactionListItemProps) {
-    const monthlyAmount = transaction.amount * transaction.interval
+    const { transactions } = useSelector(
+        (state: RootState) => state.data
+      );
+    function calcMonthAmount() {
+          const amount = (transaction.amount * transaction.interval) || 0;
+          const frequency = transaction.frequency || 'Monthly';
+          return calculateMonthlyAmount(amount, frequency);
+      }
+    const monthlyAmount = calcMonthAmount()
     
     return (
         <View style={styles.container}>  
