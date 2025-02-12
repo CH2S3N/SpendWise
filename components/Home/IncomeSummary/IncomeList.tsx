@@ -79,7 +79,8 @@ const styles=StyleSheet.create({
        flex: 1
     },
     item: {
-       paddingBottom: 5
+       paddingBottom: 5,
+       marginBottom: 10
     },
     modal: {
         flex: 1,

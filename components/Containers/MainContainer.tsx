@@ -20,6 +20,5 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     backgroundColor: colors.background,
-    marginTop: 25
   }
 })

@@ -34,6 +34,7 @@ export default function SummaryInfo() {
         {/* Needs */}
         { essentialtx.length !== 0 && (
           <>
+            <Divider/>
             <View style={styles.section}> 
               <View style={styles.tableheader}>
                   <Text style={styles.title}>Needs</Text>
@@ -45,10 +46,10 @@ export default function SummaryInfo() {
                 />
               </View>
             </View>
-            <Divider/>
           </>
         ) }
         {/* Wants */}
+        <Divider/>
         {nonEssentialtx.length !== 0 && (
           <>
             <View style={styles.section}> 
@@ -77,7 +78,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 8,
     gap: 10,
-    paddingTop: 5
+    paddingTop: 5,
+    
   },
   header: {
     flex:1,
@@ -100,9 +102,11 @@ const styles = StyleSheet.create({
   },
   title: {
     flex: 1,
+    color: 'gray',
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 25,
+    opacity: 0.5
   },
   tablecontent: {
     flex: 10,

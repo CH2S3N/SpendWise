@@ -14,6 +14,8 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import BudgetPlanInfo from '@/components/Home/BudgetPlan/BudgetPlanInfo';
 import styles from '@/components/Home/styles';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import Overview from '@/components/Home/Chart/Overview';
+import Card from '@/components/ui/Card';
 
 
 export default function Index() {
@@ -41,20 +43,36 @@ export default function Index() {
   const [isChartModalVisible, setChartModalVisible] = useState(false);
   const [isGenerateModalVisible, setGenerateModalVisible] = useState(false);
 
-
+  const [isHovered, setIsHovered] = useState(false);
+  
   // Return Function
   return (
 
-    <MainContainer>
+    <MainContainer style={styles.container}>
       <>
         <View style={styles.container}>
           <ScrollView>
-          <TouchableOpacity onPress={() => setGenerateModalVisible(true)} style={styles.regen}>
-            <FontAwesome5 name="redo-alt" size={24} color="white" />
-          </TouchableOpacity>
+            <View style={styles.genBudget}>
+              <TouchableOpacity onPress={() => setGenerateModalVisible(true)} style={styles.regen}>
+                <Text style={styles.btnTxt}>Auto Allocate</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setGenerateModalVisible(true)} style={styles.regen}>
+                <Text style={styles.btnTxt}>Budget Plan</Text>
+              </TouchableOpacity>
+            </View>
             {/* Statistics */}
-            <CircularChart/>
-
+            <Card
+              style={{marginHorizontal: 10, marginBottom: 10}}
+              content = {
+                <>
+                  <Text style={styles.title2}>Overview</Text>
+                  <Overview/>
+                  <View style={styles.btnshow}>
+                  <TouchableOpacity onPress={() => setChartModalVisible(true)}><Text style={styles.title2}>Show more</Text></TouchableOpacity>
+                  </View>
+                </>
+              } 
+            />
             {/* Transactions */}
             <SummaryInfo/>
           </ScrollView>
@@ -86,55 +104,6 @@ export default function Index() {
           </View>
           </View>
         </Modal>
-        <Modal isOpen={isIncomeInfoModalVisible} >
-          <View style={styles.modalcontainer}>
-          <View style={styles.modalheader}>
-              <View style={styles.icon}>
-                  <TouchableOpacity onPress={() => setIncomeInfoModalVisible(false)}>
-                      <AntDesign name="leftcircle" size={24} color="black" />
-                  </TouchableOpacity>
-              </View>
-                  <Text style={styles.title}>INCOME</Text>
-          </View >
-          <View style={styles.modalcontent}>
-            <IncomeInfo/>
-          </View>
-          </View>
-        </Modal>
-
-        {/* Goal */}
-        <Modal isOpen={isGoalModalVisible} >
-          <View style={styles.modalcontainer}>
-          <View style={styles.modalheader}>
-              <View style={styles.icon}>
-                  <TouchableOpacity onPress={() => setGoalModalVisible(false)}>
-                      <AntDesign name="leftcircle" size={24} color="black" />
-                  </TouchableOpacity>
-              </View>
-                  <Text style={styles.title}>GOALS</Text>
-          </View >
-          <View style={styles.modalcontent}>
-            <GoalsInfo/>
-          </View>
-          </View>
-        </Modal>
-
-        {/* Expense Summary */}
-        <Modal isOpen={isSummaryModalVisible} >
-          <View style={styles.modalcontainer}>
-          <View style={styles.modalheader}>
-              <View style={styles.icon}>
-                  <TouchableOpacity onPress={() => setSummaryModalVisible(false)}>
-                      <AntDesign name="leftcircle" size={24} color="black" />
-                  </TouchableOpacity>
-              </View>
-                  <Text style={styles.title}>EXPENSE</Text>
-          </View >
-          <View style={styles.modalcontent}>
-            <SummaryInfo/>
-          </View>
-          </View>
-        </Modal>
 
         {/* Statistics */}
         <Modal isOpen={isChartModalVisible} >
@@ -156,7 +125,7 @@ export default function Index() {
       
       {/* Add Transactions */}
       <View style={ styles.btn}>
-        <TouchableOpacity onPress={() => setIsAddingTransaction(true)} style={styles.regen}>
+        <TouchableOpacity onPress={() => setIsAddingTransaction(true)} style={styles.regen} activeOpacity={0.7}>
           <Text style={styles.btnTxt}>Add Transactions</Text>
         </TouchableOpacity>
       </View>

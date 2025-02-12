@@ -25,7 +25,8 @@ export default function Essential({
     );
 
     const [currentTransaction, setCurrentTransaction] = useState<Transaction | null>(null);
-  
+    const [isTapped, setIsTapped] = useState(false);
+
     return (
         <View style={styles.maincontainer}>
             <ScrollView>
@@ -37,19 +38,10 @@ export default function Essential({
                                 )
                                 return (
                                     <View key={transaction.id} style={styles.item}>
-                                    <TouchableOpacity 
-                                        onPress={() => {
-                                            setCurrentTransaction(transaction);
-                                            setIsModalVisible(true)
-                                        }}
-                                        onLongPress={() => deleteTransaction(transaction.id)}
-                                    >
                                         <TransactionDetails 
                                         transaction={transaction} 
                                         categoryInfo={categoryForCurrentItem}
-
                                         />
-                                    </TouchableOpacity>
                                 </View>
                                 )
                             })}   
@@ -72,7 +64,8 @@ export default function Essential({
 
 const styles=StyleSheet.create({
     maincontainer: {
-        flex: 1
+        flex: 1,
+
     },
     container: {
         flex: 1,
@@ -86,7 +79,8 @@ const styles=StyleSheet.create({
        flex: 1
     },
     item: {
-       paddingBottom: 5
+       paddingBottom: 5,
+       marginBottom: 10
     },
     modal: {
         flex: 1,

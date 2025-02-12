@@ -36,7 +36,7 @@ export default function InProgress({ goal }: Props) {
                             </Text>
                         </View>
                     </View>
-                    <ProgressBar progress={progress} theme={{ colors: { primary: colors.dark } }} />
+                    <ProgressBar progress={progress} theme={{ colors: { primary: colors.green } }} />
                 </View>
             }
         />

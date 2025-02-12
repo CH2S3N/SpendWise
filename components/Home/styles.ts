@@ -5,8 +5,7 @@ import { StyleSheet } from 'react-native';
 const styles= StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    gap: 10,
+    paddingHorizontal: 10,
     justifyContent: 'space-evenly',
   },
 
@@ -168,7 +167,24 @@ const styles= StyleSheet.create({
   title:{
     fontSize: 20,
     fontWeight:'bold'
-  }
+  },
+  title2:{
+    fontSize: 15,
+    fontWeight:'bold',
+    paddingHorizontal: 10
+  },
+  btnshow:{
+    width: '95%',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+},
+genBudget:{
+  flex:1,
+  paddingTop: 10,
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+}
 })
 
 export default styles;

@@ -6,9 +6,7 @@ const TotalExpense = () => {
   const { transactions } = useSelector((state: RootState) => state.data);
   
   const totalExpenses = transactions.reduce((total, transaction) => {
-    const amount = (transaction.amount * transaction.interval) || 0;
-      const frequency = transaction.frequency || 'Monthly';
-      return total + calculateMonthlyAmount(amount, frequency);
+      return total + (transaction.amount)
   }, 0);
 
   return totalExpenses

@@ -84,7 +84,6 @@ export default function BudgetPlanInfo({
     <MainContainer>
       <>
         <View style={styles.mainCon}>
-        <Text style={styles.title}>Generate A Budget Plan</Text>
         {/* Income & Expense Card */}
         {isAdvanceModalVisible === false && (
           <>

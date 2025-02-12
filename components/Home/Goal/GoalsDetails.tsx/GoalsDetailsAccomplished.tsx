@@ -33,7 +33,7 @@ export default function Accomplished({ goal }: Props) {
                             <Text >{progressPercentage}%</Text>
                         </View>
                     </View>
-                    <ProgressBar progress={progress} theme={{ colors: { primary: colors.dark } }} />
+                    <ProgressBar progress={progress} theme={{ colors: { primary: colors.green } }} />
                 </View>
             }
         />

@@ -116,26 +116,26 @@ export default function AddExpense({
     
      useEffect(() => {
           if (frequency === 'Daily') {
-            setRecurrence('1'); 
+            setRecurrence('28'); 
             setsubType('Custom')
           }
           if (frequency === 'Weekly' && subType === 'Weekends') {
-            setRecurrence('2'); 
+            setRecurrence('8'); 
           }
           if (frequency === 'Weekly' && subType === 'Weekdays') {
-            setRecurrence('5'); 
+            setRecurrence('20'); 
           }
           if (frequency === 'Weekly' && subType === 'All') {
-            setRecurrence('7'); 
+            setRecurrence('28'); 
           }
           if (frequency === 'Weekly' && subType === 'Custom') {
-            setRecurrence(isrecurrence); 
+            setRecurrence(String(parseInt(isrecurrence) * 4)); 
           }
           if (frequency === 'Monthly'){
             setRecurrence(isrecurrence); 
           }
           if (frequency === 'Bi-Weekly'){
-            setRecurrence(isrecurrence); 
+            setRecurrence(String(parseInt(isrecurrence) * 2)); 
           }
         }, [frequency, subType, isrecurrence]);
 

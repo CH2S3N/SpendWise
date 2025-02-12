@@ -80,30 +80,30 @@ export default function AddIncome({
     
 
     
-     useEffect(() => {
-          if (frequency === 'Daily') {
-            setRecurrence('1'); 
-            setSubType('Custom')
-          }
-          if (frequency === 'Weekly' && subType === 'Weekends') {
-            setRecurrence('2'); 
-          }
-          if (frequency === 'Weekly' && subType === 'Weekdays') {
-            setRecurrence('5'); 
-          }
-          if (frequency === 'Weekly' && subType === 'All') {
-            setRecurrence('7'); 
-          }
-          if (frequency === 'Weekly' && subType === 'Custom') {
-            setRecurrence(isrecurrence); 
-          }
-          if (frequency === 'Monthly'){
-            setRecurrence(isrecurrence); 
-          }
-          if (frequency === 'Bi-Weekly'){
-            setRecurrence(isrecurrence); 
-          }
-        }, [frequency, subType, isrecurrence]);
+        useEffect(() => {
+             if (frequency === 'Daily') {
+               setRecurrence('28'); 
+               setSubType('Custom')
+             }
+             if (frequency === 'Weekly' && subType === 'Weekends') {
+               setRecurrence('8'); 
+             }
+             if (frequency === 'Weekly' && subType === 'Weekdays') {
+               setRecurrence('20'); 
+             }
+             if (frequency === 'Weekly' && subType === 'All') {
+               setRecurrence('28'); 
+             }
+             if (frequency === 'Weekly' && subType === 'Custom') {
+               setRecurrence(String(parseInt(isrecurrence) * 4)); 
+             }
+             if (frequency === 'Monthly'){
+               setRecurrence(isrecurrence); 
+             }
+             if (frequency === 'Bi-Weekly'){
+               setRecurrence(String(parseInt(isrecurrence) * 2)); 
+             }
+           }, [frequency, subType, isrecurrence]);
 
   return (
     <View style={styles.container}>

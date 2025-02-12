@@ -1,5 +1,5 @@
-import { Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import { Text, TouchableOpacity, View, Switch } from 'react-native'
+import React, { useState,  } from 'react'
 import MainContainer from '@/components/Containers/MainContainer';
 import { StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -12,6 +12,7 @@ import { Modal } from '@/components/Modal';
 import AddGoal from '@/components/ui/AddGoal';
 import { AntDesign } from '@expo/vector-icons';
 import { colors } from '@/constants/colors';
+import Card from '@/components/ui/Card';
 
 
 
@@ -35,37 +36,75 @@ export default function GoalsInfo() {
 
  
   const accomplishedGoals = goals.filter(goal => goal.currentAmount === goal.amount);
+
   const [isAddingTransaction, setIsAddingTransaction] = useState(false);
   const [isUpdatingTransaction, setIsUpdatingTransaction] = React.useState<boolean>(false);
+
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
   return (
     <>
       <View style={styles.MainContainer}>
+        {/* Header */}
         <View style={styles.header}>
-          <View style={styles.headercontent}>
+            <Card
+            style={styles.headercontent}
+            content = {
+              <>
                 <Text style={styles.text}>Total</Text>
                 <Text style={styles.text}>{calcTotalGoal()}</Text>
-          </View>
-          <View style={styles.headercontent}>
-            <Text style={styles.text}>Accomplished</Text>
-            <Text style={styles.text}>{accomplishedGoals.length}/{goals.length}</Text>
-          </View>
+              </>
+            }
+            />
+   
+            <Card
+            style={styles.headercontent}
+            content = {
+              <>
+                <Text style={styles.text}>Accomplished</Text>
+                <Text style={styles.text}>{accomplishedGoals.length}/{goals.length}</Text>
+              </>
+            }
+            />
+            
         </View>
+
+        {/* Switch */}
+        <View style={{justifyContent: 'center', alignItems: 'flex-end'}}>
+          <Switch
+            trackColor={{false: '#767577', true: '#15B392'}}
+            thumbColor={isEnabled ? '#00FF9C' : '#f4f3f4'}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={toggleSwitch}
+            value={isEnabled}
+          />
+        </View>
+
         <View style={styles.container}>
           <Divider/>
-          <Text style={styles.text}>In Progress</Text>
-          <View style={styles.section}> 
-            <View style={styles.tablecontent}>
-            <InProgressList goals={goals}/>
-            </View>
-          </View>
-          <Divider/>
-          <Text style={styles.text}>Accomplished</Text>
-          <View style={styles.section}> 
-            <View style={styles.tablecontent}>
-            <AccomplishedList deleteGoal={deleteGoal} goals={goals}/>
-            </View>
-          </View>
+          {goals.length > 0 && (
+            <>
+              <Text style={styles.titletext}>In Progress</Text>
+              <View style={styles.section}> 
+                <View style={styles.tablecontent}>
+                <InProgressList goals={goals}/>
+                </View>
+              </View>
+            </>
+          )}
+
+          {isEnabled === true && (
+            <>
+              <Divider/>
+              <Text style={styles.titletext}>Accomplished</Text>
+              <View style={styles.section}> 
+                <View style={styles.tablecontent}>
+                <AccomplishedList deleteGoal={deleteGoal} goals={goals}/>
+                </View>
+              </View>
+            </>
+          )}
         </View>
 
       </View>
@@ -106,6 +145,7 @@ const styles = StyleSheet.create({
     flex:1,
     justifyContent: 'center',
     alignItems: 'center',
+    marginHorizontal: 10
   },
   section: {
     flex: 1,
@@ -114,7 +154,16 @@ const styles = StyleSheet.create({
     paddingVertical: 10
   },
   text: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    textAlign: 'center',
+    
+  },
+  titletext:{
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: 'gray',
+    fontSize: 20,
+    opacity: 0.5
   },
   tablecontent: {
     flex: 10,

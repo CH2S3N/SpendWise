@@ -27,6 +27,20 @@ const _layout = () => {
       <GestureHandlerRootView>
         <Tabs
               screenOptions={{
+                headerTitleAlign: 'center',
+                headerStyle: { 
+                  backgroundColor: colors.dark, 
+                  height: 80,
+                  borderBottomWidth: 2, 
+                  elevation: 5, 
+                },
+                headerTitle: 'SpendWise',
+                headerTintColor: 'white',
+                headerTitleStyle: { 
+                  fontWeight: 'bold',
+                  fontSize: 18, 
+                },
+                
                 tabBarStyle: { 
                   backgroundColor: colors.dark,
                   paddingBottom: 10,
@@ -37,13 +51,13 @@ const _layout = () => {
                   marginBottom: 10
                 
                 }, 
-                headerShown: false,
-                tabBarActiveTintColor: '#00FF9C', 
+                tabBarActiveTintColor: colors.green, 
                 tabBarInactiveTintColor: 'white', 
               }}
         >
           <Tabs.Screen 
           name='goal' 
+          
           options={{ 
             title: "GOALS",
             tabBarIcon: ({ color }) => <AntDesign name="plussquareo" size={24} color={color} />, 
