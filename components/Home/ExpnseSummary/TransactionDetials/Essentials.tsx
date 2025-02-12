@@ -15,7 +15,7 @@ export default function Essential({
     transactions: Transaction[];
 }) {
 
-      const { deleteTransaction } = UseTransactionService();
+    const { deleteTransaction } = UseTransactionService();
     
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isAddingTransaction, setIsAddingTransaction] = React.useState<boolean>(false);
@@ -25,8 +25,7 @@ export default function Essential({
     );
 
     const [currentTransaction, setCurrentTransaction] = useState<Transaction | null>(null);
-    const [isTapped, setIsTapped] = useState(false);
-
+  
     return (
         <View style={styles.maincontainer}>
             <ScrollView>
@@ -38,10 +37,20 @@ export default function Essential({
                                 )
                                 return (
                                     <View key={transaction.id} style={styles.item}>
+                                    <TouchableOpacity 
+                                        onPress={() => {
+                                            setCurrentTransaction(transaction);
+                                        }}
+                                    >
                                         <TransactionDetails 
-                                        transaction={transaction} 
-                                        categoryInfo={categoryForCurrentItem}
+                                            transaction={transaction} 
+                                            categoryInfo={categoryForCurrentItem}
+                                            setIsModalVisible={setIsModalVisible}
+                                            setCurrentTransaction={setCurrentTransaction}
+                                            deleteTransaction={deleteTransaction}
+
                                         />
+                                    </TouchableOpacity>
                                 </View>
                                 )
                             })}   
@@ -64,8 +73,7 @@ export default function Essential({
 
 const styles=StyleSheet.create({
     maincontainer: {
-        flex: 1,
-
+        flex: 1
     },
     container: {
         flex: 1,
@@ -79,8 +87,7 @@ const styles=StyleSheet.create({
        flex: 1
     },
     item: {
-       paddingBottom: 5,
-       marginBottom: 10
+       paddingBottom: 5
     },
     modal: {
         flex: 1,

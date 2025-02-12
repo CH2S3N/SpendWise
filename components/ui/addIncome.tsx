@@ -137,7 +137,7 @@ export default function AddIncome({
        {/* FREQUENCY */}
             <View>
               <View style={styles.content}>
-                  <Text style={styles.btext}>Frequency</Text>
+                  <Text style={styles.btext}>Recurrence</Text>
                   <SegmentedControl
                     values={["Daily", "Weekly", "Bi-Weekly", "Monthly"]}
                     style={{ marginTop: 10, }}

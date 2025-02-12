@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View, Switch } from 'react-native'
+import { Text, TouchableOpacity, View, Switch, ScrollView } from 'react-native'
 import React, { useState,  } from 'react'
 import MainContainer from '@/components/Containers/MainContainer';
 import { StyleSheet } from 'react-native';
@@ -72,39 +72,44 @@ export default function GoalsInfo() {
 
         {/* Switch */}
         <View style={{justifyContent: 'center', alignItems: 'flex-end'}}>
-          <Switch
-            trackColor={{false: '#767577', true: '#15B392'}}
-            thumbColor={isEnabled ? '#00FF9C' : '#f4f3f4'}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={toggleSwitch}
-            value={isEnabled}
-          />
+          <View style={{justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
+            <Text style={styles.text}>Show Accomplished Goals? </Text>
+            <Switch
+              trackColor={{false: '#767577', true: '#15B392'}}
+              thumbColor={isEnabled ? '#00FF9C' : '#f4f3f4'}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={toggleSwitch}
+              value={isEnabled}
+            />
+          </View>
         </View>
 
         <View style={styles.container}>
           <Divider/>
-          {goals.length > 0 && (
-            <>
-              <Text style={styles.titletext}>In Progress</Text>
-              <View style={styles.section}> 
-                <View style={styles.tablecontent}>
-                <InProgressList goals={goals}/>
+          <ScrollView>
+            {goals.length > 0 && (
+              <>
+                <Text style={styles.titletext}>In Progress</Text>
+                <View style={styles.section}> 
+                  <View style={styles.tablecontent}>
+                  <InProgressList goals={goals}/>
+                  </View>
                 </View>
-              </View>
-            </>
-          )}
+              </>
+            )}
 
-          {isEnabled === true && (
-            <>
-              <Divider/>
-              <Text style={styles.titletext}>Accomplished</Text>
-              <View style={styles.section}> 
-                <View style={styles.tablecontent}>
-                <AccomplishedList deleteGoal={deleteGoal} goals={goals}/>
+            {isEnabled === true && (
+              <>
+                <Divider/>
+                <Text style={styles.titletext}>Accomplished</Text>
+                <View style={styles.section}> 
+                  <View style={styles.tablecontent}>
+                  <AccomplishedList deleteGoal={deleteGoal} goals={goals}/>
+                  </View>
                 </View>
-              </View>
-            </>
-          )}
+              </>
+            )}
+          </ScrollView>
         </View>
 
       </View>
@@ -130,6 +135,7 @@ export default function GoalsInfo() {
 const styles = StyleSheet.create({
   MainContainer: {
     flex: 1,
+    paddingTop: 30
   },
   container: {
     flex: 7,

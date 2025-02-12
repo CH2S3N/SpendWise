@@ -27,17 +27,14 @@ export default function ExpenseChart() {
 
   function calcEssentials() {
     return essentialTransactions.reduce((total, transaction) => {
-      const amount = (transaction.amount * transaction.interval) || 0;
-      const frequency = transaction.frequency || 'Monthly';
-      return total + calculateMonthlyAmount(amount, frequency);    
+      return total + (transaction.amount) || 0;
+
     }, 0)
 
   };
   function calcNonEssentials() {
     return nonEssentialTransactions.reduce((total, transaction) => {
-      const amount = (transaction.amount * transaction.interval) || 0;
-      const frequency = transaction.frequency || 'Monthly';
-      return total + calculateMonthlyAmount(amount, frequency);    
+      return total + (transaction.amount) || 0; 
     }, 0)
 
 

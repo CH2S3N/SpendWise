@@ -37,13 +37,14 @@ export default function NonEssential({
                                     <TouchableOpacity 
                                         onPress={() => {
                                             setCurrentTransaction(transaction);
-                                            setIsModalVisible(true)
                                         }}
-                                        onLongPress={() => deleteTransaction(transaction.id)}
                                     >
                                         <TransactionDetails 
-                                        transaction={transaction} 
-                                        categoryInfo={categoryForCurrentItem}
+                                            transaction={transaction} 
+                                            categoryInfo={categoryForCurrentItem}
+                                            setIsModalVisible={setIsModalVisible}
+                                            setCurrentTransaction={setCurrentTransaction}
+                                            deleteTransaction={deleteTransaction}
                                         />
                                     </TouchableOpacity>
                                 </View>
@@ -81,9 +82,7 @@ const styles=StyleSheet.create({
        flex: 1
     },
     item: {
-       paddingBottom: 5,
-       marginBottom: 10
-
+       paddingBottom: 5
     },
     modal: {
         flex: 1,
