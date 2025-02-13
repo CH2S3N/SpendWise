@@ -19,6 +19,7 @@ export default function IncomeList() {
     const [isUpdatingIncome, setIsUpdatingIncome] = React.useState<boolean>(false);
     const [currentIncome, setCurrentIncome] = useState<Income | null>(null);
   
+
     return (
         <View style={styles.maincontainer}>
           <ScrollView>
@@ -41,6 +42,9 @@ export default function IncomeList() {
                         <IncomeDetails
                           income={income}
                           incomeCategoryInfo={categoryForCurrentItem}
+                          setIsModalVisible={setIsModalVisible}
+                          setCurrentIncome={setCurrentIncome}
+                          deleteIncome={deleteIncome}
                         />
                       </TouchableOpacity>
                     </View>

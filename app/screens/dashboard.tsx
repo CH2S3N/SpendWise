@@ -16,6 +16,7 @@ import styles from '@/components/Home/styles';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Overview from '@/components/Home/Chart/Overview';
 import Card from '@/components/ui/Card';
+import { Divider } from 'react-native-paper';
 
 
 export default function Index() {
@@ -53,10 +54,10 @@ export default function Index() {
         <View style={styles.container}>
           <ScrollView>
             <View style={styles.genBudget}>
-              <TouchableOpacity onPress={() => setGenerateModalVisible(true)} style={styles.regen}>
+              <TouchableOpacity onPress={() => setGenerateModalVisible(true)} style={styles.topbtn}>
                 <Text style={styles.btnTxt}>Auto Allocate</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => setGenerateModalVisible(true)} style={styles.regen}>
+              <TouchableOpacity onPress={() => setGenerateModalVisible(true)} style={styles.topbtn}>
                 <Text style={styles.btnTxt}>Budget Plan</Text>
               </TouchableOpacity>
             </View>
@@ -66,13 +67,21 @@ export default function Index() {
               content = {
                 <>
                   <Text style={styles.title2}>Overview</Text>
+                  <Divider style={{marginHorizontal: 10, marginBottom: 10}}/>
                   <Overview/>
+                  <Divider style={{marginHorizontal: 10, marginTop: 5}}/>
                   <View style={styles.btnshow}>
                   <TouchableOpacity onPress={() => setChartModalVisible(true)}><Text style={styles.title2}>Show more</Text></TouchableOpacity>
                   </View>
                 </>
               } 
             />
+            {/* Add Transactions */}
+            <View style={ styles.btn}>
+              <TouchableOpacity onPress={() => setIsAddingTransaction(true)} style={styles.regen} activeOpacity={0.7}>
+                <Text style={styles.btnTxt}>Add Transactions</Text>
+              </TouchableOpacity>
+            </View>
             {/* Transactions */}
             <SummaryInfo/>
           </ScrollView>
@@ -123,12 +132,6 @@ export default function Index() {
         </Modal>
       </>
       
-      {/* Add Transactions */}
-      <View style={ styles.btn}>
-        <TouchableOpacity onPress={() => setIsAddingTransaction(true)} style={styles.regen} activeOpacity={0.7}>
-          <Text style={styles.btnTxt}>Add Transactions</Text>
-        </TouchableOpacity>
-      </View>
     </MainContainer>
   )
 

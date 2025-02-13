@@ -37,11 +37,7 @@ export default function Essential({
                                 )
                                 return (
                                     <View key={transaction.id} style={styles.item}>
-                                    <TouchableOpacity 
-                                        onPress={() => {
-                                            setCurrentTransaction(transaction);
-                                        }}
-                                    >
+
                                         <TransactionDetails 
                                             transaction={transaction} 
                                             categoryInfo={categoryForCurrentItem}
@@ -50,7 +46,6 @@ export default function Essential({
                                             deleteTransaction={deleteTransaction}
 
                                         />
-                                    </TouchableOpacity>
                                 </View>
                                 )
                             })}   
@@ -87,7 +82,9 @@ const styles=StyleSheet.create({
        flex: 1
     },
     item: {
-       paddingBottom: 5
+       paddingBottom: 5,
+       marginBottom: 5
+
     },
     modal: {
         flex: 1,

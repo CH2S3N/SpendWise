@@ -27,7 +27,7 @@ export default function IncomeInfo() {
       {/* Add Transaction Button */}
       <View style={styles.btn}>
         <TouchableOpacity onPress={() => setIsAddingTransaction(true)} style={styles.regen}>
-            <Text style={styles.btnTxt}>Add Income</Text>
+            <Text style={styles.btnTxt}>Add New Income Source</Text>
         </TouchableOpacity>
       </View>
 

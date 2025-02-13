@@ -4,6 +4,7 @@ import PieChart from 'react-native-pie-chart';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
 import { calculateTotalIncome } from '@/utils/calcTotalIncome';
+import { colors } from '@/constants/colors';
 
 
 
@@ -24,7 +25,7 @@ export default function IncomeChart () {
     const totalAllowance = calculateTotalIncome(allowance, "Allowance")
     const totalSalary = calculateTotalIncome(salary, "Salary")
     const totalOthers = calculateTotalIncome(others, "Others")
- 
+    const total = totalAllowance + totalSalary + totalOthers
 
     useEffect(() => {
       if (totalAllowance + totalSalary + totalOthers > 0) {
@@ -40,6 +41,7 @@ export default function IncomeChart () {
   return (
     <View style={styles.mainContainer}>
       <View style={styles.container}>
+        {/* Chart */}
         <View style={styles.item1}>
           <PieChart
                   widthAndHeight={widthAndHeight}
@@ -49,18 +51,24 @@ export default function IncomeChart () {
                   coverFill={'#FFFFFF'}
               />
         </View>
-        <View style={styles.item2}>
-          <View style={styles.legendItem}>
-            <View style={[styles.colorBox, { backgroundColor: '#059212' }]} />
-            <Text>Allowance: ₱{totalAllowance}</Text>
+        {/* Legends */}
+        <View style={[styles.item1, { justifyContent: 'center', alignItems: 'center'}]}>
+          <View style={styles.total}>
+            <View style={styles.legendItem}>
+              <View style={[styles.colorBox, { backgroundColor: '#059212' }]} />
+              <Text>Allowance: ₱{totalAllowance}</Text>
+            </View>
+            <View style={styles.legendItem}>
+              <View style={[styles.colorBox, { backgroundColor: '#06D001' }]} />
+              <Text>Salary: ₱{totalSalary}</Text>
+            </View>
+            <View style={styles.legendItem}>
+              <View style={[styles.colorBox, { backgroundColor: '#9BEC00' }]} />
+              <Text>Others: ₱{totalOthers}</Text>
+            </View>
           </View>
-          <View style={styles.legendItem}>
-            <View style={[styles.colorBox, { backgroundColor: '#06D001' }]} />
-            <Text>Salary: ₱{totalSalary}</Text>
-          </View>
-          <View style={styles.legendItem}>
-            <View style={[styles.colorBox, { backgroundColor: '#9BEC00' }]} />
-            <Text>Others: ₱{totalOthers}</Text>
+          <View style={styles.total}>
+            <Text style={[styles.text, ]}>Total: <Text style={{color: colors.green}}>{total}</Text></Text>
           </View>
         </View>
       </View>
@@ -71,7 +79,6 @@ export default function IncomeChart () {
 
 const styles = StyleSheet.create({
   mainContainer:{
-
     paddingVertical: 15
   },
   container: {
@@ -106,13 +113,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   total:{
-    position: 'absolute',
-    left: "25%",
-    bottom: "45%",
+    flex:1,
+    justifyContent: 'center',
+    alignItems: 'flex-start'
   },
   text: {
-    fontWeight: 'bold'
-  }
-
-
+    fontWeight: 'bold',
+    fontSize: 20,
+    color: colors.dark
+  },
 })

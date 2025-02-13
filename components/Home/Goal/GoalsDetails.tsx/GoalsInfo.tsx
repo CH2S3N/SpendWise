@@ -32,6 +32,11 @@ export default function GoalsInfo() {
       return total + (goals.amount || 0);
     }, 0)
   };
+  function calcTotalAccomplishedGoal() {
+    return goals.reduce((total, goals) => {
+      return total + (goals.currentAmount || 0);
+    }, 0)
+  };
 
 
  
@@ -47,13 +52,23 @@ export default function GoalsInfo() {
     <>
       <View style={styles.MainContainer}>
         {/* Header */}
+        <Text style={styles.title}></Text>
         <View style={styles.header}>
             <Card
             style={styles.headercontent}
             content = {
               <>
-                <Text style={styles.text}>Total</Text>
-                <Text style={styles.text}>{calcTotalGoal()}</Text>
+              <View style={{flexDirection: 'row',}}>
+                <View style={{paddingRight: 10}}>
+                  <Text style={styles.text}> Amount</Text>
+                  <Text style={styles.text}>{calcTotalGoal()}</Text>
+                </View>
+                
+                <View style={{}}>
+                  <Text style={styles.text}>Accumulated</Text>
+                  <Text style={styles.text}>{calcTotalAccomplishedGoal()}</Text>
+                </View>
+              </View>
               </>
             }
             />
@@ -62,7 +77,7 @@ export default function GoalsInfo() {
             style={styles.headercontent}
             content = {
               <>
-                <Text style={styles.text}>Accomplished</Text>
+                <Text style={styles.text}>Goals Completed</Text>
                 <Text style={styles.text}>{accomplishedGoals.length}/{goals.length}</Text>
               </>
             }
@@ -101,7 +116,7 @@ export default function GoalsInfo() {
             {isEnabled === true && (
               <>
                 <Divider/>
-                <Text style={styles.titletext}>Accomplished</Text>
+                  <Text style={styles.titletext}>Accomplished</Text>
                 <View style={styles.section}> 
                   <View style={styles.tablecontent}>
                   <AccomplishedList deleteGoal={deleteGoal} goals={goals}/>
@@ -117,7 +132,7 @@ export default function GoalsInfo() {
         {/* Add Transaction Button */}
         <View style={styles.btn}>
           <TouchableOpacity onPress={() => setIsAddingTransaction(true)} style={styles.regen}>
-            <Text style={styles.btnTxt}>Add Goals</Text>
+            <Text style={styles.btnTxt}>Create New Goal</Text>
           </TouchableOpacity>
         </View>
 
@@ -135,7 +150,7 @@ export default function GoalsInfo() {
 const styles = StyleSheet.create({
   MainContainer: {
     flex: 1,
-    paddingTop: 30
+    paddingTop: 5
   },
   container: {
     flex: 7,
@@ -170,6 +185,13 @@ const styles = StyleSheet.create({
     color: 'gray',
     fontSize: 20,
     opacity: 0.5
+  },
+  title:{
+
+    fontWeight: 'bold',
+    textAlign: 'left',
+    color: colors.dark,
+    fontSize: 30,
   },
   tablecontent: {
     flex: 10,

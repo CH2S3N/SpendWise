@@ -34,13 +34,11 @@ export default function TransactionDetails({ transaction, categoryInfo, setIsMod
                             {!isTapped ? (
                                 <>
                                     <View style={styles.description}>
-                                        <Text style={styles.btext}>
                                         <Text style={styles.title}> {transaction.description.charAt(0).toUpperCase() + transaction.description.slice(1)}</Text>
-                                        </Text>
                                     </View>
                                     <View style={styles.item}>
                                         <Text style={styles.amount}>{transaction.amount}</Text>
-                                        <Text style={styles.text}>Monthly Budget</Text>
+                                        <Text style={styles.label}>Monthly Budget</Text>
                                     </View>
                                 </>
                             ) : (
@@ -51,6 +49,10 @@ export default function TransactionDetails({ transaction, categoryInfo, setIsMod
                                             <Text style={styles.amount}> {transaction.amount}</Text>
                                         </View>
                                         <View style={styles.details}>
+                                            <View style={styles.row}>
+                                                <Text style={styles.label}><FontAwesome6 name="calendar-alt" size={18} color= {colors.green} /> Expense Type:</Text>
+                                                <Text style={styles.value}>{categoryInfo?.name}</Text>
+                                            </View>
                                             <View style={styles.row}>
                                                 <Text style={styles.label}><FontAwesome6 name="calendar-alt" size={18} color= {colors.green} /> Recurrence:</Text>
                                                 <Text style={styles.value}>{transaction.subtype}</Text>
@@ -87,13 +89,8 @@ export default function TransactionDetails({ transaction, categoryInfo, setIsMod
 }
 
 const styles = StyleSheet.create({
-    text: {
-        fontSize: 15,
-    },
-    btext: {
-        fontWeight: 'bold',
-        fontSize: 15,
-    },
+
+
     container: {
         flex: 1,
         flexDirection: 'row',

@@ -48,6 +48,22 @@ const styles= StyleSheet.create({
     marginHorizontal: 5,
     marginBottom: 10
   },
+  topbtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.dark,
+    borderRadius: 15,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowRadius: 8,
+    shadowOffset: { height: 6, width: 0 },
+    shadowOpacity: 0.15,
+    padding: 15,
+    marginHorizontal: 10,
+    marginBottom: 10
+  },
   btnExpense: {
     flex: 1,
     flexDirection: 'row',
@@ -110,11 +126,7 @@ const styles= StyleSheet.create({
     padding: 10
   },
   btn: {
-    position: 'absolute',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    width: '100%',
-    height: '99%',
+
   },
   
   
@@ -169,7 +181,7 @@ const styles= StyleSheet.create({
     fontWeight:'bold'
   },
   title2:{
-    fontSize: 15,
+    fontSize: 20,
     fontWeight:'bold',
     paddingHorizontal: 10
   },
