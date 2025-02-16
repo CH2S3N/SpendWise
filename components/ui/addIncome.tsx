@@ -94,15 +94,6 @@ export default function AddIncome({
              if (frequency === 'Weekly' && subType === 'All') {
                setRecurrence('28'); 
              }
-             if (frequency === 'Weekly' && subType === 'Custom') {
-               setRecurrence(String(parseInt(isrecurrence) * 4)); 
-             }
-             if (frequency === 'Monthly'){
-               setRecurrence(isrecurrence); 
-             }
-             if (frequency === 'Bi-Weekly'){
-               setRecurrence(String(parseInt(isrecurrence) * 2)); 
-             }
            }, [frequency, subType, isrecurrence]);
 
   return (
@@ -174,7 +165,7 @@ export default function AddIncome({
                     onChangeText={(text) => {
                       // Remove any non-numeric characters before setting the state
                       const numericValue = text.replace(/[^0-9.]/g, "");
-                      setRecurrence(numericValue);
+                      setRecurrence(String(parseInt(numericValue) * 4));
                     }}
                     />
                     <Text>Day(s) per Week</Text>
@@ -190,10 +181,10 @@ export default function AddIncome({
                       onChangeText={(text) => {
                         // Remove any non-numeric characters before setting the state
                         const numericValue = text.replace(/[^0-9.]/g, "");
-                        setRecurrence(numericValue);
+                        setRecurrence(String(parseInt(numericValue) * 2));
                       }}
                     />
-                    <Text>Time/s in a Bi-Week</Text>
+                    <Text>Day/s per Bi-Week</Text>
                     </View>
                   )}
       
@@ -210,7 +201,7 @@ export default function AddIncome({
                           setRecurrence(numericValue);
                         }}
                       />
-                      <Text>Time/s in a Month</Text>
+                      <Text>Day/s per Month</Text>
                     </View>
                   )}
               </View>

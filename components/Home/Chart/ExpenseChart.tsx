@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
 import Budget from '../Budget/totalIncome';
 import calculateMonthlyAmount from '@/utils/calcMonthlyAmount';
+import { colors } from '@/constants/colors';
 
 
 
@@ -25,6 +26,13 @@ export default function ExpenseChart() {
   );
   
 
+  function total() {
+    return transactions.reduce((total, transaction) => {
+      return total + (transaction.amount) || 0;
+
+    }, 0)
+
+  };
   function calcEssentials() {
     return essentialTransactions.reduce((total, transaction) => {
       return total + (transaction.amount) || 0;
@@ -91,6 +99,9 @@ export default function ExpenseChart() {
             <View style={[styles.colorBox, { backgroundColor: '#FFD65A' }]} />
             <Text>Savings: ₱{totalSavingsNonNegative}</Text>
           </View>
+          <View style={styles.total}>
+            <Text style={[styles.text, ]}>Total: <Text style={{color: colors.red}}>{total()}</Text></Text>
+          </View>
         </View>
       </View>
      
@@ -132,17 +143,15 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   total:{
-    position: 'absolute',
-    left: "20%",
-    bottom: "45%",
-  
-
+    flex:1,
+    justifyContent: 'center',
+    alignItems: 'flex-start'
   },
   text: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    fontWeight: 'bold'
-  }
+    fontWeight: 'bold',
+    fontSize: 20,
+    color: colors.dark
+  },
 
 
 })

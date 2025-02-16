@@ -9,7 +9,7 @@ import { colors } from '@/constants/colors';
 
 
 export default function IncomeChart () {
-  const { incomes } = useSelector(
+  const { incomes } = useSelector( 
     (state: RootState) => state.data);
 
     const widthAndHeight=150;

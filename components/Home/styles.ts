@@ -100,14 +100,9 @@ const styles= StyleSheet.create({
   modalcontent:{
     flex:10,
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     
   },
-
-
-
-
-
 
 
   item: {
@@ -196,6 +191,25 @@ genBudget:{
   flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'center',
+},
+noData:{
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+noDataTxt:{
+  fontSize: 30,
+  fontWeight: 'bold',
+  color: colors.dark,
+  opacity: 0.5
+},
+button: {
+  padding: 10,
+  borderRadius: 5,
+},
+disabledButton: {
+  color: colors.dark,
+  opacity: 0.3
 }
 })
 

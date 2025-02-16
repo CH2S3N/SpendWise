@@ -27,17 +27,36 @@ export default function SummaryInfo() {
       categories.find((category) => category.id === transaction.category_id)?.type === 'Non_Essential'
   );
   
- 
-  return (
+  function calcEssentials() {
+    return essentialtx.reduce((total, transaction) => {
+      return total + (transaction.amount) || 0;
+
+    }, 0)  
+
+  };
+  function calcNonEssentials() {
+    return nonEssentialtx.reduce((total, transaction) => {
+      return total + (transaction.amount) || 0;
+
+    }, 0)  
+
+  };
+    
+    return (
     <MainContainer>
       <View style={styles.container}>
         {/* Needs */}
-        { essentialtx.length !== 0 && (
+        {transactions.length > 0 ? (
+          <>
+                  { essentialtx.length !== 0 && (
           <>
             <Divider/>
             <View style={styles.section}> 
               <View style={styles.tableheader}>
+                <View style={styles.row}>
                   <Text style={styles.title}>Needs</Text>
+                  <Text style={styles.title}>Total: {calcEssentials()}</Text>
+                </View>
               </View>
               <View style={styles.tablecontent}>
                 <Essential
@@ -54,8 +73,11 @@ export default function SummaryInfo() {
           <>
             <View style={styles.section}> 
               <View style={styles.tableheader}>
+              <View style={styles.row}>
                   <Text style={styles.title}>Wants</Text>
-              </View>
+                  <Text style={styles.title}>Total: {calcNonEssentials()}</Text>
+                </View>             
+             </View>
               <View style={styles.tablecontent}>
                 <NonEssential
                   categories={categories}
@@ -66,6 +88,16 @@ export default function SummaryInfo() {
             <Divider/>
           </>
         )}
+          </>
+        ) : (
+          <>
+            <View style={styles.noData}>
+            <Text style={styles.noDataTxt}>No Transaction Data</Text>
+            </View>
+          </>
+        )}
+
+
       </View>
      
 
@@ -78,8 +110,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 8,
     gap: 10,
-    paddingTop: 5,
-    
+    paddingTop: 5,    
   },
   header: {
     flex:1,
@@ -101,12 +132,15 @@ const styles = StyleSheet.create({
     paddingBottom: 5,  
   },
   title: {
-    flex: 1,
-    color: 'gray',
-    textAlign: 'center',
+    color: colors.dark,
     fontWeight: 'bold',
-    fontSize: 25,
-    opacity: 0.5
+    fontSize: 15,
+  },
+  row:{
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10
   },
   tablecontent: {
     flex: 10,
@@ -132,4 +166,17 @@ const styles = StyleSheet.create({
     shadowOffset: { height: 6, width: 0 },
     shadowOpacity: 0.15,
   },
+  noData:{
+    flex: 1,
+    height: 300,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noDataTxt:{
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: colors.dark,
+    opacity: 0.5
+  },
+  
 })

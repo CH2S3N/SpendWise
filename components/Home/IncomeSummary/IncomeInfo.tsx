@@ -7,10 +7,15 @@ import { Modal } from '@/components/Modal';
 import { AntDesign } from '@expo/vector-icons';
 import { colors } from '@/constants/colors';
 import AddIncome from '@/components/ui/addIncome';
+import { RootState } from '@/state/store';
+import { useSelector } from 'react-redux';
 
 
 export default function IncomeInfo() {
-
+  const { transactions, incomes } = useSelector(
+    (state: RootState) => state.data
+    
+  );
   const [isAddingTransaction, setIsAddingTransaction] = useState(false);
   const [isUpdatingTransaction, setIsUpdatingTransaction] = React.useState<boolean>(false);
 
@@ -19,7 +24,13 @@ export default function IncomeInfo() {
       <View style={styles.container}>
           <View style={styles.section}> 
             <View style={styles.tablecontent}>
-              <IncomeList/>
+                {incomes.length > 0 ? (
+                  <IncomeList/>
+                ) : (
+                  <View style={styles.noData}>
+                  <Text style={styles.noDataTxt}>No Transaction Data</Text>
+                </View>
+                )}
             </View>
           </View>
       </View>
@@ -96,5 +107,16 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '99%',
     
-  }
+  },
+  noData:{
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noDataTxt:{
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: colors.dark,
+    opacity: 0.5
+  },
 })

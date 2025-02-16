@@ -128,15 +128,6 @@ export default function AddExpense({
           if (frequency === 'Weekly' && subType === 'All') {
             setRecurrence('28'); 
           }
-          if (frequency === 'Weekly' && subType === 'Custom') {
-            setRecurrence(String(parseInt(isrecurrence) * 4)); 
-          }
-          if (frequency === 'Monthly'){
-            setRecurrence(isrecurrence); 
-          }
-          if (frequency === 'Bi-Weekly'){
-            setRecurrence(String(parseInt(isrecurrence) * 2)); 
-          }
         }, [frequency, subType, isrecurrence]);
 
     
@@ -226,7 +217,7 @@ export default function AddExpense({
               onChangeText={(text) => {
                 // Remove any non-numeric characters before setting the state
                 const numericValue = text.replace(/[^0-9.]/g, "");
-                setRecurrence(numericValue);
+                setRecurrence(String(parseInt(numericValue) * 4));
               }}
               />
               <Text>Day(s) per Week</Text>
@@ -243,7 +234,7 @@ export default function AddExpense({
               onChangeText={(text) => {
                 // Remove any non-numeric characters before setting the state
                 const numericValue = text.replace(/[^0-9.]/g, "");
-                setRecurrence(numericValue);
+                setRecurrence(String(parseInt(numericValue) * 2));
               }}
               />
               <Text>Day(s) per Bi-Week</Text>

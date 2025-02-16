@@ -52,7 +52,6 @@ export default function GoalsInfo() {
     <>
       <View style={styles.MainContainer}>
         {/* Header */}
-        <Text style={styles.title}></Text>
         <View style={styles.header}>
             <Card
             style={styles.headercontent}
@@ -60,13 +59,8 @@ export default function GoalsInfo() {
               <>
               <View style={{flexDirection: 'row',}}>
                 <View style={{paddingRight: 10}}>
-                  <Text style={styles.text}> Amount</Text>
+                  <Text style={styles.text}> Total Amount</Text>
                   <Text style={styles.text}>{calcTotalGoal()}</Text>
-                </View>
-                
-                <View style={{}}>
-                  <Text style={styles.text}>Accumulated</Text>
-                  <Text style={styles.text}>{calcTotalAccomplishedGoal()}</Text>
                 </View>
               </View>
               </>
@@ -104,7 +98,9 @@ export default function GoalsInfo() {
           <ScrollView>
             {goals.length > 0 && (
               <>
+              <View style={styles.row}>
                 <Text style={styles.titletext}>In Progress</Text>
+              </View>
                 <View style={styles.section}> 
                   <View style={styles.tablecontent}>
                   <InProgressList goals={goals}/>
@@ -116,7 +112,9 @@ export default function GoalsInfo() {
             {isEnabled === true && (
               <>
                 <Divider/>
+                <View style={styles.row}>
                   <Text style={styles.titletext}>Accomplished</Text>
+                </View>
                 <View style={styles.section}> 
                   <View style={styles.tablecontent}>
                   <AccomplishedList deleteGoal={deleteGoal} goals={goals}/>
@@ -172,7 +170,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'flex-start',
     paddingHorizontal: 5,
-    paddingVertical: 10
   },
   text: {
     fontWeight: 'bold',
@@ -181,10 +178,8 @@ const styles = StyleSheet.create({
   },
   titletext:{
     fontWeight: 'bold',
-    textAlign: 'center',
-    color: 'gray',
+    color: colors.dark,
     fontSize: 20,
-    opacity: 0.5
   },
   title:{
 
@@ -234,6 +229,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: '99%',
+  },
+  row:{
+    flex: 1,
+    justifyContent: 'space-between',
+    paddingHorizontal: 10
   }
 
 })

@@ -18,7 +18,6 @@ export default function AccomplishedList({
     const [currentGoal, setCurrentGoal] = useState<Goal | null>(null);
 
     return (
-        <View style={styles.maincontainer}>
             <ScrollView>
                 <View style={styles.container}>
                     <View style={styles.section}>
@@ -50,7 +49,6 @@ export default function AccomplishedList({
                     </CustomModal>
                 </View>
             </ScrollView>
-        </View>
     )
 }
 
@@ -71,7 +69,7 @@ const styles=StyleSheet.create({
     },
     item: {
        paddingBottom: 5,
-       marginBottom: 10
+       marginBottom: 5
 
     },
     modal: {

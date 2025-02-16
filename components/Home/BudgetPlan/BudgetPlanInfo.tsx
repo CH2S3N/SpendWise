@@ -9,7 +9,6 @@ import SummaryInfo from '../ExpnseSummary/TransactionDetials/SummaryInfo';
 import { Modal } from '@/components/Modal';
 import IncomeInfo from '../IncomeSummary/IncomeInfo';
 import GenerateService from '@/hooks/generateBudgetplan/Generate';
-import ChartInfo from '../Chart/ChartInfo';
 import { colors } from '@/constants/colors';
 import Card from '@/components/ui/Card';
 import Slider from '@react-native-community/slider';
@@ -19,8 +18,6 @@ import { setNeeds, setWants, setSavings, resetCat} from '@/state/budgetSlice';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Button } from 'react-native-paper';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
-import SubCat from './SubCatNeeds';
-import { setData } from '@/state/dataSlice';
 import SubCatNeeds from './SubCatNeeds';
 import SubCatWants from './SubCatWants';
 
@@ -229,12 +226,18 @@ export default function BudgetPlanInfo({
             <TouchableOpacity style={styles.btn} onPress={() =>setIsAddingTransaction(true)}>
               <Text style={styles.txt}>ADD TRANSACTION</Text>   
             </TouchableOpacity>
-            <TouchableOpacity style={styles.btn} onPress={()=> {
+            <TouchableOpacity onPress={()=> {
               handleSaveExpense();
               setBudgetPlanGenerated(true);
               setGenerateModalVisible(false)
-              }}>
-              <Text style={styles.txt}>GENERATE</Text>   
+              }}
+              disabled={transactions.length === 0 || incomes.length === 0}
+              style={[
+                styles.btn,
+                (transactions.length === 0 || incomes.length === 0) && styles.disabledButton
+              ]}
+              >
+              <Text style={styles.txt}>ALLOCATE</Text>   
             </TouchableOpacity>
           </View>
         </View>
@@ -328,6 +331,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     marginBottom: 10
+  },
+  disabledButton: {
+    color: colors.gray,
+    opacity: 0.7
   },
   txt:{
     color: colors.light,

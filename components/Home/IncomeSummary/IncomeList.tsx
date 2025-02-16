@@ -32,13 +32,6 @@ export default function IncomeList() {
                   );
                   return (
                     <View key={income.id} style={styles.item}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          setCurrentIncome(income);
-                          setIsModalVisible(true);
-                        }}
-                        onLongPress={() => deleteIncome(income.id)}
-                      >
                         <IncomeDetails
                           income={income}
                           incomeCategoryInfo={categoryForCurrentItem}
@@ -46,7 +39,6 @@ export default function IncomeList() {
                           setCurrentIncome={setCurrentIncome}
                           deleteIncome={deleteIncome}
                         />
-                      </TouchableOpacity>
                     </View>
                   );
                 })}
