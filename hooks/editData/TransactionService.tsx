@@ -3,7 +3,7 @@ import { AppDispatch, RootState } from "@/state/store";
 import { useFetchData } from "../useFetchData";
 import { useSQLiteContext } from "expo-sqlite";
 import { setData } from "@/state/dataSlice";
-import { Category, Goal, Income, Transaction } from "@/types";
+import { Category, Goal, Income, Transaction, User } from "@/types";
 
 export function UseTransactionService() {
   const dispatch = useDispatch<AppDispatch>();
@@ -205,7 +205,22 @@ export function UseTransactionService() {
     });
   };
   
-
+  // Update Expense
+  const updateUser = async (user: User) => {
+    await db.withTransactionAsync(async () => {
+      await db.runAsync(
+        `UPDATE User SET  userName = ? WHERE id = ?`,
+        [
+          user.userName,
+          user.id
+        ]
+      );
+        // Reload data after inserting transaction
+        const userResult = await db.getAllAsync<User>('SELECT * FROM User');
+        console.log('Updated user:', userResult);
+        dispatch(setData({ user: userResult, categories, incomeCategories, goals, transactions, incomes, recurrence }));
+      });
+  };
 
   
 
@@ -220,6 +235,7 @@ export function UseTransactionService() {
     insertTransaction,
     updateTransaction,
     deleteTransaction,
-    updateCategory
+    updateCategory,
+    updateUser
   };
 }

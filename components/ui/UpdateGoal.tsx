@@ -13,7 +13,7 @@ export default function UpdateGoal({
     setIsUpdatingGoal: React.Dispatch<React.SetStateAction<boolean>>;
     currentGoal: Goal;
 }) {
-
+ 
     const { updateGoal } = UseTransactionService();
     
     const [amount, setAmount] = React.useState<string>("");

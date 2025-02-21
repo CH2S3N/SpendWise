@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, Text, ScrollView } from 'react-native';
+import { View, TouchableOpacity, Text, ScrollView, TouchableWithoutFeedback } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import CircularChart from '../../components/Home/Chart/ExpenseChart';
 import AddTransaction from '../../components/ui/AddTransaction';
@@ -21,7 +21,6 @@ import BudgetPlan from '@/components/Home/BudgetPlan/BudgetPlan';
 
 
 export default function Index() {
-
   const { transactions, incomes } = useSelector(
     (state: RootState) => state.data
     
@@ -42,8 +41,13 @@ export default function Index() {
   const [isGenerateModalVisible, setGenerateModalVisible] = useState(false);
   const [isBudgetPlanModalVisible, setBudgetPlanModalVisible] = useState(false);
 
-  const [isHovered, setIsHovered] = useState(false);
   
+  // const [isAFirstLaunched, setIsAppFirstLaunched] = React.useState(null);
+  // React.useEffect(async ()=> {
+  //   const appData = await AsyncStorage
+  // })
+
+
   // Return Function
   return (
 
@@ -100,11 +104,17 @@ export default function Index() {
 
       {/* PopUp Screen */}
       <>        
-        {/* Add Transaction */}
-        <Modal isOpen={isAddingTransaction} transparent={true} >
-          <View style={styles.modalAddContent}>
-              <AddTransaction setIsAddingTransaction={setIsAddingTransaction} />
-          </View>
+        {/* Add Transactions */}
+        <Modal isOpen={isAddingTransaction} transparent animationType="fade">
+          <TouchableWithoutFeedback onPress={() => setIsAddingTransaction(false)}>
+            <View style={styles.modalOverlay}>
+              <TouchableWithoutFeedback>
+                <View style={styles.modalContent}>
+                  <AddTransaction setIsAddingTransaction={setIsAddingTransaction} />
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </TouchableWithoutFeedback>
         </Modal>
 
         {/* Generate */}

@@ -1,5 +1,5 @@
 import { Category, Transaction } from "@/types";
-import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import TransactionDetails from "./TransactionDetails";
 import React, { useState } from "react";
 import { Modal } from "@/components/Modal";
@@ -52,14 +52,22 @@ export default function NonEssential({
                         })}   
                     </View>
 
-                    
-                    <Modal isOpen={isModalVisible} style={styles.modal}>
-                            {currentTransaction && (
-                                <UpdateExpense setIsModalVisible={setIsModalVisible} setIsUpdatingTransaction={setIsUpdatingTransaction}
-                                currentTransaction={currentTransaction}
-                                />
-                            )}
-                    </Modal>
+        
+                     <Modal isOpen={isModalVisible} transparent animationType="fade">
+                        <TouchableWithoutFeedback onPress={() => setIsModalVisible(false)}>
+                            <View style={styles.modalOverlay}>
+                            <TouchableWithoutFeedback>
+                                <View style={styles.modalContent}>
+                                {currentTransaction && (
+                                    <UpdateExpense setIsModalVisible={setIsModalVisible} setIsUpdatingTransaction={setIsUpdatingTransaction}
+                                    currentTransaction={currentTransaction}
+                                    />
+                                )}
+                                </View>
+                            </TouchableWithoutFeedback>
+                            </View>
+                        </TouchableWithoutFeedback>
+                        </Modal>
                 </View>
             </ScrollView>
         </View>
@@ -89,5 +97,15 @@ const styles=StyleSheet.create({
     modal: {
         flex: 1,
         
-    }
+    },
+    modalOverlay: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+      },
+      modalContent: {
+        width: '80%',
+        height: '80%',
+      },
 })

@@ -1,4 +1,4 @@
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, Text, TouchableWithoutFeedback } from 'react-native'
 import React, { useState } from 'react'
 import MainContainer from '@/components/Containers/MainContainer';
 import { Divider } from '@rneui/base';
@@ -43,12 +43,16 @@ export default function IncomeInfo() {
       </View>
 
       {/* Add Income Modal*/}
-      <Modal isOpen={isAddingTransaction} transparent={true} >
-        <View style={styles.modalAddContent}>
-          <Text style={{textAlign: 'center', fontWeight: 'bold', fontSize:20, paddingTop: 10}}>Add a Source of Income</Text>
-
-          <AddIncome setIsAddingTransaction={setIsAddingTransaction} setIsUpdatingTransaction={setIsUpdatingTransaction} />
-        </View>
+      <Modal isOpen={isAddingTransaction} transparent animationType="fade">
+        <TouchableWithoutFeedback onPress={() => setIsAddingTransaction(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContent}>
+                <AddIncome setIsAddingTransaction={setIsAddingTransaction} setIsUpdatingTransaction={setIsUpdatingTransaction} />
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
       </Modal>
     </>
   )
@@ -118,5 +122,23 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: colors.dark,
     opacity: 0.5
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+  },
+  modalContent: {
+    width: '80%',
+    height: '80%',
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowRadius: 8,
+    shadowOffset: { height: 6, width: 0 },
+    shadowOpacity: 0.15,
   },
 })

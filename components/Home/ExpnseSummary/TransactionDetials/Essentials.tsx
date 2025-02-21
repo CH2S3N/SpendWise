@@ -1,5 +1,5 @@
 import { Category, Transaction } from "@/types";
-import { Button, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Button, ScrollView, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import TransactionDetails from "./TransactionDetails";
 import { Modal } from "@/components/Modal";
 import UpdateExpense from "@/components/ui/UpdateExpense";
@@ -52,12 +52,20 @@ export default function Essential({
                         </View>
 
 
-                        <Modal isOpen={isModalVisible} style={styles.modal}>
+                    <Modal isOpen={isModalVisible} transparent animationType="fade">
+                    <TouchableWithoutFeedback onPress={() => setIsModalVisible(false)}>
+                        <View style={styles.modalOverlay}>
+                        <TouchableWithoutFeedback>
+                            <View style={styles.modalContent}>
                             {currentTransaction && (
                                 <UpdateExpense setIsModalVisible={setIsModalVisible} setIsUpdatingTransaction={setIsAddingTransaction}
                                 currentTransaction={currentTransaction}
                                 />
                             )}
+                            </View>
+                        </TouchableWithoutFeedback>
+                        </View>
+                    </TouchableWithoutFeedback>
                     </Modal>
                     
                 </View>
@@ -89,5 +97,15 @@ const styles=StyleSheet.create({
     modal: {
         flex: 1,
         
-    }
+    },
+    modalOverlay: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+      },
+      modalContent: {
+        width: '80%',
+        height: '80%',
+      },
 })

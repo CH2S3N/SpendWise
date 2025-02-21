@@ -50,6 +50,5 @@ export interface Goal {
 
 export interface User {
     id: number;
-    budget_Amount: number;
     userName: string;
 }

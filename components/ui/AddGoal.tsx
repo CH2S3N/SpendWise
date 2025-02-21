@@ -1,6 +1,7 @@
-import { View, TextInput, Button, Text, StyleSheet } from 'react-native'
+import { View, TextInput, Button, Text, StyleSheet, ScrollView } from 'react-native'
 import React from 'react'
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
+import Card from './Card';
 
 export default function AddGoal({
     setIsAddingTransaction, 
@@ -46,57 +47,62 @@ export default function AddGoal({
     }
 
   return (
+    <Card content={
+      <View style={styles.container}>
+        <View style={{flex: 9}}>
+          <ScrollView>
+            <View style={styles.content}>
+              {/* DESCRIPTION */}
+              <Text style={styles.btext}>Item</Text>
+              <TextInput
+                placeholder="Enter Item Name"
+                style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
+                onChangeText={setName}
+              />
+            </View>
 
-    <View style={styles.container}>
-    <View style={styles.content}>
-      {/* DESCRIPTION */}
-      <Text style={styles.btext}>Item</Text>
-      <TextInput
-        placeholder="Enter Item Name"
-        style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
-        onChangeText={setName}
-      />
-    </View>
+            <View style={styles.content}>
+                <Text style={styles.btext}>Amount</Text>
+              <TextInput
+                placeholder="Enter Amount"
+                style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
+                keyboardType="numeric"
+                onChangeText={(text) => {
+                  // Remove any non-numeric characters before setting the state
+                  const numericValue = text.replace(/[^0-9.]/g, "");
+                  setAmount(numericValue);
+                }}
+              />
+            </View>
 
-    <View style={styles.content}>
-        <Text style={styles.btext}>Amount</Text>
-      <TextInput
-        placeholder="Enter Amount"
-        style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
-        keyboardType="numeric"
-        onChangeText={(text) => {
-          // Remove any non-numeric characters before setting the state
-          const numericValue = text.replace(/[^0-9.]/g, "");
-          setAmount(numericValue);
-        }}
-      />
-    </View>
-
-    <View style={styles.content}>
-      <Text style={styles.btext}>Initial Amount</Text>
-      <TextInput
-        placeholder="Enter Amount"
-        style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
-        keyboardType="numeric"
-        onChangeText={(text) => {
-          // Remove any non-numeric characters before setting the state
-          const numericValue = text.replace(/[^0-9.]/g, "");
-          setCurrentAmount(numericValue);
-        }}
-      />
-    </View>
-
-      {/* Cancel and Save Button */}
-      <View style={styles.btn}>
-        <View
-          style={{ flexDirection: "row", justifyContent: "space-around" }}
-        >
-          <Button title="Cancel" color={'black'} onPress={() => setIsAddingTransaction(false)}
-          />
-          <Button title="Save" color={'black'} onPress={handleSaveExpense} disabled={!validateFields()}/>
+            <View style={styles.content}>
+              <Text style={styles.btext}>Initial Amount</Text>
+              <TextInput
+                placeholder="Enter Amount"
+                style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
+                keyboardType="numeric"
+                onChangeText={(text) => {
+                  // Remove any non-numeric characters before setting the state
+                  const numericValue = text.replace(/[^0-9.]/g, "");
+                  setCurrentAmount(numericValue);
+                }}
+              />
+            </View>
+          </ScrollView>
+          
+        </View>
+        {/* Cancel and Save Button */}
+        <View style={styles.btn}>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-around" }}
+          >
+            <Button title="Cancel" color={'black'} onPress={() => setIsAddingTransaction(false)}
+            />
+            <Button title="Save" color={'black'} onPress={handleSaveExpense} disabled={!validateFields()}/>
+          </View>
         </View>
       </View>
-    </View>
+    }/>
 
   )
 }

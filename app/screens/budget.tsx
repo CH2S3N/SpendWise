@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Button, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useState } from 'react'
 import MainContainer from '@/components/Containers/MainContainer';
 import IncomeInfo from '@/components/Home/IncomeSummary/IncomeInfo';
@@ -7,13 +7,35 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { colors } from '@/constants/colors';
 import { Modal } from '@/components/Modal';
 import { RootState } from '@/state/store';
-import { useSelector } from 'react-redux';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { setUsername } from '@/state/usernameSlice';  // FIXED: Use the correct Redux action
+import { UseTransactionService } from '@/hooks/editData/TransactionService';
+import Card from '@/components/ui/Card';
 
 const Budget = () => {
+  const { user } = useSelector((state: RootState) => state.data);
+  const { updateUser } = UseTransactionService(); 
+  const dispatch = useDispatch();
 
+  const firstUser = user?.[0];  
+  const userName = firstUser?.userName || "";
+  const userId = firstUser?.id ?? 1;
+
+  const [input, setInput] = useState(userName);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSettingsModalVisible, setIsSettingsModalVisible] = useState(false);
+
+  async function handleUpdateUser() {
+    try {
+      await updateUser({
+        id: userId,
+        userName: input,
+      });
+      console.log("User updated successfully!");
+    } catch (error) {
+      console.error("Failed to update user:", error);
+    }
+  }
 
   return (
     <MainContainer>
@@ -23,46 +45,68 @@ const Budget = () => {
             onPress={() => setIsModalVisible(true)} 
             style={styles.userButton}>
             <FontAwesome6 name="circle-user" size={30} color={colors.dark} />
-            <Text style={styles.userText}>User</Text>
+            <Text style={styles.userText}>{userName}</Text>
           </TouchableOpacity>
-          <TouchableOpacity  onPress={() => setIsSettingsModalVisible(true)}  style={styles.iconButton}>
+          <TouchableOpacity onPress={() => setIsSettingsModalVisible(true)} style={styles.iconButton}>
             <FontAwesome6 name="gear" size={30} color={colors.dark} />
           </TouchableOpacity>
         </View>
-
-        <IncomeChart />
+        <Card
+        style={{ flex: 0.5, justifyContent: 'center', marginBottom: 10, marginHorizontal: 10}}
+        content={
+          <IncomeChart />
+        }
+        />
         <Text style={styles.text}>My Source of Income</Text>
-          <IncomeInfo />
+        <IncomeInfo />
       </View>
 
-      {/* Profile */}
+      {/* Profile Modal */}
       <Modal isOpen={isModalVisible} transparent animationType="fade">
         <TouchableWithoutFeedback onPress={() => setIsModalVisible(false)}>
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback>
               <View style={styles.modalContent}>
-                <TouchableOpacity onPress={() => setIsModalVisible(false)} style={styles.closeButton}>
-                  <Text style={styles.closeText}>Close</Text>
-                </TouchableOpacity>
                 <Text style={styles.modalTitle}>Profile</Text>
+                <FontAwesome6 name="circle-user" size={50} color={colors.dark} />
+                <View style={{ paddingTop: 10 }}>
+                  <Text>Current Username</Text>
+                  <TextInput
+                    placeholder="Enter Username"
+                    style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black', textAlign: 'center' }}
+                    value={input}
+                    onChangeText={setInput}
+                  />
+                </View>
+                <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-evenly' }}>
+                  <TouchableOpacity onPress={() => setIsModalVisible(false)}>
+                    <Text style={styles.modalSubTitle}>Close</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => {
+                    dispatch(setUsername(input));  // FIXED: Correct Redux action
+                    handleUpdateUser();
+                    setIsModalVisible(false);
+                  }}>
+                    <Text style={styles.modalSubTitle}>Save</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </TouchableWithoutFeedback>
           </View>
         </TouchableWithoutFeedback>
       </Modal>
 
-
-      {/* Modal */}
-      {/* Settings */}
+      {/* Settings Modal */}
       <Modal isOpen={isSettingsModalVisible} transparent animationType="fade">
         <TouchableWithoutFeedback onPress={() => setIsSettingsModalVisible(false)}>
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback>
               <View style={styles.modalContent}>
-                <TouchableOpacity onPress={() => setIsSettingsModalVisible(false)} style={styles.closeButton}>
-                  <Text style={styles.closeText}>Close</Text>
-                </TouchableOpacity>
                 <Text style={styles.modalTitle}>Settings</Text>
+                <Text style={styles.modalSubTitle}>Delete all data</Text>
+                <TouchableOpacity onPress={() => setIsSettingsModalVisible(false)}>
+                  <Text style={styles.modalSubTitle}>Close</Text>
+                </TouchableOpacity>
               </View>
             </TouchableWithoutFeedback>
           </View>
@@ -78,6 +122,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
   header: {
+    paddingVertical: 10,
+    marginHorizontal: 10,
     marginVertical: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -97,6 +143,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
+    textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 20,
     paddingBottom: 10,
@@ -132,19 +179,25 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
     paddingTop: 10,
+    paddingBottom: 15,
   },
-  noData:{
+  modalSubTitle: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 15,
+    paddingTop: 10,
+  },
+  noData: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  noDataTxt:{
+  noDataTxt: {
     fontSize: 30,
     fontWeight: 'bold',
     color: colors.dark,
-    opacity: 0.5
+    opacity: 0.5,
   },
 });
 
 export default Budget;
-

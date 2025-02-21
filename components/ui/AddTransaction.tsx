@@ -1,5 +1,5 @@
 import * as React from "react";
-import {  StyleSheet, View } from "react-native";
+import {  ScrollView, StyleSheet, View } from "react-native";
 import SegmentedControl from "@react-native-segmented-control/segmented-control";
 import AddExpense from "./AddExpense";
 import AddGoal from "./AddGoal";
@@ -19,7 +19,7 @@ export default function AddTransaction ({
     const [selectedTypeIndex, setselectedTypeIndex] = React.useState<number>(0);
     // Return function of the Add transaction
     return (
-        <View style={styles.container}>
+      <View style={styles.container}>
                <SegmentedControl
                   values={['Expense', 'Goal', 'Income']}
                   selectedIndex={selectedTypeIndex}
@@ -37,7 +37,7 @@ export default function AddTransaction ({
                  {selectedTypeIndex === 2 && ( 
                   <AddIncome setIsAddingTransaction={setIsAddingTransaction} setIsUpdatingTransaction={setIsUpdatingTransaction} />
                 )}
-          </View>
+        </View>
     );
 }
 

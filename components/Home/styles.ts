@@ -210,7 +210,41 @@ button: {
 disabledButton: {
   color: colors.dark,
   opacity: 0.3
-}
+},
+
+modalOverlay: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: 'rgba(0, 0, 0, 0.2)',
+},
+modalContent: {
+  width: '80%',
+  height: '80%',
+  
+  backgroundColor: 'white',
+  padding: 20,
+  borderRadius: 10,
+  alignItems: 'center',
+  elevation: 5,
+  shadowColor: '#000',
+  shadowRadius: 8,
+  shadowOffset: { height: 6, width: 0 },
+  shadowOpacity: 0.15,
+},
+modalTitle: {
+  textAlign: 'center',
+  fontWeight: 'bold',
+  fontSize: 20,
+  paddingTop: 10,
+  paddingBottom: 15,
+},
+modalSubTitle: {
+  textAlign: 'center',
+  fontWeight: 'bold',
+  fontSize: 15,
+  paddingTop: 10,
+},
 })
 
 export default styles;

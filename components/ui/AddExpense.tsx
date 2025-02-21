@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet, ScrollView } from 'react-native'
 import React, { useEffect } from 'react'
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { useSQLiteContext } from 'expo-sqlite';
@@ -134,175 +134,178 @@ export default function AddExpense({
 
   return (
     <View style={styles.container}>
-      
-      {/* DESCRIPTION */}
-      <View style={styles.content}>
-          <Text style={styles.btext}>Item</Text>
-          <TextInput
-            placeholder="Entry  description"
-            style={{ marginBottom: 15, marginTop: 10, borderBottomWidth: 1, borderBottomColor: 'black'}}
-            onChangeText={setDescription}
-          />
-      </View>
+      <View style={{flex: 9}}>
+        <ScrollView >
+          {/* DESCRIPTION */}
+          <View style={styles.content}>
+              <Text style={styles.btext}>Item</Text>
+              <TextInput
+                placeholder="Entry  description"
+                style={{ marginBottom: 15, marginTop: 10, borderBottomWidth: 1, borderBottomColor: 'black'}}
+                onChangeText={setDescription}
+              />
+          </View>
 
-      {/* IS FIXED AMOUNT */}
-      <View>
-        <View style={styles.content}>
-          <Text style={{fontWeight: 'bold', marginBottom:10}}>Is this a fixed amount?</Text>
-          <SegmentedControl
-            values={['Yes', 'No']}
-            selectedIndex={selectedIndex}
-            onChange={(event) => {setSelectedIndex(event.nativeEvent.selectedSegmentIndex)
-            }}
-          />
-        </View>
-        <View style={styles.content}>
-          {/* AMOUNT */}
-          <Text style={{fontWeight: 'bold', marginBottom:10}}>Amount</Text>
-          <TextInput
-            placeholder="Enter Amount"
-            style={{ marginBottom: 15, marginTop: 10, borderBottomWidth: 1, borderBottomColor: 'black' }}
-            keyboardType="numeric"
-            onChangeText={(text) => {
-              // Remove any non-numeric characters before setting the state
-              const numericValue = text.replace(/[^0-9.]/g, "");
-              setAmount(numericValue);
-              setIsFixedAmount("Yes")
-
-            }}
-          />
-          
-        </View>
-      </View>
-
-      {/* FREQUENCY */}
-      <View>
-        <View style={styles.content}>
-            <Text style={styles.btext}>Recurrence</Text>
-            <SegmentedControl
-              values={["Daily", "Weekly", "Bi-Weekly", "Monthly"]}
-              style={{ marginTop: 10, }}
-              selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
-              onChange={(event) => {
-                setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
-                setRecurrence('');
-              }}
-            />
-        </View>
-        <View style={styles.content}>
-            {frequency === 'Daily' && (
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-
-              </View>
-            )}
-
-            {frequency === 'Weekly' && (
+          {/* IS FIXED AMOUNT */}
+          <View>
+            <View style={styles.content}>
+              <Text style={{fontWeight: 'bold', marginBottom:10}}>Is this a fixed amount?</Text>
               <SegmentedControl
-                values={["Weekends", "Weekdays", "All", "Custom"]}
-                style={{ marginTop: 10, }}
-                selectedIndex={["Weekends", "Weekdays", "All", "Custom"].indexOf(subType)}
-                onChange={(event) => {
-                  setsubType(["Weekends", "Weekdays", "All", "Custom"][event.nativeEvent.selectedSegmentIndex]);
+                values={['Yes', 'No']}
+                selectedIndex={selectedIndex}
+                onChange={(event) => {setSelectedIndex(event.nativeEvent.selectedSegmentIndex)
+                }}
+              />
+            </View>
+            <View style={styles.content}>
+              {/* AMOUNT */}
+              <Text style={{fontWeight: 'bold', marginBottom:10}}>Amount</Text>
+              <TextInput
+                placeholder="Enter Amount"
+                style={{ marginBottom: 15, marginTop: 10, borderBottomWidth: 1, borderBottomColor: 'black' }}
+                keyboardType="numeric"
+                onChangeText={(text) => {
+                  // Remove any non-numeric characters before setting the state
+                  const numericValue = text.replace(/[^0-9.]/g, "");
+                  setAmount(numericValue);
+                  setIsFixedAmount("Yes")
+
                 }}
               />
               
-            )}
-            {frequency === 'Weekly' && subType === 'Custom' && (
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <TextInput
-              placeholder='0'
-               value={isrecurrence}
-              style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
-              keyboardType="numeric"
-              onChangeText={(text) => {
-                // Remove any non-numeric characters before setting the state
-                const numericValue = text.replace(/[^0-9.]/g, "");
-                setRecurrence(String(parseInt(numericValue) * 4));
-              }}
-              />
-              <Text>Day(s) per Week</Text>
-              </View>
-            )}
+            </View>
+          </View>
 
-            {frequency === 'Bi-Weekly' && (
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <TextInput
-              placeholder='0'
-               value={isrecurrence}
-              style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
-              keyboardType="numeric"
-              onChangeText={(text) => {
-                // Remove any non-numeric characters before setting the state
-                const numericValue = text.replace(/[^0-9.]/g, "");
-                setRecurrence(String(parseInt(numericValue) * 2));
-              }}
-              />
-              <Text>Day(s) per Bi-Week</Text>
-              </View>
-            )}
+          {/* FREQUENCY */}
+          <View>
+            <View style={styles.content}>
+                <Text style={styles.btext}>Recurrence</Text>
+                <SegmentedControl
+                  values={["Daily", "Weekly", "Bi-Weekly", "Monthly"]}
+                  style={{ marginTop: 10, }}
+                  selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
+                  onChange={(event) => {
+                    setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
+                    setRecurrence('');
+                  }}
+                />
+            </View>
+            <View style={styles.content}>
+                {frequency === 'Daily' && (
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
 
-            {frequency === 'Monthly' && (
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <TextInput
-              placeholder='0'
-              value={isrecurrence}
-              style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
-              keyboardType="numeric"
-              onChangeText={(text) => {
-                // Remove any non-numeric characters before setting the state
-                const numericValue = text.replace(/[^0-9.]/g, "");
-                setRecurrence(numericValue);
+                  </View>
+                )}
+
+                {frequency === 'Weekly' && (
+                  <SegmentedControl
+                    values={["Weekends", "Weekdays", "All", "Custom"]}
+                    style={{ marginTop: 10, }}
+                    selectedIndex={["Weekends", "Weekdays", "All", "Custom"].indexOf(subType)}
+                    onChange={(event) => {
+                      setsubType(["Weekends", "Weekdays", "All", "Custom"][event.nativeEvent.selectedSegmentIndex]);
+                    }}
+                  />
+                  
+                )}
+                {frequency === 'Weekly' && subType === 'Custom' && (
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <TextInput
+                  placeholder='0'
+                  value={isrecurrence}
+                  style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
+                  keyboardType="numeric"
+                  onChangeText={(text) => {
+                    // Remove any non-numeric characters before setting the state
+                    const numericValue = text.replace(/[^0-9.]/g, "");
+                    setRecurrence(String(parseInt(numericValue) * 4));
+                  }}
+                  />
+                  <Text>Day(s) per Week</Text>
+                  </View>
+                )}
+
+                {frequency === 'Bi-Weekly' && (
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <TextInput
+                  placeholder='0'
+                  value={isrecurrence}
+                  style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
+                  keyboardType="numeric"
+                  onChangeText={(text) => {
+                    // Remove any non-numeric characters before setting the state
+                    const numericValue = text.replace(/[^0-9.]/g, "");
+                    setRecurrence(String(parseInt(numericValue) * 2));
+                  }}
+                  />
+                  <Text>Day(s) per Bi-Week</Text>
+                  </View>
+                )}
+
+                {frequency === 'Monthly' && (
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <TextInput
+                  placeholder='0'
+                  value={isrecurrence}
+                  style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
+                  keyboardType="numeric"
+                  onChangeText={(text) => {
+                    // Remove any non-numeric characters before setting the state
+                    const numericValue = text.replace(/[^0-9.]/g, "");
+                    setRecurrence(numericValue);
+                  }}
+                />
+                <Text>Day(s) per Month</Text>
+                  </View>
+                )}
+            </View>
+          </View>
+          {/* ENTRY TYPE, ESSENTIAL & NON ESSENTIAL */}
+          <View style={styles.content}>
+            <Text style={styles.btext}>Select an Expense Type</Text>
+            <SegmentedControl
+              values={["Needs", "Wants"]}
+              style={{ marginBottom: 15, marginTop: 10, }}
+              selectedIndex={currentTab}
+              onChange={(event) => {
+                setCurrentTab(event.nativeEvent.selectedSegmentIndex);
               }}
             />
-            <Text>Day(s) per Month</Text>
-              </View>
-            )}
+
+            {categories.map((cat) => (
+              <CategoryButton
+              key={cat.name}
+              id={cat.id}
+              title={cat.name}
+              isSelected={typeSelected === cat.name}
+              setTypeSelected={setTypeSelected}
+              setCategoryId={setCategoryId}
+              />
+            ))}
+          </View>
+
+        </ScrollView>
+      </View>
+      {/* Cancel and Save Button */}
+      <View style={styles.btn}>
+        <View
+          style={{ flexDirection: "row", justifyContent: "space-around" }}
+        >
+          <Button title="Cancel" color={'black'} 
+          onPress={
+            () => {
+              setIsAddingTransaction(false);
+              setIsUpdatingTransaction(false)
+            }
+          
+          }
+          />
+          <Button title="Save" color={'black'} 
+          onPress={()=>handleSaveExpense()} disabled={!validateFields()} 
+          />
         </View>
       </View>
 
-      {/* ENTRY TYPE, ESSENTIAL & NON ESSENTIAL */}
-      <View style={styles.content}>
-        <Text style={styles.btext}>Select an Expense Type</Text>
-        <SegmentedControl
-          values={["Needs", "Wants"]}
-          style={{ marginBottom: 15, marginTop: 10, }}
-          selectedIndex={currentTab}
-          onChange={(event) => {
-            setCurrentTab(event.nativeEvent.selectedSegmentIndex);
-          }}
-        />
-
-        {categories.map((cat) => (
-          <CategoryButton
-          key={cat.name}
-          id={cat.id}
-          title={cat.name}
-          isSelected={typeSelected === cat.name}
-          setTypeSelected={setTypeSelected}
-          setCategoryId={setCategoryId}
-          />
-        ))}
-      </View>
-
-          {/* Cancel and Save Button */}
-          <View style={styles.btn}>
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-around" }}
-            >
-              <Button title="Cancel" color={'black'} 
-              onPress={
-                () => {
-                  setIsAddingTransaction(false);
-                  setIsUpdatingTransaction(false)
-                }
-              
-              }
-              />
-              <Button title="Save" color={'black'} 
-              onPress={()=>handleSaveExpense()} disabled={!validateFields()} 
-              />
-            </View>
-          </View>
     </View>
   )
 }
@@ -354,6 +357,7 @@ function CategoryButton({
 
 const styles = StyleSheet.create({
   container:{
+    flex: 1,
     height: '100%',
   },
   btn:{

@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View, Switch, ScrollView } from 'react-native'
+import { Text, TouchableOpacity, View, Switch, ScrollView, TouchableWithoutFeedback } from 'react-native'
 import React, { useState,  } from 'react'
 import MainContainer from '@/components/Containers/MainContainer';
 import { StyleSheet } from 'react-native';
@@ -109,7 +109,7 @@ export default function GoalsInfo() {
               </>
             )}
 
-            {isEnabled === true && (
+            {isEnabled && accomplishedGoals.length > 0 && (
               <>
                 <Divider/>
                 <View style={styles.row}>
@@ -117,11 +117,12 @@ export default function GoalsInfo() {
                 </View>
                 <View style={styles.section}> 
                   <View style={styles.tablecontent}>
-                  <AccomplishedList deleteGoal={deleteGoal} goals={goals}/>
+                    <AccomplishedList deleteGoal={deleteGoal} goals={goals}/>
                   </View>
                 </View>
               </>
             )}
+
           </ScrollView>
         </View>
 
@@ -135,12 +136,23 @@ export default function GoalsInfo() {
         </View>
 
         {/* Add Goals Modal */}
-        <Modal isOpen={isAddingTransaction} transparent={true} >
+        {/* <Modal isOpen={isAddingTransaction} transparent={true} >
           <View style={styles.modalAddContent}>
             <Text style={{textAlign: 'center', fontWeight: 'bold', fontSize:20, paddingTop: 10}}>Add a Goal</Text>
               <AddGoal setIsAddingTransaction={setIsAddingTransaction} />
           </View>
-        </Modal>
+        </Modal> */}
+        <Modal isOpen={isAddingTransaction} transparent animationType="fade">
+          <TouchableWithoutFeedback onPress={() => setIsAddingTransaction(false)}>
+              <View style={styles.modalOverlay}>
+              <TouchableWithoutFeedback>
+                  <View style={styles.modalContent}>
+                    <AddGoal setIsAddingTransaction={setIsAddingTransaction} />
+                  </View>
+              </TouchableWithoutFeedback>
+              </View>
+          </TouchableWithoutFeedback>
+          </Modal>
     </>
   )
 }
@@ -234,6 +246,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     paddingHorizontal: 10
-  }
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+  },
+  modalContent: {
+    width: '80%',
+    height: '80%',
+  },
 
 })
