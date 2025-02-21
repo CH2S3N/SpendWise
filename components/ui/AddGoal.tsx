@@ -47,68 +47,66 @@ export default function AddGoal({
     }
 
   return (
-    <Card content={
-      <View style={styles.container}>
-        <View style={{flex: 9}}>
-          <ScrollView>
-            <View style={styles.content}>
-              {/* DESCRIPTION */}
-              <Text style={styles.btext}>Item</Text>
-              <TextInput
-                placeholder="Enter Item Name"
-                style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
-                onChangeText={setName}
-              />
-            </View>
-
-            <View style={styles.content}>
-                <Text style={styles.btext}>Amount</Text>
-              <TextInput
-                placeholder="Enter Amount"
-                style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
-                keyboardType="numeric"
-                onChangeText={(text) => {
-                  // Remove any non-numeric characters before setting the state
-                  const numericValue = text.replace(/[^0-9.]/g, "");
-                  setAmount(numericValue);
-                }}
-              />
-            </View>
-
-            <View style={styles.content}>
-              <Text style={styles.btext}>Initial Amount</Text>
-              <TextInput
-                placeholder="Enter Amount"
-                style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
-                keyboardType="numeric"
-                onChangeText={(text) => {
-                  // Remove any non-numeric characters before setting the state
-                  const numericValue = text.replace(/[^0-9.]/g, "");
-                  setCurrentAmount(numericValue);
-                }}
-              />
-            </View>
-          </ScrollView>
-          
-        </View>
-        {/* Cancel and Save Button */}
-        <View style={styles.btn}>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-around" }}
-          >
-            <Button title="Cancel" color={'black'} onPress={() => setIsAddingTransaction(false)}
+    <View style={styles.container}>
+      <View style={{flex: 9}}>
+        <ScrollView>
+          <View style={styles.content}>
+            {/* DESCRIPTION */}
+            <Text style={styles.btext}>Item</Text>
+            <TextInput
+              placeholder="Enter Item Name"
+              style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
+              onChangeText={setName}
             />
-            <Button title="Save" color={'black'} onPress={handleSaveExpense} disabled={!validateFields()}/>
           </View>
+
+          <View style={styles.content}>
+              <Text style={styles.btext}>Amount</Text>
+            <TextInput
+              placeholder="Enter Amount"
+              style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
+              keyboardType="numeric"
+              onChangeText={(text) => {
+                // Remove any non-numeric characters before setting the state
+                const numericValue = text.replace(/[^0-9.]/g, "");
+                setAmount(numericValue);
+              }}
+            />
+          </View>
+
+          <View style={styles.content}>
+            <Text style={styles.btext}>Initial Amount</Text>
+            <TextInput
+              placeholder="Enter Amount"
+              style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
+              keyboardType="numeric"
+              onChangeText={(text) => {
+                // Remove any non-numeric characters before setting the state
+                const numericValue = text.replace(/[^0-9.]/g, "");
+                setCurrentAmount(numericValue);
+              }}
+            />
+          </View>
+        </ScrollView>
+        
+      </View>
+      {/* Cancel and Save Button */}
+      <View style={styles.btn}>
+        <View
+          style={{ flexDirection: "row", justifyContent: "space-around" }}
+        >
+          <Button title="Cancel" color={'black'} onPress={() => setIsAddingTransaction(false)}
+          />
+          <Button title="Save" color={'black'} onPress={handleSaveExpense} disabled={!validateFields()}/>
         </View>
       </View>
-    }/>
-
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
   container:{
+    flex:1,
     height: '100%',
   },
   btn:{

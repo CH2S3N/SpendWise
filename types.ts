@@ -51,4 +51,5 @@ export interface Goal {
 export interface User {
     id: number;
     userName: string;
+    hasData: "True" | "False";
 }

@@ -209,9 +209,10 @@ export function UseTransactionService() {
   const updateUser = async (user: User) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
-        `UPDATE User SET  userName = ? WHERE id = ?`,
+        `UPDATE User SET  userName = ?, hasData = ? WHERE id = ?`,
         [
           user.userName,
+          user.hasData,
           user.id
         ]
       );

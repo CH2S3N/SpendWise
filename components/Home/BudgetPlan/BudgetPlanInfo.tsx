@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native'
 import React, { useState } from 'react'
 import MainContainer from '@/components/Containers/MainContainer';
 import { AntDesign } from '@expo/vector-icons';
@@ -20,6 +20,8 @@ import { Button } from 'react-native-paper';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
 import SubCatNeeds from './SubCatNeeds';
 import SubCatWants from './SubCatWants';
+import { useFetchData } from '@/hooks/useFetchData';
+import Categories from './Categories';
 
 
 
@@ -30,13 +32,18 @@ export default function BudgetPlanInfo({
   setBudgetPlanGenerated: React.Dispatch<React.SetStateAction<boolean>>;
   setGenerateModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const { updateUser } = UseTransactionService();
   const { handleSaveExpense } = GenerateService();
-  const { updateCategory } = UseTransactionService();
   const dispatch = useDispatch();
   const { needs, wants, savings} = useSelector((state: RootState) => state.budget); 
-  const { categories, transactions, incomeCategories, goals, user, incomes, recurrence } = useSelector((state: RootState) => state.data);
+  const { transactions, user, incomes } = useSelector((state: RootState) => state.data);
+  const { fetchData } = useFetchData();
 
 
+  const firstUser = user?.[0];  
+  const userName = firstUser?.userName || "";
+  const userId = firstUser?.id ?? 1;  
+  const [input, setInput] = useState(userName);
 
   // modal
   const [activeModal, setActiveModal] = useState<'income' | 'expense' | 'summary' | null>(null);
@@ -45,13 +52,8 @@ export default function BudgetPlanInfo({
     setActiveModal(modalName);
   };
   
-
-
   const [isAdvanceModalVisible, setAdvanceModalVisible] = useState(false);
   const [isAddingTransaction, setIsAddingTransaction] = useState(false);
-
-
-  // 
 
 
 
@@ -75,173 +77,138 @@ export default function BudgetPlanInfo({
     }
   };
 
+  const [isLoading, setIsLoading] = useState(false);
 
+  const handleAllocate = async () => {
+    try {
+      setIsLoading(true); // Show loading overlay
+      await handleSaveExpense();
+      setBudgetPlanGenerated(true);
+      setGenerateModalVisible(false);
+  
+      await updateUser({
+        id: userId,
+        userName: input,
+        hasData: "True",
+      });
+    } catch (error) {
+      console.error("Error during allocation:", error);
+    } finally {
+      setIsLoading(false);
+      await fetchData()
+    }
+  };
+  
 
   return (
-    <MainContainer>
-      <>
-        <View style={styles.mainCon}>
-        {/* Income & Expense Card */}
-        {isAdvanceModalVisible === false && (
-          <>
-            <Card
-              style={styles.card}
-              content={
-                <>
-                <TouchableOpacity onPress={() => openModal('income')}>
-                    <Text style={styles.title}>INCOME</Text>
+    <MainContainer style={{justifyContent: 'center', alignItems: 'center'}}>
+      {isLoading === true && (
+          <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="black" />
+          <Text style={styles.loadingText}>Allocating Budget...</Text>
+        </View>
+      )}
+      {isLoading === false && (
+        <>
+          <View style={styles.mainCon}>
+          {/* Income & Expense Card */}
+          {isAdvanceModalVisible === false && (
+            <>
+              <Card
+                style={styles.card}
+                content={
+                  <>
+                  <TouchableOpacity onPress={() => openModal('income')}>
+                      <Text style={styles.title}>INCOME</Text>
+                    </TouchableOpacity>
+                      <InitialIncome />
+                  </>
+                }
+              />
+
+              <Card
+                style={styles.card}
+                content={
+                  <>
+                  <TouchableOpacity onPress={() => openModal('expense')}>
+                    <Text style={styles.title}>EXPENSE</Text>
                   </TouchableOpacity>
-                    <InitialIncome />
-                </>
-              }
-            />
+                  <InitialExpense />
+                  </>
+                }
+              />
 
-            <Card
-              style={styles.card}
-              content={
-                <>
-                <TouchableOpacity onPress={() => openModal('expense')}>
-                  <Text style={styles.title}>EXPENSE</Text>
-                </TouchableOpacity>
-                <InitialExpense />
-                </>
-              }
-            />
+              <Card
+                style={styles.card}
+                content={
+                  <>
+                  <Text style={styles.title}>Categories</Text>
+                  <Categories/>
+                  </>
+                }
+              />
+              <Button onPress={()=> setAdvanceModalVisible(true)}>Advance</Button>
+            </>
+          )}
 
-            <Card
-              style={styles.card}
-              content={
-                <>
-                <Text style={{textAlign: 'center', textAlignVertical: 'center'}}>Categories</Text>
-                <ScrollView>
-                <Text>Needs: {needs}%</Text>
-                <Slider
-                  value={needs}
-                  onValueChange={(value) => handleCategorySliderChange(1, value)}
-                  minimumValue={0}
-                  maximumValue={100}
-                  step={1}
-                />
-
-                <Text>Wants: {wants}%</Text>
-                <Slider
-                  value={wants}
-                  onValueChange={(value) => handleCategorySliderChange(2, value)}
-                  minimumValue={0}
-                  maximumValue={100}
-                  step={1}
-                />
-
-                <Text>Savings: {savings}%</Text>
-                <Slider
-                  value={savings}
-                  onValueChange={(value) => handleCategorySliderChange(3, value)}
-                  minimumValue={0}
-                  maximumValue={100}
-                  step={1}
-                />
-                </ScrollView>
-                <TouchableOpacity style={{alignItems: 'flex-end'}} onPressOut={()=>  dispatch(resetCat())}><Text>reset</Text></TouchableOpacity>
-
-                </>
-              }
-            />
-            <Button onPress={()=> setAdvanceModalVisible(true)}>Advance</Button>
-          </>
-        )}
-
-
-        {isAdvanceModalVisible === true && (
-          <>
           {/* Proportions */}
           {/* 502030 */}
-          <Card
-              style={styles.card}
-              content={
-                <>
-                <Text style={{textAlign: 'center', textAlignVertical: 'center'}}>Categories</Text>
-                <ScrollView>
-                <Text>Needs: {needs}%</Text>
-                <Slider
-                  value={needs}
-                  onValueChange={(value) => handleCategorySliderChange(1, value)}
-                  minimumValue={0}
-                  maximumValue={100}
-                  step={1}
-                />
-
-                <Text>Wants: {wants}%</Text>
-                <Slider
-                  value={wants}
-                  onValueChange={(value) => handleCategorySliderChange(2, value)}
-                  minimumValue={0}
-                  maximumValue={100}
-                  step={1}
-                />
-
-                <Text>Savings: {savings}%</Text>
-                <Slider
-                  value={savings}
-                  onValueChange={(value) => handleCategorySliderChange(3, value)}
-                  minimumValue={0}
-                  maximumValue={100}
-                  step={1}
-                />
-                </ScrollView>
-                <TouchableOpacity style={{alignItems: 'flex-end'}} onPressOut={()=>  dispatch(resetCat())}><Text>reset</Text></TouchableOpacity>
-
-                </>
-              }
-            />
-            {/* needs */}
+          {isAdvanceModalVisible === true && (
+            <>
             <Card
-              style={styles.card}
-              content={
-                <>
-                    <Text style={{textAlign: 'center', textAlignVertical: 'center'}}>Needs</Text>
-                      <SubCatNeeds/>
-                </>
-              }
-            />
-            
-            {/* wants */}
-            <Card
-              style={styles.card}
-              content={
-                <>
-                  <Text style={{textAlign: 'center', textAlignVertical: 'center'}}>Wants</Text>
-                  <SubCatWants/>
-                </>
-              }
-            />
-             <Button onPress={()=> setAdvanceModalVisible(false)}>Go Back</Button>
-          </>
-        )}
-
-        </View>
-
-        {/* Buttons for Transactions and Generation */}
-        <View style={styles.btncontainer}>
-          <View style={styles.content}>
-            <TouchableOpacity style={styles.btn} onPress={() =>setIsAddingTransaction(true)}>
-              <Text style={styles.txt}>ADD TRANSACTION</Text>   
-            </TouchableOpacity>
-            <TouchableOpacity onPress={()=> {
-              handleSaveExpense();
-              setBudgetPlanGenerated(true);
-              setGenerateModalVisible(false)
-              }}
-              disabled={transactions.length === 0 || incomes.length === 0}
-              style={[
-                styles.btn,
-                (transactions.length === 0 || incomes.length === 0) && styles.disabledButton
-              ]}
-              >
-              <Text style={styles.txt}>ALLOCATE</Text>   
-            </TouchableOpacity>
+                style={styles.card}
+                content={
+                  <>
+                    <Text style={styles.title}>Categories</Text>
+                    <Categories/>
+                  </>
+                }
+              />
+              {/* needs */}
+              <Card
+                style={styles.card}
+                content={
+                  <>
+                    <Text style={styles.title}>Sub-Category (Needs)</Text>
+                    <SubCatNeeds/>
+                  </>
+                }
+              />
+              
+              {/* wants */}
+              <Card
+                style={styles.card}
+                content={
+                  <>
+                    <Text style={styles.title}>Sub-Category (Wants)</Text>
+                    <SubCatWants/>
+                  </>
+                }
+              />
+              <Button onPress={()=> setAdvanceModalVisible(false)}>Go Back</Button>
+            </>
+          )}
           </View>
-        </View>
-      </>
+
+          {/* Buttons for Transactions and Generation */}
+          <View style={styles.btncontainer}>
+            <View style={styles.content}>
+              <TouchableOpacity style={styles.btn} onPress={() =>setIsAddingTransaction(true)}>
+                <Text style={styles.txt}>ADD TRANSACTION</Text>   
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleAllocate}
+                disabled={transactions.length === 0 || incomes.length === 0}
+                style={[
+                  styles.btn,
+                  (transactions.length === 0 || incomes.length === 0) && styles.disabledButton
+                ]}
+                >
+                <Text style={styles.txt}>ALLOCATE</Text>   
+              </TouchableOpacity>
+            </View>
+          </View>
+        </>
+      )}
 
       {/* PopUp Screen */}    
       <>
@@ -255,7 +222,7 @@ export default function BudgetPlanInfo({
       <Modal isOpen={activeModal === 'expense'} >
         <View style={styles.modalContainer}>
         <View style={styles.modalheader}>
-            <View style={styles.icon}>
+            <View style={{paddingRight: 10}}>
                 <TouchableOpacity onPress={closeModal}>
                     <AntDesign name="leftcircle" size={24} color="black" />
                 </TouchableOpacity>
@@ -271,7 +238,7 @@ export default function BudgetPlanInfo({
       <Modal isOpen={activeModal === 'income'} >
         <View style={styles.modalContainer}>
         <View style={styles.modalheader}>
-            <View style={styles.icon}>
+            <View style={{paddingRight: 10}}>
                 <TouchableOpacity onPress={closeModal}>
                     <AntDesign name="leftcircle" size={24} color="black" />
                 </TouchableOpacity>
@@ -300,18 +267,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 10
 
-  },
-  container:{
-    flex:1
-  },
-  cardContainer:{
-    flex:1,
-    flexDirection: 'row'
-    
-  },
-  tableHeader:{
-    flexDirection: 'row',
-    justifyContent: 'space-evenly'
   },
   title:{
     textAlign: 'center',
@@ -352,9 +307,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center', 
   },
-  icon:{
-    paddingRight: 10
-  },
   modalcontent:{
     flex:10,
     flexDirection: 'row',
@@ -373,7 +325,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
   },
   btncontainer:{
-    flex:1,
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -383,4 +335,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center', 
   },
+
+
+  // Loading Screen
+  loadingOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+
 })

@@ -6,6 +6,7 @@ import Slider from "@react-native-community/slider";
 import { UseTransactionService } from "@/hooks/editData/TransactionService";
 import { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
+import { colors } from "@/constants/colors";
 
 
 
@@ -60,7 +61,7 @@ export default function SubCatWants() {
 
 
   return (
-    <View style={{flex:1}}>
+    <View style={{flex:1, paddingHorizontal: 10}}>
       
       <ScrollView>
       {nonEssentialSubCat.map((category) => {
@@ -78,6 +79,9 @@ export default function SubCatWants() {
               minimumValue={0}
               maximumValue={100}
               step={1}
+              minimumTrackTintColor= {colors.green}
+              maximumTrackTintColor= {colors.green}
+              thumbTintColor= {colors.green}
             />
           </View>
         );

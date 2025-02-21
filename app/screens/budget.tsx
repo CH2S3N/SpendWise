@@ -8,9 +8,9 @@ import { colors } from '@/constants/colors';
 import { Modal } from '@/components/Modal';
 import { RootState } from '@/state/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { setUsername } from '@/state/usernameSlice';  // FIXED: Use the correct Redux action
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
 import Card from '@/components/ui/Card';
+import { setUsername } from '@/state/userSlice';
 
 const Budget = () => {
   const { user } = useSelector((state: RootState) => state.data);
@@ -20,8 +20,10 @@ const Budget = () => {
   const firstUser = user?.[0];  
   const userName = firstUser?.userName || "";
   const userId = firstUser?.id ?? 1;
+  const data = firstUser?.hasData ?? "False";
 
   const [input, setInput] = useState(userName);
+  const [userHasData, setUserHasData] = useState(data);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSettingsModalVisible, setIsSettingsModalVisible] = useState(false);
 
@@ -30,6 +32,7 @@ const Budget = () => {
       await updateUser({
         id: userId,
         userName: input,
+        hasData: "False",
       });
       console.log("User updated successfully!");
     } catch (error) {

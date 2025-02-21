@@ -5,7 +5,9 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Tabs } from 'expo-router';
 import AntDesign from '@expo/vector-icons/AntDesign';import { useFetchData } from '@/hooks/useFetchData';
 import { colors } from '@/constants/colors';
+import 'react-native-gesture-handler';
 
+import { useFocusEffect } from '@react-navigation/native';
 const _layout = () => {
   const { fetchData } = useFetchData();
 
@@ -15,6 +17,8 @@ const _layout = () => {
       .catch((e) => console.error(e));
   }, []);
 
+
+   
   return (
     <React.Suspense
     fallback={
@@ -51,6 +55,10 @@ const _layout = () => {
                   marginBottom: 10
                 
                 }, 
+                tabBarLabelStyle: {
+                  fontSize: 14, 
+                  fontWeight: 'bold', 
+                },
                 tabBarActiveTintColor: colors.green, 
                 tabBarInactiveTintColor: 'white', 
               }}

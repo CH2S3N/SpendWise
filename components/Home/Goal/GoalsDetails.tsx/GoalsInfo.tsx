@@ -95,6 +95,14 @@ export default function GoalsInfo() {
 
         <View style={styles.container}>
           <Divider/>
+            {goals.length === 0 && (
+              <>
+              <View style={[styles.row, {flex: 1, justifyContent: 'center', alignItems: 'center'}]}>
+                <Text style={styles.title}>No Goals to be Found!</Text>
+                <Text style={styles.titletext}>Create some New Goals</Text>
+              </View>
+              </>
+            )}
           <ScrollView>
             {goals.length > 0 && (
               <>
@@ -135,19 +143,19 @@ export default function GoalsInfo() {
           </TouchableOpacity>
         </View>
 
-        {/* Add Goals Modal */}
-        {/* <Modal isOpen={isAddingTransaction} transparent={true} >
-          <View style={styles.modalAddContent}>
-            <Text style={{textAlign: 'center', fontWeight: 'bold', fontSize:20, paddingTop: 10}}>Add a Goal</Text>
-              <AddGoal setIsAddingTransaction={setIsAddingTransaction} />
-          </View>
-        </Modal> */}
+
         <Modal isOpen={isAddingTransaction} transparent animationType="fade">
           <TouchableWithoutFeedback onPress={() => setIsAddingTransaction(false)}>
               <View style={styles.modalOverlay}>
               <TouchableWithoutFeedback>
                   <View style={styles.modalContent}>
-                    <AddGoal setIsAddingTransaction={setIsAddingTransaction} />
+                    <Card
+                    content={
+                      <View style={{flex:1}}>
+                        <Text style={[styles.title, {textAlign: 'center'}]}>Create a New Goal</Text>
+                        <AddGoal setIsAddingTransaction={setIsAddingTransaction} />
+                      </View>
+                    }/>
                   </View>
               </TouchableWithoutFeedback>
               </View>
