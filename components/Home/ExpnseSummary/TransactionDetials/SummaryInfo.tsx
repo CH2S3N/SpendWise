@@ -6,10 +6,7 @@ import { useSelector } from 'react-redux';
 import Essential from './Essentials';
 import NonEssential from './NonEssentials';
 import { Divider } from '@rneui/base';
-import { Modal } from '@/components/Modal';
-import { AntDesign } from '@expo/vector-icons';
 import { colors } from '@/constants/colors';
-import AddExpense from '@/components/ui/AddExpense';
 
 
 export default function SummaryInfo() {
@@ -92,7 +89,8 @@ export default function SummaryInfo() {
         ) : (
           <>
             <View style={styles.noData}>
-            <Text style={styles.noDataTxt}>No Transaction Data</Text>
+            <Text style={styles.noDataTxt}>No Expense Data!</Text>
+            <Text style={styles.titletext}>Please add some Expenses</Text>
             </View>
           </>
         )}
@@ -173,10 +171,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   noDataTxt:{
+    fontWeight: 'bold',
+    textAlign: 'left',
+    color: colors.dark,
     fontSize: 30,
+  },
+  titletext:{
     fontWeight: 'bold',
     color: colors.dark,
-    opacity: 0.5
+    fontSize: 20,
   },
-  
 })

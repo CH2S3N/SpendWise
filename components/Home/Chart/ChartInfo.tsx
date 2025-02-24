@@ -11,7 +11,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 export default function ChartInfo() {
   const [isOverview, setOverview] = useState(false);
   return (
-    <MainContainer>
+    <MainContainer style={{paddingLeft: 1243132}}>
     {isOverview === false && (
       <>
         <Divider/>

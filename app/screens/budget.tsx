@@ -14,7 +14,7 @@ import { setUsername } from '@/state/userSlice';
 
 const Budget = () => {
   const { user } = useSelector((state: RootState) => state.data);
-  const { updateUser } = UseTransactionService(); 
+  const { updateUser, deleteAllData } = UseTransactionService(); 
   const dispatch = useDispatch();
 
   const firstUser = user?.[0];  
@@ -32,7 +32,7 @@ const Budget = () => {
       await updateUser({
         id: userId,
         userName: input,
-        hasData: "False",
+        hasData: data,
       });
       console.log("User updated successfully!");
     } catch (error) {
@@ -86,7 +86,7 @@ const Budget = () => {
                     <Text style={styles.modalSubTitle}>Close</Text>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => {
-                    dispatch(setUsername(input));  // FIXED: Correct Redux action
+                    dispatch(setUsername(input));
                     handleUpdateUser();
                     setIsModalVisible(false);
                   }}>
@@ -106,7 +106,13 @@ const Budget = () => {
             <TouchableWithoutFeedback>
               <View style={styles.modalContent}>
                 <Text style={styles.modalTitle}>Settings</Text>
-                <Text style={styles.modalSubTitle}>Delete all data</Text>
+                <TouchableOpacity onPress={()=>{
+                  deleteAllData();
+                  handleUpdateUser();
+                  setIsSettingsModalVisible(false)
+                }}>
+                  <Text style={styles.modalSubTitle}>Delete all data</Text>
+                </TouchableOpacity>
                 <TouchableOpacity onPress={() => setIsSettingsModalVisible(false)}>
                   <Text style={styles.modalSubTitle}>Close</Text>
                 </TouchableOpacity>
@@ -189,6 +195,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 15,
     paddingTop: 10,
+    paddingBottom: 3
   },
   noData: {
     flex: 1,

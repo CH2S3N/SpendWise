@@ -163,7 +163,7 @@ export default function Index() {
               </View>
               <Text style={styles.title}>STATISTICS</Text>
             </View>
-            <View style={styles.modalcontent}>
+            <View style={[styles.modalcontent, {paddingHorizontal: 10}]}>
               <ChartInfo />
             </View>
           </View>

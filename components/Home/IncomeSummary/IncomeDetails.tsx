@@ -15,7 +15,7 @@ interface Props {
 
 export default function IncomeDetails({ income, incomeCategoryInfo, setIsModalVisible, setCurrentIncome, deleteIncome }: Props) {
     const [isTapped, setIsTapped] = useState(false);
- 
+  
   return (
     <Card
       content={
@@ -32,27 +32,32 @@ export default function IncomeDetails({ income, incomeCategoryInfo, setIsModalVi
                         </View>
                         <View style={styles.item}>
                             <Text style={styles.amount}>{income.amount * income.interval}</Text>
-                            <Text style={styles.label}>Monthly Budget</Text>
+                            <Text style={styles.label}>Income per Month</Text>
                         </View>
                     </>
                 ) : (
                     <>
                         <View style={styles.card} >
                             <View style={styles.header}>
+                              <View style={styles.description}>
                                 <Text style={styles.title}> {income.description.charAt(0).toUpperCase() + income.description.slice(1)}</Text>
-                                <Text style={styles.amount}> {income.amount }</Text>
+                              </View>
+                              <View style={styles.item}>
+                                <Text style={styles.amount}>{income.amount}</Text>
+                                <Text style={styles.label}>Income per Occurrence</Text>
+                            </View>
                             </View>
                             <View style={styles.details}>
                                 <View style={styles.row}>
-                                    <Text style={styles.label}><FontAwesome6 name="calendar-alt" size={18} color= {colors.green} /> Income Type:</Text>
+                                    <Text style={styles.label}><FontAwesome6 name="wallet" size={18} color= {colors.green} /> Income Type:</Text>
                                     <Text style={styles.value}>{income.type}</Text>
                                 </View>
                                 <View style={styles.row}>
                                     <Text style={styles.label}><FontAwesome6 name="calendar-alt" size={18} color= {colors.green} /> Recurrence:</Text>
-                                    <Text style={styles.value}>{income.subtype}</Text>
+                                    <Text style={styles.value}>{income.frequency}/{income.subtype}</Text>
                                 </View>
                                 <View style={styles.row}>
-                                    <Text style={styles.label}><FontAwesome6 name="calendar-day" size={18} color={colors.green} /> Days:</Text>
+                                    <Text style={styles.label}><FontAwesome6 name="calendar-day" size={18} color={colors.green} /> Occurence:</Text>
                                     <Text style={styles.value}>{income.interval} time(s) per month</Text>
                                 </View>
 
@@ -90,7 +95,7 @@ const styles = StyleSheet.create({
     },
     item: {
         flex: 1,
-        alignItems: 'center'
+        alignItems: 'center',
     },
     description: {
         flex: 2,

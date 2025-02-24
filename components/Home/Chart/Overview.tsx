@@ -6,19 +6,31 @@ import { Income, Transaction } from '@/types'
 import { colors } from '@/constants/colors'
 
 const Overview = () => {
-    const { incomes, transactions } = useSelector((state: RootState) => state.data);
+    const { incomes, transactions, categories } = useSelector((state: RootState) => state.data);
     
 
     const totalIncome =  incomes.reduce((total: number, income: Income) => {
         return total + (income.amount * income.interval || 1 )
     }, 0);
-    const totalExpense =  transactions.reduce((total: number, transaction: Transaction) => {
+    const essentialTransactions = transactions.filter(
+        (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Essential"
+    );
+    const nonEssentialTransactions = transactions.filter(
+        (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Non_Essential"
+    );
+    const totalEssentialExpense =  essentialTransactions.reduce((total: number, transaction: Transaction) => {
+        return total + (transaction.amount || 0)
+    }, 0);
+    const totalNonEssentialExpense =  nonEssentialTransactions.reduce((total: number, transaction: Transaction) => {
         return total + (transaction.amount || 0)
     }, 0);
     const income = totalIncome;
-    const expense = totalExpense;
+    const needsExpense = totalEssentialExpense;
+    const wantsExpense = totalNonEssentialExpense;
+    const expense = totalEssentialExpense + totalNonEssentialExpense
     const savings = income - expense;
-    const expenseRatio = income > 0 ? ((expense / income) * 100).toFixed(2) : "0";
+    const needsRatio = income > 0 ? ((needsExpense / income) * 100).toFixed(2) : "0";
+    const wantsRatio = income > 0 ? ((wantsExpense / income) * 100).toFixed(2) : "0";
     const savingsRatio = income > 0 ? ((savings / income) * 100).toFixed(2) : "0";
     
     return (
@@ -26,15 +38,32 @@ const Overview = () => {
             {transactions.length > 0 && incomes.length > 0 ? (
                 <>
                     <View style={styles.item}>
-                        <Text style={{flex: 1, textAlign: 'left'}}>Income</Text>
+                        <Text style={styles.title}>Income</Text>
                         <Text style={{flex: 1, textAlign: 'right', color: '#00d000'}}> + ₱{income}</Text>
                     </View>
-                    <View style={styles.item}>
-                        <Text style={{flex: 1, textAlign: 'left'}}>Expenses</Text>
-                        <Text style={{flex: 1, textAlign: 'right', color: '#fc2b46'}}>- ₱{expense} ({expenseRatio}%)</Text>
+                    {essentialTransactions.length > 0 && nonEssentialTransactions.length > 0 ? (
+                        <>
+                            {essentialTransactions.length > 0 && (
+                                <View style={styles.item}>
+                                    <Text style={styles.title}>Expenses (Needs)</Text>
+                                    <Text style={{flex: 1, textAlign: 'right', color: '#fc2b46'}}>- ₱{needsExpense} ({needsRatio}%)</Text>
+                                </View>
+                            )}
+                            {nonEssentialTransactions.length > 0 && (
+                                <View style={styles.item}>
+                                    <Text style={styles.title}>Expenses (Wants)</Text>
+                                    <Text style={{flex: 1, textAlign: 'right', color: '#fc2b46'}}>- ₱{wantsExpense} ({wantsRatio}%)</Text>
+                                </View>
+                            )}
+                        </>
+                    ) : (
+                        <View style={styles.item}>
+                        <Text style={styles.title}>Expenses (Needs)</Text>
+                        <Text style={{flex: 1, textAlign: 'right', color: '#fc2b46'}}>- ₱{expense} (0%)</Text>
                     </View>
+                    )}
                     <View style={styles.item}>
-                        <Text style={{flex: 1, textAlign: 'left', }}>Savings</Text>
+                        <Text style={styles.title}>Savings</Text>
                         <Text style={{flex: 1, textAlign: 'right', }}>₱{savings} ({savingsRatio}%)</Text>
                     </View>
                 </>
@@ -68,7 +97,10 @@ const styles = StyleSheet.create({
     },
     title:{
         fontWeight: 'bold',
-        fontSize: 20
+    },
+    data:{
+
+
     },
       noData:{
         flex: 1,

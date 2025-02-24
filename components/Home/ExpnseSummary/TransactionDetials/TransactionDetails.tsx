@@ -37,28 +37,35 @@ export default function TransactionDetails({ transaction, categoryInfo, setIsMod
                                         <Text style={styles.title}> {transaction.description.charAt(0).toUpperCase() + transaction.description.slice(1)}</Text>
                                     </View>
                                     <View style={styles.item}>
-                                        <Text style={styles.amount}>{transaction.amount}</Text>
-                                        <Text style={styles.label}>Monthly Budget</Text>
+                                        <Text style={styles.amount}>₱ {transaction.amount}</Text>
+                                        <Text style={styles.label}>Budget per Month</Text>
                                     </View>
                                 </>
                             ) : (
                                 <>
                                     <View style={styles.card} >
                                         <View style={styles.header}>
-                                            <Text style={styles.title}> {transaction.description.charAt(0).toUpperCase() + transaction.description.slice(1)}</Text>
-                                            <Text style={styles.amount}> {transaction.amount}</Text>
+                                            <View style={styles.description}>
+                                                <Text style={styles.title}> {transaction.description.charAt(0).toUpperCase() + transaction.description.slice(1)}</Text>
+                                            </View>
+
+                                            <View style={styles.item}>
+                                                <Text style={styles.amount}>₱ {Math.round(transaction.amount/transaction.interval)}</Text>
+                                                <Text style={styles.label}>Budget per Occurence</Text>
+                                            </View>
+
                                         </View>
                                         <View style={styles.details}>
                                             <View style={styles.row}>
-                                                <Text style={styles.label}><FontAwesome6 name="calendar-alt" size={18} color= {colors.green} /> Expense Type:</Text>
+                                                <Text style={styles.label}><FontAwesome6 name="bag-shopping" size={18} color= {colors.green} /> Expense Type:</Text>
                                                 <Text style={styles.value}>{categoryInfo?.name}</Text>
                                             </View>
                                             <View style={styles.row}>
                                                 <Text style={styles.label}><FontAwesome6 name="calendar-alt" size={18} color= {colors.green} /> Recurrence:</Text>
-                                                <Text style={styles.value}>{transaction.subtype}</Text>
+                                                <Text style={styles.value}>{transaction.frequency}/{transaction.subtype}</Text>
                                             </View>
                                             <View style={styles.row}>
-                                                <Text style={styles.label}><FontAwesome6 name="calendar-day" size={18} color={colors.green} /> Days:</Text>
+                                                <Text style={styles.label}><FontAwesome6 name="calendar-day" size={18} color={colors.green} /> Occurrence:</Text>
                                                 <Text style={styles.value}>{transaction.interval} time(s) per month</Text>
                                             </View>
                                             <View style={styles.row}>

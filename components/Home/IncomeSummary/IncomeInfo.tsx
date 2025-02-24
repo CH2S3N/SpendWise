@@ -1,10 +1,7 @@
 import { View, StyleSheet, TouchableOpacity, Text, TouchableWithoutFeedback } from 'react-native'
 import React, { useState } from 'react'
-import MainContainer from '@/components/Containers/MainContainer';
-import { Divider } from '@rneui/base';
 import IncomeList from './IncomeList';
 import { Modal } from '@/components/Modal';
-import { AntDesign } from '@expo/vector-icons';
 import { colors } from '@/constants/colors';
 import AddIncome from '@/components/ui/addIncome';
 import { RootState } from '@/state/store';
@@ -28,7 +25,8 @@ export default function IncomeInfo() {
                   <IncomeList/>
                 ) : (
                   <View style={styles.noData}>
-                  <Text style={styles.noDataTxt}>No Transaction Data</Text>
+                  <Text style={styles.noDataTxt}>No Income Data!</Text>
+                  <Text style={styles.titletext}>Please add some Income</Text>
                 </View>
                 )}
             </View>
@@ -110,18 +108,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: '99%',
-    
   },
   noData:{
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  noDataTxt:{
-    fontSize: 30,
-    fontWeight: 'bold',
-    color: colors.dark,
-    opacity: 0.5
   },
   modalOverlay: {
     flex: 1,
@@ -140,5 +131,16 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     shadowOffset: { height: 6, width: 0 },
     shadowOpacity: 0.15,
+  },
+  noDataTxt:{
+    fontWeight: 'bold',
+    textAlign: 'left',
+    color: colors.dark,
+    fontSize: 30,
+  },
+  titletext:{
+    fontWeight: 'bold',
+    color: colors.dark,
+    fontSize: 20,
   },
 })

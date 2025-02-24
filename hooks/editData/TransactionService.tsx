@@ -223,6 +223,54 @@ export function UseTransactionService() {
       });
   };
 
+  // Deleta All
+  async function deleteAllIncome() {
+    try {
+      await db.withTransactionAsync(async () => {
+        await db.runAsync('DELETE FROM Income;');
+        await fetchData(); 
+        console.log('All income records deleted');
+      });
+    } catch (error) {
+      console.error('Error deleting all Income:', error);
+    }
+  }
+  async function deleteAllExpense() {
+    try {
+      await db.withTransactionAsync(async () => {
+        await db.runAsync('DELETE FROM Transactions;');
+        await fetchData(); // Refresh data after deletion
+        console.log('All Expense records deleted');
+      });
+    } catch (error) {
+      console.error('Error deleting all Expense:', error);
+    }
+  }
+  async function deleteAllGoal() {
+    try {
+      await db.withTransactionAsync(async () => {
+        await db.runAsync('DELETE FROM Goals;');
+        await fetchData(); 
+        console.log('All income records deleted');
+      });
+    } catch (error) {
+      console.error('Error deleting all Goals:', error);
+    }
+  }
+  async function deleteAllData() {
+    try {
+      await db.withTransactionAsync(async () => {
+        await db.runAsync('DELETE FROM Income;');
+        await db.runAsync('DELETE FROM Transactions;');
+        await db.runAsync('DELETE FROM Goals;');
+        await fetchData(); 
+        console.log('All records from Income, Transactions, and Goals deleted');
+      });
+    } catch (error) {
+      console.error('Error deleting all data:', error);
+    }
+  }
+  
   
 
   return {
@@ -237,6 +285,10 @@ export function UseTransactionService() {
     updateTransaction,
     deleteTransaction,
     updateCategory,
-    updateUser
+    updateUser,
+    deleteAllIncome,
+    deleteAllExpense,
+    deleteAllGoal,
+    deleteAllData
   };
 }

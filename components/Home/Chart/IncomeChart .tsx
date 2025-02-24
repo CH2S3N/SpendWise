@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
 import { calculateTotalIncome } from '@/utils/calcTotalIncome';
 import { colors } from '@/constants/colors';
+import styles from './styles';
 
 export default function IncomeChart () {
   const { incomes } = useSelector((state: RootState) => state.data);
@@ -70,24 +71,24 @@ export default function IncomeChart () {
               {totalAllowance > 0 && (
                 <View style={styles.legendItem}>
                   <View style={[styles.colorBox, { backgroundColor: '#059212' }]} />
-                  <Text>Allowance: ₱{totalAllowance}</Text>
+                  <Text>Allowance: ₱ {totalAllowance}</Text>
                 </View>
               )}
               {totalSalary > 0 && (
                 <View style={styles.legendItem}>
                   <View style={[styles.colorBox, { backgroundColor: '#06D001' }]} />
-                  <Text>Salary: ₱{totalSalary}</Text>
+                  <Text>Salary: ₱ {totalSalary}</Text>
                 </View>
               )}
               {totalOthers > 0 && (
                 <View style={styles.legendItem}>
                   <View style={[styles.colorBox, { backgroundColor: '#9BEC00' }]} />
-                  <Text>Others: ₱{totalOthers}</Text>
+                  <Text>Others: ₱ {totalOthers}</Text>
                 </View>
               )}
             </View>
             <View style={styles.total}>
-              <Text style={styles.text}>Total: <Text style={{color: colors.green}}>{total}</Text></Text>
+              <Text style={styles.text}>Total: <Text style={{color: colors.green}}>₱ {total}</Text></Text>
             </View>
           </View>
         )}
@@ -96,44 +97,4 @@ export default function IncomeChart () {
   );
 }
 
-const styles = StyleSheet.create({
-  mainContainer: {
-    paddingVertical: 15,
-  },
-  container: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-  },
-  item1: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  legendItem: {
-    flexDirection: 'row',
-    marginBottom: 5,
-  },
-  colorBox: {
-    width: 16,
-    height: 16,
-    marginRight: 8,
-    borderRadius: 2,
-  },
-  text: {
-    fontWeight: 'bold',
-    fontSize: 20,
-    color: colors.dark,
-  },
-  total: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-  },
-  placeholderText: {
-    marginTop: 10,
-    fontSize: 16,
-    color: colors.dark,
-    opacity: 0.5,
-  },
-});
+

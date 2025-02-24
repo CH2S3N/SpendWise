@@ -147,12 +147,12 @@ const styles= StyleSheet.create({
   modalcontainer:{
     flex:1,
     backgroundColor: colors.background,
-    paddingHorizontal: 20
   },
   modalheader:{
     flex:1,
     flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: 10
     
   },
 
