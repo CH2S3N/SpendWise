@@ -25,6 +25,7 @@ export default function AddExpense({
     const [typeSelected, setTypeSelected] = React.useState<string>("");
     const [amount, setAmount] = React.useState<string>("");
     const [isrecurrence, setRecurrence] = React.useState<string>("");
+    const [isRecurrenceInput, setRecurrenceInput] = React.useState<string>("");
     const [description, setDescription] = React.useState<string>("");
     const [frequency, setFrequency] = React.useState<string>("Daily");
     const [subType, setsubType] = React.useState<string>("Weekends");
@@ -54,7 +55,7 @@ export default function AddExpense({
     }
 
     function validateFields() {
-      if ( !description || (isfixedamount == 'Yes' && !amount) || !typeSelected || (frequency == 'Daily' && !isrecurrence) || (subType === 'Custom' && !isrecurrence) || (frequency == 'Monthly' && !isrecurrence))  {
+      if ( !description || (isfixedamount == 'Yes' && !amount) || !typeSelected || (frequency == 'Daily' && (isrecurrence === "0" || null)) || (frequency == 'Bi-Weekly' && (isrecurrence === "0" || null)) || (subType === 'Custom' && (isrecurrence === "0" || null)) || (frequency == 'Monthly' && (isrecurrence === "0" || null)))  {
         return false;
       }
       
@@ -73,21 +74,6 @@ export default function AddExpense({
 
 
     async function handleSaveExpense() {
-        console.log ({
-            description,
-            frequency: frequency as "Daily" | "Weekly" | "Bi-Weekly" | "Monthly",
-            prioritization: prioritization as "High" | "Medium" | "Low",
-            isfixedamount: isfixedamount as "Yes" | "No",
-            amount: Number(amount),
-            category_id: categoryId,
-            type: category as "Essential" | "Non_Essential",
-            isrecurrence: Number(isrecurrence),
-            subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
-            recurrence_id: recurrenceId,
-            id,
-        });
-
-        // to insert transactions
         await insertTransaction({
           description,
           frequency: frequency as "Daily" | "Weekly" | "Monthly",
@@ -128,7 +114,8 @@ export default function AddExpense({
           if (frequency === 'Weekly' && subType === 'All') {
             setRecurrence('28'); 
           }
-        }, [frequency, subType, isrecurrence]);
+
+        }, [subType]);
 
     
 
@@ -140,7 +127,7 @@ export default function AddExpense({
           <View style={styles.content}>
               <Text style={styles.btext}>Item</Text>
               <TextInput
-                placeholder="Entry  description"
+                placeholder="Provide an Item Description"
                 style={{ marginBottom: 15, marginTop: 10, borderBottomWidth: 1, borderBottomColor: 'black'}}
                 onChangeText={setDescription}
               />
@@ -157,8 +144,8 @@ export default function AddExpense({
                 }}
               />
             </View>
+            {/* AMOUNT */}
             <View style={styles.content}>
-              {/* AMOUNT */}
               <Text style={{fontWeight: 'bold', marginBottom:10}}>Amount</Text>
               <TextInput
                 placeholder="Enter Amount"
@@ -186,7 +173,6 @@ export default function AddExpense({
                   selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
                   onChange={(event) => {
                     setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
-                    setRecurrence('');
                   }}
                 />
             </View>
@@ -212,13 +198,22 @@ export default function AddExpense({
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <TextInput
                   placeholder='0'
-                  value={isrecurrence}
+                  value={isRecurrenceInput}
                   style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
                   keyboardType="numeric"
                   onChangeText={(text) => {
                     // Remove any non-numeric characters before setting the state
                     const numericValue = text.replace(/[^0-9.]/g, "");
-                    setRecurrence(String(parseInt(numericValue) * 4));
+                    setRecurrenceInput(numericValue);
+                    setRecurrence(numericValue ? String(parseInt(numericValue) * 4) : "");
+                  }}
+                  onBlur={() => {
+                    let numericValue = parseInt(isRecurrenceInput) || 0; 
+                    if (numericValue > 7) {
+                      numericValue = 7;
+                    }
+                    setRecurrenceInput(numericValue.toString()); 
+                    setRecurrence(numericValue ? String(numericValue * 4) : ""); 
                   }}
                   />
                   <Text>Day(s) per Week</Text>
@@ -229,37 +224,62 @@ export default function AddExpense({
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <TextInput
                   placeholder='0'
-                  value={isrecurrence}
+                  value={isRecurrenceInput}
                   style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
                   keyboardType="numeric"
                   onChangeText={(text) => {
                     // Remove any non-numeric characters before setting the state
                     const numericValue = text.replace(/[^0-9.]/g, "");
-                    setRecurrence(String(parseInt(numericValue) * 2));
-                  }}
+                    setRecurrenceInput(numericValue);
+                    setRecurrence(numericValue ? String(parseInt(numericValue) * 2) : "");                  }}
+                    onBlur={() => {
+                      let numericValue = parseInt(isRecurrenceInput) || 0;
+                      if (numericValue > 14) {
+                        numericValue = 14;
+                      }
+                      setRecurrenceInput(numericValue.toString()); 
+                      setRecurrence(numericValue ? String(numericValue * 2) : ""); 
+                    }}
                   />
                   <Text>Day(s) per Bi-Week</Text>
                   </View>
                 )}
 
                 {frequency === 'Monthly' && (
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <TextInput
-                  placeholder='0'
-                  value={isrecurrence}
-                  style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
-                  keyboardType="numeric"
-                  onChangeText={(text) => {
-                    // Remove any non-numeric characters before setting the state
-                    const numericValue = text.replace(/[^0-9.]/g, "");
-                    setRecurrence(numericValue);
-                  }}
-                />
-                <Text>Day(s) per Month</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <TextInput
+                      placeholder="0"
+                      value={isRecurrenceInput}
+                      style={{
+                        borderBottomWidth: 1,
+                        borderBottomColor: 'black',
+                        paddingHorizontal: 5,
+                        textAlign: 'center',
+                      }}
+                      keyboardType="numeric"
+                      onChangeText={(text) => {
+                        // Remove any non-numeric characters before setting the state
+                        const numericValue = text.replace(/[^0-9]/g, "");
+                        setRecurrenceInput(numericValue);
+                        setRecurrence(numericValue);
+                      }}
+                      onBlur={() => {
+                        let numericValue = parseInt(isRecurrenceInput) || 0; 
+                        if (numericValue > 28) {
+                          numericValue = 28;
+                        }
+                        setRecurrenceInput(numericValue.toString()); 
+                        setRecurrence(numericValue.toString()); 
+                      }}
+                    />
+                    <Text>Day(s) per Month</Text>
                   </View>
                 )}
+
             </View>
           </View>
+
+
           {/* ENTRY TYPE, ESSENTIAL & NON ESSENTIAL */}
           <View style={styles.content}>
             <Text style={styles.btext}>Select an Expense Type</Text>

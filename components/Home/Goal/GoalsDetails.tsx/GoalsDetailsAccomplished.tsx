@@ -1,15 +1,18 @@
 import Card from "@/components/ui/Card";
 import { Goal } from "@/types";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import * as React from "react";
 import { ProgressBar } from "react-native-paper";
 import { colors } from "@/constants/colors";
 
 interface Props {
     goal: Goal;
+    setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+    setCurrentGoal: React.Dispatch<React.SetStateAction<Goal | null>>;
+    
 }
 
-export default function Accomplished({ goal }: Props) {
+export default function Accomplished({ goal, setCurrentGoal,setIsModalVisible }: Props) {
     const accumulatedAmount = goal.currentAmount;
     const progress = accumulatedAmount / goal.amount;
     const progressPercentage = (progress * 100);
@@ -22,7 +25,11 @@ export default function Accomplished({ goal }: Props) {
     return (
         <Card
             content={
-                <View>
+                <TouchableOpacity
+                    onPress={()=>{
+                    setIsModalVisible(true);
+                    setCurrentGoal(goal)
+                }}>
                     <View style={styles.container}>
                         <View style={styles.description}>
                             <Text style={styles.text}>{goal.name.charAt(0).toUpperCase() + goal.name.slice(1)}</Text>
@@ -34,7 +41,7 @@ export default function Accomplished({ goal }: Props) {
                         </View>
                     </View>
                     <ProgressBar progress={progress} theme={{ colors: { primary: colors.green } }} />
-                </View>
+                </TouchableOpacity>
             }
         />
     );

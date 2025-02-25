@@ -17,6 +17,7 @@ export default function AddIncome({
 
     const { insertIncome } = UseTransactionService();
     const [isrecurrence, setRecurrence] = React.useState<string>("");
+    const [isRecurrenceInput, setRecurrenceInput] = React.useState<string>("");
     const [incomeCategories, setIncomeCategories] = React.useState<IncomeCategory[]>([]);
     const [typeSelected, setTypeSelected] = React.useState<string>("Allowance");
     const [amount, setAmount] = React.useState<string>("");
@@ -25,7 +26,8 @@ export default function AddIncome({
     const [frequency, setFrequency] = React.useState<string>("Daily");
     const [incomeCategory, setIncomeCategory] = React.useState<string>("Allowance");
     const [incomeCategoryId, setIncomeCategoryId] = React.useState<number>(1);
-
+    const [id] = React.useState<number>(0);
+  
     const db = useSQLiteContext();
 
     useEffect(() => {
@@ -48,18 +50,6 @@ export default function AddIncome({
   
 
     async function handleSaveIncome() {
-        console.log ({
-            amount: Number(amount),
-            description,
-            frequency: frequency as "Daily" | "Weekly" | "Bi-Weekly" | "Monthly",
-            incomeCategory_id: incomeCategoryId,
-            type: incomeCategory as "Allowance" | "Salary" | "Others",
-            isrecurrence: Number(isrecurrence),
-            subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
-            id: 0
-        });
-
-        // to insert transactions
         await insertIncome({
             amount: Number(amount),
             description,
@@ -68,7 +58,7 @@ export default function AddIncome({
             type: incomeCategory as "Allowance" | "Salary" | "Others",
             interval: Number(isrecurrence),
             subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
-            id: 0
+            id,
         });
         setDescription("");
         setFrequency("Daily");
@@ -94,7 +84,7 @@ export default function AddIncome({
              if (frequency === 'Weekly' && subType === 'All') {
                setRecurrence('28'); 
              }
-           }, [frequency, subType, isrecurrence]);
+           }, [subType]);
 
   return (
     <View style={styles.container}>
@@ -104,7 +94,7 @@ export default function AddIncome({
           <View style={styles.content}>
           <Text style={styles.btext}>Item</Text>
             <TextInput
-              placeholder="Provide an entry description"
+              placeholder="Provide an Item Description"
               style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
               onChangeText={setDescription}
             />
@@ -160,14 +150,22 @@ export default function AddIncome({
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <TextInput
                   placeholder='0'
-                    value={isrecurrence}
+                    value={isRecurrenceInput}
                   style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
                   keyboardType="numeric"
                   onChangeText={(text) => {
                     // Remove any non-numeric characters before setting the state
                     const numericValue = text.replace(/[^0-9.]/g, "");
-                    setRecurrence(String(parseInt(numericValue) * 4));
-                  }}
+                    setRecurrenceInput(numericValue);
+                    setRecurrence(numericValue ? String(parseInt(numericValue) * 4) : "");                  }}
+                    onBlur={() => {
+                      let numericValue = parseInt(isRecurrenceInput) || 0; 
+                      if (numericValue > 7) {
+                        numericValue = 7;
+                      }
+                      setRecurrenceInput(numericValue.toString()); 
+                      setRecurrence(numericValue ? String(numericValue * 4) : ""); 
+                    }}
                   />
                   <Text>Day(s) per Week</Text>
                   </View>
@@ -176,14 +174,22 @@ export default function AddIncome({
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <TextInput
                     placeholder='0'
-                    value={isrecurrence}
+                    value={isRecurrenceInput}
                     style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
                     keyboardType="numeric"
                     onChangeText={(text) => {
                       // Remove any non-numeric characters before setting the state
                       const numericValue = text.replace(/[^0-9.]/g, "");
-                      setRecurrence(String(parseInt(numericValue) * 2));
-                    }}
+                      setRecurrenceInput(numericValue);
+                      setRecurrence(numericValue ? String(parseInt(numericValue) * 2) : "");                  }}
+                      onBlur={() => {
+                        let numericValue = parseInt(isRecurrenceInput) || 0;
+                        if (numericValue > 14) {
+                          numericValue = 14;
+                        }
+                        setRecurrenceInput(numericValue.toString()); 
+                        setRecurrence(numericValue ? String(numericValue * 2) : ""); 
+                      }}
                   />
                   <Text>Day/s per Bi-Week</Text>
                   </View>
@@ -193,13 +199,22 @@ export default function AddIncome({
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <TextInput
                       placeholder='0'
-                      value={isrecurrence}
+                      value={isRecurrenceInput}
                       style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
                       keyboardType="numeric"
                       onChangeText={(text) => {
                         // Remove any non-numeric characters before setting the state
-                        const numericValue = text.replace(/[^0-9.]/g, "");
+                        const numericValue = text.replace(/[^0-9]/g, "");
+                        setRecurrenceInput(numericValue);
                         setRecurrence(numericValue);
+                      }}
+                      onBlur={() => {
+                        let numericValue = parseInt(isRecurrenceInput) || 0; 
+                        if (numericValue > 28) {
+                          numericValue = 28;
+                        }
+                        setRecurrenceInput(numericValue.toString()); 
+                        setRecurrence(numericValue.toString());
                       }}
                     />
                     <Text>Day/s per Month</Text>

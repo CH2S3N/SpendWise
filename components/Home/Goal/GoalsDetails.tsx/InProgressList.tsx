@@ -1,10 +1,11 @@
 import { Goal } from "@/types";
-import { Button, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Button, ScrollView, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import React, { useState } from "react";
 import UpdateGoal from "@/components/ui/UpdateGoal";
 import InProgress from "./GoalsDetailsInProgress";
 import CustomModal from "@/components/Modal/CustomModal";
 import { UseTransactionService } from "@/hooks/editData/TransactionService";
+import { Modal } from "@/components/Modal";
 
 
 export default function InProgressList({
@@ -26,27 +27,27 @@ export default function InProgressList({
                         {goals.map((goal) => {
                             return (
                                 <View key={goal.id} style={styles.item}>
-                                    <TouchableOpacity 
-                                        onPress={() => {
-                                            setCurrentGoal(goal);
-                                            setIsModalVisible(true)
-                                        }}
-                                        onLongPress={() => deleteGoal(goal.id)}
-                                    >
-                                        <InProgress goal={goal}/>
-                                    </TouchableOpacity>
+                                        <InProgress goal={goal} setIsModalVisible={setIsModalVisible} setCurrentGoal={setCurrentGoal}/>
                                 </View>
                             )
                         })}   
                     </View>
 
-                    <CustomModal isOpen={isModalVisible} >
-                    {currentGoal && (
-                                <UpdateGoal setIsModalVisible={setIsModalVisible}  setIsUpdatingGoal={setIsUpdatingGoal}
+                    <Modal isOpen={isModalVisible} transparent animationType="fade">
+                    <TouchableWithoutFeedback onPress={() => setIsModalVisible(false)}>
+                        <View style={styles.modalOverlay}>
+                        <TouchableWithoutFeedback>
+                            <View style={styles.modalContent}>
+                            {currentGoal && (
+                                <UpdateGoal setIsModalVisible={setIsModalVisible} setIsUpdatingGoal={setIsUpdatingGoal}
                                 currentGoal={currentGoal}
                                 />
                             )}
-                    </CustomModal>
+                            </View>
+                        </TouchableWithoutFeedback>
+                        </View>
+                    </TouchableWithoutFeedback>
+                    </Modal>
                 </View>
             </ScrollView>
     )
@@ -74,5 +75,15 @@ const styles=StyleSheet.create({
     modal: {
         flex: 1,
         
-    }
+    },
+    modalOverlay: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+      },
+      modalContent: {
+        width: '80%',
+        height: '80%',
+      },
 })

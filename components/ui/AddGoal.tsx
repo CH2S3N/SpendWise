@@ -15,7 +15,8 @@ export default function AddGoal({
     const [amount, setAmount] = React.useState<string>("");
     const [currentAmount, setCurrentAmount] = React.useState<string>("");
     const [name, setName] = React.useState<string>("");
-
+    const [id] = React.useState<number>(0);
+    
 
     function validateFields() {
       if ( !amount || !name ) {
@@ -28,18 +29,12 @@ export default function AddGoal({
 
 
     async function handleSaveExpense() {
-        console.log ({
-            name,
-            amount: Number(amount),
-            currentAmount: Number(currentAmount),
-        });
-
         // to insert transactions
         await insertGoal({
           name,
           amount: Number(amount),
           currentAmount: Number(currentAmount),
-          id: 0
+          id,
         });
         setName("");
         setAmount("");
@@ -54,7 +49,7 @@ export default function AddGoal({
             {/* DESCRIPTION */}
             <Text style={styles.btext}>Item</Text>
             <TextInput
-              placeholder="Enter Item Name"
+              placeholder="Provide an Item Description"
               style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
               onChangeText={setName}
             />
@@ -75,9 +70,9 @@ export default function AddGoal({
           </View>
 
           <View style={styles.content}>
-            <Text style={styles.btext}>Initial Amount</Text>
+            <Text style={styles.btext}>Accumulated Amount</Text>
             <TextInput
-              placeholder="Enter Amount"
+              placeholder="Enter Accumulated Amount"
               style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
               keyboardType="numeric"
               onChangeText={(text) => {

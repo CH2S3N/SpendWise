@@ -18,40 +18,46 @@ export function UseTransactionService() {
   const insertGoal = async (goal: Goal) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
-        `INSERT INTO Goals ( name, amount ) VALUES(?, ?)`,
-        [
-          goal.name,
-          goal.amount,
-          goal.currentAmount,
-        ]
+        `INSERT INTO Goals (name, amount) VALUES(?, ?)`,
+        [goal.name, goal.amount]
       );
-
+  
+      // Fetch the newly inserted goal using last_insert_rowid()
+      const addedGoal = await db.getAllAsync<Goal>(
+        `SELECT * FROM Goals WHERE id = last_insert_rowid()`
+      );
+      
+      console.log('Added Goal:', addedGoal);
+  
       // Reload data after inserting goal
       const goalResult = await db.getAllAsync<Goal>('SELECT * FROM Goals');
-      console.log('Added Goal:', goalResult);
       dispatch(setData({ goals: goalResult, categories, incomeCategories, transactions, user, incomes, recurrence }));
     });
   };
+  
 
   // Update Goal
   const updateGoal = async (goal: Goal) => {
-      await db.withTransactionAsync(async () => {
-        await db.runAsync(
-          `UPDATE Goals SET name = ?, amount = ?, currentAmount = ? WHERE id = ?`,
-          [
-            goal.name,
-            goal.amount,
-            goal.currentAmount,
-            goal.id
-          ]
-        );
+    await db.withTransactionAsync(async () => {
+      await db.runAsync(
+        `UPDATE Goals SET name = ?, amount = ?, currentAmount = ? WHERE id = ?`,
+        [goal.name, goal.amount, goal.currentAmount, goal.id]
+      );
   
-        // Reload data after inserting goal
-        const goalResult = await db.getAllAsync<Goal>('SELECT * FROM Goals');
-        console.log('Updated Goals:', goalResult);
-        dispatch(setData({ goals: goalResult, categories, incomeCategories, transactions, user, incomes, recurrence }));
-      });
-    };
+      // Fetch the updated goal
+      const updatedGoal = await db.getAllAsync<Goal>(
+        `SELECT * FROM Goals WHERE id = ?`, 
+        [goal.id]
+      );
+  
+      console.log('Updated Goal:', updatedGoal);
+  
+      // Reload data
+      const goalResult = await db.getAllAsync<Goal>('SELECT * FROM Goals');
+      dispatch(setData({ goals: goalResult, categories, incomeCategories, transactions, user, incomes, recurrence }));
+    });
+  };
+  
 
   // Delete Goal
   async function deleteGoal(id: number) {
@@ -71,7 +77,8 @@ export function UseTransactionService() {
   const insertIncome = async (income: Income) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
-        `INSERT INTO Income (incomeCategoryId, interval, subtype, description, frequency, amount, type) VALUES(?, ?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO Income (incomeCategoryId, interval, subtype, description, frequency, amount, type) 
+         VALUES(?, ?, ?, ?, ?, ?, ?)`,
         [
           income.incomeCategoryId,
           income.interval,
@@ -82,18 +89,26 @@ export function UseTransactionService() {
           income.type,
         ]
       );
-      
-      // Reload data after inserting transaction
+  
+      // Fetch the newly inserted income
+      const addedIncome = await db.getAllAsync<Income>(
+        `SELECT * FROM Income WHERE id = last_insert_rowid()`
+      );
+  
+      console.log('Added Income:', addedIncome);
+  
+      // Reload data
       const incomeResult = await db.getAllAsync<Income>('SELECT * FROM Income');
-      console.log('Added Income:', incomeResult);
       dispatch(setData({ incomes: incomeResult, categories, incomeCategories, goals, user, transactions, recurrence }));
     });
   };
+  
   // Update Income
- const updateIncome = async (income: Income) => {
+  const updateIncome = async (income: Income) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
-        `UPDATE Income SET subtype = ?, incomeCategoryId = ?, amount = ?, description = ?, frequency = ?, type = ?, interval = ?  WHERE id = ?`,
+        `UPDATE Income SET subtype = ?, incomeCategoryId = ?, amount = ?, description = ?, frequency = ?, type = ?, interval = ?  
+         WHERE id = ?`,
         [
           income.subtype,
           income.incomeCategoryId,
@@ -103,15 +118,23 @@ export function UseTransactionService() {
           income.type,
           income.interval,
           income.id,
-          
         ]
       );
-      // Reload data after inserting transaction
-      const transactionResult = await db.getAllAsync<Income>('SELECT * FROM Income');
-      console.log('Updated Income:', transactionResult);
-      dispatch(setData({ incomes: transactionResult, categories, incomeCategories, goals, user, transactions, recurrence }));
+  
+      // Fetch the updated income
+      const updatedIncome = await db.getAllAsync<Income>(
+        `SELECT * FROM Income WHERE id = ?`, 
+        [income.id]
+      );
+  
+      console.log('Updated Income:', updatedIncome);
+  
+      // Reload data
+      const incomeResult = await db.getAllAsync<Income>('SELECT * FROM Income');
+      dispatch(setData({ incomes: incomeResult, categories, incomeCategories, goals, user, transactions, recurrence }));
     });
   };
+  
   // Delete Income
   async function deleteIncome(id: number) {
     try {
@@ -130,7 +153,8 @@ export function UseTransactionService() {
   const insertTransaction = async (transaction: Transaction) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
-        `INSERT INTO Transactions (category_id, recurrence_id, interval, subtype, description, frequency, prioritization, isfixedamount, amount, type) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO Transactions (category_id, recurrence_id, interval, subtype, description, frequency, prioritization, isfixedamount, amount, type) 
+         VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           transaction.category_id,
           transaction.recurrence_id,
@@ -144,18 +168,28 @@ export function UseTransactionService() {
           transaction.type,
         ]
       );
-      // Reload data after inserting transaction
+  
+      // Fetch the newly inserted transaction
+      const addedExpense = await db.getAllAsync<Transaction>(
+        `SELECT * FROM Transactions WHERE id = last_insert_rowid()`
+      );
+  
+      console.log('Added Expense:', addedExpense);
+  
+      // Reload data
       const transactionResult = await db.getAllAsync<Transaction>('SELECT * FROM Transactions');
-      console.log('Added Expense:', transactionResult);
       dispatch(setData({ transactions: transactionResult, categories, incomeCategories, goals, user, incomes, recurrence }));
     });
   };
+  
 
   // Update Expense
   const updateTransaction = async (transaction: Transaction) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
-        `UPDATE Transactions SET subtype = ?, category_id = ?, description = ?, frequency = ?, prioritization = ?, isfixedamount = ?, amount = ?, type = ?, recurrence_id = ?, interval = ? WHERE id = ?`,
+        `UPDATE Transactions 
+         SET subtype = ?, category_id = ?, description = ?, frequency = ?, prioritization = ?, isfixedamount = ?, amount = ?, type = ?, recurrence_id = ?, interval = ? 
+         WHERE id = ?`,
         [
           transaction.subtype,
           transaction.category_id,
@@ -170,12 +204,21 @@ export function UseTransactionService() {
           transaction.id,
         ]
       );
-        // Reload data after inserting transaction
-        const transactionResult = await db.getAllAsync<Transaction>('SELECT * FROM Transactions');
-        console.log('Updated Expense:', transactionResult);
-        dispatch(setData({ transactions: transactionResult, categories, incomeCategories, goals, user, incomes, recurrence }));
-      });
+  
+      // Fetch the updated transaction
+      const updatedExpense = await db.getAllAsync<Transaction>(
+        `SELECT * FROM Transactions WHERE id = ?`, 
+        [transaction.id]
+      );
+  
+      console.log('Updated Expense:', updatedExpense);
+  
+      // Reload data
+      const transactionResult = await db.getAllAsync<Transaction>('SELECT * FROM Transactions');
+      dispatch(setData({ transactions: transactionResult, categories, incomeCategories, goals, user, incomes, recurrence }));
+    });
   };
+  
 
   // Delete Expense
   async function deleteTransaction(id: number) {
@@ -205,7 +248,7 @@ export function UseTransactionService() {
     });
   };
   
-  // Update Expense
+  // Update User
   const updateUser = async (user: User) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(

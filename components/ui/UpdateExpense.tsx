@@ -22,7 +22,8 @@ export default function UpdateExpense({
       const { updateTransaction } = UseTransactionService();
     
 
-    const [interval, setInterval] = React.useState<string>("");
+    const [recurrence, setRecurrence] = React.useState<string>("");
+    const [isRecurrenceInput, setRecurrenceInput] = React.useState<string>("");
     const [recurrenceId, setRecurrenceId] = React.useState<number>(1);
     const [currentTab, setCurrentTab] = React.useState<number>(0);
     const [categories, setCategories] = React.useState<Category[]>([]);
@@ -41,27 +42,27 @@ export default function UpdateExpense({
    
     useEffect(() => {
       if (frequency === 'Daily') {
-        setInterval('1'); 
+        setRecurrence('1'); 
         setSubType('Custom')
       }
       if (frequency === 'Weekly' && subType === 'Weekends') {
-        setInterval('2'); 
+        setRecurrence('2'); 
       }
       if (frequency === 'Weekly' && subType === 'Weekdays') {
-        setInterval('5'); 
+        setRecurrence('5'); 
       }
       if (frequency === 'Weekly' && subType === 'All') {
-        setInterval('7'); 
+        setRecurrence('7'); 
       }
       if (frequency === 'Weekly' && subType === 'Custom') {
-        setInterval('1'); 
+        setRecurrence('1'); 
       }
       if (frequency === 'Monthly'){
-        setInterval('1'); 
+        setRecurrence('1'); 
         setSubType('Custom')
       }
       if (frequency === 'Bi-Weekly'){
-        setInterval('1'); 
+        setRecurrence('1'); 
         setSubType('Custom')
       }
     }, [frequency, subType]);
@@ -72,7 +73,7 @@ export default function UpdateExpense({
     React.useEffect(() => {
       if (currentTransaction) {
         setAmount(String(currentTransaction.amount || ""));
-        setInterval(String(currentTransaction.interval || ""));
+        setRecurrence(String(currentTransaction.interval || ""));
         setDescription(currentTransaction.description || "");
         setFrequency(currentTransaction.frequency || "Daily");
         setPrioritization(currentTransaction.prioritization || "High");
@@ -102,7 +103,7 @@ export default function UpdateExpense({
     }
 
     function validateFields() {
-      if (!description || (subType === 'Custom' && !interval) || !category || !prioritization || !typeSelected ) {
+      if (!description || (subType === 'Custom' && !recurrence) || !category || !prioritization || !typeSelected ) {
         return false;
       }
       
@@ -118,21 +119,6 @@ export default function UpdateExpense({
         }, [selectedIndex]);
 
     async function handleSaveExpense() {
-        console.log ({
-          id: currentTransaction.id,
-          description,
-          frequency: frequency as "Daily" | "Weekly" | "Bi-Weekly" | "Monthly",
-          prioritization: prioritization as "High" | "Medium" | "Low",
-          isfixedamount: isfixedamount as "Yes" | "No",
-          amount: Number(amount),
-          category_id: categoryId,
-          type: category as "Essential" | "Non_Essential",
-          interval: Number(interval),
-          subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
-          recurrence_id: recurrenceId,
-        });
-  
-        // to update transactions
         await updateTransaction({
           id: currentTransaction.id,
           description,
@@ -142,7 +128,7 @@ export default function UpdateExpense({
           amount: Number(amount),
           category_id: categoryId,
           type: category as "Essential" | "Non_Essential",
-          interval: Number(interval),
+          interval: Number(recurrence),
           subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
           recurrence_id: recurrenceId,
         });
@@ -184,7 +170,7 @@ export default function UpdateExpense({
                   selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
                   onChange={(event) => {
                     setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
-                    setInterval(interval);
+                    setRecurrence(recurrence);
                   }}
                 />
             </View>
@@ -203,7 +189,7 @@ export default function UpdateExpense({
                     selectedIndex={["Weekends", "Weekdays", "All", "Custom"].indexOf(subType)}
                     onChange={(event) => {
                       setSubType(["Weekends", "Weekdays", "All", "Custom"][event.nativeEvent.selectedSegmentIndex]);
-                      setInterval(interval);
+                      setRecurrence(recurrence);
                     }}
                   />
                   
@@ -212,20 +198,22 @@ export default function UpdateExpense({
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <TextInput
                   placeholder='0'
-                  value={interval}
+                  value={isRecurrenceInput}
                   style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
                   keyboardType="numeric"
                   onChangeText={(text) => {
                     // Remove any non-numeric characters before setting the state
                     const numericValue = text.replace(/[^0-9.]/g, "");
-                    setInterval(numericValue);
+                    setRecurrenceInput(numericValue);
+                    setRecurrence(numericValue ? String(parseInt(numericValue) * 4) : "");
                   }}
                   onBlur={() => {
-                    const Interval = parseFloat(interval);
-        
-                    if (Interval > 7) {
-                      setInterval("7");
+                    let numericValue = parseInt(isRecurrenceInput) || 0; 
+                    if (numericValue > 7) {
+                      numericValue = 7;
                     }
+                    setRecurrenceInput(numericValue.toString()); 
+                    setRecurrence(numericValue ? String(numericValue * 4) : ""); 
                   }}
                   />
                   <Text>Day(s) per Week</Text>
@@ -236,22 +224,22 @@ export default function UpdateExpense({
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <TextInput
                   placeholder='0'
-                  value={interval}
+                  value={isRecurrenceInput}
                   style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
                   keyboardType="numeric"
                   onChangeText={(text) => {
                     // Remove any non-numeric characters before setting the state
                     const numericValue = text.replace(/[^0-9.]/g, "");
-                    setInterval(numericValue);
-                    setSubType("Custom")
-                  }}
-                  onBlur={() => {
-                    const Interval = parseFloat(interval);
-        
-                    if (Interval > 14) {
-                      setInterval("14");
-                    }
-                  }}
+                    setRecurrenceInput(numericValue);
+                    setRecurrence(numericValue ? String(parseInt(numericValue) * 2) : "");                  }}
+                    onBlur={() => {
+                      let numericValue = parseInt(isRecurrenceInput) || 0;
+                      if (numericValue > 14) {
+                        numericValue = 14;
+                      }
+                      setRecurrenceInput(numericValue.toString()); 
+                      setRecurrence(numericValue ? String(numericValue * 2) : ""); 
+                    }}
                   />
                   <Text>Day(s) per Bi-Week</Text>
                   </View>
@@ -261,14 +249,22 @@ export default function UpdateExpense({
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <TextInput
                   placeholder='0'
-                  value={interval}
+                  value={isRecurrenceInput}
                   style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
                   keyboardType="numeric"
                   onChangeText={(text) => {
                     // Remove any non-numeric characters before setting the state
-                    const numericValue = text.replace(/[^0-9.]/g, "");
-                    setInterval(numericValue);
-                    setSubType("Custom")
+                    const numericValue = text.replace(/[^0-9]/g, "");
+                    setRecurrenceInput(numericValue);
+                    setRecurrence(numericValue);
+                  }}
+                  onBlur={() => {
+                    let numericValue = parseInt(isRecurrenceInput) || 0; 
+                    if (numericValue > 28) {
+                      numericValue = 28;
+                    }
+                    setRecurrenceInput(numericValue.toString()); 
+                    setRecurrence(numericValue.toString()); 
                   }}
                 />
                 <Text>Day(s) per Month</Text>

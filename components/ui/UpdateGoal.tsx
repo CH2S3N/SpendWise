@@ -3,6 +3,7 @@ import React from 'react'
 import { Goal } from '@/types';
 import { Divider } from '@rneui/base';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
+import Card from './Card';
 
 export default function UpdateGoal({
     setIsUpdatingGoal, 
@@ -38,14 +39,6 @@ export default function UpdateGoal({
     }
 
     async function handleUpdateGoal() {
-        console.log ({
-            id: currentGoal.id,
-            name,
-            amount: Number(amount),
-            accumulatedAmount: Number(accumulatedAmount)
-        });
-
-        // to insert transactions
         await updateGoal({
           id: currentGoal.id,
           name,
@@ -60,24 +53,28 @@ export default function UpdateGoal({
     }
 
   return (
-    <View >
+    <Card
+    content={
+    <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Update Goal</Text>
       </View>
-      <Text style={styles.textTitle}>Item</Text>
-        {/* DESCRIPTION */}
-        <TextInput
-          placeholder="Provide an entry description"
-          style={{ }}
-          value={name}
-          onChangeText={setName}
-        />
-        <Divider/>
-        <Text style={styles.textTitle}>Total Amount</Text>
+      {/* DESCRIPTION */}
+      <View style={styles.content}>
+        <Text style={styles.textTitle}>Item</Text>
+          <TextInput
+            placeholder="Provide an entry description"
+            style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
+            value={name}
+            onChangeText={setName}
+          />
+      </View>
         {/* AMOUNT */}
+        <View style={styles.content}>
+        <Text style={styles.textTitle}>Total Amount</Text>
         <TextInput
           placeholder="₱Amount"
-          style={{}}
+          style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
           value={amount}
           keyboardType="numeric"
           onChangeText={(text) => {
@@ -86,12 +83,12 @@ export default function UpdateGoal({
             setAmount(numericValue);
           }}
         />
-        <Divider/>
+        </View>
         <Text style={styles.textTitle}>Accumulated Amount</Text>
         {/* ACCUMULATED AMOUNT */}
         <TextInput
           placeholder="Enter Amount"
-          style={{ }}
+          style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
           value={accumulatedAmount}
           keyboardType="numeric"
           onChangeText={(text) => {
@@ -108,21 +105,26 @@ export default function UpdateGoal({
             }
           }}
         />
-        <Divider style={{marginBottom: 20}}/>
        
 
         {/* Cancel and Save Button */}
-        <View
-          style={{ flexDirection: "row", justifyContent: "space-around" }}
-        >
-          <Button title="Cancel" color={'black'} onPress={() => {
-            setIsUpdatingGoal(false)
-            setIsModalVisible(false);
-          }}
-          />
-          <Button title="Save" color={'black'} onPress={handleUpdateGoal}  disabled={!validateFields()}/>
+        <View style={styles.btn}>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-around" }}
+          >
+            <Button title="Cancel" color={'black'} onPress={() => {
+              setIsUpdatingGoal(false)
+              setIsModalVisible(false);
+            }}
+            />
+            <Button title="Save" color={'black'} onPress={handleUpdateGoal}  disabled={!validateFields()}/>
+          </View>
+
         </View>
     </View>
+
+    }
+    />
   )
 }
 
@@ -133,13 +135,25 @@ const styles = StyleSheet.create({
     justifyContent:'center'
   },
   title:{
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: 'bold'
   },
   textTitle:{
     fontWeight: 'bold'
   },
-  foot:{
-    marginVertical: 15
+  container:{
+    flex:1,
+    height: '100%',
+  },
+  btn:{
+    flex: 1,
+    flexDirection: 'column-reverse',
+    paddingBottom: 20
+  },
+  content:{
+    paddingTop: 10
+  },
+  btext:{
+    fontWeight: 'bold'
   }
 })
