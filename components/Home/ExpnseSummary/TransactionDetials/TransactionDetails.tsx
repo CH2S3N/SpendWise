@@ -15,21 +15,17 @@ interface Props{
     transaction: Transaction;
     categoryInfo: Category | undefined;
     setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+    isTapped: boolean
     setCurrentTransaction: React.Dispatch<React.SetStateAction<Transaction | null>>;
     deleteTransaction: (id: number) => void;
     
 }
 
-export default function TransactionDetails({ transaction, categoryInfo, setIsModalVisible, setCurrentTransaction, deleteTransaction }: Props) {
-    const [isTapped, setIsTapped] = useState(false);
+export default function TransactionDetails({ transaction, categoryInfo, setIsModalVisible, setCurrentTransaction, deleteTransaction, isTapped }: Props) {
 
     return (
             <Card content={
                 <>
-
-                    <TouchableOpacity
-                            onPress={() => setIsTapped(prev => !prev)} 
-                    > 
                         <View style={styles.container} >  
                             {!isTapped ? (
                                 <>
@@ -89,7 +85,6 @@ export default function TransactionDetails({ transaction, categoryInfo, setIsMod
                                 </>
                             )}
                         </View>   
-                    </TouchableOpacity>
                 </>
             }/>
     )

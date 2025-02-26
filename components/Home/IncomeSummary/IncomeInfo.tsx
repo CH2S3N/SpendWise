@@ -114,6 +114,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  noDataTxt:{
+    fontWeight: 'bold',
+    textAlign: 'left',
+    color: colors.dark,
+    fontSize: 30,
+  },
+  titletext:{
+    fontWeight: 'bold',
+    color: colors.dark,
+    fontSize: 20,
+  },
   modalOverlay: {
     flex: 1,
     justifyContent: 'center',
@@ -132,15 +143,5 @@ const styles = StyleSheet.create({
     shadowOffset: { height: 6, width: 0 },
     shadowOpacity: 0.15,
   },
-  noDataTxt:{
-    fontWeight: 'bold',
-    textAlign: 'left',
-    color: colors.dark,
-    fontSize: 30,
-  },
-  titletext:{
-    fontWeight: 'bold',
-    color: colors.dark,
-    fontSize: 20,
-  },
+
 })

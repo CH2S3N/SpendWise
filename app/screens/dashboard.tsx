@@ -1,7 +1,6 @@
 import { View, TouchableOpacity, Text, ScrollView, TouchableWithoutFeedback } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import AddTransaction from '../../components/ui/AddTransaction';
-import SummaryInfo from '@/components/Home/ExpnseSummary/TransactionDetials/SummaryInfo';
 import ChartInfo from '@/components/Home/Chart/ChartInfo';
 import { RootState } from '@/state/store';
 import { useSelector } from 'react-redux';
@@ -14,6 +13,7 @@ import Overview from '@/components/Home/Chart/Overview';
 import Card from '@/components/ui/Card';
 import { Divider } from 'react-native-paper';
 import BudgetPlan from '@/components/Home/BudgetPlan/BudgetPlan';
+import Expense from '@/components/Home/ExpnseSummary/TransactionDetials/Expense';
 
 export default function Index() {
   const { transactions, incomes, user } = useSelector((state: RootState) => state.data);
@@ -96,7 +96,7 @@ export default function Index() {
 
             {/* Transactions */}
             <View>
-              <SummaryInfo />
+              <Expense/>
             </View>
           </ScrollView>
         </View>

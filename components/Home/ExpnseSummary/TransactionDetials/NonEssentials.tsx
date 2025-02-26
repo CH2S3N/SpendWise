@@ -1,9 +1,9 @@
 import { Category, Transaction } from "@/types";
-import { ScrollView, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { Button, ScrollView, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import TransactionDetails from "./TransactionDetails";
-import React, { useState } from "react";
 import { Modal } from "@/components/Modal";
 import UpdateExpense from "@/components/ui/UpdateExpense";
+import React, { useState } from "react";
 import { UseTransactionService } from "@/hooks/editData/TransactionService";
 
 
@@ -15,59 +15,67 @@ export default function NonEssential({
     transactions: Transaction[];
 }) {
 
-      const { deleteTransaction } = UseTransactionService();
+    const { deleteTransaction } = UseTransactionService();
     
-
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isAddingTransaction, setIsAddingTransaction] = React.useState<boolean>(false);
     const [isUpdatingTransaction, setIsUpdatingTransaction] = React.useState<boolean>(false);
-    const nonEssentialTransactions = transactions.filter((transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Non_Essential");
+    const essentialTransactions = transactions.filter(
+        (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Non_Essential"
+    );
+
     const [currentTransaction, setCurrentTransaction] = useState<Transaction | null>(null);
-    
+    const [tappedTransactionId, setTappedTransactionId] = useState<number | null>(null); // Track which transaction is tapped
+
+
     return (
         <View style={styles.maincontainer}>
             <ScrollView>
-                <View style={styles.container}>
+            <View style={styles.container}>
                     <View style={styles.section}>
-                        {nonEssentialTransactions.map((transaction) => {
+                        {essentialTransactions.map((transaction) => {
                             const categoryForCurrentItem = categories.find(
                                 (category) => category.id === transaction.category_id
-                            )
+                            );
+
                             return (
-                                <View key={transaction.id} style={styles.item}>
-                                    <TouchableOpacity 
-                                        onPress={() => {
-                                            setCurrentTransaction(transaction);
-                                        }}
-                                    >
-                                        <TransactionDetails 
-                                            transaction={transaction} 
-                                            categoryInfo={categoryForCurrentItem}
-                                            setIsModalVisible={setIsModalVisible}
-                                            setCurrentTransaction={setCurrentTransaction}
-                                            deleteTransaction={deleteTransaction}
-                                        />
-                                    </TouchableOpacity>
-                                </View>
-                            )
+                                <TouchableOpacity
+                                    key={transaction.id}
+                                    style={styles.item}
+                                    onPress={() =>
+                                        setTappedTransactionId(tappedTransactionId === transaction.id ? null : transaction.id)
+                                    }
+                                >
+                                    <TransactionDetails 
+                                        transaction={transaction} 
+                                        categoryInfo={categoryForCurrentItem}
+                                        setIsModalVisible={setIsModalVisible}
+                                        setCurrentTransaction={setCurrentTransaction}
+                                        deleteTransaction={deleteTransaction}
+                                        isTapped={tappedTransactionId === transaction.id}
+                                    />
+                                </TouchableOpacity>
+                            );
                         })}   
                     </View>
 
-        
-                     <Modal isOpen={isModalVisible} transparent animationType="fade">
-                        <TouchableWithoutFeedback onPress={() => setIsModalVisible(false)}>
-                            <View style={styles.modalOverlay}>
-                            <TouchableWithoutFeedback>
-                                <View style={styles.modalContent}>
-                                {currentTransaction && (
-                                    <UpdateExpense setIsModalVisible={setIsModalVisible} setIsUpdatingTransaction={setIsUpdatingTransaction}
-                                    currentTransaction={currentTransaction}
-                                    />
-                                )}
-                                </View>
-                            </TouchableWithoutFeedback>
+
+                    <Modal isOpen={isModalVisible} transparent animationType="fade">
+                    <TouchableWithoutFeedback onPress={() => setIsModalVisible(false)}>
+                        <View style={styles.modalOverlay}>
+                        <TouchableWithoutFeedback>
+                            <View style={styles.modalContent}>
+                            {currentTransaction && (
+                                <UpdateExpense setIsModalVisible={setIsModalVisible} setIsUpdatingTransaction={setIsAddingTransaction}
+                                currentTransaction={currentTransaction}
+                                />
+                            )}
                             </View>
                         </TouchableWithoutFeedback>
-                        </Modal>
+                        </View>
+                    </TouchableWithoutFeedback>
+                    </Modal>
+                    
                 </View>
             </ScrollView>
         </View>

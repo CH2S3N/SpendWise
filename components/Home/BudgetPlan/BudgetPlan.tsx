@@ -36,7 +36,7 @@ const BudgetPlanner = () => {
             <Text style={styles.celltitle}>Item</Text>
             <Text style={styles.celltitle}>Category</Text>
             <Text style={styles.celltitle}>Recurrence</Text>
-            <Text style={styles.celltitle}>Budget per Occurrence</Text>
+            <Text style={styles.celltitle}>Income per Occurrence</Text>
             <Text style={styles.celltitle}>Total Amount</Text>
           </View>
           {incomes.map((income) => {
@@ -55,6 +55,7 @@ const BudgetPlanner = () => {
       </View>
 
       {/* Expenses Section */}
+      {/* Needs */}
         <View style={styles.container}>
           <Text style={styles.header}>Essentials (Basic Needs)</Text>
           <View style={styles.table}>
@@ -80,6 +81,7 @@ const BudgetPlanner = () => {
             )})}
           </View>
         </View>
+
         <View style={styles.container}>
           <Text style={styles.header}>Non-Essentials (Wants & Optional Spending)</Text>
           <View style={styles.table}>
@@ -108,6 +110,7 @@ const BudgetPlanner = () => {
 
 
       {/* Summary Section */}
+      {/* Wants */}
       <View style={styles.container}>
         <Text style={styles.header}>SUMMARY</Text>
         <View style={styles.table}>

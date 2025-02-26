@@ -5,7 +5,6 @@ import { AntDesign } from '@expo/vector-icons';
 import InitialExpense from './GeneratedPlan/Expense';
 import InitialIncome from './GeneratedPlan/Income';
 import AddTransaction from '@/components/ui/AddTransaction';
-import SummaryInfo from '../ExpnseSummary/TransactionDetials/SummaryInfo';
 import { Modal } from '@/components/Modal';
 import IncomeInfo from '../IncomeSummary/IncomeInfo';
 import GenerateService from '@/hooks/generateBudgetplan/Generate';
@@ -22,6 +21,7 @@ import SubCatNeeds from './SubCatNeeds';
 import SubCatWants from './SubCatWants';
 import { useFetchData } from '@/hooks/useFetchData';
 import Categories from './Categories';
+import Expense from '../ExpnseSummary/TransactionDetials/Expense';
 
 
 
@@ -230,7 +230,7 @@ export default function BudgetPlanInfo({
                 <Text style={styles.title}>EXPENSE</Text>
         </View >
         <View style={styles.modalcontent}>
-          <SummaryInfo/>
+          <Expense/>
         </View>
         </View>
       </Modal>

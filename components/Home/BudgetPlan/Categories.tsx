@@ -1,34 +1,18 @@
 import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native'
 import React, { useState } from 'react'
-import MainContainer from '@/components/Containers/MainContainer';
-import { AntDesign } from '@expo/vector-icons';
-import InitialExpense from './GeneratedPlan/Expense';
-import InitialIncome from './GeneratedPlan/Income';
-import AddTransaction from '@/components/ui/AddTransaction';
-import SummaryInfo from '../ExpnseSummary/TransactionDetials/SummaryInfo';
-import { Modal } from '@/components/Modal';
-import IncomeInfo from '../IncomeSummary/IncomeInfo';
 import GenerateService from '@/hooks/generateBudgetplan/Generate';
 import { colors } from '@/constants/colors';
-import Card from '@/components/ui/Card';
 import Slider from '@react-native-community/slider';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
 import { setNeeds, setWants, setSavings, resetCat} from '@/state/budgetSlice';
 import { ScrollView } from 'react-native-gesture-handler';
-import { Button } from 'react-native-paper';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
-import SubCatNeeds from './SubCatNeeds';
-import SubCatWants from './SubCatWants';
 import { useFetchData } from '@/hooks/useFetchData';
 
 const Categories = () => {
-    const { updateUser } = UseTransactionService();
-    const { handleSaveExpense } = GenerateService();
     const dispatch = useDispatch();
     const { needs, wants, savings} = useSelector((state: RootState) => state.budget); 
-    const { transactions, user, incomes } = useSelector((state: RootState) => state.data);
-    const { fetchData } = useFetchData();
   
     // Function to handle slider change
     const handleCategorySliderChange = (sliderIndex: number, value: number) => {
