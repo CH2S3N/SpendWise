@@ -10,11 +10,11 @@ import { colors } from "@/constants/colors";
 
 
 
-export default function SubCatWants() {
+export default function SubCatAll() {
   const { updateCategory } = UseTransactionService();
   const dispatch = useDispatch();
   const { categories, transactions, incomeCategories, goals, user, incomes, recurrence } = useSelector((state: RootState) => state.data);
-  const nonEssentialSubCat = categories.filter((category) => category.type === "Non_Essential");
+  const essentialSubCat = categories.filter((category) => category.type === "Essential");
   const [sliderValue, setSliderValue] = useState<{ [key: number]: number }>({});
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function SubCatWants() {
 
   const resetProportions = async () => {
     try {
-      const updatedCategories = nonEssentialSubCat.map((cat) => {
+      const updatedCategories = categories.map((cat) => {
         return { ...cat, proportion: cat.initialProp };
       });
 
@@ -64,7 +64,7 @@ export default function SubCatWants() {
     <View style={{flex:1, paddingHorizontal: 10}}>
       
       <ScrollView>
-      {nonEssentialSubCat.map((category) => {
+      {categories.map((category) => {
         const value = sliderValue[category.id] ?? category.proportion; // Use slider value if available
         return (
           <View key={category.id}>
@@ -87,7 +87,7 @@ export default function SubCatWants() {
         );
       })}
       </ScrollView>
-      <View style={{ paddingTop: 10, alignItems: "flex-end" }}>
+      <View style={{ paddingTop: 10, alignItems: "flex-end"}}>
         <TouchableOpacity  onPress={() => resetProportions()}>
           <Text>Reset</Text>
         </TouchableOpacity>

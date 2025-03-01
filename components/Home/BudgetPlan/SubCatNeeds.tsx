@@ -87,7 +87,7 @@ export default function SubCatNeeds() {
         );
       })}
       </ScrollView>
-      <View style={{ alignItems: 'flex-end' }}>
+      <View style={{ paddingTop: 10, alignItems: "flex-end"}}>
         <TouchableOpacity  onPress={() => resetProportions()}>
           <Text>Reset</Text>
         </TouchableOpacity>

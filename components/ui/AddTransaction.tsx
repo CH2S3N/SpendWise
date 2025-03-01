@@ -21,7 +21,7 @@ export default function AddTransaction ({
     return (
       <View style={styles.container}>
                <SegmentedControl
-                  values={['Expense', 'Goal', 'Income']}
+                  values={['Expense', 'Income']}
                   selectedIndex={selectedTypeIndex}
                   onChange={(event) => setselectedTypeIndex(event.nativeEvent.selectedSegmentIndex)}
                 />
@@ -29,12 +29,8 @@ export default function AddTransaction ({
                  {selectedTypeIndex === 0 && ( 
                   <AddExpense setIsAddingTransaction={setIsAddingTransaction} setIsUpdatingTransaction={setIsUpdatingTransaction}/>
                 )}
-                  {/* Goal Form */}
-                 {selectedTypeIndex === 1 && ( 
-                  <AddGoal setIsAddingTransaction={setIsAddingTransaction} />
-                )}
                 {/* Budget Form */}
-                 {selectedTypeIndex === 2 && ( 
+                 {selectedTypeIndex === 1 && ( 
                   <AddIncome setIsAddingTransaction={setIsAddingTransaction} setIsUpdatingTransaction={setIsUpdatingTransaction} />
                 )}
         </View>
