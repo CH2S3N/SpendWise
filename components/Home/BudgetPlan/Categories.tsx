@@ -71,6 +71,7 @@ const Categories = ({ isAdvanceBtnTapped, setIsAdvanceBtnTapped }: { isAdvanceBt
             dispatch(setNeeds(50));
             dispatch(setWants(30));
             dispatch(setSavings(20));
+            setIsEnabled(true)
             }}>
             <Text style={styles.txt}>50/30/20 Rule</Text>
           </TouchableOpacity>
@@ -110,33 +111,6 @@ const Categories = ({ isAdvanceBtnTapped, setIsAdvanceBtnTapped }: { isAdvanceBt
                 </View>
                 {isEnabled === true ? (
                   <>
-                    <Text>Expenses: {needs}%</Text>
-                    <Slider
-                      value={needs}
-                      onValueChange={(value) => handleCategorySliderChange(1, value)}
-                      minimumValue={0}
-                      maximumValue={100}
-                      step={1}
-                      minimumTrackTintColor= {colors.green}
-                      maximumTrackTintColor= {colors.green}
-                      thumbTintColor= {colors.green}
-                    />
-    
-                    <Text>Savings: {savings}%</Text>
-                    <Slider
-                      value={savings}
-                      onValueChange={(value) => handleCategorySliderChange(3, value)}
-                      minimumValue={0}
-                      maximumValue={100}
-                      step={1}
-                      minimumTrackTintColor= {colors.green}
-                      maximumTrackTintColor= {colors.green}
-                      thumbTintColor= {colors.green}
-                    />
-                    <TouchableOpacity style={{alignItems: 'flex-end'}} onPressOut={()=>  dispatch(resetCat())}><Text>Reset</Text></TouchableOpacity>
-                  </>
-                ): (
-                  <>
                     <Text>Needs: {needs}%</Text>
                     <Slider
                       value={needs}
@@ -172,7 +146,38 @@ const Categories = ({ isAdvanceBtnTapped, setIsAdvanceBtnTapped }: { isAdvanceBt
                       maximumTrackTintColor= {colors.green}
                       thumbTintColor= {colors.green}
                     />
-                    <TouchableOpacity style={{alignItems: 'flex-end'}} onPressOut={()=>  dispatch(resetCat())}><Text>Reset</Text></TouchableOpacity>
+                    <View style={{ paddingTop: 10, alignItems: "flex-end"}}>
+                      <TouchableOpacity style={{alignItems: 'flex-end'}} onPressOut={()=>  dispatch(resetCat())}><Text>Reset</Text></TouchableOpacity>
+                    </View>
+                  </>
+                ): (
+                  <>
+                    <Text>Expenses: {needs}%</Text>
+                    <Slider
+                      value={needs}
+                      onValueChange={(value) => handleCategorySliderChange(1, value)}
+                      minimumValue={0}
+                      maximumValue={100}
+                      step={1}
+                      minimumTrackTintColor= {colors.green}
+                      maximumTrackTintColor= {colors.green}
+                      thumbTintColor= {colors.green}
+                    />
+    
+                    <Text>Savings: {savings}%</Text>
+                    <Slider
+                      value={savings}
+                      onValueChange={(value) => handleCategorySliderChange(3, value)}
+                      minimumValue={0}
+                      maximumValue={100}
+                      step={1}
+                      minimumTrackTintColor= {colors.green}
+                      maximumTrackTintColor= {colors.green}
+                      thumbTintColor= {colors.green}
+                    />
+                    <View style={{ paddingTop: 10, alignItems: "flex-end"}}>
+                      <TouchableOpacity style={{alignItems: 'flex-end'}} onPressOut={()=>  dispatch(resetCat())}><Text>Reset</Text></TouchableOpacity>
+                    </View>          
                   </>
                 )}
               </>
@@ -199,7 +204,7 @@ const Categories = ({ isAdvanceBtnTapped, setIsAdvanceBtnTapped }: { isAdvanceBt
         {/* Slider */}
         {isAdvanceBtnTapped === true && (
             <>
-              {strat2 === true ? (
+              {strat2 === true || isEnabled === false ? (
                 <View style={[styles.container, {flex: 2}]}>
                   <Text style={styles.title}>Sub-Category (Expenses)</Text>
                   <SubCatAll/>

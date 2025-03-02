@@ -50,8 +50,11 @@ export default function AddIncome({
   
 
     async function handleSaveIncome() {
+      const calculatedAmount = Number(amount) * Number(isrecurrence);
+
         await insertIncome({
-            amount: Number(amount),
+
+            amount: calculatedAmount,
             description,
             frequency: frequency as "Daily" | "Weekly" | "Monthly",
             incomeCategoryId: incomeCategoryId,
@@ -70,21 +73,32 @@ export default function AddIncome({
     
 
     
-        useEffect(() => {
-             if (frequency === 'Daily') {
-               setRecurrence('28'); 
-               setSubType('Custom')
-             }
-             if (frequency === 'Weekly' && subType === 'Weekends') {
-               setRecurrence('8'); 
-             }
-             if (frequency === 'Weekly' && subType === 'Weekdays') {
-               setRecurrence('20'); 
-             }
-             if (frequency === 'Weekly' && subType === 'All') {
-               setRecurrence('28'); 
-             }
-           }, [subType]);
+   useEffect(() => {
+         if (frequency === 'Daily') {
+           setRecurrence('28'); 
+           setSubType('Custom')
+         }
+         if (frequency === 'Weekly' && subType === 'Weekends') {
+           setRecurrence('2'); 
+         }
+         if (frequency === 'Weekly' && subType === 'Weekdays') {
+           setRecurrence('5'); 
+         }
+         if (frequency === 'Weekly' && subType === 'All') {
+           setRecurrence('7'); 
+         }
+         if (frequency === 'Weekly' && subType === 'Custom') {
+           setRecurrence('1'); 
+         }
+         if (frequency === 'Monthly'){
+           setRecurrence('1'); 
+           setSubType('Custom')
+         }
+         if (frequency === 'Bi-Weekly'){
+           setRecurrence('1'); 
+           setSubType('Custom')
+         }
+       }, [subType]);
 
   return (
     <View style={styles.container}>

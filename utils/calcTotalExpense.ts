@@ -1,5 +1,4 @@
 import { Category, Transaction } from "@/types";
-import calculateMonthlyAmount from "./calcMonthlyAmount";
 
 
 export const calculateTotalExpense = (transactions: Transaction[], categories: Category[], type: string): number => {
@@ -8,7 +7,7 @@ export const calculateTotalExpense = (transactions: Transaction[], categories: C
     );
 
     return filteredTransactions.reduce((total, transaction) => {
-      return total + calculateMonthlyAmount(transaction.amount, transaction.frequency);
+      return total + transaction.amount;
     }, 0);
   };
 

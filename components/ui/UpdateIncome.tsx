@@ -46,7 +46,7 @@ export default function UpdateIncome({
 
    useEffect(() => {
          if (frequency === 'Daily') {
-           setRecurrence('30'); 
+           setRecurrence('28'); 
            setSubType('Custom')
          }
          if (frequency === 'Weekly' && subType === 'Weekends') {
@@ -69,7 +69,7 @@ export default function UpdateIncome({
            setRecurrence('1'); 
            setSubType('Custom')
          }
-       }, [frequency, subType]);
+       }, [subType]);
    
 
 
@@ -96,24 +96,13 @@ export default function UpdateIncome({
           }, []);
 
     async function handleSaveIncome() {
-        console.log ({
-          id: currentIncome.id,
-          description,
-          frequency: frequency as "Daily" | "Weekly" | "Bi-Weekly" | "Monthly",
-          amount: Number(amount),
-          category_id: incomeCategoryId,
-          type: incomeCategory as "Allowance" | "Salary" | "Others",
-          isRecurrence: Number(isRecurrence),
-          subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
-        });
+       const calculatedAmount = Number(amount) * Number(isRecurrence);
 
-      
-        // to update transactions
-        await updateIncome({
+          await updateIncome({
           id: currentIncome.id,
           description,
           frequency: frequency as "Daily" | "Weekly" | "Monthly",
-          amount: Number(amount),
+          amount: calculatedAmount,
           incomeCategoryId: incomeCategoryId,
           type: incomeCategory as "Allowance" | "Salary" | "Others",
           interval: Number(isRecurrence),

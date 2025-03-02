@@ -6,6 +6,7 @@ import { RootState } from '@/state/store';
 import Budget from '../Budget/totalIncome';
 import { colors } from '@/constants/colors';
 import styles from './styles';
+import { calculateTotalExpense } from '@/utils/calcTotalExpense';
 
 export default function ExpenseChart() {
   const { categories, transactions, goals } = useSelector(
@@ -14,23 +15,14 @@ export default function ExpenseChart() {
   const [values, setValues] = useState([1]);
   const [sliceColor, setSliceColor] = useState(['#CCCCCC']);
 
-  // Filter Expense Type
-  const essentialTransactions = transactions.filter(
-    (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Essential"
-  );
-  const nonEssentialTransactions = transactions.filter(
-    (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Non_Essential"
-  );
-
-  const calcTotal = (items: any[]) => items.reduce((total, item) => total + (item.amount || 0), 0);
   const calcTotalGoal = () => goals.reduce((total, goal) => total + (goal.currentAmount || 0), 0);
 
   const totalIncome = Budget();
-  const totalEssential = calcTotal(essentialTransactions);
-  const totalNonEssential = calcTotal(nonEssentialTransactions);
+  const totalEssential = calculateTotalExpense(transactions, categories, "Essential",);
+  const totalNonEssential = calculateTotalExpense(transactions, categories, "Non_Essential");
   const totalGoal = calcTotalGoal();
   const totalSavings = Math.max(0, totalIncome - (totalEssential + totalNonEssential));
-  const totalExpenses = totalEssential + totalNonEssential + totalSavings;
+  const totalExpenses = totalEssential + totalNonEssential;
 
   useEffect(() => {
     if (totalExpenses > 0) {

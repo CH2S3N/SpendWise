@@ -24,6 +24,7 @@ export default function AddExpense({
     const [categories, setCategories] = React.useState<Category[]>([]);
     const [typeSelected, setTypeSelected] = React.useState<string>("");
     const [amount, setAmount] = React.useState<string>("");
+    const [amountInput, setAmountInput] = React.useState<string>("");
     const [isrecurrence, setRecurrence] = React.useState<string>("");
     const [isRecurrenceInput, setRecurrenceInput] = React.useState<string>("");
     const [description, setDescription] = React.useState<string>("");
@@ -74,12 +75,14 @@ export default function AddExpense({
 
 
     async function handleSaveExpense() {
+      const calculatedAmount = Number(amount) * Number(isrecurrence);
+
         await insertTransaction({
           description,
           frequency: frequency as "Daily" | "Weekly" | "Monthly",
           prioritization: prioritization as "High" | "Medium" | "Low",
           isfixedamount: isfixedamount as "Yes" | "No",
-          amount: Number(amount),
+          amount: calculatedAmount,
           category_id: categoryId,
           type: category as "Essential" | "Non_Essential",
           recurrence_id: recurrenceId,
@@ -100,22 +103,32 @@ export default function AddExpense({
         
     }
     
-     useEffect(() => {
-          if (frequency === 'Daily') {
-            setRecurrence('28'); 
-            setsubType('Custom')
-          }
-          if (frequency === 'Weekly' && subType === 'Weekends') {
-            setRecurrence('8'); 
-          }
-          if (frequency === 'Weekly' && subType === 'Weekdays') {
-            setRecurrence('20'); 
-          }
-          if (frequency === 'Weekly' && subType === 'All') {
-            setRecurrence('28'); 
-          }
-
-        }, [subType]);
+ useEffect(() => {
+      if (frequency === 'Daily') {
+        setRecurrence('28'); 
+        setsubType('Custom')
+      }
+      if (frequency === 'Weekly' && subType === 'Weekends') {
+        setRecurrence('2'); 
+      }
+      if (frequency === 'Weekly' && subType === 'Weekdays') {
+        setRecurrence('5'); 
+      }
+      if (frequency === 'Weekly' && subType === 'All') {
+        setRecurrence('7'); 
+      }
+      if (frequency === 'Weekly' && subType === 'Custom') {
+        setRecurrence('1'); 
+      }
+      if (frequency === 'Monthly'){
+        setRecurrence('1'); 
+        setsubType('Custom')
+      }
+      if (frequency === 'Bi-Weekly'){
+        setRecurrence('1'); 
+        setsubType('Custom')
+      }
+    }, [frequency, subType]);
 
     
 

@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Switch } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Switch, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import AddTransaction from '@/components/ui/AddTransaction';
@@ -82,64 +82,65 @@ export default function BudgetPlanInfo({
        )}
        {isLoading === false && (
          <>
-            <View style={styles.container}>
+            <View style={[styles.container,]}>
               {/* Categories */}
-              <View style={styles.container}>
-                <View style={[styles.card]}>
-                  <Categories isAdvanceBtnTapped={isAdvanceBtnTapped} setIsAdvanceBtnTapped={setAdvanceBtnTapped}/>
-                  {isAdvanceBtnTapped === false ? (
-                    <Button onPress={()=>{setAdvanceBtnTapped(true)}}>Advance</Button>
-                  ) : (
-                    <Button onPress={()=> setAdvanceBtnTapped(false)}>Go Back</Button>
-                  )}
+                <View style={[styles.container, {flex: 7}]}>
+                  <View style={[styles.card,]}>
+                    <Categories isAdvanceBtnTapped={isAdvanceBtnTapped} setIsAdvanceBtnTapped={setAdvanceBtnTapped}/>
+                    {isAdvanceBtnTapped === false ? (
+                      <Button onPress={()=>{setAdvanceBtnTapped(true)}}>Advance</Button>
+                    ) : (
+                      <Button onPress={()=> setAdvanceBtnTapped(false)}>Go Back</Button>
+                    )}
+                  </View>
+
                 </View>
 
-              </View>
               {/* Expense & Income */}
               {isAdvanceBtnTapped === false && (
-                <View style={styles.container}>
-                  <View style={styles.row}>
+                <View style={[styles.container, {flex: 4}]}>
+                  <View style={[styles.row, {justifyContent: "center", }]}>
                     {/* Income */}
-                    <View style={styles.card}>
+                    <View style={[styles.card, {backgroundColor: colors.green,  marginLeft: 20, marginRight: 5, marginVertical: 5,}]}>
                       <TouchableOpacity onPress={() => openModal('income')}>
-                          <Text style={styles.title}>INCOME</Text>
+                          <Text style={styles.titleW}>INCOME</Text>
                       </TouchableOpacity>
                       <View style={styles.row}>
                         <View style={styles.col}>
-                          <Text>No. of Income Sources:</Text>
+                          <Text style={styles.txtW}>No. of Income Sources:</Text>
                         </View>
                         <View style={styles.col1}>
-                          <Text>{incomes.length}</Text>
+                          <Text style={styles.txtW}>{incomes.length}</Text>
                         </View>
                       </View>
                       <View style={styles.row}>
                         <View style={styles.col}>
-                          <Text>Total Income:</Text>
+                          <Text style={styles.txtW}>Total Income:</Text>
                         </View>
                         <View style={styles.col1}>
-                          <Text>{totalIncome}</Text>
+                          <Text style={styles.txtW}>{totalIncome}</Text>
                         </View>
                       </View>
                     </View>
 
                     {/* Expense */}
-                      <View style={styles.card}>
+                      <View style={[styles.card, {backgroundColor: colors.red, marginRight: 20, marginLeft: 5, marginVertical: 5,}]}>
                         <TouchableOpacity onPress={() => openModal('expense')}>
-                          <Text style={styles.title}>EXPENSE</Text>
+                          <Text style={styles.titleW}>EXPENSE</Text>
                           <View style={styles.row}>
                             <View style={styles.col}>
-                              <Text>No. of Expense:</Text>
+                              <Text style={styles.txtW}>No. of Expense:</Text>
                             </View>
                             <View style={styles.col1}>
-                              <Text>{transactions.length}</Text>
+                              <Text style={styles.txtW}>{transactions.length}</Text>
                             </View>
                           </View>
                           <View style={styles.row}>
                             <View style={styles.col}>
-                              <Text>Total Expense:</Text>
+                              <Text style={styles.txtW}>Total Expense:</Text>
                             </View>
                             <View style={styles.col1}>
-                              <Text>To be Calculated</Text>
+                              <Text style={styles.txtW}>To be Calculated</Text>
                             </View>
                           </View>
                         </TouchableOpacity>
@@ -153,7 +154,7 @@ export default function BudgetPlanInfo({
             <View style={styles.btncontainer}>
               <View style={[styles.content, {flexDirection: "row"}]}>
                 <TouchableOpacity style={styles.btn} onPress={() =>setIsAddingTransaction(true)}>
-                  <Text style={styles.txt}>ADD</Text>   
+                  <Text style={styles.titleW}>ADD</Text>   
                 </TouchableOpacity>
                 <TouchableOpacity onPress={handleAllocate}
                   disabled={transactions.length === 0 || incomes.length === 0}
@@ -162,7 +163,7 @@ export default function BudgetPlanInfo({
                     (transactions.length === 0 || incomes.length === 0) && styles.disabledButton
                   ]}
                   >
-                  <Text style={styles.txt}>ALLOCATE</Text>   
+                  <Text style={styles.titleW}>ALLOCATE</Text>   
                 </TouchableOpacity>
               </View>
             </View>
@@ -266,6 +267,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20,
   },
+  titleW:{
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 20,
+    color: colors.light
+  },
+  txtW:{
+    color: colors.light
+  },
   btn:{
     marginHorizontal: 10,
     flex: 1,
@@ -286,11 +296,7 @@ const styles = StyleSheet.create({
     color: colors.gray,
     opacity: 0.7
   },
-  txt:{
-    color: colors.light,
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
+
 
 
   modalContainer:{

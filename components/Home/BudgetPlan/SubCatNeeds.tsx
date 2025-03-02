@@ -61,7 +61,7 @@ export default function SubCatNeeds() {
 
 
   return (
-    <View style={{flex:1, paddingHorizontal: 10}}>
+    <View style={{flex:1, }}>
       
       <ScrollView>
       {essentialSubCat.map((category) => {

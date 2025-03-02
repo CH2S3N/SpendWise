@@ -42,7 +42,7 @@ export default function UpdateExpense({
    
     useEffect(() => {
       if (frequency === 'Daily') {
-        setRecurrence('1'); 
+        setRecurrence('28'); 
         setSubType('Custom')
       }
       if (frequency === 'Weekly' && subType === 'Weekends') {
@@ -72,17 +72,17 @@ export default function UpdateExpense({
 
     React.useEffect(() => {
       if (currentTransaction) {
-        setAmount(String(currentTransaction.amount || ""));
-        setRecurrence(String(currentTransaction.interval || ""));
-        setDescription(currentTransaction.description || "");
-        setFrequency(currentTransaction.frequency || "Daily");
-        setPrioritization(currentTransaction.prioritization || "High");
-        setIsFixedAmount(currentTransaction.isfixedamount || "Yes");
-        setSubType(currentTransaction.subtype || "")
-        setCategory(currentTransaction.type || "Essential");
-        setCategoryId(currentTransaction.category_id || 1);
+        setAmount(String(currentTransaction.amount));
+        setRecurrence(String(currentTransaction.interval));
+        setDescription(currentTransaction.description);
+        setFrequency(currentTransaction.frequency);
+        setPrioritization(currentTransaction.prioritization);
+        setIsFixedAmount(currentTransaction.isfixedamount);
+        setSubType(currentTransaction.subtype)
+        setCategory(currentTransaction.type);
+        setCategoryId(currentTransaction.category_id);
         setCurrentTab(currentTransaction.type === "Essential" ? 0 : 1);
-        setTypeSelected(currentTransaction.type || "Essential");
+        setTypeSelected(currentTransaction.type);
         setSelectedIndex(currentTransaction.isfixedamount === "Yes" ? 0 : 1);
       }
     }, [currentTransaction]);
@@ -110,22 +110,17 @@ export default function UpdateExpense({
       return true;
     }
 
-        useEffect(() => {
-          if (selectedIndex === 0) {
-            setIsFixedAmount('Yes');
-          } else {
-            setIsFixedAmount('No');
-          }
-        }, [selectedIndex]);
 
     async function handleSaveExpense() {
+        const calculatedAmount = Number(amount) * Number(recurrence);
+
         await updateTransaction({
           id: currentTransaction.id,
           description,
           frequency: frequency as "Daily" | "Weekly" | "Bi-Weekly" | "Monthly",
           prioritization: prioritization as "High" | "Medium" | "Low",
           isfixedamount: isfixedamount as "Yes" | "No",
-          amount: Number(amount),
+          amount: calculatedAmount,
           category_id: categoryId,
           type: category as "Essential" | "Non_Essential",
           interval: Number(recurrence),

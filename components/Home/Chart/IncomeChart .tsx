@@ -3,9 +3,12 @@ import React, { useEffect, useState } from 'react'
 import PieChart from 'react-native-pie-chart';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
-import { calculateTotalIncome } from '@/utils/calcTotalIncome';
 import { colors } from '@/constants/colors';
 import styles from './styles';
+import { Income } from '@/types';
+import { calculateTotalIncome } from '@/utils/calcTotalIncome';
+
+
 
 export default function IncomeChart () {
   const { incomes } = useSelector((state: RootState) => state.data);
@@ -18,6 +21,7 @@ export default function IncomeChart () {
   const allowance = incomes.filter((income) => income.type === "Allowance");
   const salary = incomes.filter((income) => income.type === "Salary");
   const others = incomes.filter((income) => income.type === "Others");
+  
   
   const totalAllowance = calculateTotalIncome(allowance, "Allowance");
   const totalSalary = calculateTotalIncome(salary, "Salary");

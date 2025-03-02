@@ -49,7 +49,7 @@ export default function IncomeList() {
                                                       </Text>
                                                   </View>
                                                   <View style={styles.item}>
-                                                      <Text style={styles.amount}>₱ {income.amount * income.interval}</Text>
+                                                      <Text style={styles.amount}>₱ {income.amount}</Text>
                                                       <Text style={styles.label}>Budget per Month</Text>
                                                   </View>
                                               </>

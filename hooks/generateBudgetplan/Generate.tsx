@@ -23,7 +23,7 @@ export default function GenerateService() {
 
   // total Income of the user
   const totalIncome =  incomes.reduce((total: number, income: Income) => {
-    return total + (income.amount * income.interval)
+    return total + (income.amount)
   }, 0);
 
   const handleSaveExpense = async () => {
@@ -59,123 +59,151 @@ export default function GenerateService() {
 
     try {
       //ESSENTIALS
+     // Calculate total fixed expenses across all essential categories
+      const totalFixedEssentials = essentialTransactions
+      .filter(transaction => transaction.isfixedamount === "Yes")
+      .reduce((sum, transaction) => sum + transaction.amount, 0);
+
+      // Subtract fixed expenses from the essentials budget
+      let remainingEssentialsAllocation = essentialsAllocation - totalFixedEssentials;
+
+      if (remainingEssentialsAllocation < 0) {
+      console.warn(`Not enough budget to cover all fixed essential expenses.`);
+      remainingEssentialsAllocation = 0; // Prevent negative values
+      }
+
+      // ESSENTIALS
       for (const category of adjustedEssentialCategories) {
-        const catTxs = essentialTransactions.filter(transaction => transaction.category_id === category.id);
-        let categoryBudget = Math.round(essentialsAllocation * (category.adjustedProportion / 100));
-    
-        const fixedTransactions = catTxs.filter(transaction => transaction.isfixedamount === "Yes");
-        const variableTransactions = catTxs.filter(transaction => transaction.isfixedamount !== "Yes");
-    
-        // Allocate fixed transactions first 
-        for (const transaction of fixedTransactions) {
-          const allocation = Math.min((transaction.amount * transaction.interval), categoryBudget);
-          categoryBudget -= allocation;
-          const updatedTx = { ...transaction, amount: allocation };
+      const catTxs = essentialTransactions.filter(transaction => transaction.category_id === category.id);
+
+      // Separate fixed and variable transactions
+      const fixedTransactions = catTxs.filter(transaction => transaction.isfixedamount === "Yes");
+      const variableTransactions = catTxs.filter(transaction => transaction.isfixedamount !== "Yes");
+
+      // 1️⃣ Allocate fixed transactions (already deducted from essentialsAllocation)
+      for (const transaction of fixedTransactions) {
+        const allocation = transaction.amount; // Fully allocate
+        const updatedTx = { ...transaction, amount: allocation };
+        try {
+          await updateTransaction(updatedTx);
+        } catch (error) {
+          console.error(`Error updating fixed essential transaction ${transaction.id}:`, error);
+          alert(`An error occurred while saving expense ${transaction.description}.`);
+        }
+      }
+
+      // 2️⃣ Allocate remaining budget to variable transactions
+      let categoryBudget = Math.round(remainingEssentialsAllocation * (category.adjustedProportion / 100));
+      let remainingBudget = categoryBudget;
+
+      if (variableTransactions.length > 0 && remainingBudget > 0) {
+        let allocatedAmounts = [];
+        const equalShare = Math.floor(remainingBudget / variableTransactions.length);
+        let remainder = remainingBudget % variableTransactions.length;
+
+        for (let i = 0; i < variableTransactions.length; i++) {
+          let allocation = equalShare;
+          if (remainder > 0) {
+            allocation += 1;
+            remainder--;
+          }
+          allocatedAmounts.push({ tx: variableTransactions[i], amount: allocation });
+        }
+
+        // Ensure last transaction takes any remaining unallocated budget
+        const totalAllocated = allocatedAmounts.reduce((sum, { amount }) => sum + amount, 0);
+        const difference = remainingBudget - totalAllocated;
+        if (difference !== 0 && allocatedAmounts.length > 0) {
+          allocatedAmounts[allocatedAmounts.length - 1].amount += difference;
+        }
+
+        // Save transactions
+        for (const { tx, amount } of allocatedAmounts) {
+          const updatedTx = { ...tx, amount: Math.round(amount) };
           try {
             await updateTransaction(updatedTx);
           } catch (error) {
-            console.error(`Error updating fixed essential transaction ${transaction.id}:`, error);
-            alert(`An error occurred while saving expense ${transaction.description}.`);
+            console.error(`Error updating variable essential transaction ${tx.id}:`, error);
+            alert(`An error occurred while saving expense ${tx.description}.`);
           }
         }
-    
-        // Allocate remaining funds to variable transactions
-        let remainingBudget = categoryBudget;
-        let allocatedAmounts = [];
-        
-        if (variableTransactions.length > 0) {
-          const equalShare = Math.floor(remainingBudget / variableTransactions.length);
-          let remainder = remainingBudget % variableTransactions.length;
-    
-          for (let i = 0; i < variableTransactions.length; i++) {
-            let allocation = equalShare;
-            if (remainder > 0) {
-              allocation += 1;
-              remainder--;
-            }
-            
-            allocatedAmounts.push({ tx: variableTransactions[i], amount: allocation });
-          }
-    
-          // Ensure last transaction takes any remaining unallocated budget
-          const totalAllocated = allocatedAmounts.reduce((sum, { amount }) => sum + amount, 0);
-          const difference = remainingBudget - totalAllocated;
-          if (difference !== 0 && allocatedAmounts.length > 0) {
-            allocatedAmounts[allocatedAmounts.length - 1].amount += difference;
-          }
-    
-          // Save transactions
-          for (const { tx, amount } of allocatedAmounts) {
-            const updatedTx = { ...tx, amount: Math.round(amount) };
-            try {
-              await updateTransaction(updatedTx);
-            } catch (error) {
-              console.error(`Error updating variable essential transaction ${tx.id}:`, error);
-              alert(`An error occurred while saving expense ${tx.description}.`);
-            }
-          }
-        }
-    }
+      }
+      }
+
     
 
       // NON-ESSENTIALS
-      for (const category of adjustedNonEssentialCategories) {
-        const catTxs = nonEssentialTransactions.filter(transaction => transaction.category_id === category.id);
-        let categoryBudget = Math.round(nonEssentialsAllocation * (category.adjustedProportion / 100));
-    
-        const fixedTransactions = catTxs.filter(transaction => transaction.isfixedamount === "Yes");
-        const variableTransactions = catTxs.filter(transaction => transaction.isfixedamount !== "Yes");
-    
-        // Allocate fixed transactions first 
-        for (const transaction of fixedTransactions) {
-          const allocation = Math.min((transaction.amount * transaction.interval), categoryBudget);
-          categoryBudget -= allocation;
-          const updatedTx = { ...transaction, amount: allocation };
-          try {
-            await updateTransaction(updatedTx);
-          } catch (error) {
-            console.error(`Error updating fixed essential transaction ${transaction.id}:`, error);
-            alert(`An error occurred while saving expense ${transaction.description}.`);
-          }
-        }
-    
-        // Allocate remaining funds to variable transactions
-        let remainingBudget = categoryBudget;
-        let allocatedAmounts = [];
-        
-        if (variableTransactions.length > 0) {
-          const equalShare = Math.floor(remainingBudget / variableTransactions.length);
-          let remainder = remainingBudget % variableTransactions.length;
-    
-          for (let i = 0; i < variableTransactions.length; i++) {
-            let allocation = equalShare;
-            if (remainder > 0) {
-              allocation += 1;
-              remainder--;
-            }
-            
-            allocatedAmounts.push({ tx: variableTransactions[i], amount: allocation });
-          }
-    
-          // Ensure last transaction takes any remaining unallocated budget
-          const totalAllocated = allocatedAmounts.reduce((sum, { amount }) => sum + amount, 0);
-          const difference = remainingBudget - totalAllocated;
-          if (difference !== 0 && allocatedAmounts.length > 0) {
-            allocatedAmounts[allocatedAmounts.length - 1].amount += difference;
-          }
-    
-          // Save transactions
-          for (const { tx, amount } of allocatedAmounts) {
-            const updatedTx = { ...tx, amount: Math.round(amount) };
-            try {
-              await updateTransaction(updatedTx);
-            } catch (error) {
-              console.error(`Error updating variable essential transaction ${tx.id}:`, error);
-              alert(`An error occurred while saving expense ${tx.description}.`);
-            }
-          }
-        }
-    }
+     // Calculate total fixed expenses across all essential categories
+     const totalFixedNonEssentials = nonEssentialTransactions
+     .filter(transaction => transaction.isfixedamount === "Yes")
+     .reduce((sum, transaction) => sum + transaction.amount, 0);
+
+     // Subtract fixed expenses from the essentials budget
+     let remainingNonEssentialsAllocation = nonEssentialsAllocation - totalFixedNonEssentials;
+
+     if (remainingNonEssentialsAllocation < 0) {
+     console.warn(`Not enough budget to cover all fixed essential expenses.`);
+     remainingNonEssentialsAllocation = 0; // Prevent negative values
+     }
+
+     // ESSENTIALS
+     for (const category of adjustedNonEssentialCategories) {
+     const catTxs = nonEssentialTransactions.filter(transaction => transaction.category_id === category.id);
+
+     // Separate fixed and variable transactions
+     const fixedTransactions = catTxs.filter(transaction => transaction.isfixedamount === "Yes");
+     const variableTransactions = catTxs.filter(transaction => transaction.isfixedamount !== "Yes");
+
+     // 1️⃣ Allocate fixed transactions (already deducted from essentialsAllocation)
+     for (const transaction of fixedTransactions) {
+       const allocation = transaction.amount; // Fully allocate
+       const updatedTx = { ...transaction, amount: allocation };
+       try {
+         await updateTransaction(updatedTx);
+       } catch (error) {
+         console.error(`Error updating fixed essential transaction ${transaction.id}:`, error);
+         alert(`An error occurred while saving expense ${transaction.description}.`);
+       }
+     }
+
+     // 2️⃣ Allocate remaining budget to variable transactions
+     let categoryBudget = Math.round(remainingNonEssentialsAllocation * (category.adjustedProportion / 100));
+     let remainingBudget = categoryBudget;
+
+     if (variableTransactions.length > 0 && remainingBudget > 0) {
+       let allocatedAmounts = [];
+       const equalShare = Math.floor(remainingBudget / variableTransactions.length);
+       let remainder = remainingBudget % variableTransactions.length;
+
+       for (let i = 0; i < variableTransactions.length; i++) {
+         let allocation = equalShare;
+         if (remainder > 0) {
+           allocation += 1;
+           remainder--;
+         }
+         allocatedAmounts.push({ tx: variableTransactions[i], amount: allocation });
+       }
+
+       // Ensure last transaction takes any remaining unallocated budget
+       const totalAllocated = allocatedAmounts.reduce((sum, { amount }) => sum + amount, 0);
+       const difference = remainingBudget - totalAllocated;
+       if (difference !== 0 && allocatedAmounts.length > 0) {
+         allocatedAmounts[allocatedAmounts.length - 1].amount += difference;
+       }
+
+       // Save transactions
+       for (const { tx, amount } of allocatedAmounts) {
+         const updatedTx = { ...tx, amount: Math.round(amount) };
+         try {
+           await updateTransaction(updatedTx);
+         } catch (error) {
+           console.error(`Error updating variable essential transaction ${tx.id}:`, error);
+           alert(`An error occurred while saving expense ${tx.description}.`);
+         }
+       }
+     }
+     }
+
     
 
       await fetchData();

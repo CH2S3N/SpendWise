@@ -11,7 +11,7 @@ const BudgetPlanner = () => {
   );
 
     const totalIncome =  incomes.reduce((total: number, income: Income) => {
-        return total + (income.amount * income.interval)
+        return total + (income.amount)
       }, 0);
 
 
