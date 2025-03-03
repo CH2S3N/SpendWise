@@ -1,4 +1,4 @@
-import { View, StyleSheet, TouchableOpacity, Text, TouchableWithoutFeedback } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, Text, TouchableWithoutFeedback, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import IncomeList from './IncomeList';
 import { Modal } from '@/components/Modal';
@@ -18,9 +18,16 @@ export default function IncomeInfo() {
 
   return (
     <>
+      {/* Add Transaction Button */}
+      <View style={styles.btn}>
+        <TouchableOpacity onPress={() => setIsAddingTransaction(true)} style={styles.regen}>
+            <Text style={styles.btnTxt}>Add New Income Source</Text>
+        </TouchableOpacity>
+      </View>
       <View style={styles.container}>
           <View style={styles.section}> 
             <View style={styles.tablecontent}>
+              <ScrollView>
                 {incomes.length > 0 ? (
                   <IncomeList/>
                 ) : (
@@ -29,16 +36,12 @@ export default function IncomeInfo() {
                   <Text style={styles.titletext}>Please add some Income</Text>
                 </View>
                 )}
+              </ScrollView>
             </View>
           </View>
       </View>
 
-      {/* Add Transaction Button */}
-      <View style={styles.btn}>
-        <TouchableOpacity onPress={() => setIsAddingTransaction(true)} style={styles.regen}>
-            <Text style={styles.btnTxt}>Add New Income Source</Text>
-        </TouchableOpacity>
-      </View>
+
 
       {/* Add Income Modal*/}
       <Modal isOpen={isAddingTransaction} transparent animationType="fade">
@@ -103,11 +106,6 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   btn: {
-    position: 'absolute',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    width: '100%',
-    height: '99%',
   },
   noData:{
     flex: 1,

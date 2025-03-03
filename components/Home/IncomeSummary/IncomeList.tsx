@@ -26,11 +26,10 @@ export default function IncomeList() {
 
     return (
         <View style={styles.maincontainer}>
-          <ScrollView>
             <View style={styles.container}>
               <View style={styles.contentSection}>
                   {incomes.map((income) => {
-                      const isExpanded = tappedTransactionId === income.id;
+                        const isExpanded = tappedTransactionId === income.id;
 
                       return (
                           <TouchableOpacity
@@ -63,11 +62,17 @@ export default function IncomeList() {
                                                               </Text>
                                                           </View>
                                                           <View style={styles.item}>
-                                                              <Text style={styles.amount}>₱ {Math.round(income.amount / income.interval)}</Text>
+                                                              <Text style={styles.amount}>₱ {Math.round(income.amount)}</Text>
                                                               <Text style={styles.label}>Budget per Occurrence</Text>
                                                           </View>
                                                       </View>
                                                       <View style={styles.details}>
+                                                          <View style={styles.row}>
+                                                              <Text style={styles.label}>
+                                                                  <FontAwesome6 name="bag-shopping" size={18} color={colors.green} /> Income per Ocurrence:
+                                                              </Text>
+                                                              <Text style={[styles.value, {color: colors.green, fontSize:15}]}>₱ {income.amount/income.interval}</Text>
+                                                          </View>
                                                           <View style={styles.row}>
                                                               <Text style={styles.label}>
                                                                   <FontAwesome6 name="bag-shopping" size={18} color={colors.green} /> Expense Type:
@@ -76,15 +81,21 @@ export default function IncomeList() {
                                                           </View>
                                                           <View style={styles.row}>
                                                               <Text style={styles.label}>
-                                                                  <FontAwesome6 name="calendar-alt" size={18} color={colors.green} /> Recurrence:
+                                                                  <FontAwesome6 name="calendar-alt" size={18} color={colors.green} /> Recurrence Pattern:
                                                               </Text>
-                                                              <Text style={styles.value}>{income.frequency}/{income.subtype}</Text>
+                                                              <Text style={styles.value}>{income.frequency}
+                                                                { income.subtype === "Custom" ? (
+                                                                    null
+                                                                ) : (
+                                                                   income.subtype
+                                                                )}
+                                                              </Text>
                                                           </View>
                                                           <View style={styles.row}>
                                                               <Text style={styles.label}>
-                                                                  <FontAwesome6 name="calendar-day" size={18} color={colors.green} /> Occurrence:
+                                                                  <FontAwesome6 name="calendar-alt" size={18} color={colors.green} /> Occurrence Count:
                                                               </Text>
-                                                              <Text style={styles.value}>{income.interval} time(s) per month</Text>
+                                                              <Text style={styles.value}>{income.interval} Times/s per Month</Text>
                                                           </View>
                                                           <View style={styles.row2}>
                                                               <TouchableOpacity onPress={() => {
@@ -113,7 +124,6 @@ export default function IncomeList() {
                   })}
               </View>
             </View>
-          </ScrollView>
 
 
 

@@ -95,14 +95,20 @@ export default function GoalsInfo() {
 
         <View style={styles.container}>
           <Divider/>
-            {goals.length === 0 && (
-              <>
-              <View style={[styles.row, {flex: 1, justifyContent: 'center', alignItems: 'center'}]}>
-                <Text style={styles.title}>No Goals to be Found!</Text>
-                <Text style={styles.titletext}>Create some New Goals</Text>
-              </View>
-              </>
-            )}
+          {/* Add Transaction Button */}
+          <View style={styles.btn}>
+            <TouchableOpacity onPress={() => setIsAddingTransaction(true)} style={styles.regen}>
+              <Text style={styles.btnTxt}>Create a New Goal</Text>
+            </TouchableOpacity>
+          </View>
+          {goals.length === 0 && (
+            <>
+            <View style={[styles.row, {flex: 1, justifyContent: 'center', alignItems: 'center'}]}>
+              <Text style={styles.title}>No Goals to be Found!</Text>
+              <Text style={styles.titletext}>Create some New Goals</Text>
+            </View>
+            </>
+          )}
           <ScrollView>
             {goals.length > 0 && (
               <>
@@ -136,12 +142,7 @@ export default function GoalsInfo() {
 
       </View>
 
-        {/* Add Transaction Button */}
-        <View style={styles.btn}>
-          <TouchableOpacity onPress={() => setIsAddingTransaction(true)} style={styles.regen}>
-            <Text style={styles.btnTxt}>Create New Goal</Text>
-          </TouchableOpacity>
-        </View>
+
 
 
         <Modal isOpen={isAddingTransaction} transparent animationType="fade">
@@ -244,11 +245,7 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   btn: {
-    position: 'absolute',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    width: '100%',
-    height: '99%',
+
   },
   row:{
     flex: 1,

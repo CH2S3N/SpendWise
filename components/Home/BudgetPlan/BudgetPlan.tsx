@@ -45,8 +45,8 @@ const BudgetPlanner = () => {
                       <Text style={styles.cell}>{income.description}</Text>
                       <Text style={styles.cell}>{income.type}</Text>
                       <Text style={styles.cell}>{income.frequency}/ {income.subtype} ({income.interval})</Text>
+                      <Text style={styles.cell}>₱ {income.amount / income.interval}</Text>
                       <Text style={styles.cell}>₱ {income.amount}</Text>
-                      <Text style={styles.cell}>₱ {income.amount * income.interval}</Text>
                 </View>
                 )
               })}  
@@ -55,36 +55,12 @@ const BudgetPlanner = () => {
       </View>
 
       {/* Expenses Section */}
-      {/* Needs */}
-        <View style={styles.container}>
-          <Text style={styles.header}>Essentials (Basic Needs)</Text>
-          <View style={styles.table}>
-          <View style={styles.row}>
-            <Text style={styles.celltitle}>Item</Text>
-            <Text style={styles.celltitle}>Category</Text>
-            <Text style={styles.celltitle}>Recurrence</Text>
-            <Text style={styles.celltitle}>Budget per Occurrence</Text>
-            <Text style={styles.celltitle}>Total Amount</Text>
-          </View>
-            {essentialTransactions.map((transaction) => {
-              const categoryInfo = categories.find(
-              (category) => category.id === transaction.category_id
-              )
-             return (
-              <View key={transaction.id} style={styles.row}>
-                <Text style={styles.cell}>{transaction.description}</Text> 
-                <Text style={styles.cell}>{categoryInfo?.name}</Text> 
-                <Text style={styles.cell}>{transaction.frequency}/{transaction.subtype} ({transaction.interval})</Text>
-                <Text style={[styles.cell, {}]}>₱ {Math.round(transaction.amount/transaction.interval)}</Text>
-                <Text style={[styles.cell, {}]}>₱ {transaction.amount}</Text>
-              </View>
-            )})}
-          </View>
-        </View>
-
-        <View style={styles.container}>
-          <Text style={styles.header}>Non-Essentials (Wants & Optional Spending)</Text>
-          <View style={styles.table}>
+      {nonEssentialTransactions.length <= 0 ? (
+        <>
+          {/* Expense */}
+          <View style={styles.container}>
+            <Text style={styles.header}>Expenses</Text>
+            <View style={styles.table}>
             <View style={styles.row}>
               <Text style={styles.celltitle}>Item</Text>
               <Text style={styles.celltitle}>Category</Text>
@@ -92,21 +68,83 @@ const BudgetPlanner = () => {
               <Text style={styles.celltitle}>Budget per Occurrence</Text>
               <Text style={styles.celltitle}>Total Amount</Text>
             </View>
-            {nonEssentialTransactions.map((transaction) => {
-              const categoryInfo = categories.find(
-              (category) => category.id === transaction.category_id
-              )
-             return (
-              <View key={transaction.id} style={styles.row}>
-                <Text style={styles.cell} >{transaction.description}</Text> 
-                <Text style={styles.cell} >{categoryInfo?.name}</Text> 
-                <Text style={styles.cell} >{transaction.frequency}/ {transaction.subtype} ({transaction.interval})</Text>
-                <Text style={[styles.cell, {}]}>₱ {Math.round(transaction.amount/transaction.interval)}</Text>
-                <Text style={[styles.cell, {}]}>₱ {transaction.amount}</Text>
-              </View>
-            )})}
+              {transactions.map((transaction) => {
+                const categoryInfo = categories.find(
+                (category) => category.id === transaction.category_id
+                )
+              return (
+                <View key={transaction.id} style={styles.row}>
+                  <Text style={styles.cell}>{transaction.description}</Text> 
+                  <Text style={styles.cell}>{categoryInfo?.name}</Text> 
+                  <Text style={styles.cell}>{transaction.frequency}
+                    {transaction.subtype === "Custom" ? (null) : (<Text>/{transaction.subtype}</Text>)} 
+                    ({transaction.interval})</Text>
+                  <Text style={[styles.cell, {}]}>₱ {Math.round(transaction.amount/transaction.interval)}</Text>
+                  <Text style={[styles.cell, {}]}>₱ {transaction.amount}</Text>
+                </View>
+              )})}
+            </View>
           </View>
-        </View>
+        </>
+      ) : (
+
+        <>
+        {/* Needs */}
+          <View style={styles.container}>
+            <Text style={styles.header}>Essentials (Basic Needs)</Text>
+            <View style={styles.table}>
+            <View style={styles.row}>
+              <Text style={styles.celltitle}>Item</Text>
+              <Text style={styles.celltitle}>Category</Text>
+              <Text style={styles.celltitle}>Recurrence</Text>
+              <Text style={styles.celltitle}>Budget per Occurrence</Text>
+              <Text style={styles.celltitle}>Total Amount</Text>
+            </View>
+              {essentialTransactions.map((transaction) => {
+                const categoryInfo = categories.find(
+                (category) => category.id === transaction.category_id
+                )
+              return (
+                <View key={transaction.id} style={styles.row}>
+                  <Text style={styles.cell}>{transaction.description}</Text> 
+                  <Text style={styles.cell}>{categoryInfo?.name}</Text> 
+                  <Text style={styles.cell}>{transaction.frequency}
+                    {transaction.subtype === "Custom" ? (null) : (<Text>/{transaction.subtype}</Text>)} ({transaction.interval})</Text>
+                  <Text style={[styles.cell, {}]}>₱ {Math.round(transaction.amount/transaction.interval)}</Text>
+                  <Text style={[styles.cell, {}]}>₱ {transaction.amount}</Text>
+                </View>
+              )})}
+            </View>
+          </View>
+        {/* Wants */}
+          <View style={styles.container}>
+            <Text style={styles.header}>Non-Essentials (Wants & Optional Spending)</Text>
+            <View style={styles.table}>
+              <View style={styles.row}>
+                <Text style={styles.celltitle}>Item</Text>
+                <Text style={styles.celltitle}>Category</Text>
+                <Text style={styles.celltitle}>Recurrence</Text>
+                <Text style={styles.celltitle}>Budget per Occurrence</Text>
+                <Text style={styles.celltitle}>Total Amount</Text>
+              </View>
+              {nonEssentialTransactions.map((transaction) => {
+                const categoryInfo = categories.find(
+                (category) => category.id === transaction.category_id
+                )
+              return (
+                <View key={transaction.id} style={styles.row}>
+                  <Text style={styles.cell}>{transaction.description}</Text> 
+                  <Text style={styles.cell}>{categoryInfo?.name}</Text> 
+                  <Text style={styles.cell}>{transaction.frequency}
+                    {transaction.subtype === "Custom" ? (null) : (<Text>/{transaction.subtype}</Text>)} ({transaction.interval})</Text>
+                  <Text style={[styles.cell, {}]}>₱ {Math.round(transaction.amount/transaction.interval)}</Text>
+                  <Text style={[styles.cell, {}]}>₱ {transaction.amount}</Text>
+                </View>
+              )})}
+            </View>
+          </View>
+        </>
+      )}
 
 
       {/* Summary Section */}

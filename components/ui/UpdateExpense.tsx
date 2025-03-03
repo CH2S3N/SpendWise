@@ -5,6 +5,11 @@ import SegmentedControl from '@react-native-segmented-control/segmented-control'
 import { useSQLiteContext } from 'expo-sqlite';
 import { Category, Transaction } from '@/types';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/state/store';
+import { Modal } from 'react-native';
+import { colors } from '@/constants/colors';
+import RNPickerSelect from 'react-native-picker-select';
 
 
 interface Props {
@@ -19,14 +24,15 @@ export default function UpdateExpense({
      currentTransaction,
 }: Props) {
 
-      const { updateTransaction } = UseTransactionService();
-    
+    const { updateTransaction } = UseTransactionService();
+    const { categories, transactions } = useSelector(
+      (state: RootState) => state.data
+    );
 
     const [recurrence, setRecurrence] = React.useState<string>("");
     const [isRecurrenceInput, setRecurrenceInput] = React.useState<string>("");
     const [recurrenceId, setRecurrenceId] = React.useState<number>(1);
     const [currentTab, setCurrentTab] = React.useState<number>(0);
-    const [categories, setCategories] = React.useState<Category[]>([]);
     const [typeSelected, setTypeSelected] = React.useState<string>("");
     const [amount, setAmount] = React.useState<string>("");
     const [description, setDescription] = React.useState<string>("");
@@ -37,9 +43,14 @@ export default function UpdateExpense({
     const [category, setCategory] = React.useState<string>("Essential");
     const [categoryId, setCategoryId] = React.useState<number>(1);
    
-    const db = useSQLiteContext();
     const [selectedIndex, setSelectedIndex] = React.useState<number>(1);
-   
+    const [isConfirmModalVisible, setIsConfirmModalVisible] = React.useState(false);
+  
+    function handleConfirmSave() {
+        setIsConfirmModalVisible(false);
+        handleSaveExpense(); 
+    }
+
     useEffect(() => {
       if (frequency === 'Daily') {
         setRecurrence('28'); 
@@ -87,20 +98,6 @@ export default function UpdateExpense({
       }
     }, [currentTransaction]);
 
-    React.useEffect(() => {
-        getExpenseType(currentTab);
-    }, [currentTab]);
-
-    async function getExpenseType(currentTab: number) {
-        setCategory(currentTab === 0 ? "Essential" : "Non_Essential");
-        const type = currentTab === 0 ? "Essential" : "Non_Essential";
-
-        const result = await db.getAllAsync<Category>(
-            'SELECT * FROM CATEGORIES WHERE type = ?;',
-            [type]
-        );
-        setCategories(result);
-    }
 
     function validateFields() {
       if (!description || (subType === 'Custom' && !recurrence) || !category || !prioritization || !typeSelected ) {
@@ -301,7 +298,7 @@ export default function UpdateExpense({
             {/* ENTRY TYPE, ESSENTIAL & NON ESSENTIAL */}
           <Text style={styles.btext}>Select an Expense Type</Text>
           <SegmentedControl
-            values={["Essential", "Non Essential"]}
+            values={["Needs", "Wants"]}
             style={{ marginBottom: 15 }}
             selectedIndex={currentTab}
             onChange={(event) => {
@@ -309,16 +306,26 @@ export default function UpdateExpense({
             }}
           />
 
-          {categories.map((cat) => (
-            <CategoryButton
-              key={cat.name}
-              id={cat.id}
-              title={cat.name}
-              isSelected={typeSelected === cat.name}
-              setTypeSelected={setTypeSelected}
-              setCategoryId={setCategoryId}
-            />
-          ))}
+          <Text style={styles.btext}>Select an Expense Sub-type</Text>
+          <View style={styles.dropdownContainer}>
+              <RNPickerSelect                
+                value={typeSelected}
+                onValueChange={(value) => {
+                  setTypeSelected(value);
+                  const selectedCategory = categories.find((cat) => cat.name === value);
+                  if (selectedCategory) {
+                    setCategoryId(selectedCategory.id);
+                  }
+                }}
+                items={categories.map((cat) => ({
+                  label: cat.name.charAt(0).toUpperCase() + cat.name.slice(1),
+                  value: cat.name,
+                }))}
+                placeholder={{ label: "Select a sub-type...", value: null }}
+              />
+          </View>
+
+
         </ScrollView>
 
         {/* Cancel and Save Button */}
@@ -334,8 +341,45 @@ export default function UpdateExpense({
 
           }
           />
-          <Button title="Save" color={'black'} onPress={handleSaveExpense} disabled={!validateFields()}/>
+          <Button title="Save" color={'black'} onPress={()=> setIsConfirmModalVisible(true)} disabled={!validateFields()}/>
         </View>
+
+
+
+      {/* Confirmation Modal */}
+      <Modal
+        visible={isConfirmModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setIsConfirmModalVisible(false)}
+      >
+        <View style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        }}>
+          <View style={{
+            width: 300,
+            padding: 20,
+            backgroundColor: 'white',
+            borderRadius: 10,
+            alignItems: 'center',
+          }}>
+            <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 10 }}>
+              Confirm Save
+            </Text>
+            <Text style={{ marginBottom: 20 }}>
+              Are you sure you want to save this entry?
+            </Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+              <Button title="Cancel" color={colors.red} onPress={() => setIsConfirmModalVisible(false)} />
+              <Button title="Confirm" color={colors.green} onPress={handleConfirmSave} />
+            </View>
+          </View>
+        </View>
+      </Modal>
+
       </>
     }
     />
@@ -366,7 +410,7 @@ function CategoryButton({
         }}
         activeOpacity={0.5}
         style={{
-            height: 40,
+            height: 30,
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
@@ -405,5 +449,10 @@ const styles = StyleSheet.create({
   btext:{
     fontWeight: 'bold'
   },
-
+  dropdownContainer: {
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 5,
+  },
 })

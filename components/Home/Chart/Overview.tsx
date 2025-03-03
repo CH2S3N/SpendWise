@@ -29,9 +29,10 @@ const Overview = () => {
     const wantsExpense = totalNonEssentialExpense;
     const expense = totalEssentialExpense + totalNonEssentialExpense
     const savings = income - expense;
-    const needsRatio = income > 0 ? ((needsExpense / income) * 100).toFixed(2) : "0";
-    const wantsRatio = income > 0 ? ((wantsExpense / income) * 100).toFixed(2) : "0";
-    const savingsRatio = income > 0 ? ((savings / income) * 100).toFixed(2) : "0";
+    const needsRatio = income > 0 ? ((needsExpense / income) * 100).toFixed(0) : "0";
+    const wantsRatio = income > 0 ? ((wantsExpense / income) * 100).toFixed(0) : "0";
+    const expenseRatio = income > 0 ? ((expense / income) * 100).toFixed(0) : "0";
+    const savingsRatio = income > 0 ? ((savings / income) * 100).toFixed(0) : "0";
     
     return (
         <View style={styles.mainContainer}>
@@ -59,7 +60,7 @@ const Overview = () => {
                     ) : (
                         <View style={styles.item}>
                         <Text style={styles.title}>Expenses (Needs)</Text>
-                        <Text style={{flex: 1, textAlign: 'right', color: '#fc2b46'}}>- ₱{expense} (0%)</Text>
+                        <Text style={{flex: 1, textAlign: 'right', color: '#fc2b46'}}>- ₱{expense} ({expenseRatio}%)</Text>
                     </View>
                     )}
                     <View style={styles.item}>

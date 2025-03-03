@@ -50,7 +50,7 @@ export default function BudgetPlanInfo({
 
   const handleAllocate = async () => {
     try {
-      setIsLoading(true); // Show loading overlay
+      setIsLoading(true);
       await handleSaveExpense();
       setBudgetPlanGenerated(true);
       setGenerateModalVisible(false);
@@ -84,21 +84,22 @@ export default function BudgetPlanInfo({
          <>
             <View style={[styles.container,]}>
               {/* Categories */}
-                <View style={[styles.container, {flex: 7}]}>
-                  <View style={[styles.card,]}>
-                    <Categories isAdvanceBtnTapped={isAdvanceBtnTapped} setIsAdvanceBtnTapped={setAdvanceBtnTapped}/>
-                    {isAdvanceBtnTapped === false ? (
-                      <Button onPress={()=>{setAdvanceBtnTapped(true)}}>Advance</Button>
-                    ) : (
-                      <Button onPress={()=> setAdvanceBtnTapped(false)}>Go Back</Button>
-                    )}
+                <View style={[styles.container, {flex: 1, }]}>
+                  <View style={[styles.card, {}]}>
+                      <Categories isAdvanceBtnTapped={isAdvanceBtnTapped} setIsAdvanceBtnTapped={setAdvanceBtnTapped}/>
+                      {isAdvanceBtnTapped === false ? (
+                        <Button onPress={()=>{setAdvanceBtnTapped(true)}}>Advance</Button>
+                      ) : (
+                        <Button onPress={()=> setAdvanceBtnTapped(false)}>Go Back</Button>
+                      )}
+
                   </View>
 
                 </View>
 
               {/* Expense & Income */}
               {isAdvanceBtnTapped === false && (
-                <View style={[styles.container, {flex: 4}]}>
+                <View style={[styles.container, {flex: 1,  justifyContent: "center", alignItems: "center"}]}>
                   <View style={[styles.row, {justifyContent: "center", }]}>
                     {/* Income */}
                     <View style={[styles.card, {backgroundColor: colors.green,  marginLeft: 20, marginRight: 5, marginVertical: 5,}]}>

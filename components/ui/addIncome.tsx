@@ -1,9 +1,10 @@
-import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet, ScrollView } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet, ScrollView, Modal } from 'react-native'
 import React, { useEffect } from 'react'
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { useSQLiteContext } from 'expo-sqlite';
 import { IncomeCategory } from '@/types';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
+import { colors } from '@/constants/colors';
 
 
 interface addIncomeProps {
@@ -29,6 +30,13 @@ export default function AddIncome({
     const [id] = React.useState<number>(0);
   
     const db = useSQLiteContext();
+    const [isConfirmModalVisible, setIsConfirmModalVisible] = React.useState(false);
+  
+  
+    function handleConfirmSave() {
+        setIsConfirmModalVisible(false);
+        handleSaveIncome(); // Proceed with saving
+    }
 
     useEffect(() => {
         async function fetchIncomeCategories() {
@@ -151,11 +159,11 @@ export default function AddIncome({
                 )}
                 {frequency === 'Weekly' && (
                   <SegmentedControl
-                    values={["Weekends", "Weekdays", "All", "Custom"]}
+                    values={["Weekends", "Weekdays", "Custom"]}
                     style={{ marginTop: 10, }}
-                    selectedIndex={["Weekends", "Weekdays", "All", "Custom"].indexOf(subType)}
+                    selectedIndex={["Weekends", "Weekdays", "Custom"].indexOf(subType)}
                     onChange={(event) => {
-                      setSubType(["Weekends", "Weekdays", "All", "Custom"][event.nativeEvent.selectedSegmentIndex]);
+                      setSubType(["Weekends", "Weekdays", "Custom"][event.nativeEvent.selectedSegmentIndex]);
                     }}
                   />
                   
@@ -237,19 +245,16 @@ export default function AddIncome({
             </View>
           </View>
 
-          <View style={styles.content}>
-            <Text style={styles.btext}>Select an Income Type</Text>
-            {incomeCategories.map((cat) => (
-              <CategoryButton
-                key={cat.name}
-                id={cat.id}
-                title={cat.name}
-                isSelected={typeSelected === cat.name}
-                setTypeSelected={setTypeSelected}
-                setIncomeCategoryId={setIncomeCategoryId}
-              />
-            ))}
-          </View>
+
+          <Text style={styles.btext}>Income Type</Text>
+          <SegmentedControl
+            values={["Allowance", "Salary", "Others"]}
+            style={{ marginTop: 10, }}
+            selectedIndex={["Allowance", "Salary", "Others"].indexOf(incomeCategory)}
+            onChange={(event) => {
+              setIncomeCategory(["Allowance", "Salary", "Others"][event.nativeEvent.selectedSegmentIndex]);
+            }}
+          />
 
         </ScrollView>
       </View>
@@ -267,9 +272,46 @@ export default function AddIncome({
               }
             }
           />
-          <Button title="Save" color={'black'} onPress={handleSaveIncome} disabled={!validateFields()} />
+          <Button title="Save" color={'black'} onPress={()=> setIsConfirmModalVisible(true)} disabled={!validateFields()} />
         </View>
       </View>
+
+
+
+
+      {/* Confirmation Modal */}
+      <Modal
+        visible={isConfirmModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setIsConfirmModalVisible(false)}
+      >
+        <View style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        }}>
+          <View style={{
+            width: 300,
+            padding: 20,
+            backgroundColor: 'white',
+            borderRadius: 10,
+            alignItems: 'center',
+          }}>
+            <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 10 }}>
+              Confirm Save
+            </Text>
+            <Text style={{ marginBottom: 20 }}>
+              Are you sure you want to save this entry?
+            </Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+              <Button title="Cancel" color={colors.red} onPress={() => setIsConfirmModalVisible(false)} />
+              <Button title="Confirm" color={colors.green} onPress={handleConfirmSave} />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   )
 }

@@ -1,9 +1,13 @@
-import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet, ScrollView } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet, ScrollView, Modal } from 'react-native'
 import React, { useEffect } from 'react'
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { useSQLiteContext } from 'expo-sqlite';
 import { Category } from '@/types';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/state/store';
+import { colors } from '@/constants/colors';
+import RNPickerSelect from 'react-native-picker-select';
 
 
 
@@ -17,11 +21,12 @@ export default function AddExpense({
     setIsAddingTransaction, setIsUpdatingTransaction,
 }: addExpenseProps) {
 
-      const { insertTransaction } = UseTransactionService();
-    
+    const { insertTransaction } = UseTransactionService();
+    const { categories, transactions } = useSelector(
+      (state: RootState) => state.data
+    );
 
     const [currentTab, setCurrentTab] = React.useState<number>(0);
-    const [categories, setCategories] = React.useState<Category[]>([]);
     const [typeSelected, setTypeSelected] = React.useState<string>("");
     const [amount, setAmount] = React.useState<string>("");
     const [amountInput, setAmountInput] = React.useState<string>("");
@@ -39,22 +44,12 @@ export default function AddExpense({
    
     const db = useSQLiteContext();
     const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
+    const [isConfirmModalVisible, setIsConfirmModalVisible] = React.useState(false);
 
-    React.useEffect(() => {
-        getExpenseType(currentTab);
-    }, [currentTab]);
-
-    async function getExpenseType(currentTab: number) {
-        setCategory(currentTab === 0 ? "Essential" : "Non_Essential");
-        const type = currentTab === 0 ? "Essential" : "Non_Essential";
-
-        const result = await db.getAllAsync<Category>(
-            'SELECT * FROM CATEGORIES WHERE type = ?;',
-            [type]
-        );
-        setCategories(result);
+    function handleConfirmSave() {
+        setIsConfirmModalVisible(false);
+        handleSaveExpense();
     }
-
     function validateFields() {
       if ( !description || (isfixedamount == 'Yes' && !amount) || !typeSelected || (frequency == 'Daily' && (isrecurrence === "0" || null)) || (frequency == 'Bi-Weekly' && (isrecurrence === "0" || null)) || (subType === 'Custom' && (isrecurrence === "0" || null)) || (frequency == 'Monthly' && (isrecurrence === "0" || null)))  {
         return false;
@@ -176,7 +171,7 @@ export default function AddExpense({
             </View>
           </View>
 
-          {/* FREQUENCY */}
+          {/* Recurrence */}
           <View>
             <View style={styles.content}>
                 <Text style={styles.btext}>Recurrence</Text>
@@ -198,11 +193,11 @@ export default function AddExpense({
 
                 {frequency === 'Weekly' && (
                   <SegmentedControl
-                    values={["Weekends", "Weekdays", "All", "Custom"]}
+                    values={["Weekends", "Weekdays", "Custom"]}
                     style={{ marginTop: 10, }}
-                    selectedIndex={["Weekends", "Weekdays", "All", "Custom"].indexOf(subType)}
+                    selectedIndex={["Weekends", "Weekdays", "Custom"].indexOf(subType)}
                     onChange={(event) => {
-                      setsubType(["Weekends", "Weekdays", "All", "Custom"][event.nativeEvent.selectedSegmentIndex]);
+                      setsubType(["Weekends", "Weekdays", "Custom"][event.nativeEvent.selectedSegmentIndex]);
                     }}
                   />
                   
@@ -299,26 +294,37 @@ export default function AddExpense({
             <SegmentedControl
               values={["Needs", "Wants"]}
               style={{ marginBottom: 15, marginTop: 10, }}
-              selectedIndex={currentTab}
+              selectedIndex={["Essential","Non_Essential"].indexOf(category)}
               onChange={(event) => {
-                setCurrentTab(event.nativeEvent.selectedSegmentIndex);
+                setCategory(["Essential","Non_Essential"][event.nativeEvent.selectedSegmentIndex])
               }}
             />
-
-            {categories.map((cat) => (
-              <CategoryButton
-              key={cat.name}
-              id={cat.id}
-              title={cat.name}
-              isSelected={typeSelected === cat.name}
-              setTypeSelected={setTypeSelected}
-              setCategoryId={setCategoryId}
-              />
-            ))}
           </View>
 
+        <Text style={styles.btext}>Select an Expense Sub-type</Text>
+          <View style={styles.dropdownContainer}>
+              <RNPickerSelect
+                onValueChange={(value) => {
+                  setTypeSelected(value);
+                  const selectedCategory = categories.find((cat) => cat.name === value);
+                  if (selectedCategory) {
+                    setCategoryId(selectedCategory.id);
+                  }
+                }}
+                items={categories.map((cat) => ({
+                  label: cat.name.charAt(0).toUpperCase() + cat.name.slice(1),
+                  value: cat.name,
+                }))}
+                placeholder={{ label: "Select a sub-type...", value: null }}
+                value={typeSelected}
+              />
+          </View>
+
+          
         </ScrollView>
       </View>
+
+
       {/* Cancel and Save Button */}
       <View style={styles.btn}>
         <View
@@ -334,59 +340,50 @@ export default function AddExpense({
           }
           />
           <Button title="Save" color={'black'} 
-          onPress={()=>handleSaveExpense()} disabled={!validateFields()} 
+          onPress={()=>setIsConfirmModalVisible(true)} disabled={!validateFields()} 
           />
         </View>
       </View>
 
+
+      {/* Confirmation Modal */}
+      <Modal
+        visible={isConfirmModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setIsConfirmModalVisible(false)}
+      >
+        <View style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        }}>
+          <View style={{
+            width: 300,
+            padding: 20,
+            backgroundColor: 'white',
+            borderRadius: 10,
+            alignItems: 'center',
+          }}>
+            <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 10 }}>
+              Confirm Save
+            </Text>
+            <Text style={{ marginBottom: 20 }}>
+              Are you sure you want to save this entry?
+            </Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+              <Button title="Cancel" color={colors.red} onPress={() => setIsConfirmModalVisible(false)} />
+              <Button title="Confirm" color={colors.green} onPress={handleConfirmSave} />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   )
 }
 
 
-// ENTRY TYPE PICKER
-function CategoryButton({
-    id,
-    title,
-    isSelected,
-    setTypeSelected,
-    setCategoryId,
-} : {
-    id: number;
-    title: string;
-    isSelected: boolean;
-    setTypeSelected: React.Dispatch<React.SetStateAction<string>>
-    setCategoryId: React.Dispatch<React.SetStateAction<number>>;
-}) {
-    return (
-        <TouchableOpacity
-        onPress={() => {
-            setTypeSelected(title);
-            setCategoryId(id);
-        }}
-        activeOpacity={0.5}
-        style={{
-            height: 40,
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: isSelected? 'black' : 'white',
-            borderRadius: 15,
-          
-        }}
-        >
-            <Text
-                style={{
-                    fontWeight: "700",
-                    color: isSelected? 'white' : 'black',
-                    marginLeft: 5,
-                }}
-            >
-                {title.charAt(0).toLocaleUpperCase() + title.slice(1)}
-            </Text>
-        </TouchableOpacity>
-    )
-}
 
 const styles = StyleSheet.create({
   container:{
@@ -404,8 +401,6 @@ const styles = StyleSheet.create({
   btext:{
     fontWeight: 'bold'
   },
-
-
 
 
 
@@ -436,5 +431,12 @@ const styles = StyleSheet.create({
   selectedDayButtonText: {
     color: '#fff',
   },
-
+  dropdownContainer: {
+  
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 5,
+  },
 })
+

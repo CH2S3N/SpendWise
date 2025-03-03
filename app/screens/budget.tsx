@@ -121,6 +121,8 @@ const Budget = () => {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
+
+      
     </MainContainer>
   );
 };

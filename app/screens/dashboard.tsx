@@ -51,7 +51,7 @@ export default function Index() {
                 onPress={() => setGenerateModalVisible(true)} 
                 style={styles.topbtn}
               >
-                <Text style={styles.btnTxt}>Auto Allocate</Text>
+                <Text style={styles.btnTxt}>Allocate</Text>
               </TouchableOpacity>
               <TouchableOpacity 
                 onPress={() => setBudgetPlanModalVisible(true)} 
