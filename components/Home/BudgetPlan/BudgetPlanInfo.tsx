@@ -8,12 +8,12 @@ import GenerateService from '@/hooks/generateBudgetplan/Generate';
 import { colors } from '@/constants/colors';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
-import { Button } from 'react-native-paper';
+import { Button, Divider } from 'react-native-paper';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
 import { useFetchData } from '@/hooks/useFetchData';
 import Categories from './Categories';
 import Expense from '../ExpnseSummary/TransactionDetials/Expense';
-import { Income } from '@/types';
+import { Income, Transaction } from '@/types';
 
 
 
@@ -44,6 +44,7 @@ export default function BudgetPlanInfo({
   
   const [isAdvanceBtnTapped, setAdvanceBtnTapped] = useState(false);
   const [isAddingTransaction, setIsAddingTransaction] = useState(false);
+  const [hasBudgetStrat, setHasBudgetStrat] = useState(false);
 
 
   const [isLoading, setIsLoading] = useState(false);
@@ -69,8 +70,21 @@ export default function BudgetPlanInfo({
   };
   
   const totalIncome =  incomes.reduce((total: number, income: Income) => {
-      return total + (income.amount * income.interval || 1 )
+      return total + (income.amount  || 1 )
   }, 0);
+  const totalExpense =  transactions.reduce((total: number, transaction: Transaction) => {
+      return total + (transaction.amount  || 1 )
+  }, 0);
+
+
+
+  function validateFields() {
+    if ( transactions.length === 0 || incomes.length === 0 || !hasBudgetStrat)  {
+      return false;
+    }
+    
+    return true;
+  }
 
   return (
     <View style={styles.mainCon}>
@@ -86,7 +100,7 @@ export default function BudgetPlanInfo({
               {/* Categories */}
                 <View style={[styles.container, {flex: 1, }]}>
                   <View style={[styles.card, {}]}>
-                      <Categories isAdvanceBtnTapped={isAdvanceBtnTapped} setIsAdvanceBtnTapped={setAdvanceBtnTapped}/>
+                      <Categories setHasBudgetStrat={setHasBudgetStrat} isAdvanceBtnTapped={isAdvanceBtnTapped} setIsAdvanceBtnTapped={setAdvanceBtnTapped}/>
                       {isAdvanceBtnTapped === false ? (
                         <Button onPress={()=>{setAdvanceBtnTapped(true)}}>Advance</Button>
                       ) : (
@@ -102,50 +116,22 @@ export default function BudgetPlanInfo({
                 <View style={[styles.container, {flex: 1,  justifyContent: "center", alignItems: "center"}]}>
                   <View style={[styles.row, {justifyContent: "center", }]}>
                     {/* Income */}
-                    <View style={[styles.card, {backgroundColor: colors.green,  marginLeft: 20, marginRight: 5, marginVertical: 5,}]}>
-                      <TouchableOpacity onPress={() => openModal('income')}>
-                          <Text style={styles.titleW}>INCOME</Text>
+                    <View style={[styles.card, {flex: 1, backgroundColor: colors.green,  marginLeft: 20, marginRight: 5, marginVertical: 5,}]}>
+                      <TouchableOpacity onPress={() => openModal('income')} activeOpacity={0.5}>
+                        <Text style={styles.titleW}>INCOME</Text>
+                        <Divider/>
+                        <Text style={styles.txtW}>Expand</Text>
                       </TouchableOpacity>
-                      <View style={styles.row}>
-                        <View style={styles.col}>
-                          <Text style={styles.txtW}>No. of Income Sources:</Text>
-                        </View>
-                        <View style={styles.col1}>
-                          <Text style={styles.txtW}>{incomes.length}</Text>
-                        </View>
-                      </View>
-                      <View style={styles.row}>
-                        <View style={styles.col}>
-                          <Text style={styles.txtW}>Total Income:</Text>
-                        </View>
-                        <View style={styles.col1}>
-                          <Text style={styles.txtW}>{totalIncome}</Text>
-                        </View>
-                      </View>
                     </View>
 
                     {/* Expense */}
-                      <View style={[styles.card, {backgroundColor: colors.red, marginRight: 20, marginLeft: 5, marginVertical: 5,}]}>
-                        <TouchableOpacity onPress={() => openModal('expense')}>
-                          <Text style={styles.titleW}>EXPENSE</Text>
-                          <View style={styles.row}>
-                            <View style={styles.col}>
-                              <Text style={styles.txtW}>No. of Expense:</Text>
-                            </View>
-                            <View style={styles.col1}>
-                              <Text style={styles.txtW}>{transactions.length}</Text>
-                            </View>
-                          </View>
-                          <View style={styles.row}>
-                            <View style={styles.col}>
-                              <Text style={styles.txtW}>Total Expense:</Text>
-                            </View>
-                            <View style={styles.col1}>
-                              <Text style={styles.txtW}>To be Calculated</Text>
-                            </View>
-                          </View>
-                        </TouchableOpacity>
-                      </View>
+                    <View style={[styles.card, {flex: 1, backgroundColor: colors.red, marginRight: 20, marginLeft: 5, marginVertical: 5,}]}>
+                      <TouchableOpacity onPress={() => openModal('expense')} activeOpacity={0.5}>
+                        <Text style={styles.titleW}>EXPENSE</Text>
+                        <Divider/>
+                        <Text style={styles.txtW}>Expand</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
               )}
@@ -155,16 +141,16 @@ export default function BudgetPlanInfo({
             <View style={styles.btncontainer}>
               <View style={[styles.content, {flexDirection: "row"}]}>
                 <TouchableOpacity style={styles.btn} onPress={() =>setIsAddingTransaction(true)}>
-                  <Text style={styles.titleW}>ADD</Text>   
+                  <Text style={styles.title}>ADD</Text>   
                 </TouchableOpacity>
                 <TouchableOpacity onPress={handleAllocate}
-                  disabled={transactions.length === 0 || incomes.length === 0}
+                   disabled={!validateFields()} 
                   style={[
                     styles.btn,
-                    (transactions.length === 0 || incomes.length === 0) && styles.disabledButton
+                    (!validateFields()) && styles.disabledButton
                   ]}
                   >
-                  <Text style={styles.titleW}>ALLOCATE</Text>   
+                  <Text style={styles.title}>ALLOCATE</Text>   
                 </TouchableOpacity>
               </View>
             </View>
@@ -175,13 +161,13 @@ export default function BudgetPlanInfo({
       {/* PopUp Screen */}    
       <>
       {/* Add Transaction */}
-      <Modal isOpen={isAddingTransaction} transparent={true} >
+      <Modal isOpen={isAddingTransaction} transparent={true} onRequestClose={()=> setIsAddingTransaction(false)}>
         <View style={styles.modalAddContent}>
             <AddTransaction setIsAddingTransaction={setIsAddingTransaction} />
         </View>
       </Modal>
       {/* Expense Summary */}
-      <Modal isOpen={activeModal === 'expense'} >
+      <Modal isOpen={activeModal === 'expense'} onRequestClose={closeModal}>
         <View style={styles.modalContainer}>
         <View style={styles.modalheader}>
             <View style={{paddingRight: 10}}>
@@ -197,7 +183,7 @@ export default function BudgetPlanInfo({
         </View>
       </Modal>
       {/* Income Summary */}
-      <Modal isOpen={activeModal === 'income'} >
+      <Modal isOpen={activeModal === 'income'} onRequestClose={closeModal}>
         <View style={styles.modalContainer}>
         <View style={styles.modalheader}>
             <View style={{paddingRight: 10}}>
@@ -244,10 +230,10 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   col1:{
-    flex: .7,
+    flex: .5,
     flexDirection: "row",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   card:{
     flex: 1,
@@ -275,14 +261,17 @@ const styles = StyleSheet.create({
     color: colors.light
   },
   txtW:{
-    color: colors.light
+    fontWeight: "bold",
+    color: colors.light,
+    textAlign: 'center',
+
   },
   btn:{
     marginHorizontal: 10,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.dark,
+    backgroundColor: colors.light,
     borderRadius: 45,
     elevation: 5,
     shadowColor: "#000",
@@ -295,7 +284,7 @@ const styles = StyleSheet.create({
   },
   disabledButton: {
     color: colors.gray,
-    opacity: 0.7
+    opacity: 0.5
   },
 
 

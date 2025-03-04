@@ -57,7 +57,7 @@ export default function GenerateService() {
       // Essentials
       const totalFixedEssentials = essentialTransactions
         .filter(transaction => transaction.isfixedamount === "Yes")
-        .reduce((sum, transaction) => sum + transaction.amount, 0);
+        .reduce((sum, transaction) => sum + (transaction.amount * transaction.interval), 0);
 
       let remainingEssentialsAllocation = essentialsAllocation - totalFixedEssentials;
       remainingEssentialsAllocation = Math.max(remainingEssentialsAllocation, 0);
@@ -84,7 +84,7 @@ export default function GenerateService() {
         for (const transaction of variableTransactions) {
           let allocation = remainingBudget > 0 ? Math.floor(remainingBudget / variableTransactions.length) : 0;
           try {
-            await updateTransaction({ ...transaction, amount: allocation });
+            await updateTransaction({ ...transaction, amount: (Math.round(allocation / transaction.interval)) });
           } catch (error) {
             console.error(`Error updating variable essential transaction ${transaction.id}:`, error);
             alert(`An error occurred while saving expense ${transaction.description}.`);
@@ -122,7 +122,7 @@ export default function GenerateService() {
         for (const transaction of variableTransactions) {
           let allocation = remainingBudget > 0 ? Math.floor(remainingBudget / variableTransactions.length) : 0;
           try {
-            await updateTransaction({ ...transaction, amount: allocation });
+            await updateTransaction({ ...transaction, amount: (Math.round(allocation / transaction.interval)) });
           } catch (error) {
             console.error(`Error updating variable non-essential transaction ${transaction.id}:`, error);
             alert(`An error occurred while saving expense ${transaction.description}.`);

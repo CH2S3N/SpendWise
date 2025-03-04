@@ -145,7 +145,7 @@ export default function GoalsInfo() {
 
 
 
-        <Modal isOpen={isAddingTransaction} transparent animationType="fade">
+        <Modal isOpen={isAddingTransaction} transparent animationType="fade" onRequestClose={() => setIsAddingTransaction(false)}>
           <TouchableWithoutFeedback onPress={() => setIsAddingTransaction(false)}>
               <View style={styles.modalOverlay}>
               <TouchableWithoutFeedback>
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.dark,
+    backgroundColor: colors.light,
     borderRadius: 15,
     elevation: 5,
     shadowColor: "#000",
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
   btnTxt:{
     fontSize: 15,
     fontWeight: 'bold',
-    color: 'white'
+    color: colors.dark
   },
   btn: {
 

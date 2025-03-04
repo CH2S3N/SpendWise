@@ -19,10 +19,10 @@ const Overview = () => {
         (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Non_Essential"
     );
     const totalEssentialExpense =  essentialTransactions.reduce((total: number, transaction: Transaction) => {
-        return total + (transaction.amount || 0)
+        return total + (transaction.amount * transaction.interval || 0)
     }, 0);
     const totalNonEssentialExpense =  nonEssentialTransactions.reduce((total: number, transaction: Transaction) => {
-        return total + (transaction.amount || 0)
+        return total + (transaction.amount * transaction.interval || 0)
     }, 0);
     const income = totalIncome;
     const needsExpense = totalEssentialExpense;
@@ -59,7 +59,7 @@ const Overview = () => {
                         </>
                     ) : (
                         <View style={styles.item}>
-                        <Text style={styles.title}>Expenses (Needs)</Text>
+                        <Text style={styles.title}>Expenses {totalNonEssentialExpense === 0 ? (null) : (<Text>(Needs)</Text>)}</Text>
                         <Text style={{flex: 1, textAlign: 'right', color: '#fc2b46'}}>- ₱{expense} ({expenseRatio}%)</Text>
                     </View>
                     )}

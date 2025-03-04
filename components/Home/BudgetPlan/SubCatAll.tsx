@@ -64,7 +64,7 @@ export default function SubCatAll() {
     <View style={{flex:1}}>
       <ScrollView>
       {categories.map((category) => {
-        const value = sliderValue[category.id] ?? category.proportion; // Use slider value if available
+        const value = sliderValue[category.id] ?? category.proportion; 
         return (
           <View key={category.id}>
             <View style={{ flexDirection: "row" }}>

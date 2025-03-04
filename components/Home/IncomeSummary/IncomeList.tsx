@@ -1,5 +1,5 @@
 import { Income } from "@/types";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View, Modal as RNModal } from "react-native";
 import { Modal } from "@/components/Modal";
 import React, { useState } from "react";
 import IncomeDetails from "./IncomeDetails";
@@ -21,7 +21,8 @@ export default function IncomeList() {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isUpdatingIncome, setIsUpdatingIncome] = React.useState<boolean>(false);
     const [currentIncome, setCurrentIncome] = useState<Income | null>(null);
-  
+    const [isConfirmModalVisible, setIsConfirmModalVisible] = React.useState(false);
+    
   const [tappedTransactionId, setTappedTransactionId] = useState<number | null>(null);
 
     return (
@@ -48,7 +49,7 @@ export default function IncomeList() {
                                                       </Text>
                                                   </View>
                                                   <View style={styles.item}>
-                                                      <Text style={styles.amount}>₱ {income.amount}</Text>
+                                                      <Text style={styles.amount}>₱ {income.amount * income.interval}</Text>
                                                       <Text style={styles.label}>Budget per Month</Text>
                                                   </View>
                                               </>
@@ -62,7 +63,7 @@ export default function IncomeList() {
                                                               </Text>
                                                           </View>
                                                           <View style={styles.item}>
-                                                              <Text style={styles.amount}>₱ {Math.round(income.amount)}</Text>
+                                                              <Text style={styles.amount}>₱ {Math.round(income.amount * income.interval)}</Text>
                                                               <Text style={styles.label}>Budget per Occurrence</Text>
                                                           </View>
                                                       </View>
@@ -71,7 +72,7 @@ export default function IncomeList() {
                                                               <Text style={styles.label}>
                                                                   <FontAwesome6 name="bag-shopping" size={18} color={colors.green} /> Income per Ocurrence:
                                                               </Text>
-                                                              <Text style={[styles.value, {color: colors.green, fontSize:15}]}>₱ {income.amount/income.interval}</Text>
+                                                              <Text style={[styles.value, {color: colors.green, fontSize:15}]}>₱ {income.amount}</Text>
                                                           </View>
                                                           <View style={styles.row}>
                                                               <Text style={styles.label}>
@@ -106,7 +107,7 @@ export default function IncomeList() {
                                                                       <FontAwesome6 name="edit" size={35} color={colors.green} />
                                                                   </Text>
                                                               </TouchableOpacity>
-                                                              <TouchableOpacity onPress={() => deleteIncome(income.id)}>
+                                                              <TouchableOpacity onPress={() => setIsConfirmModalVisible(true)}>
                                                                   <Text style={[styles.label, { marginRight: 20 }]}>
                                                                       <FontAwesome6 name="square-xmark" size={35} color={colors.red} />
                                                                   </Text>
@@ -126,6 +127,44 @@ export default function IncomeList() {
             </View>
 
 
+            {/* Confirmation Modal */}
+            <RNModal
+            visible={isConfirmModalVisible}
+            transparent={true}
+            animationType="fade"
+            onRequestClose={() => setIsConfirmModalVisible(false)}
+            >
+            <View style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            }}>
+                <View style={{
+                width: 300,
+                padding: 20,
+                backgroundColor: 'white',
+                borderRadius: 10,
+                alignItems: 'center',
+                }}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 10 }}>
+                    Confirm Save
+                </Text>
+                <Text style={{ marginBottom: 20 }}>
+                    Are you sure you want to delete this entry?
+                </Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+                    <Button title="Cancel" color={colors.red} onPress={() => setIsConfirmModalVisible(false)} />
+                    <Button title="Confirm" color={colors.green} onPress={()=> {
+                        if (tappedTransactionId !== null) {
+                            deleteIncome(tappedTransactionId);
+                            setIsConfirmModalVisible(false); // Close modal after deletion
+                            }
+                    }} />
+                </View>
+                </View>
+            </View>
+            </RNModal>
 
           <Modal isOpen={isModalVisible} transparent animationType="fade">
             <TouchableWithoutFeedback onPress={() => setIsModalVisible(false)}>

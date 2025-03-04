@@ -58,7 +58,7 @@ export default function AddIncome({
   
 
     async function handleSaveIncome() {
-      const calculatedAmount = Number(amount) * Number(isrecurrence);
+      const calculatedAmount = Number(amount)
 
         await insertIncome({
 
@@ -87,30 +87,22 @@ export default function AddIncome({
            setSubType('Custom')
          }
          if (frequency === 'Weekly' && subType === 'Weekends') {
-           setRecurrence('2'); 
+           setRecurrence('8'); 
          }
          if (frequency === 'Weekly' && subType === 'Weekdays') {
-           setRecurrence('5'); 
-         }
-         if (frequency === 'Weekly' && subType === 'All') {
-           setRecurrence('7'); 
-         }
-         if (frequency === 'Weekly' && subType === 'Custom') {
-           setRecurrence('1'); 
+           setRecurrence('20'); 
          }
          if (frequency === 'Monthly'){
-           setRecurrence('1'); 
            setSubType('Custom')
          }
          if (frequency === 'Bi-Weekly'){
-           setRecurrence('1'); 
            setSubType('Custom')
          }
-       }, [subType]);
+       }, [frequency]);
 
   return (
     <View style={styles.container}>
-      <View style={{flex: 9,}}>
+      <View style={{flex: 1}}>
         <ScrollView>
           {/* DESCRIPTION */}
           <View style={styles.content}>
@@ -148,7 +140,6 @@ export default function AddIncome({
                   selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
                   onChange={(event) => {
                     setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
-                    setRecurrence('')
                   }}
                 />
             </View>
@@ -164,6 +155,14 @@ export default function AddIncome({
                     selectedIndex={["Weekends", "Weekdays", "Custom"].indexOf(subType)}
                     onChange={(event) => {
                       setSubType(["Weekends", "Weekdays", "Custom"][event.nativeEvent.selectedSegmentIndex]);
+                      const selectedType = ["Weekends", "Weekdays", "Custom"][event.nativeEvent.selectedSegmentIndex];
+                      setSubType(selectedType);
+                  
+                      if (selectedType === "Weekends") {
+                        setRecurrence("8");
+                      } else if (selectedType === "Weekdays") {
+                        setRecurrence("20");
+                      }
                     }}
                   />
                   
@@ -258,6 +257,7 @@ export default function AddIncome({
 
         </ScrollView>
       </View>
+    
       {/* Cancel and Save Button */}
       <View style={styles.btn}>
         <View
@@ -317,56 +317,14 @@ export default function AddIncome({
 }
 
 
-// ENTRY TYPE PICKER
-function CategoryButton({
-    id,
-    title,
-    isSelected,
-    setTypeSelected,
-    setIncomeCategoryId,
-} : {
-    id: number;
-    title: string;
-    isSelected: boolean;
-    setTypeSelected: React.Dispatch<React.SetStateAction<string>>
-    setIncomeCategoryId: React.Dispatch<React.SetStateAction<number>>;
-}) {
-    return (
-        <TouchableOpacity
-        onPress={() => {
-            setTypeSelected(title);
-            setIncomeCategoryId(id);
-        }}
-        activeOpacity={0.5}
-        style={{
-            height: 40,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: isSelected? 'black' : 'white',
-            borderRadius: 15,
-            marginBottom: 6,
-          
-        }}
-        >
-            <Text
-                style={{
-                    fontWeight: "700",
-                    color: isSelected? 'white' : 'black',
-                    marginLeft: 5,
-                }}
-            >
-                {title.charAt(0).toLocaleUpperCase() + title.slice(1)}
-            </Text>
-        </TouchableOpacity>
-    )
-}
 
 const styles = StyleSheet.create({
   container:{
+    flex: 1,
     height: '100%',
+    width: "100%"
   },
   btn:{
-    flex: 1,
     flexDirection: 'column-reverse',
     paddingBottom: 20
   },

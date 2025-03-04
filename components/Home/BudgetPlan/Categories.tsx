@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Button, Switch, FlatList } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Button, Switch, FlatList, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { colors } from '@/constants/colors';
 import Slider from '@react-native-community/slider';
@@ -8,7 +8,6 @@ import { setNeeds, setWants, setSavings, resetCat} from '@/state/budgetSlice';
 import SubCatNeeds from './SubCatNeeds';
 import SubCatWants from './SubCatWants';
 import SubCatAll from './SubCatAll';
-import { Picker } from '@react-native-picker/picker';
 import { AntDesign } from '@expo/vector-icons';
 
 
@@ -22,8 +21,8 @@ const CustomDropdown: React.FC<DropdownProps> = ({ selectedValue, onValueChange 
   const [isDropdownVisible, setIsDropdownVisible] = useState<boolean>(false);
 
   const options = [
-    { label: "50/30/20 Rule", value: "50/30/20" },
-    { label: "70/30 Rule", value: "70/30" },
+    { label: "50/30/20 Rule", value: "50/30/20 Rule" },
+    { label: "70/30 Rule", value: "70/30 Rule" },
     { label: "Custom", value: "Custom" },
   ];
 
@@ -39,7 +38,7 @@ const CustomDropdown: React.FC<DropdownProps> = ({ selectedValue, onValueChange 
         style={styles.dropdown} 
         onPress={() => setIsDropdownVisible(!isDropdownVisible)}
       >
-        <Text style={styles.selectedText}>{selectedValue}</Text>
+        <Text style={styles.selectedText}>{selectedValue ? (selectedValue) : (<Text style={{color: colors.gray,}}>Select a Stragtegy</Text>)}</Text>
         <AntDesign name={isDropdownVisible ? "up" : "down"} size={16} color="#333" />
       </TouchableOpacity>
       {/* Dropdown List */}
@@ -57,7 +56,13 @@ const CustomDropdown: React.FC<DropdownProps> = ({ selectedValue, onValueChange 
 };
 
 
-const Categories = ({ isAdvanceBtnTapped, setIsAdvanceBtnTapped }: { isAdvanceBtnTapped: boolean, setIsAdvanceBtnTapped: React.Dispatch<React.SetStateAction<boolean>>  }) => {
+const Categories = ({
+   isAdvanceBtnTapped, setIsAdvanceBtnTapped, setHasBudgetStrat 
+  }: { 
+    isAdvanceBtnTapped: boolean, 
+    setIsAdvanceBtnTapped: React.Dispatch<React.SetStateAction<boolean>>  
+    setHasBudgetStrat: React.Dispatch<React.SetStateAction<boolean>>  
+  }) => {
     const dispatch = useDispatch();
     const { needs, wants, savings} = useSelector((state: RootState) => state.budget); 
     const [isEnabled, setIsEnabled] = useState(true);
@@ -65,9 +70,10 @@ const Categories = ({ isAdvanceBtnTapped, setIsAdvanceBtnTapped }: { isAdvanceBt
     
 
 
-    const [strat1, setStrat1] = useState(true);
-    const [strat2, setStrat2] = useState(false);
     const [customStrat, setcustomStrat] = useState(false);
+    const [strat, setstrat] = useState(false);
+    const [strat1, setStrat1] = useState(false);
+    const [strat2, setStrat2] = useState(false);
     
 
     
@@ -111,13 +117,19 @@ const Categories = ({ isAdvanceBtnTapped, setIsAdvanceBtnTapped }: { isAdvanceBt
     
 
 
-    const [selectedStrategy, setSelectedStrategy] = useState("50/30/20");
+    const [selectedStrategy, setSelectedStrategy] = useState("Select a Strategy");
 
     const handleStrategyChange = (strategy: string) => {
       setSelectedStrategy(strategy);
       
       switch (strategy) {
-        case "50/30/20":
+        case "Select a Strategy":
+          setstrat(true)
+          setcustomStrat(false); 
+          setStrat1(false);
+          setStrat2(false);
+          break;
+        case "50/30/20 Rule":
           setStrat1(true);
           setStrat2(false);
           setcustomStrat(false);
@@ -126,7 +138,7 @@ const Categories = ({ isAdvanceBtnTapped, setIsAdvanceBtnTapped }: { isAdvanceBt
           dispatch(setSavings(20));
           setIsEnabled(true)
           break;
-        case "70/30":
+        case "70/30 Rule":
           setStrat2(true);
           setStrat1(false);
           setcustomStrat(false);
@@ -139,23 +151,28 @@ const Categories = ({ isAdvanceBtnTapped, setIsAdvanceBtnTapped }: { isAdvanceBt
           setStrat1(false);
           setStrat2(false);
           break;
+
       }
     };
+
+
+    useEffect(() => {
+      setHasBudgetStrat(strat1 || strat2 || customStrat);
+    }, [strat1, strat2, customStrat]);
+    
   return (
       <View style={[styles.container]}>
-          <Text style={styles.title}>BUDGETING STRATEGY</Text>
+        <Text style={[styles.title, {paddingBottom: 10}]}>BUDGETING STRATEGY</Text>
         <View style={[ { zIndex: 1, justifyContent: "center",}]}>
-
           <CustomDropdown 
             selectedValue={selectedStrategy} 
             onValueChange={handleStrategyChange} 
           />
         </View>
-
         {customStrat === true && (
               <>
               {/* Switch */}
-              <View style={[styles.container, {flex: 2}]}>
+              <View style={[styles.container, {flex: 1}]}>
                 <View style={[styles.row, {justifyContent: "flex-end", alignItems: "center"}]}>
                         <Text style={styles.text}>Split Expense? </Text>
                         <Switch
@@ -240,34 +257,71 @@ const Categories = ({ isAdvanceBtnTapped, setIsAdvanceBtnTapped }: { isAdvanceBt
               </View>
               </>
         )}
-        <View style={{flex:1, justifyContent: "center", alignItems: "center",}}>
-        {strat1 && (
-            <Text style={styles.description}>
-              {"\t"} The <Text style={{color: colors.green, fontWeight: "bold"}}>50/30/20 BUDGETING RULE</Text> is a simple money management strategy that divides your income into three categories:{"\n"}
-              🔹 50% Essentials (Basic Needs){"\n"}
-              🔹 30% Non-Essentials (Wants & Optional Spending){"\n"}
-              🔹 20% Savings{"\n\n"}
-            </Text>
-        )}
-        {strat2 && (
-            <Text style={styles.description}>
-             {"\t"} The <Text style={{color: colors.green, fontWeight: "bold"}}>70/30 BUDGETING RULE</Text> splits income into 70% for expenses and lifestyle and 30% for savings, promoting financial stability while allowing flexibility.
-            </Text>
-        )}
+        <View style={{flex:2, justifyContent: "center", alignItems: "center"}}>
+          { isAdvanceBtnTapped === true ? (
+            <View  style={{flex: 1, justifyContent: "center",}}>
+             {strat1 === false && strat2 === false && customStrat === false && (
+              <Text style={[styles.description]}>
+                Pick a <Text style={{ color: colors.green, fontWeight: "bold" }}>Budgeting Strategy</Text> to manage spending, control expenses, and grow savings effectively.
+              </Text>
+            )}
+            {strat1 && (
+              <Text style={[styles.description, { textAlign: "center" }]}>
+                The <Text style={{ color: colors.green, fontWeight: "bold" }}>50/30/20 BUDGETING RULE</Text> is a simple money management strategy that divides your income into three categories:{"\n\n"}
+                <Text style={{ color: colors.green, fontWeight: "bold" }}>50%</Text> Essentials (Basic Needs),{" "}
+                <Text style={{ color: colors.green, fontWeight: "bold" }}>30%</Text> Non-Essentials (Wants & Optional Spending) &{" "}
+                <Text style={{ color: colors.green, fontWeight: "bold" }}>20%</Text> Savings
+              </Text>
+            )}
+            {strat2 && (
+              <Text style={[styles.description]}>
+                The <Text style={{ color: colors.green, fontWeight: "bold" }}>70/30 BUDGETING RULE</Text> splits income into{" "}
+                <Text style={{ color: colors.green, fontWeight: "bold" }}>70%</Text> for expenses and lifestyle and{" "}
+                <Text style={{ color: colors.green, fontWeight: "bold" }}>30%</Text> for savings, promoting financial stability while allowing flexibility.
+              </Text>
+            )}
+
+            </View >
+          ) : (
+            <>
+              {strat1 === false && strat2 === false && customStrat === false && (
+                  <Text style={[styles.description, ]}>
+                   Pick a  <Text style={{color: colors.green, fontWeight: "bold", }}>Budgeting Strategy</Text> to manage spending, control expenses, and grow savings effectively.
+                  </Text>     
+              )}
+              {strat1 && (
+                <Text style={[styles.description, { textAlign: "center" }]}>
+                The <Text style={{ color: colors.green, fontWeight: "bold" }}>50/30/20 BUDGETING RULE</Text> is a simple money management strategy that divides your income into three categories:{"\n\n"}
+                <Text style={{ color: colors.green, fontWeight: "bold" }}>50%</Text> Essentials (Basic Needs),{" "}
+                <Text style={{ color: colors.green, fontWeight: "bold" }}>30%</Text> Non-Essentials (Wants & Optional Spending) &{" "}
+                <Text style={{ color: colors.green, fontWeight: "bold" }}>20%</Text> Savings
+                </Text>       
+              )}
+              {strat2 && (
+                <Text style={[styles.description]}>
+                The <Text style={{ color: colors.green, fontWeight: "bold" }}>70/30 BUDGETING RULE</Text> splits income into{" "}
+                <Text style={{ color: colors.green, fontWeight: "bold" }}>70%</Text> for expenses and lifestyle and{" "}
+                <Text style={{ color: colors.green, fontWeight: "bold" }}>30%</Text> for savings, promoting financial stability while allowing flexibility.
+                </Text>
+              )}
+            </>
+          )}
         </View>
+        
+
 
            
         {/* Slider */}
         {isAdvanceBtnTapped === true && (
             <>
               {strat2 === true || isEnabled === false ? (
-                <View style={[styles.container, {flex: 5}]}>
+                <View style={[styles.container, {flex: 5,}]}>
                   <Text style={styles.title}>Sub-Category (Expenses)</Text>
                   <SubCatAll/>
                 </View>
               ) : (
                 <>
-                <View style={[styles.container, {flex: 4, paddingTop:5}]}>
+                <View style={[styles.container, {flex: 5, paddingTop:5}]}>
                   <View style={[styles.container, {flex: 0.6}]}>
                     <Text style={styles.title}>Sub-Category (Needs)</Text>
                     <SubCatNeeds/>
@@ -323,9 +377,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   description:{
-    fontSize: 15,
+    fontSize: 17,
     color: colors.dark,
-    textAlign: 'left',
+    textAlign: 'center',
     textAlignVertical: "center"
   },
   title:{
@@ -363,12 +417,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   selectedText: {
-    fontSize: 16,
-    color: "#333",
+    flex: 1,
+    fontSize: 20,
+    fontWeight: "bold",
+    color: colors.dark,
+    textAlign: "center",
+    textAlignVertical: "center"
   },
   dropdownList: {
     position: "absolute",
-    top: 50, // Adjust this if needed
+    top: 50, 
     left: 0,
     width: "100%",
     backgroundColor: "#fff",
@@ -376,7 +434,7 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     borderRadius: 5,
     zIndex: 1000,
-    elevation: 5, // Shadow for Android
+    elevation: 5,
   },
   dropdownItem: {
     padding: 12,

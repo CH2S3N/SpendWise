@@ -36,7 +36,7 @@ export default function AccomplishedList({
 
                     
                     
-                    <Modal isOpen={isModalVisible} transparent animationType="fade">
+                    <Modal isOpen={isModalVisible} transparent animationType="fade" onRequestClose={() => setIsModalVisible(false)}>
                     <TouchableWithoutFeedback onPress={() => setIsModalVisible(false)}>
                         <View style={styles.modalOverlay}>
                         <TouchableWithoutFeedback>

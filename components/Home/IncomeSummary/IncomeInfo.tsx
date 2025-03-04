@@ -6,6 +6,8 @@ import { colors } from '@/constants/colors';
 import AddIncome from '@/components/ui/addIncome';
 import { RootState } from '@/state/store';
 import { useSelector } from 'react-redux';
+import { calculateTotalIncome } from '@/utils/calcTotalIncome';
+import { Divider } from 'react-native-paper';
 
 
 export default function IncomeInfo() {
@@ -16,15 +18,25 @@ export default function IncomeInfo() {
   const [isAddingTransaction, setIsAddingTransaction] = useState(false);
   const [isUpdatingTransaction, setIsUpdatingTransaction] = React.useState<boolean>(false);
 
+  function calcIncome() {
+    return incomes.reduce((total, income) => {
+      return total + (income.amount * income.interval) || 0;
+
+    }, 0)  
+
+  };
   return (
     <>
       {/* Add Transaction Button */}
-      <View style={styles.btn}>
-        <TouchableOpacity onPress={() => setIsAddingTransaction(true)} style={styles.regen}>
-            <Text style={styles.btnTxt}>Add New Income Source</Text>
-        </TouchableOpacity>
-      </View>
+
       <View style={styles.container}>
+          <View style={styles.tableheader}>
+              <View style={styles.row}>
+                <Text style={styles.title}>Income Sources</Text>
+                <Text style={[styles.title, {color: colors.green}]}>Total: ₱ {calcIncome()}</Text>
+            </View>
+          </View>
+          <Divider style={{marginBottom: 10}}/>
           <View style={styles.section}> 
             <View style={styles.tablecontent}>
               <ScrollView>
@@ -66,7 +78,6 @@ const styles = StyleSheet.create({
   section: {
     flex: 1,
     alignItems: 'flex-start',
-    paddingHorizontal: 5,
   },
   tablecontent: {
     flex: 10,
@@ -141,5 +152,23 @@ const styles = StyleSheet.create({
     shadowOffset: { height: 6, width: 0 },
     shadowOpacity: 0.15,
   },
+  tableheader: {
+    width: '100%',
+    alignContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    paddingHorizontal: 5,
+    paddingBottom: 5,  
+},
+row: {
+  flex: 1,
+  flexDirection: "row",
+  justifyContent: "space-between",
+  marginBottom: 5,
+},
+title: {
+  fontSize: 16,
+  fontWeight: "bold",
+},
 
 })

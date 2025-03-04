@@ -66,7 +66,7 @@ const BudgetPlanner = () => {
               <Text style={styles.celltitle}>Category</Text>
               <Text style={styles.celltitle}>Recurrence</Text>
               <Text style={styles.celltitle}>Budget per Occurrence</Text>
-              <Text style={styles.celltitle}>Total Amount</Text>
+              <Text style={[styles.celltitle, {}]}>Total Amount</Text>
             </View>
               {transactions.map((transaction) => {
                 const categoryInfo = categories.find(
@@ -77,8 +77,7 @@ const BudgetPlanner = () => {
                   <Text style={styles.cell}>{transaction.description}</Text> 
                   <Text style={styles.cell}>{categoryInfo?.name}</Text> 
                   <Text style={styles.cell}>{transaction.frequency}
-                    {transaction.subtype === "Custom" ? (null) : (<Text>/{transaction.subtype}</Text>)} 
-                    ({transaction.interval})</Text>
+                    {transaction.subtype === "Custom" ? (null) : (<Text>/{transaction.subtype}</Text>)} ({transaction.interval})</Text>
                   <Text style={[styles.cell, {}]}>₱ {Math.round(transaction.amount/transaction.interval)}</Text>
                   <Text style={[styles.cell, {}]}>₱ {transaction.amount}</Text>
                 </View>

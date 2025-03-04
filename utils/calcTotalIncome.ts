@@ -4,6 +4,6 @@ export const calculateTotalIncome = (incomes: Income[], type: string): number =>
   const filteredIncome = incomes.filter((income) => income.type === type);
 
   return filteredIncome.reduce((total, income) => {
-    return total + income.amount
+    return total + income.amount *income.interval
   }, 0);
 };

@@ -37,7 +37,7 @@ const styles= StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.dark,
+    backgroundColor: colors.light,
     borderRadius: 15,
     elevation: 5,
     shadowColor: "#000",
@@ -53,7 +53,7 @@ const styles= StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.dark,
+    backgroundColor: colors.light,
     borderRadius: 15,
     elevation: 5,
     shadowColor: "#000",
@@ -82,7 +82,7 @@ const styles= StyleSheet.create({
   btnTxt:{
     fontSize: 15,
     fontWeight: 'bold',
-    color: 'white'
+    color: colors.dark
   },
  
 

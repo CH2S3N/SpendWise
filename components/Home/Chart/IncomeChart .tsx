@@ -92,7 +92,7 @@ export default function IncomeChart () {
               )}
             </View>
             <View style={styles.total}>
-              <Text style={styles.text}>Total: <Text style={{color: colors.green}}>₱ {total}</Text></Text>
+              <Text style={[styles.text, {color: colors.green}]}>Total: <Text style={{}}>₱ {total}</Text></Text>
             </View>
           </View>
         )}

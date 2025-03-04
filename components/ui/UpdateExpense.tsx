@@ -41,6 +41,7 @@ export default function UpdateExpense({
     const [prioritization, setPrioritization] = React.useState<string>("High");
     const [isfixedamount, setIsFixedAmount] = React.useState<string>("Yes");
     const [category, setCategory] = React.useState<string>("Essential");
+    const [subcategory, setSubCategory] = React.useState<string>("");
     const [categoryId, setCategoryId] = React.useState<number>(1);
    
     const [selectedIndex, setSelectedIndex] = React.useState<number>(1);
@@ -51,32 +52,24 @@ export default function UpdateExpense({
         handleSaveExpense(); 
     }
 
-    useEffect(() => {
-      if (frequency === 'Daily') {
-        setRecurrence('28'); 
-        setSubType('Custom')
-      }
-      if (frequency === 'Weekly' && subType === 'Weekends') {
-        setRecurrence('2'); 
-      }
-      if (frequency === 'Weekly' && subType === 'Weekdays') {
-        setRecurrence('5'); 
-      }
-      if (frequency === 'Weekly' && subType === 'All') {
-        setRecurrence('7'); 
-      }
-      if (frequency === 'Weekly' && subType === 'Custom') {
-        setRecurrence('1'); 
-      }
-      if (frequency === 'Monthly'){
-        setRecurrence('1'); 
-        setSubType('Custom')
-      }
-      if (frequency === 'Bi-Weekly'){
-        setRecurrence('1'); 
-        setSubType('Custom')
-      }
-    }, [frequency, subType]);
+       useEffect(() => {
+         if (frequency === 'Daily') {
+           setRecurrence('28'); 
+           setSubType('Custom')
+         }
+         if (frequency === 'Weekly' && subType === 'Weekends') {
+           setRecurrence('8'); 
+         }
+         if (frequency === 'Weekly' && subType === 'Weekdays') {
+           setRecurrence('20'); 
+         }
+         if (frequency === 'Bi-Weekly'){
+           setSubType('Custom')
+         }
+         if (frequency === 'Monthly'){
+           setSubType('Custom')
+         }
+       }, [frequency]);
 
 
 
@@ -85,6 +78,7 @@ export default function UpdateExpense({
       if (currentTransaction) {
         setAmount(String(currentTransaction.amount));
         setRecurrence(String(currentTransaction.interval));
+        setRecurrenceInput(String(currentTransaction.interval));
         setDescription(currentTransaction.description);
         setFrequency(currentTransaction.frequency);
         setPrioritization(currentTransaction.prioritization);
@@ -109,7 +103,7 @@ export default function UpdateExpense({
 
 
     async function handleSaveExpense() {
-        const calculatedAmount = Number(amount) * Number(recurrence);
+        const calculatedAmount = Number(amount)
 
         await updateTransaction({
           id: currentTransaction.id,
@@ -124,16 +118,6 @@ export default function UpdateExpense({
           subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
           recurrence_id: recurrenceId,
         });
-        setDescription("");
-        setFrequency("Daily");
-        setPrioritization("High");
-        setIsFixedAmount("Yes");
-        setAmount("");
-        setCategoryId(1);
-        setCurrentTab(0);
-        setIsModalVisible(false);
-        setIsUpdatingTransaction(false);
-
     }
     
     
@@ -142,7 +126,7 @@ export default function UpdateExpense({
     <Card
     content={
       <>
-        <ScrollView style={{flex: 8}}>
+        <ScrollView style={{flex: 1}}>
           {/* DESCRIPTION */}
           <Text style={styles.btext}>Item</Text>
           <TextInput
@@ -155,14 +139,13 @@ export default function UpdateExpense({
           {/* FREQUENCY */}
           <View>
             <View style={styles.content}>
-                <Text style={styles.btext}>Frequency</Text>
+                <Text style={styles.btext}>Recurrence</Text>
                 <SegmentedControl
                   values={["Daily", "Weekly", "Bi-Weekly", "Monthly"]}
                   style={{ marginTop: 10, }}
                   selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
                   onChange={(event) => {
                     setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
-                    setRecurrence(recurrence);
                   }}
                 />
             </View>
@@ -176,12 +159,18 @@ export default function UpdateExpense({
 
                 {frequency === 'Weekly' && (
                   <SegmentedControl
-                    values={["Weekends", "Weekdays", "All", "Custom"]}
+                    values={["Weekends", "Weekdays", "Custom"]}
                     style={{ marginTop: 10, }}
-                    selectedIndex={["Weekends", "Weekdays", "All", "Custom"].indexOf(subType)}
+                    selectedIndex={["Weekends", "Weekdays", "Custom"].indexOf(subType)}
                     onChange={(event) => {
-                      setSubType(["Weekends", "Weekdays", "All", "Custom"][event.nativeEvent.selectedSegmentIndex]);
-                      setRecurrence(recurrence);
+                      const selectedType = ["Weekends", "Weekdays", "Custom"][event.nativeEvent.selectedSegmentIndex];
+                      setSubType(selectedType);
+                      
+                      if (selectedType === "Weekends") {
+                        setRecurrence("8");
+                      } else if (selectedType === "Weekdays") {
+                        setRecurrence("20");
+                      }
                     }}
                   />
                   
@@ -300,16 +289,16 @@ export default function UpdateExpense({
           <SegmentedControl
             values={["Needs", "Wants"]}
             style={{ marginBottom: 15 }}
-            selectedIndex={currentTab}
+            selectedIndex={["Essential","Non_Essential"].indexOf(category)}
             onChange={(event) => {
-              setCurrentTab(event.nativeEvent.selectedSegmentIndex);
+              setCategory(["Essential","Non_Essential"][event.nativeEvent.selectedSegmentIndex])
             }}
           />
 
           <Text style={styles.btext}>Select an Expense Sub-type</Text>
           <View style={styles.dropdownContainer}>
               <RNPickerSelect                
-                value={typeSelected}
+                value={categoryId}
                 onValueChange={(value) => {
                   setTypeSelected(value);
                   const selectedCategory = categories.find((cat) => cat.name === value);
@@ -330,7 +319,7 @@ export default function UpdateExpense({
 
         {/* Cancel and Save Button */}
         <View
-          style={{ flexDirection: "row", justifyContent: "space-around" }}
+          style={{ flexDirection: "row", justifyContent: "space-around", paddingTop: 10 }}
         >
           <Button title="Cancel" color={'black'} 
           onPress={

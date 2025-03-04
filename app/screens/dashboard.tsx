@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, Text, ScrollView, TouchableWithoutFeedback } from 'react-native';
+import { View, TouchableOpacity, Text, ScrollView, TouchableWithoutFeedback,  } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import AddTransaction from '../../components/ui/AddTransaction';
 import ChartInfo from '@/components/Home/Chart/ChartInfo';
@@ -106,7 +106,7 @@ export default function Index() {
       {/* PopUp Screens */}
       <>
         {/* Add Transactions Modal */}
-        <Modal isOpen={isAddingTransaction} transparent animationType="fade">
+        <Modal isOpen={isAddingTransaction} transparent animationType="fade" onRequestClose={() => setIsAddingTransaction(false)}>
           <TouchableWithoutFeedback onPress={() => setIsAddingTransaction(false)}>
             <View style={styles.modalOverlay}>
               <TouchableWithoutFeedback>
@@ -119,7 +119,7 @@ export default function Index() {
         </Modal>
 
         {/* Generate Budget Plan Modal */}
-        <Modal isOpen={isGenerateModalVisible}>
+        <Modal isOpen={isGenerateModalVisible} onRequestClose={() => setGenerateModalVisible(false)}>
           <View style={styles.modalcontainer}>
             <View style={styles.modalheader}>
               <View style={styles.icon}>
@@ -136,7 +136,7 @@ export default function Index() {
         </Modal>
 
         {/* Budget Plan Summary Modal */}
-        <Modal isOpen={isBudgetPlanModalVisible}>
+        <Modal isOpen={isBudgetPlanModalVisible} onRequestClose={() => setBudgetPlanModalVisible(false)}>
           <View style={styles.modalcontainer}>
             <View style={styles.modalheader}>
               <View style={styles.icon}>
@@ -153,7 +153,7 @@ export default function Index() {
         </Modal>
 
         {/* Statistics Modal */}
-        <Modal isOpen={isChartModalVisible}>
+        <Modal isOpen={isChartModalVisible} onRequestClose={() => setChartModalVisible(false)}>
           <View style={styles.modalcontainer}>
             <View style={styles.modalheader}>
               <View style={styles.icon}>

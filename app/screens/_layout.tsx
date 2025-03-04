@@ -7,7 +7,6 @@ import AntDesign from '@expo/vector-icons/AntDesign';import { useFetchData } fro
 import { colors } from '@/constants/colors';
 import 'react-native-gesture-handler';
 
-import { useFocusEffect } from '@react-navigation/native';
 const _layout = () => {
   const { fetchData } = useFetchData();
 
@@ -33,20 +32,19 @@ const _layout = () => {
               screenOptions={{
                 headerTitleAlign: 'center',
                 headerStyle: { 
-                  backgroundColor: colors.dark, 
+                  backgroundColor: colors.light, 
                   height: 80,
                   borderBottomWidth: 2, 
                   elevation: 5, 
                 },
-                headerTitle: 'SpendWise',
-                headerTintColor: 'white',
-                headerTitleStyle: { 
+                  headerTitle: 'SpendWise',
+                  headerTintColor: colors.dark,
+                  headerTitleStyle: { 
                   fontWeight: 'bold',
                   fontSize: 18, 
                 },
-                
                 tabBarStyle: { 
-                  backgroundColor: colors.dark,
+                  backgroundColor: colors.light,
                   paddingBottom: 10,
                   paddingTop: 10,
                   height: 70,
@@ -60,7 +58,7 @@ const _layout = () => {
                   fontWeight: 'bold', 
                 },
                 tabBarActiveTintColor: colors.green, 
-                tabBarInactiveTintColor: 'white', 
+                tabBarInactiveTintColor: colors.dark, 
               }}
         >
           <Tabs.Screen 

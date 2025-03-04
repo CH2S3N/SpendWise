@@ -77,6 +77,7 @@ export default function UpdateIncome({
     if (currentIncome) {
       setAmount(String(currentIncome.amount || ""));
       setRecurrence(String(currentIncome.interval || ""));
+      setRecurrenceInput(String(currentIncome.interval || ""));
       setDescription(currentIncome.description || "");
       setFrequency(currentIncome.frequency || "Daily");
       setIncomeCategory(currentIncome.type || "Allowance");
@@ -95,9 +96,8 @@ export default function UpdateIncome({
     }, []);
 
   async function handleSaveIncome() {
-    const calculatedAmount = Number(amount) * Number(isRecurrence);
-
-      await updateIncome({
+    const calculatedAmount = Number(amount)
+    await updateIncome({
       id: currentIncome.id,
       description,
       frequency: frequency as "Daily" | "Weekly" | "Monthly",

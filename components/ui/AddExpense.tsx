@@ -34,7 +34,7 @@ export default function AddExpense({
     const [isRecurrenceInput, setRecurrenceInput] = React.useState<string>("");
     const [description, setDescription] = React.useState<string>("");
     const [frequency, setFrequency] = React.useState<string>("Daily");
-    const [subType, setsubType] = React.useState<string>("Weekends");
+    const [subType, setSubType] = React.useState<string>("Weekends");
     const [prioritization, setPrioritization] = React.useState<string>("High");
     const [isfixedamount, setIsFixedAmount] = React.useState<string>("Yes");
     const [category, setCategory] = React.useState<string>("Essential");
@@ -70,108 +70,70 @@ export default function AddExpense({
 
 
     async function handleSaveExpense() {
-      const calculatedAmount = Number(amount) * Number(isrecurrence);
+      const calculatedAmount = Number(amount)
 
-        await insertTransaction({
-          description,
-          frequency: frequency as "Daily" | "Weekly" | "Monthly",
-          prioritization: prioritization as "High" | "Medium" | "Low",
-          isfixedamount: isfixedamount as "Yes" | "No",
-          amount: calculatedAmount,
-          category_id: categoryId,
-          type: category as "Essential" | "Non_Essential",
-          recurrence_id: recurrenceId,
-          interval: Number(isrecurrence),
-          subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
-          id,
-        });
-        setDescription("");
-        setFrequency("Daily");
-        setPrioritization("High");
-        setIsFixedAmount("Yes");
-        setAmount("");
-        setCategoryId(1);
-        setRecurrenceId(1);
-        setCurrentTab(0);
-        setIsAddingTransaction(false);
-
-        
+      await insertTransaction({
+        description,
+        frequency: frequency as "Daily" | "Weekly" | "Monthly",
+        prioritization: prioritization as "High" | "Medium" | "Low",
+        isfixedamount: isfixedamount as "Yes" | "No",
+        amount: calculatedAmount, 
+        category_id: categoryId,
+        type: category as "Essential" | "Non_Essential",
+        recurrence_id: recurrenceId,
+        interval: Number(isrecurrence),
+        subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
+        id,
+      });
+    
+      // Reset form after saving
+      setDescription("");
+      setFrequency("Daily");
+      setPrioritization("High");
+      setIsFixedAmount("Yes");
+      setAmount("");
+      setCategoryId(1);
+      setRecurrenceId(1);
+      setCurrentTab(0);
+      setIsAddingTransaction(false);
     }
     
- useEffect(() => {
-      if (frequency === 'Daily') {
-        setRecurrence('28'); 
-        setsubType('Custom')
-      }
-      if (frequency === 'Weekly' && subType === 'Weekends') {
-        setRecurrence('2'); 
-      }
-      if (frequency === 'Weekly' && subType === 'Weekdays') {
-        setRecurrence('5'); 
-      }
-      if (frequency === 'Weekly' && subType === 'All') {
-        setRecurrence('7'); 
-      }
-      if (frequency === 'Weekly' && subType === 'Custom') {
-        setRecurrence('1'); 
-      }
-      if (frequency === 'Monthly'){
-        setRecurrence('1'); 
-        setsubType('Custom')
-      }
-      if (frequency === 'Bi-Weekly'){
-        setRecurrence('1'); 
-        setsubType('Custom')
-      }
-    }, [frequency, subType]);
+    
+       useEffect(() => {
+         if (frequency === 'Daily') {
+           setRecurrence('28'); 
+           setSubType('Custom')
+         }
+         if (frequency === 'Weekly' && subType === 'Weekends') {
+           setRecurrence('8'); 
+         }
+         if (frequency === 'Weekly' && subType === 'Weekdays') {
+           setRecurrence('20'); 
+         }
+         if (frequency === 'Bi-Weekly'){
+           setSubType('Custom')
+         }
+         if (frequency === 'Monthly'){
+           setSubType('Custom')
+         }
+       }, [frequency]);
 
     
 
   return (
     <View style={styles.container}>
       <View style={{flex: 9}}>
-        <ScrollView >
+      <ScrollView style={{flex: 1}}>
           {/* DESCRIPTION */}
-          <View style={styles.content}>
-              <Text style={styles.btext}>Item</Text>
-              <TextInput
-                placeholder="Provide an Item Description"
-                style={{ marginBottom: 15, marginTop: 10, borderBottomWidth: 1, borderBottomColor: 'black'}}
-                onChangeText={setDescription}
-              />
-          </View>
+          <Text style={styles.btext}>Item</Text>
+          <TextInput
+            placeholder="Provide an entry description"
+            style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
+            value={description}
+            onChangeText={setDescription}
+          />
 
-          {/* IS FIXED AMOUNT */}
-          <View>
-            <View style={styles.content}>
-              <Text style={{fontWeight: 'bold', marginBottom:10}}>Is this a fixed amount?</Text>
-              <SegmentedControl
-                values={['Yes', 'No']}
-                selectedIndex={selectedIndex}
-                onChange={(event) => {setSelectedIndex(event.nativeEvent.selectedSegmentIndex)
-                }}
-              />
-            </View>
-            {/* AMOUNT */}
-            <View style={styles.content}>
-              <Text style={{fontWeight: 'bold', marginBottom:10}}>Amount</Text>
-              <TextInput
-                placeholder="Enter Amount"
-                style={{ marginBottom: 15, marginTop: 10, borderBottomWidth: 1, borderBottomColor: 'black' }}
-                keyboardType="numeric"
-                onChangeText={(text) => {
-                  // Remove any non-numeric characters before setting the state
-                  const numericValue = text.replace(/[^0-9.]/g, "");
-                  setAmount(numericValue);
-                  setIsFixedAmount("Yes")
-
-                }}
-              />
-              
-            </View>
-          </View>
-
-          {/* Recurrence */}
+          {/* FREQUENCY */}
           <View>
             <View style={styles.content}>
                 <Text style={styles.btext}>Recurrence</Text>
@@ -185,9 +147,10 @@ export default function AddExpense({
                 />
             </View>
             <View style={styles.content}>
+
                 {frequency === 'Daily' && (
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
-
+                    
                   </View>
                 )}
 
@@ -197,7 +160,14 @@ export default function AddExpense({
                     style={{ marginTop: 10, }}
                     selectedIndex={["Weekends", "Weekdays", "Custom"].indexOf(subType)}
                     onChange={(event) => {
-                      setsubType(["Weekends", "Weekdays", "Custom"][event.nativeEvent.selectedSegmentIndex]);
+                      const selectedType = ["Weekends", "Weekdays", "Custom"][event.nativeEvent.selectedSegmentIndex];
+                      setSubType(selectedType);
+                      
+                      if (selectedType === "Weekends") {
+                        setRecurrence("8");
+                      } else if (selectedType === "Weekdays") {
+                        setRecurrence("20");
+                      }
                     }}
                   />
                   
@@ -254,56 +224,78 @@ export default function AddExpense({
                 )}
 
                 {frequency === 'Monthly' && (
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <TextInput
-                      placeholder="0"
-                      value={isRecurrenceInput}
-                      style={{
-                        borderBottomWidth: 1,
-                        borderBottomColor: 'black',
-                        paddingHorizontal: 5,
-                        textAlign: 'center',
-                      }}
-                      keyboardType="numeric"
-                      onChangeText={(text) => {
-                        // Remove any non-numeric characters before setting the state
-                        const numericValue = text.replace(/[^0-9]/g, "");
-                        setRecurrenceInput(numericValue);
-                        setRecurrence(numericValue);
-                      }}
-                      onBlur={() => {
-                        let numericValue = parseInt(isRecurrenceInput) || 0; 
-                        if (numericValue > 28) {
-                          numericValue = 28;
-                        }
-                        setRecurrenceInput(numericValue.toString()); 
-                        setRecurrence(numericValue.toString()); 
-                      }}
-                    />
-                    <Text>Day(s) per Month</Text>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <TextInput
+                  placeholder='0'
+                  value={isRecurrenceInput}
+                  style={{ borderBottomWidth: 1, borderBottomColor: 'black',  paddingHorizontal: 5, textAlign: 'center'}}
+                  keyboardType="numeric"
+                  onChangeText={(text) => {
+                    // Remove any non-numeric characters before setting the state
+                    const numericValue = text.replace(/[^0-9]/g, "");
+                    setRecurrenceInput(numericValue);
+                    setRecurrence(numericValue);
+                  }}
+                  onBlur={() => {
+                    let numericValue = parseInt(isRecurrenceInput) || 0; 
+                    if (numericValue > 28) {
+                      numericValue = 28;
+                    }
+                    setRecurrenceInput(numericValue.toString()); 
+                    setRecurrence(numericValue.toString()); 
+                  }}
+                />
+                <Text>Day(s) per Month</Text>
                   </View>
                 )}
-
             </View>
           </View>
 
-
-          {/* ENTRY TYPE, ESSENTIAL & NON ESSENTIAL */}
-          <View style={styles.content}>
-            <Text style={styles.btext}>Select an Expense Type</Text>
+          {/* IS FIXED AMOUNT */}
+          <View>
+            <Text style={styles.btext}>Is a Fixed Amount?</Text>
             <SegmentedControl
-              values={["Needs", "Wants"]}
-              style={{ marginBottom: 15, marginTop: 10, }}
-              selectedIndex={["Essential","Non_Essential"].indexOf(category)}
+              values={['Yes', 'No']}
+              selectedIndex={selectedIndex}
               onChange={(event) => {
-                setCategory(["Essential","Non_Essential"][event.nativeEvent.selectedSegmentIndex])
+                setSelectedIndex(event.nativeEvent.selectedSegmentIndex)
+                if (selectedIndex === 1) {
+                  setAmount('');
+                  setIsFixedAmount('No')
+                }
               }}
             />
+            {/* AMOUNT */}
+              <Text style={styles.btext}>Amount</Text>
+              <TextInput
+                placeholder="Enter Amount"
+                style={{ marginBottom: 15, marginTop: 10, borderBottomWidth: 1, borderBottomColor: 'black' }}
+                value={amount}
+                keyboardType="numeric"
+                onChangeText={(text) => {
+                  // Remove any non-numeric characters before setting the state
+                  const numericValue = text.replace(/[^0-9.]/g, "");
+                  setAmount(numericValue);
+                  setIsFixedAmount('Yes')
+                }}
+              />
           </View>
 
-        <Text style={styles.btext}>Select an Expense Sub-type</Text>
+            {/* ENTRY TYPE, ESSENTIAL & NON ESSENTIAL */}
+          <Text style={styles.btext}>Select an Expense Type</Text>
+          <SegmentedControl
+            values={["Needs", "Wants"]}
+            style={{ marginBottom: 15 }}
+            selectedIndex={["Essential","Non_Essential"].indexOf(category)}
+            onChange={(event) => {
+              setCategory(["Essential","Non_Essential"][event.nativeEvent.selectedSegmentIndex])
+            }}
+          />
+
+          <Text style={styles.btext}>Select an Expense Sub-type</Text>
           <View style={styles.dropdownContainer}>
-              <RNPickerSelect
+              <RNPickerSelect                
+                value={categoryId}
                 onValueChange={(value) => {
                   setTypeSelected(value);
                   const selectedCategory = categories.find((cat) => cat.name === value);
@@ -316,11 +308,10 @@ export default function AddExpense({
                   value: cat.name,
                 }))}
                 placeholder={{ label: "Select a sub-type...", value: null }}
-                value={typeSelected}
               />
           </View>
 
-          
+
         </ScrollView>
       </View>
 
@@ -340,7 +331,9 @@ export default function AddExpense({
           }
           />
           <Button title="Save" color={'black'} 
-          onPress={()=>setIsConfirmModalVisible(true)} disabled={!validateFields()} 
+          onPress={()=> {
+              setIsConfirmModalVisible(true)
+            }} disabled={!validateFields()} 
           />
         </View>
       </View>

@@ -1,5 +1,5 @@
 import { Category, Transaction } from "@/types";
-import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View, Modal as RNModal   } from "react-native";
 import TransactionDetails from "./TransactionDetails";
 import { Modal } from "@/components/Modal";
 import UpdateExpense from "@/components/ui/UpdateExpense";
@@ -10,6 +10,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import Card from "@/components/ui/Card";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
+import { Divider } from "react-native-paper";
 
 
 export default function Expense() {
@@ -21,7 +22,8 @@ export default function Expense() {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [currentTransaction, setCurrentTransaction] = useState<Transaction | null>(null);
     const [tappedTransactionId, setTappedTransactionId] = useState<number | null>(null);
-
+    const [isConfirmModalVisible, setIsConfirmModalVisible] = React.useState(false);
+      
     const essentialTransactions = transactions.filter(
         (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Essential"
     );
@@ -32,11 +34,12 @@ export default function Expense() {
 
     function calcTransactions() {
         return transactions.reduce((total, transaction) => {
-          return total + (transaction.amount) || 0;
+          return total + (transaction.amount * transaction.interval) || 0;
     
         }, 0)  
     
       };
+
 
 
     return (
@@ -49,9 +52,10 @@ export default function Expense() {
                                 <View style={styles.tableheader}>
                                 <View style={styles.row}>
                                     <Text style={styles.title}>Expenses</Text>
-                                    <Text style={styles.title}>Total: {calcTransactions()}</Text>
+                                    <Text style={[styles.title, {color: colors.red}]}>Total: ₱ {calcTransactions()}</Text>
                                 </View>
                                 </View>
+                                <Divider style={{marginBottom: 10}}/>
                                 <View style={styles.contentSection}>
                                     {transactions.map((transaction) => {
                                         const categoryForCurrentItem = categories.find(
@@ -76,7 +80,7 @@ export default function Expense() {
                                                                         </Text>
                                                                     </View>
                                                                     <View style={styles.item}>
-                                                                        <Text style={styles.amount}>₱ {transaction.amount}</Text>
+                                                                        <Text style={styles.amount}>₱ {transaction.amount * transaction.interval}</Text>
                                                                         <Text style={styles.label}>Budget per Month</Text>
                                                                     </View>
                                                                 </>
@@ -91,7 +95,7 @@ export default function Expense() {
                                                                                 </Text>
                                                                             </View>
                                                                             <View style={styles.item}>
-                                                                                <Text style={styles.amount}>₱ {Math.round(transaction.amount)}</Text>
+                                                                                <Text style={styles.amount}>₱ {Math.round(transaction.amount * transaction.interval)}</Text>
                                                                                 <Text style={styles.label}>Budget per Month</Text>
                                                                             </View>
                                                                         </View>
@@ -101,7 +105,7 @@ export default function Expense() {
                                                                                 <Text style={styles.label}>
                                                                                     <FontAwesome6 name="calendar-day" size={18} color={colors.green} /> Budget per Occurrence:
                                                                                 </Text>
-                                                                                <Text style={[styles.value, { color: colors.green, fontSize:15, }]} >₱ {Math.round(transaction.amount / transaction.interval)}</Text>
+                                                                                <Text style={[styles.value, { color: colors.green, fontSize:15, }]} >₱ {Math.round(transaction.amount)}</Text>
                                                                             </View>
                                                                             <View style={styles.row}>
                                                                                 <Text style={styles.label}>
@@ -148,7 +152,7 @@ export default function Expense() {
                                                                                         <FontAwesome6 name="edit" size={35} color={colors.green} />
                                                                                     </Text>
                                                                                 </TouchableOpacity>
-                                                                                <TouchableOpacity onPress={() => deleteTransaction(transaction.id)}>
+                                                                                <TouchableOpacity onPress={() => setIsConfirmModalVisible(true)}>
                                                                                     <Text style={[styles.label, { marginRight: 20 }]}>
                                                                                         <FontAwesome6 name="square-xmark" size={35} color={colors.red} />
                                                                                     </Text>
@@ -179,7 +183,7 @@ export default function Expense() {
 
 
             {/* Modal */}
-            <Modal isOpen={isModalVisible} transparent animationType="fade">
+            <Modal isOpen={isModalVisible} transparent animationType="fade" onRequestClose={() => setIsModalVisible(false)}>
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContent}>
                         {currentTransaction && (
@@ -192,6 +196,46 @@ export default function Expense() {
                     </View>
                 </View>
             </Modal>
+
+
+            {/* Confirmation Modal */}
+            <RNModal
+            visible={isConfirmModalVisible}
+            transparent={true}
+            animationType="fade"
+            onRequestClose={() => setIsConfirmModalVisible(false)}
+            >
+            <View style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            }}>
+                <View style={{
+                width: 300,
+                padding: 20,
+                backgroundColor: 'white',
+                borderRadius: 10,
+                alignItems: 'center',
+                }}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 10 }}>
+                    Confirm Save
+                </Text>
+                <Text style={{ marginBottom: 20 }}>
+                    Are you sure you want to delete this entry?
+                </Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+                    <Button title="Cancel" color={colors.red} onPress={() => setIsConfirmModalVisible(false)} />
+                    <Button title="Confirm" color={colors.green} onPress={()=> {
+                        if (tappedTransactionId !== null) {
+                            deleteTransaction(tappedTransactionId);
+                            setIsConfirmModalVisible(false); // Close modal after deletion
+                            }
+                    }} />
+                </View>
+                </View>
+            </View>
+            </RNModal>
         </View>
     );
 }

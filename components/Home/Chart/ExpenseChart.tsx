@@ -52,22 +52,29 @@ export default function ExpenseChart() {
         {totalExpenses > 0 && (
           <View style={{ justifyContent: 'center', alignItems: 'center'}}>
             <View style={styles.total}> 
-              <View style={styles.legendItem}>
-                <View style={[styles.colorBox, { backgroundColor: '#FC2947' }]} />
-                <Text>Needs: ₱ {totalEssential}</Text>
-              </View>
-              <View style={styles.legendItem}>
-                <View style={[styles.colorBox, { backgroundColor: '#FE6244' }]} />
-                <Text>Wants: ₱ {totalNonEssential}</Text>
-              </View>
-              <View style={styles.legendItem}>
-                <View style={[styles.colorBox, { backgroundColor: '#FFD65A' }]} />
-                <Text>Savings: ₱ {totalSavings}</Text>
-              </View>
+              {totalEssential > 0 && (
+                <View style={styles.legendItem}>
+                  <View style={[styles.colorBox, { backgroundColor: '#FC2947' }]} />
+                  <Text>Needs: ₱ {totalEssential}</Text>
+                </View>
+              )}
+              {totalNonEssential > 0 && (
+                <View style={styles.legendItem}>
+                  <View style={[styles.colorBox, { backgroundColor: '#FE6244' }]} />
+                  <Text>Wants: ₱ {totalNonEssential}</Text>
+                </View>
+              )}
+              {totalSavings > 0 && (
+                <View style={styles.legendItem}>
+                  <View style={[styles.colorBox, { backgroundColor: '#FFD65A' }]} />
+                  <Text>Savings: ₱ {totalSavings}</Text>
+                </View>
+              )}
+
 
             </View>
             <View style={styles.total}>
-              <Text style={styles.text}>Total: <Text style={{ color: colors.red }}>₱ {totalExpenses}</Text></Text>
+              <Text style={[styles.text, { color: colors.red }]}>Total: <Text style={{}}>₱ {totalExpenses}</Text></Text>
             </View>
           </View>
         )}

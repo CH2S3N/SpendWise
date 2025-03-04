@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
 import Card from '@/components/ui/Card';
 import { setUsername } from '@/state/userSlice';
+import AddIncome from '@/components/ui/addIncome';
 
 const Budget = () => {
   const { user } = useSelector((state: RootState) => state.data);
@@ -26,6 +27,8 @@ const Budget = () => {
   const [userHasData, setUserHasData] = useState(data);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSettingsModalVisible, setIsSettingsModalVisible] = useState(false);
+  const [isAddingTransaction, setIsAddingTransaction] = useState(false);
+  const [isUpdatingTransaction, setIsUpdatingTransaction] = React.useState<boolean>(false);
 
   async function handleUpdateUser() {
     try {
@@ -61,6 +64,11 @@ const Budget = () => {
         }
         />
         <Text style={styles.text}>My Source of Income</Text>
+        <View style={styles.btn}>
+          <TouchableOpacity onPress={() => setIsAddingTransaction(true)} style={styles.regen}>
+              <Text style={styles.btnTxt}>Add New Income Source</Text>
+          </TouchableOpacity>
+        </View>
         <IncomeInfo />
       </View>
 
@@ -104,7 +112,7 @@ const Budget = () => {
         <TouchableWithoutFeedback onPress={() => setIsSettingsModalVisible(false)}>
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback>
-              <View style={styles.modalContent}>
+              <View style={[styles.modalContent, {}]}>
                 <Text style={styles.modalTitle}>Settings</Text>
                 <TouchableOpacity onPress={()=>{
                   deleteAllData();
@@ -123,6 +131,18 @@ const Budget = () => {
       </Modal>
 
       
+      {/* Add Income Modal*/}
+      <Modal isOpen={isAddingTransaction} transparent animationType="fade">
+        <TouchableWithoutFeedback onPress={() => setIsAddingTransaction(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContent}>
+                <AddIncome setIsAddingTransaction={setIsAddingTransaction} setIsUpdatingTransaction={setIsUpdatingTransaction} />
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </MainContainer>
   );
 };
@@ -161,13 +181,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   modalOverlay: {
-    flex: 1,
+    flex:1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.2)',
   },
   modalContent: {
     width: '80%',
+    height: '80%',
+
     backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
@@ -209,6 +231,30 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: colors.dark,
     opacity: 0.5,
+  },
+  btnTxt:{
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: colors.dark
+  },
+  btn: {
+  },
+  regen: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.light,
+    borderRadius: 15,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowRadius: 8,
+    shadowOffset: { height: 6, width: 0 },
+    shadowOpacity: 0.15,
+    padding: 15,
+    marginHorizontal: 5,
+    marginBottom: 10
+    
+
   },
 });
 
