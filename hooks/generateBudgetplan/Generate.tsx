@@ -21,7 +21,7 @@ export default function GenerateService() {
     }));
   };
 
-  const totalIncome = incomes.reduce((total: number, income: Income) => total + income.amount, 0);
+  const totalIncome = incomes.reduce((total: number, income: Income) => total + (income.amount * income.interval), 0);
 
   const handleSaveExpense = async () => {
     const budget = totalIncome;

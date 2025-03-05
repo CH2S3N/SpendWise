@@ -10,7 +10,7 @@ const Overview = () => {
     
 
     const totalIncome =  incomes.reduce((total: number, income: Income) => {
-        return total + (income.amount  || 0 )
+        return total + (income.amount * income.interval || 0 )
     }, 0);
     const essentialTransactions = transactions.filter(
         (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Essential"

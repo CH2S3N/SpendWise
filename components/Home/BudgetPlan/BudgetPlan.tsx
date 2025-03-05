@@ -11,12 +11,12 @@ const BudgetPlanner = () => {
   );
 
     const totalIncome =  incomes.reduce((total: number, income: Income) => {
-        return total + (income.amount)
+        return total + (income.amount * income.interval)
       }, 0);
 
 
       const totalExpense =  transactions.reduce((total: number, transaction: Transaction) => {
-          return total + (transaction.amount || 0)
+          return total + (transaction.amount * transaction.interval || 0)
       }, 0);
 
   const essentialTransactions = transactions.filter(
@@ -45,8 +45,8 @@ const BudgetPlanner = () => {
                       <Text style={styles.cell}>{income.description}</Text>
                       <Text style={styles.cell}>{income.type}</Text>
                       <Text style={styles.cell}>{income.frequency}/ {income.subtype} ({income.interval})</Text>
-                      <Text style={styles.cell}>₱ {income.amount / income.interval}</Text>
                       <Text style={styles.cell}>₱ {income.amount}</Text>
+                      <Text style={styles.cell}>₱ {income.amount  * income.interval}</Text>
                 </View>
                 )
               })}  
@@ -78,8 +78,8 @@ const BudgetPlanner = () => {
                   <Text style={styles.cell}>{categoryInfo?.name}</Text> 
                   <Text style={styles.cell}>{transaction.frequency}
                     {transaction.subtype === "Custom" ? (null) : (<Text>/{transaction.subtype}</Text>)} ({transaction.interval})</Text>
-                  <Text style={[styles.cell, {}]}>₱ {Math.round(transaction.amount/transaction.interval)}</Text>
-                  <Text style={[styles.cell, {}]}>₱ {transaction.amount}</Text>
+                  <Text style={[styles.cell, {}]}>₱ {Math.round(transaction.amount)}</Text>
+                  <Text style={[styles.cell, {}]}>₱ {transaction.amount * transaction.interval}</Text>
                 </View>
               )})}
             </View>
@@ -109,8 +109,8 @@ const BudgetPlanner = () => {
                   <Text style={styles.cell}>{categoryInfo?.name}</Text> 
                   <Text style={styles.cell}>{transaction.frequency}
                     {transaction.subtype === "Custom" ? (null) : (<Text>/{transaction.subtype}</Text>)} ({transaction.interval})</Text>
-                  <Text style={[styles.cell, {}]}>₱ {Math.round(transaction.amount/transaction.interval)}</Text>
-                  <Text style={[styles.cell, {}]}>₱ {transaction.amount}</Text>
+                  <Text style={[styles.cell, {}]}>₱ {Math.round(transaction.amount)}</Text>
+                  <Text style={[styles.cell, {}]}>₱ {transaction.amount * transaction.interval}</Text>
                 </View>
               )})}
             </View>
@@ -136,8 +136,8 @@ const BudgetPlanner = () => {
                   <Text style={styles.cell}>{categoryInfo?.name}</Text> 
                   <Text style={styles.cell}>{transaction.frequency}
                     {transaction.subtype === "Custom" ? (null) : (<Text>/{transaction.subtype}</Text>)} ({transaction.interval})</Text>
-                  <Text style={[styles.cell, {}]}>₱ {Math.round(transaction.amount/transaction.interval)}</Text>
-                  <Text style={[styles.cell, {}]}>₱ {transaction.amount}</Text>
+                  <Text style={[styles.cell, {}]}>₱ {Math.round(transaction.amount)}</Text>
+                  <Text style={[styles.cell, {}]}>₱ {transaction.amount * transaction.interval}</Text>
                 </View>
               )})}
             </View>
