@@ -166,12 +166,13 @@ export default function IncomeList() {
             </View>
             </RNModal>
 
-          <Modal isOpen={isModalVisible} transparent animationType="fade">
+          <Modal isOpen={isModalVisible} transparent animationType="fade" onRequestClose={() => setIsModalVisible(false)}>
             <TouchableWithoutFeedback onPress={() => setIsModalVisible(false)}>
               <View style={styles.modalOverlay}>
                 <TouchableWithoutFeedback>
                   <View style={styles.modalContent}>
-                      {currentIncome && (
+                    <Text style={styles.title}>UPDATE INCOME</Text>
+                    {currentIncome && (
                     <UpdateIncome
                       setIsModalVisible={setIsModalVisible}
                       setIsUpdatingIncome={setIsUpdatingIncome}
@@ -225,6 +226,15 @@ const styles=StyleSheet.create({
       modalContent: {
         width: '80%',
         height: '80%',
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 10,
+        alignItems: 'center',
+        elevation: 5,
+        shadowColor: '#000',
+        shadowRadius: 8,
+        shadowOffset: { height: 6, width: 0 },
+        shadowOpacity: 0.15,
       },
 
 
@@ -249,7 +259,7 @@ const styles=StyleSheet.create({
         marginBottom: 10,
     },
     title: {
-        fontSize: 16,
+        fontSize: 20,
         fontWeight: "bold",
     },
     amount: {

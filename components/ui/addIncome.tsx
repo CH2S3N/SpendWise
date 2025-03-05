@@ -102,7 +102,6 @@ export default function AddIncome({
 
   return (
     <View style={styles.container}>
-      <View style={{flex: 1}}>
         <ScrollView>
           {/* DESCRIPTION */}
           <View style={styles.content}>
@@ -256,24 +255,21 @@ export default function AddIncome({
           />
 
         </ScrollView>
-      </View>
     
       {/* Cancel and Save Button */}
-      <View style={styles.btn}>
-        <View
-          style={{ flexDirection: "row", justifyContent: "space-around" }}
-        >
+      <View
+        style={{ flexDirection: "row", justifyContent: "space-around", paddingTop: 10 }}
+      >
 
-          <Button title="Cancel" color={'black'} 
-            onPress={
-              () => {
-                setIsAddingTransaction(false);
-                setIsUpdatingTransaction(false)
-              }
+        <Button title="Cancel" color={'black'} 
+          onPress={
+            () => {
+              setIsAddingTransaction(false);
+              setIsUpdatingTransaction(false)
             }
-          />
-          <Button title="Save" color={'black'} onPress={()=> setIsConfirmModalVisible(true)} disabled={!validateFields()} />
-        </View>
+          }
+        />
+        <Button title="Save" color={'black'} onPress={()=> setIsConfirmModalVisible(true)} disabled={!validateFields()} />
       </View>
 
 
@@ -321,12 +317,11 @@ export default function AddIncome({
 const styles = StyleSheet.create({
   container:{
     flex: 1,
-    height: '100%',
-    width: "100%"
+    width: '100%',
   },
   btn:{
     flexDirection: 'column-reverse',
-    paddingBottom: 20
+    paddingBottom: 10
   },
   content:{
     paddingTop: 10

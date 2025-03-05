@@ -69,13 +69,6 @@ export default function BudgetPlanInfo({
     }
   };
   
-  const totalIncome =  incomes.reduce((total: number, income: Income) => {
-      return total + (income.amount  || 1 )
-  }, 0);
-  const totalExpense =  transactions.reduce((total: number, transaction: Transaction) => {
-      return total + (transaction.amount  || 1 )
-  }, 0);
-
 
 
   function validateFields() {

@@ -122,7 +122,6 @@ export default function AddExpense({
 
   return (
     <View style={styles.container}>
-      <View style={{flex: 9}}>
       <ScrollView style={{flex: 1}}>
           {/* DESCRIPTION */}
           <Text style={styles.btext}>Item</Text>
@@ -312,14 +311,12 @@ export default function AddExpense({
           </View>
 
 
-        </ScrollView>
-      </View>
+      </ScrollView>
 
 
       {/* Cancel and Save Button */}
-      <View style={styles.btn}>
         <View
-          style={{ flexDirection: "row", justifyContent: "space-around" }}
+          style={{ flexDirection: "row", justifyContent: "space-around", paddingTop: 10}}
         >
           <Button title="Cancel" color={'black'} 
           onPress={
@@ -336,7 +333,7 @@ export default function AddExpense({
             }} disabled={!validateFields()} 
           />
         </View>
-      </View>
+
 
 
       {/* Confirmation Modal */}

@@ -7,7 +7,7 @@ export const calculateTotalExpense = (transactions: Transaction[], categories: C
     );
 
     return filteredTransactions.reduce((total, transaction) => {
-      return total + transaction.amount;
+      return total + transaction.amount * transaction.interval;
     }, 0);
   };
 

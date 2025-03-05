@@ -80,40 +80,44 @@ const Categories = ({
     // Function to handle slider change
     const handleCategorySliderChange = (sliderIndex: number, value: number) => {
       if (sliderIndex === 1) { // Needs slider
-        const maxValue = needs + wants; // Max user can allocate to Needs
-        const clampedValue = Math.min(Math.max(value, 0), maxValue);
+        const maxValue = needs + wants;
+        const step = 5;
+        const clampedValue = Math.min((Math.round(value / step) * step), maxValue);
         const newWants = maxValue - clampedValue;
     
         dispatch(setNeeds(clampedValue));
         dispatch(setWants(newWants));
       } else if (sliderIndex === 2) { // Wants slider
-        const maxValue = needs + wants; // Max user can allocate to Wants
-        const clampedValue = Math.min(Math.max(value, 0), maxValue);
+        const maxValue = needs + wants;
+        const step = 5;
+        const clampedValue = Math.min((Math.round(value / step) * step), maxValue);
         const newNeeds = maxValue - clampedValue;
     
         dispatch(setWants(clampedValue));
         dispatch(setNeeds(newNeeds));
       } else { // Savings slider
-        const newSavings = Math.min(Math.max(value, 0), 100); // Clamp between 0-100
+        const step = 10;
+        const newSavings = Math.min((Math.round(value / step) * step), 100);
         const remainingBudget = 100 - newSavings;
     
-        if (needs + wants > 0) {
-          const needsRatio = needs / (needs + wants);
-          const wantsRatio = wants / (needs + wants);
-          
-          const newNeeds = Math.round(needsRatio * remainingBudget);
-          const newWants = remainingBudget - newNeeds; 
+        let newNeeds = 0;
+        let newWants = 0;
     
-          dispatch(setNeeds(newNeeds));
-          dispatch(setWants(newWants));
+        if (needs > 0 || wants > 0) {
+          const total = needs + wants;
+          newNeeds = Math.round((needs / total) * remainingBudget);
+          newWants = remainingBudget - newNeeds;
         } else {
-          dispatch(setNeeds(Math.round(remainingBudget / 2)));
-          dispatch(setWants(Math.round(remainingBudget / 2)));
+          newNeeds = Math.round(remainingBudget / 2);
+          newWants = remainingBudget - newNeeds;
         }
     
+        dispatch(setNeeds(newNeeds));
+        dispatch(setWants(newWants));
         dispatch(setSavings(newSavings));
       }
     };
+    
     
 
 

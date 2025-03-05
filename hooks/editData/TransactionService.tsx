@@ -240,10 +240,16 @@ export function UseTransactionService() {
         `UPDATE Categories SET name = ?, type = ?, initialProp = ?, proportion = ?  WHERE id = ?`,
         [category.name, category.type, category.initialProp, category.proportion, category.id]
       );
-  
+            // Fetch the updated transaction
+            const updatedCategory = await db.getAllAsync<Category>(
+              `SELECT * FROM Categories WHERE id = ?`, 
+              [category.id]
+            );
+        
+            console.log('Updated Category:', updatedCategory);
+        
       // Reload data after updating
       const categoryResult = await db.getAllAsync<Category>("SELECT * FROM Categories");
-      console.log("Updated Category:", categoryResult);
       dispatch(setData({ categories: categoryResult, transactions, incomeCategories, goals, user, incomes, recurrence }));
     });
   };

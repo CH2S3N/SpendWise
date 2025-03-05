@@ -137,6 +137,7 @@ const Budget = () => {
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback>
               <View style={styles.modalContent}>
+                <Text style={styles.title}>ADD INCOME </Text>
                 <AddIncome setIsAddingTransaction={setIsAddingTransaction} setIsUpdatingTransaction={setIsUpdatingTransaction} />
               </View>
             </TouchableWithoutFeedback>
@@ -200,6 +201,10 @@ const styles = StyleSheet.create({
     shadowOffset: { height: 6, width: 0 },
     shadowOpacity: 0.15,
   },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+},
   closeButton: {
     alignSelf: 'flex-end',
   },

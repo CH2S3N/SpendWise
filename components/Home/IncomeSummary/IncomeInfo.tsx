@@ -56,11 +56,12 @@ export default function IncomeInfo() {
 
 
       {/* Add Income Modal*/}
-      <Modal isOpen={isAddingTransaction} transparent animationType="fade">
+      <Modal isOpen={isAddingTransaction} transparent animationType="fade" onRequestClose={() => setIsAddingTransaction(false)}>
         <TouchableWithoutFeedback onPress={() => setIsAddingTransaction(false)}>
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback>
               <View style={styles.modalContent}>
+                <Text style={styles.title}>UPDATE INCOME</Text>                
                 <AddIncome setIsAddingTransaction={setIsAddingTransaction} setIsUpdatingTransaction={setIsUpdatingTransaction} />
               </View>
             </TouchableWithoutFeedback>
@@ -146,6 +147,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
+    alignItems: 'center',
     elevation: 5,
     shadowColor: '#000',
     shadowRadius: 8,
@@ -167,7 +169,7 @@ row: {
   marginBottom: 5,
 },
 title: {
-  fontSize: 16,
+  fontSize: 20,
   fontWeight: "bold",
 },
 

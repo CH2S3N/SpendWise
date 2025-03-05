@@ -8,8 +8,6 @@ import { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { colors } from "@/constants/colors";
 
-
-
 export default function SubCatWants() {
   const { updateCategory } = UseTransactionService();
   const dispatch = useDispatch();
@@ -18,29 +16,36 @@ export default function SubCatWants() {
   const [sliderValue, setSliderValue] = useState<{ [key: number]: number }>({});
 
   useEffect(() => {
-    const initialSliderValues = categories.reduce((id, cat) => {
+    const initialSliderValues = nonEssentialSubCat.reduce((id, cat) => {
       id[cat.id] = cat.proportion;
       return id;
     }, {} as { [key: number]: number });
-    
-    setSliderValue(initialSliderValues); // Set the initial slider values from Redux
+
+    setSliderValue(initialSliderValues); // Set initial slider values from Redux
   }, [categories]);
 
   const handleSliderChange = async (categoryId: number, value: number) => {
-    const category = categories.find((cat) => cat.id === categoryId);
+    const step = 5;
+    const roundedValue = Math.round(value / step) * step; 
+
+    const category = nonEssentialSubCat.find((cat) => cat.id === categoryId);
     if (!category) return;
+
     const updatedCategories = categories.map((cat) =>
-      cat.id === categoryId ? { ...cat, proportion: value } : cat
+      cat.id === categoryId ? { ...cat, proportion: roundedValue } : cat
     );
+
     dispatch(setData({ categories: updatedCategories, transactions, incomeCategories, goals, user, incomes, recurrence }));
-    await updateCategory({ ...category, proportion: value });
+    await updateCategory({ ...category, proportion: roundedValue });
   };
 
   const resetProportions = async () => {
     try {
-      const updatedCategories = nonEssentialSubCat.map((cat) => {
-        return { ...cat, proportion: cat.initialProp };
-      });
+      const updatedCategories = categories.map((cat) =>
+        nonEssentialSubCat.some((subCat) => subCat.id === cat.id)
+          ? { ...cat, proportion: cat.initialProp }
+          : cat
+      );
 
       dispatch(setData({ categories: updatedCategories, transactions, incomeCategories, goals, user, incomes, recurrence }));
 
@@ -50,8 +55,8 @@ export default function SubCatWants() {
       }, {} as { [key: number]: number });
 
       setSliderValue(initialSliderValues);
-      
-      for (const category of updatedCategories) {
+
+      for (const category of nonEssentialSubCat) {
         await updateCategory(category);
       }
     } catch (error) {
@@ -59,39 +64,41 @@ export default function SubCatWants() {
     }
   };
 
-
   return (
-    <View style={{flex:1}}>
-      
+    <View style={{ flex: 1 }}>
       <ScrollView>
-      {nonEssentialSubCat.map((category) => {
-        const value = sliderValue[category.id] ?? category.proportion; // Use slider value if available
-        return (
-          <View key={category.id}>
-            <View style={{ flexDirection: "row" }}>
-              <Text style={{ paddingRight: 5 }}>{category.name}</Text>
-              <Text style={{ paddingRight: 5 }}>{value.toFixed(0)}%</Text>
+        {nonEssentialSubCat.map((category) => {
+          const value = sliderValue[category.id] ?? category.proportion;
+          return (
+            <View key={category.id}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Text style={{ paddingRight: 5 }}>{category.name}</Text>
+                <Text style={{ paddingRight: 5 }}>{value.toFixed(0)}%</Text>
+              </View>
+              <Slider
+                value={value}
+                onValueChange={(val) => {
+                  const step = 5;
+                  const roundedVal = Math.round(val / step) * step;
+                  setSliderValue((prev) => ({ ...prev, [category.id]: roundedVal }));
+                }}
+                onSlidingComplete={(val) => handleSliderChange(category.id, val)}
+                minimumValue={0}
+                maximumValue={100}
+                step={5} // Ensures the slider moves in steps of 5
+                minimumTrackTintColor={colors.green}
+                maximumTrackTintColor={colors.green}
+                thumbTintColor={colors.green}
+              />
             </View>
-            <Slider
-              value={value}
-              onValueChange={(val) => setSliderValue((prev) => ({ ...prev, [category.id]: val }))}
-              onSlidingComplete={(val) => handleSliderChange(category.id, val)}
-              minimumValue={0}
-              maximumValue={100}
-              step={1}
-              minimumTrackTintColor= {colors.green}
-              maximumTrackTintColor= {colors.green}
-              thumbTintColor= {colors.green}
-            />
-          </View>
-        );
-      })}
+          );
+        })}
       </ScrollView>
       <View style={{ paddingTop: 10, alignItems: "flex-end" }}>
-        <TouchableOpacity  onPress={() => resetProportions()}>
+        <TouchableOpacity onPress={() => resetProportions()}>
           <Text>Reset</Text>
         </TouchableOpacity>
-      </View >
+      </View>
     </View>
   );
 }

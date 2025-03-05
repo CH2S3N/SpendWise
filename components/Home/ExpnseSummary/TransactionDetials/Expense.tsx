@@ -186,6 +186,7 @@ export default function Expense() {
             <Modal isOpen={isModalVisible} transparent animationType="fade" onRequestClose={() => setIsModalVisible(false)}>
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContent}>
+                        <Text style={styles.title}>UPDATE EXPENSE</Text>
                         {currentTransaction && (
                             <UpdateExpense
                                 setIsModalVisible={setIsModalVisible}
@@ -205,36 +206,36 @@ export default function Expense() {
             animationType="fade"
             onRequestClose={() => setIsConfirmModalVisible(false)}
             >
-            <View style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            }}>
                 <View style={{
-                width: 300,
-                padding: 20,
-                backgroundColor: 'white',
-                borderRadius: 10,
-                alignItems: 'center',
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
                 }}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 10 }}>
-                    Confirm Save
-                </Text>
-                <Text style={{ marginBottom: 20 }}>
-                    Are you sure you want to delete this entry?
-                </Text>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-                    <Button title="Cancel" color={colors.red} onPress={() => setIsConfirmModalVisible(false)} />
-                    <Button title="Confirm" color={colors.green} onPress={()=> {
-                        if (tappedTransactionId !== null) {
-                            deleteTransaction(tappedTransactionId);
-                            setIsConfirmModalVisible(false); // Close modal after deletion
-                            }
-                    }} />
+                    <View style={{
+                    width: 300,
+                    padding: 20,
+                    backgroundColor: 'white',
+                    borderRadius: 10,
+                    alignItems: 'center',
+                    }}>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 10 }}>
+                        Confirm Save
+                    </Text>
+                    <Text style={{ marginBottom: 20 }}>
+                        Are you sure you want to delete this entry?
+                    </Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+                        <Button title="Cancel" color={colors.red} onPress={() => setIsConfirmModalVisible(false)} />
+                        <Button title="Confirm" color={colors.green} onPress={()=> {
+                            if (tappedTransactionId !== null) {
+                                deleteTransaction(tappedTransactionId);
+                                setIsConfirmModalVisible(false); // Close modal after deletion
+                                }
+                        }} />
+                    </View>
+                    </View>
                 </View>
-                </View>
-            </View>
             </RNModal>
         </View>
     );
@@ -278,6 +279,16 @@ const styles=StyleSheet.create({
       modalContent: {
         width: '80%',
         height: '80%',
+        
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 10,
+        alignItems: 'center',
+        elevation: 5,
+        shadowColor: '#000',
+        shadowRadius: 8,
+        shadowOffset: { height: 6, width: 0 },
+        shadowOpacity: 0.15,
       },
 
 
@@ -302,7 +313,7 @@ const styles=StyleSheet.create({
         marginBottom: 10,
     },
     title: {
-        fontSize: 16,
+        fontSize: 20,
         fontWeight: "bold",
     },
     amount: {
