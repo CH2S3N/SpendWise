@@ -68,6 +68,7 @@ export default function AddIncome({
             incomeCategoryId: incomeCategoryId,
             type: incomeCategory as "Allowance" | "Salary" | "Others",
             interval: Number(isrecurrence),
+            intervalInput: Number(isRecurrenceInput),
             subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
             id,
         });

@@ -69,7 +69,7 @@ export default function UpdateIncome({
     if (currentIncome) {
       setAmount(String(currentIncome.amount || ""));
       setRecurrence(String(currentIncome.interval || ""));
-      setRecurrenceInput(String(currentIncome.interval || ""));
+      setRecurrenceInput(String(currentIncome.intervalInput || ""));
       setDescription(currentIncome.description || "");
       setFrequency(currentIncome.frequency || "Daily");
       setIncomeCategory(currentIncome.type || "Allowance");
@@ -97,6 +97,7 @@ export default function UpdateIncome({
       incomeCategoryId: incomeCategoryId,
       type: incomeCategory as "Allowance" | "Salary" | "Others",
       interval: Number(isRecurrence),
+      intervalInput: Number(isRecurrenceInput),
       subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
     });
     setDescription("");

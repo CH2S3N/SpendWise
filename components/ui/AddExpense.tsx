@@ -82,6 +82,7 @@ export default function AddExpense({
         type: category as "Essential" | "Non_Essential",
         recurrence_id: recurrenceId,
         interval: Number(isrecurrence),
+        intervalInput: Number(isRecurrenceInput),
         subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
         id,
       });
@@ -193,7 +194,7 @@ export default function AddExpense({
                     setRecurrence(numericValue ? String(numericValue * 4) : ""); 
                   }}
                   />
-                  <Text>Day(s) per Week</Text>
+                  <Text>Time(s) per Week</Text>
                   </View>
                 )}
 
@@ -218,7 +219,7 @@ export default function AddExpense({
                       setRecurrence(numericValue ? String(numericValue * 2) : ""); 
                     }}
                   />
-                  <Text>Day(s) per Bi-Week</Text>
+                  <Text>Time(s) per Bi-Week</Text>
                   </View>
                 )}
 
@@ -244,7 +245,7 @@ export default function AddExpense({
                     setRecurrence(numericValue.toString()); 
                   }}
                 />
-                <Text>Day(s) per Month</Text>
+                <Text>Time(s) per Month</Text>
                   </View>
                 )}
             </View>

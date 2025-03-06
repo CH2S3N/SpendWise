@@ -78,7 +78,7 @@ export default function UpdateExpense({
       if (currentTransaction) {
         setAmount(String(currentTransaction.amount));
         setRecurrence(String(currentTransaction.interval));
-        setRecurrenceInput(String(currentTransaction.interval));
+        setRecurrenceInput(String(currentTransaction.intervalInput));
         setDescription(currentTransaction.description);
         setFrequency(currentTransaction.frequency);
         setPrioritization(currentTransaction.prioritization);
@@ -115,6 +115,7 @@ export default function UpdateExpense({
           category_id: categoryId,
           type: category as "Essential" | "Non_Essential",
           interval: Number(recurrence),
+          intervalInput: Number(isRecurrenceInput),
           subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
           recurrence_id: recurrenceId,
         });
@@ -195,7 +196,7 @@ export default function UpdateExpense({
                   setRecurrence(numericValue ? String(numericValue * 4) : ""); 
                 }}
                 />
-                <Text>Day(s) per Week</Text>
+                <Text>Time(s) per Week</Text>
                 </View>
               )}
 
@@ -220,7 +221,7 @@ export default function UpdateExpense({
                     setRecurrence(numericValue ? String(numericValue * 2) : ""); 
                   }}
                 />
-                <Text>Day(s) per Bi-Week</Text>
+                <Text>Time(s) per Bi-Week</Text>
                 </View>
               )}
 
@@ -246,7 +247,7 @@ export default function UpdateExpense({
                   setRecurrence(numericValue.toString()); 
                 }}
               />
-              <Text>Day(s) per Month</Text>
+              <Text>Time(s) per Month</Text>
                 </View>
               )}
           </View>

@@ -9,6 +9,7 @@ export interface Transaction {
     amount: number;
     type: "Essential" | "Non_Essential";
     interval: number;
+    intervalInput: number;
     subtype: "Weekends" | "Weekdays" | "All" | "Custom"
 }
 export interface Recurrence {
@@ -23,6 +24,7 @@ export interface Income {
     frequency: "Daily" | "Weekly" | "Bi-Weekly" | "Monthly";
     type: "Allowance" | "Salary" | "Others";
     interval: number;
+    intervalInput: number;
     subtype: "Weekends" | "Weekdays" | "All" | "Custom"
 }
 

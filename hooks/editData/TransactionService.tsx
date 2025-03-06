@@ -77,11 +77,12 @@ export function UseTransactionService() {
   const insertIncome = async (income: Income) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
-        `INSERT INTO Income (incomeCategoryId, interval, subtype, description, frequency, amount, type) 
-         VALUES(?, ?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO Income (incomeCategoryId, interval, intervalInput, subtype, description, frequency, amount, type) 
+         VALUES(?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           income.incomeCategoryId,
           income.interval,
+          income.intervalInput,
           income.subtype,
           income.description,
           income.frequency,
@@ -107,7 +108,7 @@ export function UseTransactionService() {
   const updateIncome = async (income: Income) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
-        `UPDATE Income SET subtype = ?, incomeCategoryId = ?, amount = ?, description = ?, frequency = ?, type = ?, interval = ?  
+        `UPDATE Income SET subtype = ?, incomeCategoryId = ?, amount = ?, description = ?, frequency = ?, type = ?, interval = ?, intervalInput = ? 
          WHERE id = ?`,
         [
           income.subtype,
@@ -117,6 +118,7 @@ export function UseTransactionService() {
           income.frequency,
           income.type,
           income.interval,
+          income.intervalInput,
           income.id,
         ]
       );
@@ -153,12 +155,13 @@ export function UseTransactionService() {
   const insertTransaction = async (transaction: Transaction) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
-        `INSERT INTO Transactions (category_id, recurrence_id, interval, subtype, description, frequency, prioritization, isfixedamount, amount, type) 
-         VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO Transactions (category_id, recurrence_id, interval, intervalInput, subtype, description, frequency, prioritization, isfixedamount, amount, type) 
+         VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           transaction.category_id,
           transaction.recurrence_id,
           transaction.interval,
+          transaction.intervalInput,
           transaction.subtype,
           transaction.description,
           transaction.frequency,
@@ -188,7 +191,7 @@ export function UseTransactionService() {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
         `UPDATE Transactions 
-         SET subtype = ?, category_id = ?, description = ?, frequency = ?, prioritization = ?, isfixedamount = ?, amount = ?, type = ?, recurrence_id = ?, interval = ? 
+         SET subtype = ?, category_id = ?, description = ?, frequency = ?, prioritization = ?, isfixedamount = ?, amount = ?, type = ?, recurrence_id = ?, interval = ?, intervalInput = ? 
          WHERE id = ?`,
         [
           transaction.subtype,
@@ -201,6 +204,7 @@ export function UseTransactionService() {
           transaction.type,
           transaction.recurrence_id,
           transaction.interval,
+          transaction.intervalInput,
           transaction.id,
         ]
       );

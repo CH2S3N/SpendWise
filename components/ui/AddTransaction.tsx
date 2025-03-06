@@ -2,7 +2,6 @@ import * as React from "react";
 import {  ScrollView, StyleSheet, View } from "react-native";
 import SegmentedControl from "@react-native-segmented-control/segmented-control";
 import AddExpense from "./AddExpense";
-import AddGoal from "./AddGoal";
 import AddIncome from "./addIncome";
 
 
