@@ -35,91 +35,87 @@ export default function IncomeList() {
                       return (
                           <TouchableOpacity
                               key={income.id}
-                              style={styles.item}
+                              style={[styles.card, isExpanded ? {backgroundColor: "#FEFAE0", } : { backgroundColor: "white" }]}
                               onPress={() => setTappedTransactionId(isExpanded ? null : income.id)}
                           >
-                              <Card
-                                  content={
-                                      <View style={styles.content}>
-                                          {!isExpanded ? (
-                                              <>
-                                                  <View style={styles.description}>
-                                                      <Text style={styles.title}>
-                                                          {income.description.charAt(0).toUpperCase() + income.description.slice(1)}
-                                                      </Text>
-                                                  </View>
-                                                  <View style={styles.item}>
-                                                      <Text style={styles.amount}>₱ {income.amount * income.interval}</Text>
-                                                      <Text style={styles.label}>Budget per Month</Text>
-                                                  </View>
-                                              </>
-                                          ) : (
-                                              <>
-                                                  <View style={styles.card}>
-                                                      <View style={styles.header}>
-                                                          <View style={styles.description}>
-                                                              <Text style={styles.title}>
-                                                                  {income.description.charAt(0).toUpperCase() + income.description.slice(1)}
-                                                              </Text>
-                                                          </View>
-                                                          <View style={styles.item}>
-                                                              <Text style={styles.amount}>₱ {Math.round(income.amount * income.interval)}</Text>
-                                                              <Text style={styles.label}>Budget per Occurrence</Text>
-                                                          </View>
-                                                      </View>
-                                                      <View style={styles.details}>
-                                                          <View style={styles.row}>
-                                                              <Text style={styles.label}>
-                                                                  <FontAwesome6 name="bag-shopping" size={18} color={colors.green} /> Income per Ocurrence:
-                                                              </Text>
-                                                              <Text style={[styles.value, {color: colors.green, fontSize:15}]}>₱ {income.amount}</Text>
-                                                          </View>
-                                                          <View style={styles.row}>
-                                                              <Text style={styles.label}>
-                                                                  <FontAwesome6 name="bag-shopping" size={18} color={colors.green} /> Expense Type:
-                                                              </Text>
-                                                              <Text style={styles.value}>{income.type}</Text>
-                                                          </View>
-                                                          <View style={styles.row}>
-                                                              <Text style={styles.label}>
-                                                                  <FontAwesome6 name="calendar-alt" size={18} color={colors.green} /> Recurrence Pattern:
-                                                              </Text>
-                                                              <Text style={styles.value}>{income.frequency}
-                                                                { income.subtype === "Custom" ? (
-                                                                    null
-                                                                ) : (
-                                                                   income.subtype
-                                                                )}
-                                                              </Text>
-                                                          </View>
-                                                          <View style={styles.row}>
-                                                              <Text style={styles.label}>
-                                                                  <FontAwesome6 name="calendar-alt" size={18} color={colors.green} /> Occurrence Count:
-                                                              </Text>
-                                                              <Text style={styles.value}>{income.interval} Times/s per Month</Text>
-                                                          </View>
-                                                          <View style={styles.row2}>
-                                                              <TouchableOpacity onPress={() => {
-                                                                  setCurrentIncome(income);
-                                                                  setIsModalVisible(true);
-                                                              }}>
-                                                                  <Text style={[styles.label, { marginRight: 20 }]}>
-                                                                      <FontAwesome6 name="edit" size={35} color={colors.green} />
-                                                                  </Text>
-                                                              </TouchableOpacity>
-                                                              <TouchableOpacity onPress={() => setIsConfirmModalVisible(true)}>
-                                                                  <Text style={[styles.label, { marginRight: 20 }]}>
-                                                                      <FontAwesome6 name="square-xmark" size={35} color={colors.red} />
-                                                                  </Text>
-                                                              </TouchableOpacity>
-                                                          </View>
-                                                      </View>
-                                                  </View>
-                                              </>
-                                          )}
-                                      </View>
-                                  }
-                              />
+                                <View style={styles.content}>
+                                    {!isExpanded ? (
+                                        <>
+                                            <View style={styles.description}>
+                                                <Text style={styles.title}>
+                                                    {income.description.charAt(0).toUpperCase() + income.description.slice(1)}
+                                                </Text>
+                                            </View>
+                                            <View style={styles.item}>
+                                                <Text style={styles.amount}>₱ {income.amount * income.interval}</Text>
+                                                <Text style={styles.label}>Budget per Month</Text>
+                                            </View>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <View style={{flex: 1}}>
+                                                <View style={styles.header}>
+                                                    <View style={styles.description}>
+                                                        <Text style={styles.title}>
+                                                            {income.description.charAt(0).toUpperCase() + income.description.slice(1)}
+                                                        </Text>
+                                                    </View>
+                                                    <View style={styles.item}>
+                                                        <Text style={styles.amount}>₱ {Math.round(income.amount * income.interval)}</Text>
+                                                        <Text style={styles.label}>Budget per Month</Text>
+                                                    </View>
+                                                </View>
+                                                <View style={styles.details}>
+                                                    <View style={styles.row}>
+                                                        <Text style={styles.label}>
+                                                            <FontAwesome6 name="bag-shopping" size={18} color={colors.green} /> Income per Ocurrence:
+                                                        </Text>
+                                                        <Text style={[styles.value, {color: colors.green, fontSize:15}]}>₱ {income.amount}</Text>
+                                                    </View>
+                                                    <View style={styles.row}>
+                                                        <Text style={styles.label}>
+                                                            <FontAwesome6 name="bag-shopping" size={18} color={colors.green} /> Expense Type:
+                                                        </Text>
+                                                        <Text style={styles.value}>{income.type}</Text>
+                                                    </View>
+                                                    <View style={styles.row}>
+                                                        <Text style={styles.label}>
+                                                            <FontAwesome6 name="calendar-alt" size={18} color={colors.green} /> Recurrence Pattern:
+                                                        </Text>
+                                                        <Text style={styles.value}>{income.frequency}
+                                                        { income.subtype === "Custom" ? (
+                                                            null
+                                                        ) : (
+                                                            income.subtype
+                                                        )}
+                                                        </Text>
+                                                    </View>
+                                                    <View style={styles.row}>
+                                                        <Text style={styles.label}>
+                                                            <FontAwesome6 name="calendar-alt" size={18} color={colors.green} /> Occurrence Count:
+                                                        </Text>
+                                                        <Text style={styles.value}>{income.interval} Times/s per Month</Text>
+                                                    </View>
+                                                    <View style={styles.row2}>
+                                                        <TouchableOpacity onPress={() => {
+                                                            setCurrentIncome(income);
+                                                            setIsModalVisible(true);
+                                                        }}>
+                                                            <Text style={[styles.label, { marginRight: 20 }]}>
+                                                                <FontAwesome6 name="edit" size={35} color={colors.green} />
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                        <TouchableOpacity onPress={() => setIsConfirmModalVisible(true)}>
+                                                            <Text style={[styles.label, { marginRight: 20 }]}>
+                                                                <FontAwesome6 name="square-xmark" size={35} color={colors.red} />
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                </View>
+                                            </View>
+                                        </>
+                                    )}
+                                </View>
                           </TouchableOpacity>
                       );
                   })}
@@ -250,8 +246,16 @@ const styles=StyleSheet.create({
     },
 
     card: {
+        padding: 15,
+        borderRadius: 15,
+        backgroundColor: 'white',
+        elevation: 5,
+        shadowColor: "#000",
+        shadowRadius: 8,
+        shadowOffset: { height: 6, width: 0 },
+        shadowOpacity: 0.15,
         flex: 1,
-        paddingHorizontal: 5
+        marginBottom: 10
     },
     header: {
         flexDirection: "row",

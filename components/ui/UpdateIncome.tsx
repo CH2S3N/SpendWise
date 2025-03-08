@@ -206,7 +206,7 @@ export default function UpdateIncome({
                     setRecurrence(numericValue ? String(numericValue * 4) : ""); 
                   }}
                 />
-                <Text>Day(s) per Week</Text>
+                <Text>Time/s per Week</Text>
                 </View>
               )}
               {frequency === 'Bi-Weekly' && (
@@ -230,7 +230,7 @@ export default function UpdateIncome({
                       setRecurrence(numericValue ? String(numericValue * 2) : ""); 
                     }}
                 />
-                <Text>Day/s per Bi-Week</Text>
+                <Text>Time/s per Bi-Week</Text>
                 </View>
               )}
 
@@ -256,7 +256,7 @@ export default function UpdateIncome({
                       setRecurrence(numericValue.toString());
                     }}
                   />
-                  <Text>Day/s per Month</Text>
+                  <Text>Time/s per Month</Text>
                 </View>
               )}
           </View>

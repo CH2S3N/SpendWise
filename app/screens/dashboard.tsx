@@ -127,7 +127,7 @@ export default function Index() {
                   <AntDesign name="leftcircle" size={24} color="black" />
                 </TouchableOpacity>
               </View>
-              <Text style={styles.title}>Generate Budget Plan</Text>
+              <Text style={styles.title}>Allocate</Text>
             </View>
             <View style={styles.modalcontent}>
               <BudgetPlanInfo setBudgetPlanGenerated={setBudgetPlanGenerated} setGenerateModalVisible={setGenerateModalVisible} />

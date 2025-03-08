@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    paddingHorizontal: 5,
+    paddingHorizontal: 20,
     paddingBottom: 5,  
 },
 row: {

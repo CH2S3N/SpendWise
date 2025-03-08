@@ -43,6 +43,7 @@ const _layout = () => {
                   fontWeight: 'bold',
                   fontSize: 18, 
                 },
+                
                 tabBarStyle: { 
                   backgroundColor: colors.light,
                   paddingBottom: 10,
@@ -53,12 +54,15 @@ const _layout = () => {
                   marginBottom: 10
                 
                 }, 
+                
                 tabBarLabelStyle: {
                   fontSize: 14, 
                   fontWeight: 'bold', 
                 },
+                
                 tabBarActiveTintColor: colors.green, 
                 tabBarInactiveTintColor: colors.dark, 
+              
               }}
         >
           <Tabs.Screen 
@@ -67,18 +71,34 @@ const _layout = () => {
           options={{ 
             title: "GOALS",
             tabBarIcon: ({ color }) => <AntDesign name="plussquareo" size={24} color={color} />, 
+            tabBarLabel: ({ focused, color }) => (
+              <Text style={{ fontSize: focused ? 20 : 14, fontWeight: 'bold', color}}>
+                GOALS
+              </Text>
+            ),
           }}
           />
           <Tabs.Screen 
           name='dashboard' 
-          options={{ title: "TRANSACTIONS",
+          options={{ title: "TRANSACTIONS", 
             tabBarIcon: ({ color }) => <AntDesign name="profile" size={24} color={color} />,
+            tabBarLabel: ({ focused, color }) => (
+              <Text style={{ fontSize: focused ? 20 : 14, fontWeight: 'bold', color }}>
+                TRANSACTIONS
+              </Text>
+            ),
           }}
+          
           />
           <Tabs.Screen 
           name='budget' 
           options={{ title: "WALLET",
             tabBarIcon: ({ color }) => <AntDesign name="wallet" size={24} color={color} />,
+            tabBarLabel: ({ focused, color }) => (
+              <Text style={{ fontSize: focused ? 20 : 14, fontWeight: 'bold', color }}>
+                WALLET
+              </Text>
+            ),
           }}
           />
         </Tabs>
