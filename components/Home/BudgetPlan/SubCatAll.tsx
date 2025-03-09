@@ -12,7 +12,6 @@ export default function SubCatAll() {
   const { updateCategory } = UseTransactionService();
   const dispatch = useDispatch();
   const { categories, transactions, incomeCategories, goals, user, incomes, recurrence } = useSelector((state: RootState) => state.data);
-  const essentialSubCat = categories.filter((category) => category.type === "Essential");
   const [sliderValue, setSliderValue] = useState<{ [key: number]: number }>({});
 
   useEffect(() => {

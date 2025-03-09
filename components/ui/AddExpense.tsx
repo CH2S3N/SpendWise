@@ -1,8 +1,7 @@
 import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet, ScrollView, Modal } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { useSQLiteContext } from 'expo-sqlite';
-import { Category } from '@/types';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
@@ -13,12 +12,11 @@ import RNPickerSelect from 'react-native-picker-select';
 
 interface addExpenseProps {
   setIsAddingTransaction: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsUpdatingTransaction: React.Dispatch<React.SetStateAction<boolean>>;
  
 }
 
 export default function AddExpense({
-    setIsAddingTransaction, setIsUpdatingTransaction,
+    setIsAddingTransaction, 
 }: addExpenseProps) {
 
     const { insertTransaction } = UseTransactionService();
@@ -45,7 +43,7 @@ export default function AddExpense({
     const db = useSQLiteContext();
     const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
     const [isConfirmModalVisible, setIsConfirmModalVisible] = React.useState(false);
-
+    const [categoryDescription, setCategoryDescription] = useState('');
     function handleConfirmSave() {
         setIsConfirmModalVisible(false);
         handleSaveExpense();
@@ -80,14 +78,12 @@ export default function AddExpense({
         amount: calculatedAmount, 
         category_id: categoryId,
         type: category as "Essential" | "Non_Essential",
-        recurrence_id: recurrenceId,
         interval: Number(isrecurrence),
         intervalInput: Number(isRecurrenceInput),
         subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
         id,
       });
-    
-      // Reset form after saving
+      alert("Expense Added Successfully")
       setDescription("");
       setFrequency("Daily");
       setPrioritization("High");
@@ -96,7 +92,6 @@ export default function AddExpense({
       setCategoryId(1);
       setRecurrenceId(1);
       setCurrentTab(0);
-      setIsAddingTransaction(false);
     }
     
     
@@ -133,7 +128,7 @@ export default function AddExpense({
             onChangeText={setDescription}
           />
 
-          {/* FREQUENCY */}
+          {/* Recurrence */}
           <View>
             <View style={styles.content}>
                 <Text style={styles.btext}>Recurrence</Text>
@@ -144,6 +139,10 @@ export default function AddExpense({
                   onChange={(event) => {
                     setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
                   }}
+                  fontStyle={{ color: colors.dark }}
+                  activeFontStyle={{ color: colors.light }}
+                  tintColor={colors.red} 
+                  backgroundColor={colors.lightRed}
                 />
             </View>
             <View style={styles.content}>
@@ -169,6 +168,10 @@ export default function AddExpense({
                         setRecurrence("20");
                       }
                     }}
+                    fontStyle={{ color: colors.dark }}
+                    activeFontStyle={{ color: colors.light }}
+                    tintColor={colors.red} 
+                    backgroundColor={colors.lightRed}
                   />
                   
                 )}
@@ -264,6 +267,10 @@ export default function AddExpense({
                   setIsFixedAmount('No')
                 }
               }}
+              fontStyle={{ color: colors.dark }}
+              activeFontStyle={{ color: colors.light }}
+              tintColor={colors.red} 
+              backgroundColor={colors.lightRed}
             />
             {/* AMOUNT */}
               <Text style={styles.btext}>Amount</Text>
@@ -290,22 +297,29 @@ export default function AddExpense({
             onChange={(event) => {
               setCategory(["Essential","Non_Essential"][event.nativeEvent.selectedSegmentIndex])
             }}
+            fontStyle={{ color: colors.dark }}
+            activeFontStyle={{ color: colors.light }}
+            tintColor={colors.red} 
+            backgroundColor={colors.lightRed}
           />
 
           <Text style={styles.btext}>Select an Expense Sub-type</Text>
           <View style={styles.dropdownContainer}>
-              <RNPickerSelect                
+              <RNPickerSelect    
+              style={{}}            
                 value={categoryId}
                 onValueChange={(value) => {
                   setTypeSelected(value);
                   const selectedCategory = categories.find((cat) => cat.name === value);
                   if (selectedCategory) {
                     setCategoryId(selectedCategory.id);
+                    setCategoryDescription(selectedCategory.description);
                   }
                 }}
+               
                 items={categories.map((cat) => ({
-                  label: cat.name.charAt(0).toUpperCase() + cat.name.slice(1),
-                  value: cat.name,
+                  label: cat.name.charAt(0).toUpperCase() + cat.name.slice(1) ,
+                  value: (cat.id ),
                 }))}
                 placeholder={{ label: "Select a sub-type...", value: null }}
               />
@@ -319,19 +333,19 @@ export default function AddExpense({
         <View
           style={{ flexDirection: "row", justifyContent: "space-around", paddingTop: 10}}
         >
-          <Button title="Cancel" color={'black'} 
+          <Button title="Cancel" color={colors.red} 
           onPress={
             () => {
               setIsAddingTransaction(false);
-              setIsUpdatingTransaction(false)
             }
           
           }
           />
-          <Button title="Save" color={'black'} 
+          <Button title="Save" color={colors.red} 
           onPress={()=> {
               setIsConfirmModalVisible(true)
-            }} disabled={!validateFields()} 
+            }} disabled={!validateFields() } 
+
           />
         </View>
 
@@ -423,11 +437,15 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   dropdownContainer: {
-  
     marginTop: 10,
     borderWidth: 1,
     borderColor: 'black',
     borderRadius: 5,
+  },
+  descriptionText: {
+    marginTop: 10,
+    fontSize: 14,
+    color: 'gray',
   },
 })
 

@@ -40,7 +40,7 @@ export default function Accomplished({ goal, setCurrentGoal,setIsModalVisible }:
                             <Text >{progressPercentage}%</Text>
                         </View>
                     </View>
-                    <ProgressBar progress={progress} theme={{ colors: { primary: colors.green } }} />
+                    <ProgressBar progress={progress} theme={{ colors: { primary: colors.yellow } }} />
                 </TouchableOpacity>
             }
         />

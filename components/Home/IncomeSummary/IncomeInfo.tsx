@@ -30,8 +30,8 @@ export default function IncomeInfo() {
       {/* Add Transaction Button */}
 
       <View style={styles.container}>
-          <View style={styles.tableheader}>
-              <View style={styles.row}>
+          <View style={[styles.tableheader, ]}>
+              <View style={[styles.row, {marginHorizontal: 20}]}>
                 <Text style={styles.title}>Income Sources</Text>
                 <Text style={[styles.title, {color: colors.green}]}>Total: ₱ {calcIncome()}</Text>
             </View>

@@ -57,17 +57,21 @@ const CustomDropdown: React.FC<DropdownProps> = ({ selectedValue, onValueChange 
 
 
 const Categories = ({
-   isAdvanceBtnTapped, setIsAdvanceBtnTapped, setHasBudgetStrat 
+   isAdvanceBtnTapped,stratSplit, setIsAdvanceBtnTapped, setHasBudgetStrat, setStratSplit 
   }: { 
     isAdvanceBtnTapped: boolean, 
-    setIsAdvanceBtnTapped: React.Dispatch<React.SetStateAction<boolean>>  
-    setHasBudgetStrat: React.Dispatch<React.SetStateAction<boolean>>  
+    setIsAdvanceBtnTapped: React.Dispatch<React.SetStateAction<boolean>>  ,
+    setHasBudgetStrat: React.Dispatch<React.SetStateAction<boolean>>  ,
+    stratSplit: boolean,
+    setStratSplit: React.Dispatch<React.SetStateAction<boolean>>  
   }) => {
     const dispatch = useDispatch();
     const { needs, wants, savings} = useSelector((state: RootState) => state.budget); 
     const [isEnabled, setIsEnabled] = useState(true);
-    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-    
+    useEffect(() => {
+      setIsEnabled(stratSplit);
+    }, [stratSplit]);
+        
 
 
     const [customStrat, setcustomStrat] = useState(false);
@@ -132,6 +136,7 @@ const Categories = ({
           setcustomStrat(false); 
           setStrat1(false);
           setStrat2(false);
+          setStratSplit(true)
           break;
         case "50/30/20 Rule":
           setStrat1(true);
@@ -141,8 +146,10 @@ const Categories = ({
           dispatch(setWants(30));
           dispatch(setSavings(20));
           setIsEnabled(true)
+          setStratSplit(true)
           break;
         case "70/30 Rule":
+          setStratSplit(false)
           setStrat2(true);
           setStrat1(false);
           setcustomStrat(false);
@@ -167,7 +174,7 @@ const Categories = ({
   return (
       <View style={[styles.container]}>
         <Text style={[styles.title, {paddingBottom: 10}]}>BUDGETING STRATEGY</Text>
-        <View style={[ { zIndex: 1, justifyContent: "center",}]}>
+        <View style={[ { zIndex: 1, justifyContent: "center", }]}>
           <CustomDropdown 
             selectedValue={selectedStrategy} 
             onValueChange={handleStrategyChange} 
@@ -183,7 +190,9 @@ const Categories = ({
                           trackColor={{false: '#767577', true: '#15B392'}}
                           thumbColor={isEnabled ? '#00FF9C' : '#f4f3f4'}
                           ios_backgroundColor="#3e3e3e"
-                          onValueChange={toggleSwitch}
+                          onValueChange={(value) => {
+                            setStratSplit(value);
+                          }}
                           value={isEnabled}
                         />
                 </View>
@@ -318,26 +327,12 @@ const Categories = ({
         {/* Slider */}
         {isAdvanceBtnTapped === true && (
             <>
-              {strat2 === true || isEnabled === false ? (
+             
                 <View style={[styles.container, {flex: 5,}]}>
-                  <Text style={styles.title}>Sub-Category (Expenses)</Text>
+                  <Text style={styles.title}>Sub-Type</Text>
                   <SubCatAll/>
                 </View>
-              ) : (
-                <>
-                <View style={[styles.container, {flex: 5, paddingTop:5}]}>
-                  <View style={[styles.container, {flex: 0.6}]}>
-                    <Text style={styles.title}>Sub-Category (Needs)</Text>
-                    <SubCatNeeds/>
-                  </View>
-                  <View style={[styles.container, {flex: 0.6}]}>
-                    <Text style={styles.title}>Sub-Category (Wants)</Text>
-                    <SubCatWants/>
-                  </View>
-                </View>
-                
-                </>
-              )}
+              
             </>
         )}
       </View>

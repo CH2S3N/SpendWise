@@ -28,21 +28,17 @@ export default function InProgress({ goal, setCurrentGoal,setIsModalVisible }: P
                     setIsModalVisible(true);
                     setCurrentGoal(goal)                }
                 }>
-                    <View style={styles.container}>
+                    <View style={styles.content}>
                         <View style={styles.description}>
-                            <Text style={styles.text}>{goal.name.charAt(0).toUpperCase() + goal.name.slice(1)}</Text>
-                            <Text >{accumulatedAmount}</Text>
+                            <Text style={styles.title}> {goal.name.charAt(0).toUpperCase() + goal.name.slice(1)} </Text>
+                            <Text style={styles.text}>Accumulated Amount: ₱ {goal.currentAmount}</Text>
                         </View>
                         <View style={styles.item}>
-                            <Text style={styles.text}>
-                                 {goal.amount}
-                            </Text>
-                            <Text>
-                                {progressPercentage}%
-                            </Text>
+                            <Text style={[styles.text, ]}>₱ {goal.amount}</Text>
+                            <Text style={[styles.text, {color: colors.yellow}]}>{progressPercentage}%</Text>
                         </View>
                     </View>
-                    <ProgressBar progress={progress} theme={{ colors: { primary: colors.green } }} />
+                    <ProgressBar progress={progress} theme={{ colors: { primary: colors.yellow } }} />
                 </TouchableOpacity>
             }
         />
@@ -54,14 +50,17 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 15,
     },
-    container: {
+    content: {
         flex: 1,
-        flexDirection: "row",
-        justifyContent: "center",
+        flexDirection: 'row',
+        justifyContent: 'center',
+        paddingHorizontal: 5,
+        paddingBottom: 10
     },
     item: {
         flex: 1,
         alignItems: "center",
+        justifyContent: "space-evenly"
     },
     description: {
         flex: 1,
@@ -79,5 +78,21 @@ const styles = StyleSheet.create({
     buttonText: {
         color: "#fff",
         fontSize: 14, 
+    },
+    title: {
+        color: colors.dark,
+        fontSize: 20,
+        fontWeight: "bold",
+    },
+    amount: {
+        textAlign: 'center',
+        fontSize: 18,
+        fontWeight: "bold",
+        color: colors.red,
+    },
+    label: {
+        fontSize: 14,
+        fontWeight: "600",
+        color: colors.dark,
     },
 });

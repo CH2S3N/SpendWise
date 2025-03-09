@@ -28,6 +28,10 @@ export default function IncomeChart () {
   const totalOthers = calculateTotalIncome(others, "Others");
   const total = totalAllowance + totalSalary + totalOthers;
 
+  const allowanceRatio = total > 0 ? ((totalAllowance / total) * 100).toFixed(0) : "0";
+  const salaryRatio = total > 0 ? ((totalSalary / total) * 100).toFixed(0) : "0";
+  const othersRatio = total > 0 ? ((totalOthers / total) * 100).toFixed(0) : "0";
+
   useEffect(() => {
     if (total > 0) {
       const newValues = [];
@@ -75,19 +79,19 @@ export default function IncomeChart () {
               {totalAllowance > 0 && (
                 <View style={styles.legendItem}>
                   <View style={[styles.colorBox, { backgroundColor: '#059212' }]} />
-                  <Text>Allowance: ₱ {totalAllowance}</Text>
+                  <Text>Allowance: ₱ {totalAllowance} <Text style={{color: '#059212'}}>({allowanceRatio}%)</Text></Text>
                 </View>
               )}
               {totalSalary > 0 && (
                 <View style={styles.legendItem}>
                   <View style={[styles.colorBox, { backgroundColor: '#06D001' }]} />
-                  <Text>Salary: ₱ {totalSalary}</Text>
+                  <Text>Salary: ₱ {totalSalary} <Text style={{color: '#06D001'}}>({salaryRatio}%)</Text></Text>
                 </View>
               )}
               {totalOthers > 0 && (
                 <View style={styles.legendItem}>
                   <View style={[styles.colorBox, { backgroundColor: '#9BEC00' }]} />
-                  <Text>Others: ₱ {totalOthers}</Text>
+                  <Text>Others: ₱ {totalOthers} <Text style={{color: '#9BEC00'}}>({othersRatio}%)</Text></Text>
                 </View>
               )}
             </View>

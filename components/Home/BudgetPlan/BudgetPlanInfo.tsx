@@ -1,10 +1,9 @@
 import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Switch, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import AddTransaction from '@/components/ui/AddTransaction';
 import { Modal } from '@/components/Modal';
 import IncomeInfo from '../IncomeSummary/IncomeInfo';
-import GenerateService from '@/hooks/generateBudgetplan/Generate';
 import { colors } from '@/constants/colors';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
@@ -13,8 +12,9 @@ import { UseTransactionService } from '@/hooks/editData/TransactionService';
 import { useFetchData } from '@/hooks/useFetchData';
 import Categories from './Categories';
 import Expense from '../ExpnseSummary/TransactionDetials/Expense';
-import { Income, Transaction } from '@/types';
-
+import AllocateAllService from '@/hooks/generateBudgetplan/AllocateService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setBudgetStratSplit } from '@/state/dataSlice';
 
 
 export default function BudgetPlanInfo({
@@ -25,9 +25,10 @@ export default function BudgetPlanInfo({
   setGenerateModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { updateUser } = UseTransactionService();
-  const { handleSaveExpense } = GenerateService();
+  const { allocateAll, splitAllocation } = AllocateAllService();
   const { transactions, user, incomes } = useSelector((state: RootState) => state.data);
   const { fetchData } = useFetchData();
+  const dispatch = useDispatch();
 
 
   const firstUser = user?.[0];  
@@ -45,14 +46,59 @@ export default function BudgetPlanInfo({
   const [isAdvanceBtnTapped, setAdvanceBtnTapped] = useState(false);
   const [isAddingTransaction, setIsAddingTransaction] = useState(false);
   const [hasBudgetStrat, setHasBudgetStrat] = useState(false);
+  const [stratSplit, setStratSplit] = useState(false);
+  const [budgetStratSplit, setIsStratSplit] = useState(false);
+
+
+  useEffect(() => {
+    const loadStratSplit = async () => {
+      try {
+        const storedValue = await AsyncStorage.getItem('stratSplit');
+        if (storedValue !== null) {
+          const parsedValue = JSON.parse(storedValue);
+          setStratSplit(parsedValue);
+          console.log("Loaded stratSplit:", parsedValue);
+        }
+      } catch (error) {
+        console.error("Error loading stratSplit:", error);
+      }
+    };
+   
+    loadStratSplit();
+  }, []); 
+  
+  useEffect(() => {
+    const saveStratSplit = async () => {
+      try {
+        await AsyncStorage.setItem('stratSplit', JSON.stringify(stratSplit));
+        console.log("Saved stratSplit:", stratSplit);
+      } catch (error) {
+        console.error("Error saving stratSplit:", error);
+      }
+    };
+  
+    if (stratSplit !== null) {
+      saveStratSplit();
+    }
+  }, [stratSplit]);
+  
+
+
 
 
   const [isLoading, setIsLoading] = useState(false);
 
+
   const handleAllocate = async () => {
     try {
       setIsLoading(true);
-      await handleSaveExpense();
+  
+      if (stratSplit === true) {
+        await splitAllocation();
+      } else {
+        await allocateAll();
+      }
+  
       setBudgetPlanGenerated(true);
       setGenerateModalVisible(false);
   
@@ -61,13 +107,23 @@ export default function BudgetPlanInfo({
         userName: input,
         hasData: "True",
       });
+  
+  
+      dispatch(setBudgetStratSplit(stratSplit));
+      await AsyncStorage.setItem('budgetStratSplit', JSON.stringify(stratSplit));
+  
+      console.log("Strategy split? ", stratSplit);
+  
+      await fetchData();
     } catch (error) {
       console.error("Error during allocation:", error);
     } finally {
       setIsLoading(false);
-      await fetchData()
     }
   };
+  
+  
+  
   
 
 
@@ -91,15 +147,14 @@ export default function BudgetPlanInfo({
          <>
             <View style={[styles.container,]}>
               {/* Categories */}
-                <View style={[styles.container, {flex: 1, }]}>
+                <View style={[styles.container, {flex: 1.2, }]}>
                   <View style={[styles.card, {}]}>
-                      <Categories setHasBudgetStrat={setHasBudgetStrat} isAdvanceBtnTapped={isAdvanceBtnTapped} setIsAdvanceBtnTapped={setAdvanceBtnTapped}/>
+                      <Categories setHasBudgetStrat={setHasBudgetStrat} isAdvanceBtnTapped={isAdvanceBtnTapped} setIsAdvanceBtnTapped={setAdvanceBtnTapped} setStratSplit={setStratSplit} stratSplit={stratSplit}/>
                       {isAdvanceBtnTapped === false ? (
                         <Button onPress={()=>{setAdvanceBtnTapped(true)}}>Advance</Button>
                       ) : (
                         <Button onPress={()=> setAdvanceBtnTapped(false)}>Go Back</Button>
                       )}
-
                   </View>
 
                 </View>

@@ -6,18 +6,21 @@ import { Income, Transaction } from '@/types'
 import { colors } from '@/constants/colors'
 
 const Overview = () => {
-    const { incomes, transactions, categories } = useSelector((state: RootState) => state.data);
-    
+    const { incomes, transactions, budgetStratSplit } = useSelector((state: RootState) => state.data);
+
 
     const totalIncome =  incomes.reduce((total: number, income: Income) => {
         return total + (income.amount * income.interval || 0 )
     }, 0);
+
     const essentialTransactions = transactions.filter(
-        (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Essential"
+        (transaction) => transaction.type === "Essential"
     );
+    
     const nonEssentialTransactions = transactions.filter(
-        (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Non_Essential"
+        (transaction) => transaction.type === "Non_Essential"
     );
+    
     const totalEssentialExpense =  essentialTransactions.reduce((total: number, transaction: Transaction) => {
         return total + (transaction.amount * transaction.interval || 0)
     }, 0);
@@ -42,30 +45,30 @@ const Overview = () => {
                         <Text style={styles.title}>Income</Text>
                         <Text style={{flex: 1, textAlign: 'right', color: '#00d000'}}> + ₱{income}</Text>
                     </View>
-                    {essentialTransactions.length > 0 && nonEssentialTransactions.length > 0 ? (
+                    {budgetStratSplit === true ? (
                         <>
                             {essentialTransactions.length > 0 && (
                                 <View style={styles.item}>
                                     <Text style={styles.title}>Expenses (Needs)</Text>
-                                    <Text style={{flex: 1, textAlign: 'right', color: '#fc2b46'}}>- ₱{needsExpense} ({needsRatio}%)</Text>
+                                    <Text style={{flex: 1, textAlign: 'right', }}>- ₱{needsExpense} <Text style={{color: '#fc2b46'}}>({needsRatio}%)</Text></Text>
                                 </View>
                             )}
                             {nonEssentialTransactions.length > 0 && (
                                 <View style={styles.item}>
                                     <Text style={styles.title}>Expenses (Wants)</Text>
-                                    <Text style={{flex: 1, textAlign: 'right', color: '#fc2b46'}}>- ₱{wantsExpense} ({wantsRatio}%)</Text>
+                                    <Text style={{flex: 1, textAlign: 'right', }}>- ₱{wantsExpense} <Text style={{color: '#FE6244'}}>({wantsRatio}%)</Text></Text>
                                 </View>
                             )}
                         </>
                     ) : (
                         <View style={styles.item}>
                         <Text style={styles.title}>Expenses {totalNonEssentialExpense === 0 ? (null) : (<Text>(Needs)</Text>)}</Text>
-                        <Text style={{flex: 1, textAlign: 'right', color: '#fc2b46'}}>- ₱{expense} ({expenseRatio}%)</Text>
+                        <Text style={{flex: 1, textAlign: 'right', }}>- ₱{expense} <Text style={{color: '#fc2b46'}}>({needsRatio}%)</Text></Text>
                     </View>
                     )}
                     <View style={styles.item}>
                         <Text style={styles.title}>Savings</Text>
-                        <Text style={{flex: 1, textAlign: 'right', }}>₱{savings} ({savingsRatio}%)</Text>
+                        <Text style={{flex: 1, textAlign: 'right', }}>₱{savings} <Text style={{color: '#FFD65A'}}>({savingsRatio}%)</Text></Text>
                     </View>
                 </>
             ) : (

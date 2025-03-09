@@ -21,7 +21,11 @@ export default function NonEssential({
     const [isAddingTransaction, setIsAddingTransaction] = React.useState<boolean>(false);
     const [isUpdatingTransaction, setIsUpdatingTransaction] = React.useState<boolean>(false);
     const essentialTransactions = transactions.filter(
-        (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Non_Essential"
+        (transaction) => transaction.type === "Essential"
+    );
+    
+    const nonEssentialTransactions = transactions.filter(
+        (transaction) => transaction.type === "Non_Essential"
     );
 
     const [currentTransaction, setCurrentTransaction] = useState<Transaction | null>(null);

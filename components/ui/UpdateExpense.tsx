@@ -261,10 +261,8 @@ export default function UpdateExpense({
             selectedIndex={selectedIndex}
             onChange={(event) => {
               setSelectedIndex(event.nativeEvent.selectedSegmentIndex)
-              if (selectedIndex === 1) {
-                setAmount('');
-                setIsFixedAmount('No')
-              }
+              setIsFixedAmount(event.nativeEvent.selectedSegmentIndex === 0 ? "Yes" : "No")
+
             }}
           />
           {/* AMOUNT */}
@@ -278,7 +276,6 @@ export default function UpdateExpense({
                 // Remove any non-numeric characters before setting the state
                 const numericValue = text.replace(/[^0-9.]/g, "");
                 setAmount(numericValue);
-                setIsFixedAmount('Yes')
               }}
             />
         </View>
@@ -362,7 +359,11 @@ export default function UpdateExpense({
           </Text>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
             <Button title="Cancel" color={colors.red} onPress={() => setIsConfirmModalVisible(false)} />
-            <Button title="Confirm" color={colors.green} onPress={handleConfirmSave} />
+            <Button title="Confirm" color={colors.green} onPress={()=>{
+              handleConfirmSave();
+              setIsUpdatingTransaction(false);
+              
+              }} />
           </View>
         </View>
       </View>

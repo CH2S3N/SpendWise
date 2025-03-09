@@ -8,18 +8,16 @@ import { colors } from '@/constants/colors';
 
 const Goal = () => {
   return (
-    <MainContainer>
-      <View style={styles.container}>
+    <View style={styles.container}>
         <GoalsInfo/>
-      </View>
-   </MainContainer>
+   </View>
  )
 }
 
 const styles = StyleSheet.create({
   container:{
     flex: 1,
-    marginHorizontal: 15,
+    paddingHorizontal: 10,
     
   },
 })

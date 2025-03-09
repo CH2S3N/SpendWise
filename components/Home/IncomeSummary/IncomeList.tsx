@@ -15,7 +15,7 @@ import Card from "@/components/ui/Card";
 export default function IncomeList() {
 
     const { deleteIncome } = UseTransactionService();
-     const { incomeCategories, incomes } = useSelector(
+     const {  incomes } = useSelector(
           (state: RootState) => state.data
         );
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -35,7 +35,7 @@ export default function IncomeList() {
                       return (
                           <TouchableOpacity
                               key={income.id}
-                              style={[styles.card, isExpanded ? {backgroundColor: "#FEFAE0", } : { backgroundColor: "white" }]}
+                              style={[styles.card, isExpanded ? {backgroundColor: "#E7F0DC", } : { backgroundColor: "white", marginHorizontal: 20}]}
                               onPress={() => setTappedTransactionId(isExpanded ? null : income.id)}
                           >
                                 <View style={styles.content}>
@@ -263,6 +263,7 @@ const styles=StyleSheet.create({
         marginBottom: 10,
     },
     title: {
+        color: colors.dark,
         fontSize: 20,
         fontWeight: "bold",
     },
@@ -291,7 +292,7 @@ const styles=StyleSheet.create({
     label: {
         fontSize: 14,
         fontWeight: "600",
-        color: "#666",
+        color: colors.dark
     },
     value: {
         fontSize: 14,

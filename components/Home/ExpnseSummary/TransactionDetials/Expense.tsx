@@ -1,13 +1,11 @@
 import { Category, Transaction } from "@/types";
 import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View, Modal as RNModal   } from "react-native";
-import TransactionDetails from "./TransactionDetails";
 import { Modal } from "@/components/Modal";
 import UpdateExpense from "@/components/ui/UpdateExpense";
 import React, { useState } from "react";
 import { UseTransactionService } from "@/hooks/editData/TransactionService";
 import { colors } from "@/constants/colors";
 import { FontAwesome6 } from "@expo/vector-icons";
-import Card from "@/components/ui/Card";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { Divider } from "react-native-paper";
@@ -24,13 +22,6 @@ export default function Expense() {
     const [tappedTransactionId, setTappedTransactionId] = useState<number | null>(null);
     const [isConfirmModalVisible, setIsConfirmModalVisible] = React.useState(false);
       
-    const essentialTransactions = transactions.filter(
-        (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Essential"
-    );
-    const nonEssentialTransactions = transactions.filter(
-        (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Non_Essential"
-    );
-
 
     function calcTransactions() {
         return transactions.reduce((total, transaction) => {
@@ -65,7 +56,7 @@ export default function Expense() {
                                         return (
                                                 <TouchableOpacity
                                                     key={transaction.id}
-                                                    style={[styles.card, isExpanded ? {backgroundColor: "#FEFAE0", } : { backgroundColor: "white" }]}
+                                                    style={[styles.card, isExpanded ? {backgroundColor: "#FFEDFA", } : { backgroundColor: colors.light, marginHorizontal:20}]}
                                                     activeOpacity={.8}
                                                     onPress={() => setTappedTransactionId(isExpanded ? null : transaction.id)}
                                                 >
@@ -84,82 +75,80 @@ export default function Expense() {
                                                                 </View>
                                                             </>
                                                         ) : (
-                                                            <>
-                                                                <View style={styles.cardinfo}>
+                                                            <View style={[styles.cardinfo, ]}>
 
-                                                                    <View style={styles.header}>
-                                                                        <View style={styles.description}>
-                                                                            <Text style={styles.title}>
-                                                                                {transaction.description.charAt(0).toUpperCase() + transaction.description.slice(1)}
-                                                                            </Text>
-                                                                        </View>
-                                                                        <View style={styles.item}>
-                                                                            <Text style={styles.amount}>₱ {Math.round(transaction.amount * transaction.interval)}</Text>
-                                                                            <Text style={[styles.label]}>Budget per Month</Text>
-                                                                        </View>
+                                                                <View style={styles.header}>
+                                                                    <View style={styles.description}>
+                                                                        <Text style={styles.title}>
+                                                                            {transaction.description.charAt(0).toUpperCase() + transaction.description.slice(1)}
+                                                                        </Text>
                                                                     </View>
-
-                                                                    <View style={styles.details}>
-                                                                    <View style={styles.row}>
-                                                                            <Text style={[styles.label]}>
-                                                                                <FontAwesome6 name="calendar-day" size={18} color={colors.green} /> Budget per Occurrence:
-                                                                            </Text>
-                                                                            <Text style={[styles.value, { color: colors.green, fontSize:15, }]} >₱ {Math.round(transaction.amount)}</Text>
-                                                                        </View>
-                                                                        <View style={styles.row}>
-                                                                            <Text style={[styles.label]}>
-                                                                                <FontAwesome6 name="bag-shopping" size={18} color={colors.green} /> Expense Type:
-                                                                            </Text>
-                                                                            { transaction.type === "Non_Essential" ? (
-                                                                                <Text style={styles.value}>Non Essential</Text>
-                                                                            ) : (
-                                                                                <Text style={styles.value}>Essential</Text>
-                                                                            )}
-                                                                        </View>
-                                                                        <View style={styles.row}>
-                                                                            <Text style={[styles.label]}>
-                                                                                <FontAwesome6 name="bag-shopping" size={18} color={colors.green} /> Expense Subtype:
-                                                                            </Text>
-                                                                            <Text style={styles.value}>{categoryForCurrentItem?.name}</Text>
-                                                                        </View>
-                                                                        <View style={styles.row}>
-                                                                            <Text style={[styles.label]}>
-                                                                                <FontAwesome6 name="calendar-alt" size={18} color={colors.green} /> Recurrence Pattern:
-                                                                            </Text>
-                                                                            <Text style={styles.value}>{transaction.frequency}{transaction.subtype === "Custom" ? (null) : (<Text>/{transaction.subtype}</Text>)}</Text>
-                                                                        </View>
-                                                                        <View style={styles.row}>
-                                                                            <Text style={[styles.label]}>
-                                                                                <FontAwesome6 name="calendar-alt" size={18} color={colors.green} /> Occurrence Count:
-                                                                            </Text>
-                                                                            <Text style={styles.value}>{transaction.interval} Time/s per Month</Text>
-                                                                        </View>
-                                                                        <View style={styles.row}>
-                                                                            <Text style={[styles.label]}>
-                                                                                <FontAwesome6 name="lock" size={18} color={colors.green} /> Fixed Amount?
-                                                                            </Text>
-                                                                            <Text style={[styles.value, { color: transaction.isfixedamount  === "Yes" ? colors.green : colors.red }]}>
-                                                                                {transaction.isfixedamount === "Yes" ? "Yes" : "No"}
-                                                                            </Text>
-                                                                        </View>
-                                                                        <View style={styles.row2}>
-                                                                            <TouchableOpacity onPress={() => {
-                                                                                setCurrentTransaction(transaction);
-                                                                                setIsModalVisible(true);
-                                                                            }}>
-                                                                                <Text style={[[styles.label], { marginRight: 20 }]}>
-                                                                                    <FontAwesome6 name="edit" size={35} color={colors.green} />
-                                                                                </Text>
-                                                                            </TouchableOpacity>
-                                                                            <TouchableOpacity onPress={() => setIsConfirmModalVisible(true)}>
-                                                                                <Text style={[[styles.label], { marginRight: 20 }]}>
-                                                                                    <FontAwesome6 name="square-xmark" size={35} color={colors.red} />
-                                                                                </Text>
-                                                                            </TouchableOpacity>
-                                                                        </View>
+                                                                    <View style={styles.item}>
+                                                                        <Text style={styles.amount}>₱ {Math.round(transaction.amount * transaction.interval)}</Text>
+                                                                        <Text style={[styles.label]}>Budget per Month</Text>
                                                                     </View>
                                                                 </View>
-                                                            </>
+
+                                                                <View style={styles.details}>
+                                                                <View style={styles.row}>
+                                                                        <Text style={[styles.label]}>
+                                                                            <FontAwesome6 name="calendar-day" size={18} color={colors.red} /> Budget per Occurrence:
+                                                                        </Text>
+                                                                        <Text style={[styles.value, { color: colors.red, fontSize:15, }]} >₱ {Math.round(transaction.amount)}</Text>
+                                                                    </View>
+                                                                    <View style={styles.row}>
+                                                                        <Text style={[styles.label]}>
+                                                                            <FontAwesome6 name="bag-shopping" size={18} color={colors.red} /> Expense Type:
+                                                                        </Text>
+                                                                        { transaction.type === "Non_Essential" ? (
+                                                                            <Text style={styles.value}>Non Essential</Text>
+                                                                        ) : (
+                                                                            <Text style={styles.value}>Essential</Text>
+                                                                        )}
+                                                                    </View>
+                                                                    <View style={styles.row}>
+                                                                        <Text style={[styles.label]}>
+                                                                            <FontAwesome6 name="bag-shopping" size={18} color={colors.red} /> Expense Subtype:
+                                                                        </Text>
+                                                                        <Text style={styles.value}>{categoryForCurrentItem?.name}</Text>
+                                                                    </View>
+                                                                    <View style={styles.row}>
+                                                                        <Text style={[styles.label]}>
+                                                                            <FontAwesome6 name="calendar-alt" size={18} color={colors.red} /> Recurrence Pattern:
+                                                                        </Text>
+                                                                        <Text style={styles.value}>{transaction.frequency}{transaction.subtype === "Custom" ? (null) : (<Text>/{transaction.subtype}</Text>)}</Text>
+                                                                    </View>
+                                                                    <View style={styles.row}>
+                                                                        <Text style={[styles.label]}>
+                                                                            <FontAwesome6 name="calendar-alt" size={18} color={colors.red} /> Occurrence Count:
+                                                                        </Text>
+                                                                        <Text style={styles.value}>{transaction.interval} Time/s per Month</Text>
+                                                                    </View>
+                                                                    <View style={styles.row}>
+                                                                        <Text style={[styles.label]}>
+                                                                            <FontAwesome6 name="lock" size={18} color={colors.red} /> Fixed Amount?
+                                                                        </Text>
+                                                                        <Text style={[styles.value, { color: transaction.isfixedamount  === "Yes" ? colors.red : colors.red }]}>
+                                                                            {transaction.isfixedamount === "Yes" ? "Yes" : "No"}
+                                                                        </Text>
+                                                                    </View>
+                                                                    <View style={styles.row2}>
+                                                                        <TouchableOpacity onPress={() => {
+                                                                            setCurrentTransaction(transaction);
+                                                                            setIsModalVisible(true);
+                                                                        }}>
+                                                                            <Text style={[[styles.label], { marginRight: 20 }]}>
+                                                                                <FontAwesome6 name="edit" size={35} color={colors.green} />
+                                                                            </Text>
+                                                                        </TouchableOpacity>
+                                                                        <TouchableOpacity onPress={() => setIsConfirmModalVisible(true)}>
+                                                                            <Text style={[[styles.label], { marginRight: 20 }]}>
+                                                                                <FontAwesome6 name="square-xmark" size={35} color={colors.red} />
+                                                                            </Text>
+                                                                        </TouchableOpacity>
+                                                                    </View>
+                                                                </View>
+                                                            </View>
                                                         )}
                                                     </View>
 
@@ -226,7 +215,7 @@ export default function Expense() {
                     </Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
                         <Button title="Cancel" color={colors.red} onPress={() => setIsConfirmModalVisible(false)} />
-                        <Button title="Confirm" color={colors.green} onPress={()=> {
+                        <Button title="Confirm" color={colors.red} onPress={()=> {
                             if (tappedTransactionId !== null) {
                                 deleteTransaction(tappedTransactionId);
                                 setIsConfirmModalVisible(false); // Close modal after deletion
@@ -323,6 +312,8 @@ const styles=StyleSheet.create({
         marginBottom: 10,
     },
     title: {
+        color: colors.dark,
+
         fontSize: 20,
         fontWeight: "bold",
     },
@@ -330,7 +321,7 @@ const styles=StyleSheet.create({
         textAlign: 'center',
         fontSize: 18,
         fontWeight: "bold",
-        color: colors.green,
+        color: colors.red,
     },
     details: {
         borderTopWidth: 1,
@@ -354,6 +345,7 @@ const styles=StyleSheet.create({
         color: colors.dark,
     },
     value: {
+        color: colors.dark,
         fontSize: 14,
         fontWeight: "bold",
     },

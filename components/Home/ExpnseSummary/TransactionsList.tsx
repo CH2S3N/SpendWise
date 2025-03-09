@@ -14,10 +14,11 @@ export default function TransactionList({
     deleteTransaction?: (id: number) => Promise<void>;
 }) {
     const essentialTransactions = transactions.filter(
-        (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Essential"
+        (transaction) => transaction.type === "Essential"
     );
+    
     const nonEssentialTransactions = transactions.filter(
-        (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Non_Essential"
+        (transaction) => transaction.type === "Non_Essential"
     );
 
     return (

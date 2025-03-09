@@ -14,6 +14,7 @@ import Card from '@/components/ui/Card';
 import { Divider } from 'react-native-paper';
 import BudgetPlan from '@/components/Home/BudgetPlan/BudgetPlan';
 import Expense from '@/components/Home/ExpnseSummary/TransactionDetials/Expense';
+import { colors } from '@/constants/colors';
 
 export default function Index() {
   const { transactions, incomes, user } = useSelector((state: RootState) => state.data);
@@ -33,8 +34,8 @@ export default function Index() {
   const [isChartModalVisible, setChartModalVisible] = useState(false);
   const [isGenerateModalVisible, setGenerateModalVisible] = useState(false);
   const [isBudgetPlanModalVisible, setBudgetPlanModalVisible] = useState(false);
-
-
+  const [selectedTypeIndex, setselectedTypeIndex] = React.useState<number>(0);
+  
   return (
     <MainContainer style={styles.container}>
       {userHasData && userHasData.hasData === "False" ? (
@@ -84,7 +85,7 @@ export default function Index() {
             }/>
 
             {/* Add Transactions */}
-            <View style={styles.btn}>
+            <View style={[styles.btn, {marginHorizontal: 20, }]}>
               <TouchableOpacity 
                 onPress={() => setIsAddingTransaction(true)} 
                 style={styles.regen} 
@@ -110,8 +111,8 @@ export default function Index() {
           <TouchableWithoutFeedback onPress={() => setIsAddingTransaction(false)}>
             <View style={styles.modalOverlay}>
               <TouchableWithoutFeedback>
-                <View style={styles.modalContent}>
-                  <AddTransaction setIsAddingTransaction={setIsAddingTransaction} />
+                <View style={[styles.modalContent, selectedTypeIndex === 0 ? {backgroundColor: "#FFEDFA"} : { backgroundColor: "#E7F0DC"}]}>
+                  <AddTransaction setIsAddingTransaction={setIsAddingTransaction} selectedTypeIndex={selectedTypeIndex}  setselectedTypeIndex={setselectedTypeIndex}/>
                 </View>
               </TouchableWithoutFeedback>
             </View>
@@ -144,7 +145,7 @@ export default function Index() {
                   <AntDesign name="leftcircle" size={24} color="black" />
                 </TouchableOpacity>
               </View>
-              <Text style={styles.title}>Summary</Text>
+              <Text style={styles.title}>Monthly Transaction Summary</Text>
             </View>
             <View style={styles.modalcontent}>
               <BudgetPlan />

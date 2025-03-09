@@ -63,8 +63,7 @@ const Budget = () => {
           <IncomeChart />
         }
         />
-        <Text style={styles.text}>My Source of Income</Text>
-        <View style={styles.btn}>
+        <View style={[styles.btn, {marginHorizontal:20}]}>
           <TouchableOpacity onPress={() => setIsAddingTransaction(true)} style={styles.regen}>
               <Text style={styles.btnTxt}>Add New Income Source</Text>
           </TouchableOpacity>
@@ -151,7 +150,7 @@ const Budget = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginHorizontal: 15,
+    marginHorizontal: 10,
   },
   header: {
     paddingVertical: 10,

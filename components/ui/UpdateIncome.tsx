@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import Card from './Card';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { useSQLiteContext } from 'expo-sqlite';
-import { Income, IncomeCategory } from '@/types';
+import { Income } from '@/types';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
 import { ScrollView } from 'react-native-gesture-handler';
 import { colors } from '@/constants/colors';
@@ -23,7 +23,6 @@ export default function UpdateIncome({
   const [isRecurrence, setRecurrence] = React.useState<string>("");
   const [isRecurrenceInput, setRecurrenceInput] = React.useState<string>("");
   const [currentTab, setCurrentTab] = React.useState<number>(0);
-  const [incomeCategories, setIncomeCategories] = React.useState<IncomeCategory[]>([]);
   const [typeSelected, setTypeSelected] = React.useState<string>("");
   const [amount, setAmount] = React.useState<string>("");
   const [description, setDescription] = React.useState<string>("");
@@ -79,13 +78,6 @@ export default function UpdateIncome({
   }, [currentIncome]);
 
 
-  useEffect(() => {
-      async function fetchIncomeCategories() {
-          const result = await db.getAllAsync<IncomeCategory>('SELECT * FROM IncomeCategory;');
-          setIncomeCategories(result);
-      }
-      fetchIncomeCategories();
-    }, []);
 
   async function handleSaveIncome() {
     const calculatedAmount = Number(amount)
@@ -159,6 +151,10 @@ export default function UpdateIncome({
                 onChange={(event) => {
                   setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
                 }}
+                fontStyle={{ color: colors.dark }}
+                activeFontStyle={{ color: colors.light }}
+                tintColor={colors.green} 
+                backgroundColor={colors.ligthGreen}
               />
           </View>
           <View style={styles.content}>
@@ -182,6 +178,10 @@ export default function UpdateIncome({
                       setRecurrence("20");
                     }
                   }}
+                  fontStyle={{ color: colors.dark }}
+                  activeFontStyle={{ color: colors.light }}
+                  tintColor={colors.green} 
+                  backgroundColor={colors.ligthGreen}
                 />
                 
               )}
@@ -271,6 +271,10 @@ export default function UpdateIncome({
           onChange={(event) => {
             setIncomeCategory(["Allowance", "Salary", "Others"][event.nativeEvent.selectedSegmentIndex]);
           }}
+          fontStyle={{ color: colors.dark }}
+          activeFontStyle={{ color: colors.light }}
+          tintColor={colors.green} 
+          backgroundColor={colors.ligthGreen}
         />
 
       </ScrollView>
@@ -279,7 +283,7 @@ export default function UpdateIncome({
       <View
         style={{ flexDirection: "row", justifyContent: "space-around", paddingTop: 10}}
       >
-        <Button title="Cancel" color={'black'} 
+        <Button title="Cancel" color={colors.green} 
         onPress={
           () => {
             setIsModalVisible(false);
@@ -288,7 +292,7 @@ export default function UpdateIncome({
         
         }
         />
-        <Button title="Save" color={'black'} onPress={()=> setIsConfirmModalVisible(true)} disabled={!validateFields()}/>
+        <Button title="Save" color={colors.green} onPress={()=> setIsConfirmModalVisible(true)} disabled={!validateFields()}/>
       </View>
 
     

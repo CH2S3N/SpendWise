@@ -1,29 +1,29 @@
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Category, Transaction, Goal, User, Income, IncomeCategory, Recurrence } from "@/types";
+import { Category, Transaction, Goal, User, Income, VarDataState } from "@/types";
 
 interface DataState {
   categories: Category[];
-  recurrence: Recurrence[];
-  incomeCategories: IncomeCategory[];
   transactions: Transaction[];
   user: User[];
   goals: Goal[];
   incomes: Income[];
+  varDataStates: VarDataState[];
   loading: boolean;
+  budgetStratSplit: boolean;
   error: string | null;
 }
 
 const initialState: DataState = {
   categories: [],
-  recurrence: [],
-  incomeCategories: [],
   transactions: [],
+  varDataStates: [],
   user: [],
   goals: [],
   incomes: [],
   loading: false,
   error: null,
+  budgetStratSplit: false,
 };
 
 const dataSlice = createSlice({
@@ -35,17 +35,21 @@ const dataSlice = createSlice({
     },
     setData(
       state,
-      action: PayloadAction<{ categories: Category[], incomeCategories: IncomeCategory[], transactions: Transaction[], user: User[], goals: Goal[], incomes: Income[], recurrence: Recurrence[] }>
+      action: PayloadAction<{ categories: Category[], transactions: Transaction[], user: User[], goals: Goal[], incomes: Income[], varDataStates: VarDataState[] }>
     ) {
       state.categories = action.payload.categories || [];
-      state.recurrence = action.payload.recurrence || [];
-      state.incomeCategories = action.payload.incomeCategories || [];
       state.transactions = action.payload.transactions || [];
       state.user = action.payload.user || [];
+      state.varDataStates = action.payload.varDataStates || [];
       state.goals = action.payload.goals || [];
       state.incomes = action.payload.incomes || [];
       state.loading = false;
+      
     },
+    setBudgetStratSplit: (state, action: PayloadAction<boolean>) => {
+      state.budgetStratSplit = action.payload;
+    },
+
     setError(state, action: PayloadAction<string>) {
       state.error = action.payload;
       state.loading = false;
@@ -59,5 +63,5 @@ const dataSlice = createSlice({
   },
 });
 
-export const { setLoading, setData, setError, clearData } = dataSlice.actions;
+export const { setLoading, setData, setError, clearData, setBudgetStratSplit  } = dataSlice.actions;
 export default dataSlice.reducer;

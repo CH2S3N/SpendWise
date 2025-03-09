@@ -3,11 +3,11 @@ import { AppDispatch, RootState } from "@/state/store";
 import { useFetchData } from "../useFetchData";
 import { useSQLiteContext } from "expo-sqlite";
 import { setData } from "@/state/dataSlice";
-import { Category, Goal, Income, Transaction, User } from "@/types";
+import { Category, Goal, Income, Transaction, User, VarDataState } from "@/types";
 
 export function UseTransactionService() {
   const dispatch = useDispatch<AppDispatch>();
-  const { categories, transactions, user, goals, incomes, incomeCategories, recurrence } = useSelector((state: RootState) => state.data);
+  const { categories, transactions, user, goals, incomes, varDataStates  } = useSelector((state: RootState) => state.data);
   const { fetchData } = useFetchData();
   const db = useSQLiteContext();
   if (!db) {
@@ -31,7 +31,7 @@ export function UseTransactionService() {
   
       // Reload data after inserting goal
       const goalResult = await db.getAllAsync<Goal>('SELECT * FROM Goals');
-      dispatch(setData({ goals: goalResult, categories, incomeCategories, transactions, user, incomes, recurrence }));
+      dispatch(setData({ goals: goalResult, categories, transactions, user, incomes, varDataStates  }));
     });
   };
   
@@ -54,7 +54,7 @@ export function UseTransactionService() {
   
       // Reload data
       const goalResult = await db.getAllAsync<Goal>('SELECT * FROM Goals');
-      dispatch(setData({ goals: goalResult, categories, incomeCategories, transactions, user, incomes, recurrence }));
+      dispatch(setData({ goals: goalResult, categories, transactions, user, incomes, varDataStates  }));
     });
   };
   
@@ -100,7 +100,7 @@ export function UseTransactionService() {
   
       // Reload data
       const incomeResult = await db.getAllAsync<Income>('SELECT * FROM Income');
-      dispatch(setData({ incomes: incomeResult, categories, incomeCategories, goals, user, transactions, recurrence }));
+      dispatch(setData({ incomes: incomeResult, categories, goals, user, transactions, varDataStates }));
     });
   };
   
@@ -133,7 +133,7 @@ export function UseTransactionService() {
   
       // Reload data
       const incomeResult = await db.getAllAsync<Income>('SELECT * FROM Income');
-      dispatch(setData({ incomes: incomeResult, categories, incomeCategories, goals, user, transactions, recurrence }));
+      dispatch(setData({ incomes: incomeResult, categories, goals, user, transactions, varDataStates }));
     });
   };
   
@@ -155,11 +155,10 @@ export function UseTransactionService() {
   const insertTransaction = async (transaction: Transaction) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
-        `INSERT INTO Transactions (category_id, recurrence_id, interval, intervalInput, subtype, description, frequency, prioritization, isfixedamount, amount, type) 
-         VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO Transactions (category_id, interval, intervalInput, subtype, description, frequency, prioritization, isfixedamount, amount, type) 
+         VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           transaction.category_id,
-          transaction.recurrence_id,
           transaction.interval,
           transaction.intervalInput,
           transaction.subtype,
@@ -181,7 +180,7 @@ export function UseTransactionService() {
   
       // Reload data
       const transactionResult = await db.getAllAsync<Transaction>('SELECT * FROM Transactions');
-      dispatch(setData({ transactions: transactionResult, categories, incomeCategories, goals, user, incomes, recurrence }));
+      dispatch(setData({ transactions: transactionResult, categories, goals, user, incomes, varDataStates }));
     });
   };
   
@@ -191,7 +190,7 @@ export function UseTransactionService() {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
         `UPDATE Transactions 
-         SET subtype = ?, category_id = ?, description = ?, frequency = ?, prioritization = ?, isfixedamount = ?, amount = ?, type = ?, recurrence_id = ?, interval = ?, intervalInput = ? 
+         SET subtype = ?, category_id = ?, description = ?, frequency = ?, prioritization = ?, isfixedamount = ?, amount = ?, type = ?, interval = ?, intervalInput = ? 
          WHERE id = ?`,
         [
           transaction.subtype,
@@ -202,7 +201,6 @@ export function UseTransactionService() {
           transaction.isfixedamount,
           transaction.amount,
           transaction.type,
-          transaction.recurrence_id,
           transaction.interval,
           transaction.intervalInput,
           transaction.id,
@@ -219,7 +217,7 @@ export function UseTransactionService() {
   
       // Reload data
       const transactionResult = await db.getAllAsync<Transaction>('SELECT * FROM Transactions');
-      dispatch(setData({ transactions: transactionResult, categories, incomeCategories, goals, user, incomes, recurrence }));
+      dispatch(setData({ transactions: transactionResult, categories, goals, user, incomes, varDataStates }));
     });
   };
   
@@ -241,8 +239,8 @@ export function UseTransactionService() {
   const updateCategory = async (category: Category) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
-        `UPDATE Categories SET name = ?, type = ?, initialProp = ?, proportion = ?  WHERE id = ?`,
-        [category.name, category.type, category.initialProp, category.proportion, category.id]
+        `UPDATE Categories SET name = ?, initialProp = ?, proportion = ? description = ?  WHERE id = ?`,
+        [category.name, category.initialProp, category.proportion, category.description, category.id]
       );
             // Fetch the updated transaction
             const updatedCategory = await db.getAllAsync<Category>(
@@ -254,7 +252,26 @@ export function UseTransactionService() {
         
       // Reload data after updating
       const categoryResult = await db.getAllAsync<Category>("SELECT * FROM Categories");
-      dispatch(setData({ categories: categoryResult, transactions, incomeCategories, goals, user, incomes, recurrence }));
+      dispatch(setData({ categories: categoryResult, transactions, goals, user, incomes, varDataStates }));
+    });
+  };
+  const updateVarDataState = async (vardata: VarDataState) => {
+    await db.withTransactionAsync(async () => {
+      await db.runAsync(
+        `UPDATE DataStates SET name = ?, value = ?,  WHERE id = ?`,
+        [vardata.name, vardata.value, vardata.id]
+      );
+            // Fetch the updated transaction
+            const updatedvardata = await db.getAllAsync<VarDataState>(
+              `SELECT * FROM DataSates WHERE id = ?`, 
+              [vardata.id]
+            );
+        
+            console.log('Updated vardata:', updatedvardata);
+        
+      // Reload data after updating
+      const vardataResult = await db.getAllAsync<VarDataState>("SELECT * FROM DataSates");
+      dispatch(setData({ varDataStates: vardataResult, transactions, goals, user, incomes, categories }));
     });
   };
   
@@ -272,7 +289,7 @@ export function UseTransactionService() {
         // Reload data after inserting transaction
         const userResult = await db.getAllAsync<User>('SELECT * FROM User');
         console.log('Updated user:', userResult);
-        dispatch(setData({ user: userResult, categories, incomeCategories, goals, transactions, incomes, recurrence }));
+        dispatch(setData({ user: userResult, categories, goals, transactions, incomes, varDataStates }));
       });
   };
 

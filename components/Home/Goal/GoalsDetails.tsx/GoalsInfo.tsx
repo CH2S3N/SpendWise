@@ -112,8 +112,9 @@ export default function GoalsInfo() {
           <ScrollView>
             {goals.length > 0 && (
               <>
-              <View style={styles.row}>
+              <View style={[styles.row, {paddingBottom: 15}]}>
                 <Text style={styles.titletext}>In Progress</Text>
+              <Divider style={{paddingTop: 10}}/>
               </View>
                 <View style={styles.section}> 
                   <View style={styles.tablecontent}>
@@ -125,10 +126,10 @@ export default function GoalsInfo() {
 
             {isEnabled && accomplishedGoals.length > 0 && (
               <>
-                <Divider/>
-                <View style={styles.row}>
-                  <Text style={styles.titletext}>Accomplished</Text>
-                </View>
+                <View style={[styles.row, {paddingBottom: 15}]}>
+                <Text style={styles.titletext}>Completed</Text>
+              <Divider style={{paddingTop: 10}}/>
+              </View>
                 <View style={styles.section}> 
                   <View style={styles.tablecontent}>
                     <AccomplishedList deleteGoal={deleteGoal} goals={goals}/>

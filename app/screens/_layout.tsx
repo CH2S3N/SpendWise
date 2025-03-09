@@ -60,8 +60,7 @@ const _layout = () => {
                   fontWeight: 'bold', 
                 },
                 
-                tabBarActiveTintColor: colors.green, 
-                tabBarInactiveTintColor: colors.dark, 
+ 
               
               }}
         >
@@ -72,10 +71,13 @@ const _layout = () => {
             title: "GOALS",
             tabBarIcon: ({ color }) => <AntDesign name="plussquareo" size={24} color={color} />, 
             tabBarLabel: ({ focused, color }) => (
-              <Text style={{ fontSize: focused ? 20 : 14, fontWeight: 'bold', color}}>
+              <Text style={{ fontSize: focused ? 15 : 10, fontWeight: 'bold', color}}>
                 GOALS
               </Text>
+              
             ),
+            tabBarActiveTintColor: colors.yellow, 
+            tabBarInactiveTintColor: colors.dark,          
           }}
           />
           <Tabs.Screen 
@@ -83,10 +85,12 @@ const _layout = () => {
           options={{ title: "TRANSACTIONS", 
             tabBarIcon: ({ color }) => <AntDesign name="profile" size={24} color={color} />,
             tabBarLabel: ({ focused, color }) => (
-              <Text style={{ fontSize: focused ? 20 : 14, fontWeight: 'bold', color }}>
+              <Text style={{ fontSize: focused ? 15 : 10, fontWeight: 'bold', color}}>
                 TRANSACTIONS
               </Text>
             ),
+            tabBarActiveTintColor: colors.red, 
+            tabBarInactiveTintColor: colors.dark,
           }}
           
           />
@@ -95,10 +99,12 @@ const _layout = () => {
           options={{ title: "WALLET",
             tabBarIcon: ({ color }) => <AntDesign name="wallet" size={24} color={color} />,
             tabBarLabel: ({ focused, color }) => (
-              <Text style={{ fontSize: focused ? 20 : 14, fontWeight: 'bold', color }}>
+              <Text style={{ fontSize: focused ? 15 : 10, fontWeight: 'bold', color}}>
                 WALLET
               </Text>
             ),
+            tabBarActiveTintColor: colors.green, 
+            tabBarInactiveTintColor: colors.dark,
           }}
           />
         </Tabs>

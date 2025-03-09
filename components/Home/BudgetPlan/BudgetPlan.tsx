@@ -6,7 +6,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 
 const BudgetPlanner = () => {
-  const { categories, transactions, incomes } = useSelector(
+  const { categories, transactions, incomes, budgetStratSplit } = useSelector(
     (state: RootState) => state.data
   );
 
@@ -19,12 +19,13 @@ const BudgetPlanner = () => {
           return total + (transaction.amount * transaction.interval || 0)
       }, 0);
 
-  const essentialTransactions = transactions.filter(
-    (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Essential"
-  );
-  const nonEssentialTransactions = transactions.filter(
-    (transaction) => categories.find((category) => category.id === transaction.category_id)?.type === "Non_Essential"
-  );
+      const essentialTransactions = transactions.filter(
+        (transaction) => transaction.type === "Essential"
+    );
+    
+    const nonEssentialTransactions = transactions.filter(
+        (transaction) => transaction.type === "Non_Essential"
+    );
 
   return (
     <ScrollView style={styles.container}>
@@ -55,7 +56,7 @@ const BudgetPlanner = () => {
       </View>
 
       {/* Expenses Section */}
-      {nonEssentialTransactions.length <= 0 ? (
+      {budgetStratSplit === !true ? (
         <>
           {/* Expense */}
           <View style={styles.container}>

@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { UseTransactionService } from '../editData/TransactionService';
 import { useFetchData } from '../useFetchData';
 
-export default function GenerateService() {
+export default function AllocateAllService() {
   const { fetchData } = useFetchData();
   const { categories, transactions, incomes } = useSelector((state: RootState) => state.data);
   const { updateTransaction } = UseTransactionService();
@@ -23,7 +23,79 @@ export default function GenerateService() {
 
   const totalIncome = incomes.reduce((total: number, income: Income) => total + (income.amount * income.interval), 0);
 
-  const handleSaveExpense = async () => {
+  // For all Expense
+  const allocateAll = async () => {
+    
+    const budget = totalIncome;
+    const remainingPercentage = Math.max(100 - savings, 0);
+
+    const totalNeedsWants = needs + wants;
+    const scaledNeeds = totalNeedsWants > 0 ? (needs / totalNeedsWants) * remainingPercentage : 0;
+
+    const Allocation = Math.round(budget * (scaledNeeds / 100));
+
+    const allTransactions = transactions.filter(transaction =>
+      categories.find(category => category.id === transaction.category_id)
+    );
+
+
+    const adjustedCategories = adjustProportions(
+      categories,
+      allTransactions
+    );
+
+
+    adjustedCategories.sort((a, b) => b.adjustedProportion - a.adjustedProportion);
+
+    try {
+      // Allocation of all Transactions
+      const totalFixedTransactions = allTransactions
+        .filter(transaction => transaction.isfixedamount === "Yes")
+        .reduce((sum, transaction) => sum + (transaction.amount * transaction.interval), 0);
+
+      let remainingAllocation = Allocation - totalFixedTransactions;
+      remainingAllocation = Math.max(remainingAllocation, 0);
+
+      for (const category of adjustedCategories) {
+        const cattransactions = allTransactions.filter(transaction => transaction.category_id === category.id);
+        const fixedTransactions = cattransactions.filter(transaction => transaction.isfixedamount === "Yes");
+        const variableTransactions = cattransactions.filter(transaction => transaction.isfixedamount !== "Yes");
+
+        // Allocate fixed transactions (even if amount is 0)
+        for (const transaction of fixedTransactions) {
+          try {
+            await updateTransaction({ ...transaction, amount: transaction.amount });
+          } catch (error) {
+            console.error(`Error updating fixed essential transaction ${transaction.id}:`, error);
+            alert(`An error occurred while saving expense ${transaction.description}.`);
+          }
+        }
+
+        // Allocate 0 if budget is 0, otherwise distribute normally
+        let categoryBudget = remainingAllocation > 0 ? Math.round(remainingAllocation * (category.adjustedProportion / 100)) : 0;
+        let remainingBudget = categoryBudget;
+
+        for (const transaction of variableTransactions) {
+          let allocation = remainingBudget > 0 ? Math.floor(remainingBudget / variableTransactions.length) : 0;
+          try {
+            await updateTransaction({ ...transaction, amount: (Math.round(allocation / transaction.interval)) });
+          } catch (error) {
+            console.error(`Error updating variable essential transaction ${transaction.id}:`, error);
+            alert(`An error occurred while saving expense ${transaction.description}.`);
+          }
+        }
+      }
+
+      await fetchData();
+      alert('Budget Allocaated Successfully');
+    } catch (error) {
+      console.error('Unexpected error while allocating budget:', error);
+      alert('An unexpected error occurred while allocating budget.');
+    }
+  };
+
+  // For Split Expense
+  const splitAllocation = async () => {
     const budget = totalIncome;
     const remainingPercentage = Math.max(100 - savings, 0);
 
@@ -34,19 +106,20 @@ export default function GenerateService() {
     const essentialsAllocation = Math.round(budget * (scaledNeeds / 100));
     const nonEssentialsAllocation = Math.round(budget * (scaledWants / 100));
 
-    const essentialTransactions = transactions.filter(transaction =>
-      categories.find(category => category.id === transaction.category_id)?.type === "Essential"
-    );
-    const nonEssentialTransactions = transactions.filter(transaction =>
-      categories.find(category => category.id === transaction.category_id)?.type === "Non_Essential"
-    );
+    const essentialTransactions = transactions.filter(
+      (transaction) => transaction.type === "Essential"
+  );
+  
+  const nonEssentialTransactions = transactions.filter(
+      (transaction) => transaction.type === "Non_Essential"
+  );
 
     const adjustedEssentialCategories = adjustProportions(
-      categories.filter(cat => cat.type === "Essential"),
+      categories,
       essentialTransactions
     );
     const adjustedNonEssentialCategories = adjustProportions(
-      categories.filter(cat => cat.type === "Non_Essential"),
+      categories,
       nonEssentialTransactions
     );
 
@@ -138,8 +211,10 @@ export default function GenerateService() {
     }
   };
 
+
   return {
-    handleSaveExpense,
+    allocateAll,
+    splitAllocation
   };
 }
 

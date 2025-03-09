@@ -1,7 +1,6 @@
 export interface Transaction {
     id: number;
     category_id: number;
-    recurrence_id: number;
     description: string;
     frequency: "Daily" | "Weekly" | "Bi-Weekly" | "Monthly";
     prioritization: "High" | "Medium" | "Low";
@@ -11,10 +10,6 @@ export interface Transaction {
     interval: number;
     intervalInput: number;
     subtype: "Weekends" | "Weekdays" | "All" | "Custom"
-}
-export interface Recurrence {
-    id: number;
-    name: string;
 }
 export interface Income {
     id: number;
@@ -27,27 +22,24 @@ export interface Income {
     intervalInput: number;
     subtype: "Weekends" | "Weekdays" | "All" | "Custom"
 }
-
 export interface Category {
     map(arg0: (category: any) => any): import("react").ReactNode;
     id: number;
     name: string;
-    type: "Essential" | "Non_Essential";
+    description: string;
     proportion: number;
     initialProp: number;
 }
-
-export interface IncomeCategory {
-    id: number;
-    name: string;
-    type: "Allowance" | "Salary" | "Others";
-}
-
 export interface Goal {
     id: number;
     name: string;
     amount: number;
     currentAmount: number;
+}
+export interface VarDataState {
+    id: number;
+    name: string;
+    value: "True" | " Fales"
 }
 
 export interface User {

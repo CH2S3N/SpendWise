@@ -2,7 +2,6 @@ import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet, ScrollView
 import React, { useEffect } from 'react'
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { useSQLiteContext } from 'expo-sqlite';
-import { IncomeCategory } from '@/types';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
 import { colors } from '@/constants/colors';
 
@@ -19,7 +18,6 @@ export default function AddIncome({
     const { insertIncome } = UseTransactionService();
     const [isrecurrence, setRecurrence] = React.useState<string>("");
     const [isRecurrenceInput, setRecurrenceInput] = React.useState<string>("");
-    const [incomeCategories, setIncomeCategories] = React.useState<IncomeCategory[]>([]);
     const [typeSelected, setTypeSelected] = React.useState<string>("Allowance");
     const [amount, setAmount] = React.useState<string>("");
     const [description, setDescription] = React.useState<string>("");
@@ -35,18 +33,9 @@ export default function AddIncome({
   
     function handleConfirmSave() {
         setIsConfirmModalVisible(false);
-        handleSaveIncome(); // Proceed with saving
+        handleSaveIncome();
     }
 
-    useEffect(() => {
-        async function fetchIncomeCategories() {
-            const result = await db.getAllAsync<IncomeCategory>('SELECT * FROM IncomeCategory;');
-            setIncomeCategories(result);
-        }
-        fetchIncomeCategories();
-      }, []);
-
-      
 
       function validateFields() {
         if ( !description || !amount || !typeSelected || (frequency == 'Daily' && !isrecurrence) || (subType === 'Custom' && !isrecurrence) || (frequency == 'Monthly' && !isrecurrence))  {
@@ -141,6 +130,10 @@ export default function AddIncome({
                   onChange={(event) => {
                     setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
                   }}
+                  fontStyle={{ color: colors.dark }}
+                  activeFontStyle={{ color: colors.light }}
+                  tintColor={colors.green} 
+                  backgroundColor={colors.ligthGreen}
                 />
             </View>
             <View style={styles.content}>
@@ -164,6 +157,10 @@ export default function AddIncome({
                         setRecurrence("20");
                       }
                     }}
+                    fontStyle={{ color: colors.dark }}
+                    activeFontStyle={{ color: colors.light }}
+                    tintColor={colors.green} 
+                    backgroundColor={colors.ligthGreen}
                   />
                   
                 )}
@@ -244,7 +241,7 @@ export default function AddIncome({
             </View>
           </View>
 
-
+          {/* Income Type */}
           <Text style={styles.btext}>Income Type</Text>
           <SegmentedControl
             values={["Allowance", "Salary", "Others"]}
@@ -253,6 +250,10 @@ export default function AddIncome({
             onChange={(event) => {
               setIncomeCategory(["Allowance", "Salary", "Others"][event.nativeEvent.selectedSegmentIndex]);
             }}
+            fontStyle={{ color: colors.dark }}
+            activeFontStyle={{ color: colors.light }}
+            tintColor={colors.green} 
+            backgroundColor={colors.ligthGreen}
           />
 
         </ScrollView>
@@ -262,7 +263,7 @@ export default function AddIncome({
         style={{ flexDirection: "row", justifyContent: "space-around", paddingTop: 10 }}
       >
 
-        <Button title="Cancel" color={'black'} 
+        <Button title="Cancel" color={colors.green} 
           onPress={
             () => {
               setIsAddingTransaction(false);
@@ -270,7 +271,7 @@ export default function AddIncome({
             }
           }
         />
-        <Button title="Save" color={'black'} onPress={()=> setIsConfirmModalVisible(true)} disabled={!validateFields()} />
+        <Button title="Save" color={colors.green} onPress={()=> setIsConfirmModalVisible(true)} disabled={!validateFields()} />
       </View>
 
 

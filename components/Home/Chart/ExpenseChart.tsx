@@ -7,9 +7,10 @@ import Budget from '../Budget/totalIncome';
 import { colors } from '@/constants/colors';
 import styles from './styles';
 import { calculateTotalExpense } from '@/utils/calcTotalExpense';
+import { Income, Transaction } from '@/types';
 
 export default function ExpenseChart() {
-  const { categories, transactions, goals } = useSelector(
+  const { categories, transactions, goals, incomes, budgetStratSplit } = useSelector(
     (state: RootState) => state.data);
   const widthAndHeight = 150;
   const [values, setValues] = useState([1]);
@@ -17,23 +18,48 @@ export default function ExpenseChart() {
 
   const calcTotalGoal = () => goals.reduce((total, goal) => total + (goal.currentAmount || 0), 0);
 
-  const totalIncome = Budget();
-  const totalEssential = calculateTotalExpense(transactions, categories, "Essential",);
-  const totalNonEssential = calculateTotalExpense(transactions, categories, "Non_Essential");
+
+    const totalIncome =  incomes.reduce((total: number, income: Income) => {
+        return total + (income.amount * income.interval || 0 )
+    }, 0);
+
+    const essentialTransactions = transactions.filter(
+        (transaction) => transaction.type === "Essential"
+    );
+    
+    const nonEssentialTransactions = transactions.filter(
+        (transaction) => transaction.type === "Non_Essential"
+    );
+    const totalEssential =  essentialTransactions.reduce((total: number, transaction: Transaction) => {
+        return total + (transaction.amount * transaction.interval || 0)
+    }, 0);
+    const totalNonEssential =  nonEssentialTransactions.reduce((total: number, transaction: Transaction) => {
+        return total + (transaction.amount * transaction.interval || 0)
+    }, 0);
+
+
   const totalGoal = calcTotalGoal();
   const totalSavings = Math.max(0, totalIncome - (totalEssential + totalNonEssential));
   const totalExpenses = totalEssential + totalNonEssential;
 
+  const needsRatio = totalIncome > 0 ? ((totalEssential / totalIncome) * 100).toFixed(0) : "0";
+  const wantsRatio = totalIncome > 0 ? ((totalNonEssential / totalIncome) * 100).toFixed(0) : "0";
+  const expenseRatio = totalIncome > 0 ? ((totalExpenses / totalIncome) * 100).toFixed(0) : "0";
+  const savingsRatio = totalIncome > 0 ? ((totalSavings / totalIncome) * 100).toFixed(0) : "0";
+  
   useEffect(() => {
-    if (totalExpenses > 0) {
+    if (totalExpenses > 0 && budgetStratSplit === true) {
       setValues([totalEssential, totalNonEssential, totalSavings]);
       setSliceColor(['#FC2947', '#FE6244', '#FFD65A']);
+    } else if (totalExpenses > 0 && budgetStratSplit === false) { // Fix here
+      setValues([totalExpenses, totalSavings]);
+      setSliceColor(['#FC2947', '#FFD65A']);
     } else {
       setValues([1]);
       setSliceColor(['#CCCCCC']);
     }
-  }, [totalEssential, totalNonEssential, totalSavings]);
-
+  }, [totalEssential, totalNonEssential, totalSavings, budgetStratSplit]);
+  
   return (
     <View>
       <View style={styles.container}>
@@ -49,34 +75,64 @@ export default function ExpenseChart() {
           {totalExpenses === 0 && <Text style={styles.placeholderText}>No Expense Data</Text>}
         </View>
         {/* Legends */}
-        {totalExpenses > 0 && (
-          <View style={{ justifyContent: 'center', alignItems: 'center'}}>
-            <View style={styles.total}> 
-              {totalEssential > 0 && (
-                <View style={styles.legendItem}>
-                  <View style={[styles.colorBox, { backgroundColor: '#FC2947' }]} />
-                  <Text>Needs: ₱ {totalEssential}</Text>
-                </View>
-              )}
-              {totalNonEssential > 0 && (
-                <View style={styles.legendItem}>
-                  <View style={[styles.colorBox, { backgroundColor: '#FE6244' }]} />
-                  <Text>Wants: ₱ {totalNonEssential}</Text>
-                </View>
-              )}
-              {totalSavings > 0 && (
-                <View style={styles.legendItem}>
-                  <View style={[styles.colorBox, { backgroundColor: '#FFD65A' }]} />
-                  <Text>Savings: ₱ {totalSavings}</Text>
-                </View>
-              )}
+        {budgetStratSplit === true ? (
+          <>
+            {totalExpenses > 0 && (
+              <View style={{ justifyContent: 'center', alignItems: 'center'}}>
+                <View style={styles.total}> 
+                  {totalEssential > 0 && (
+                    <View style={styles.legendItem}>
+                      <View style={[styles.colorBox, { backgroundColor: '#FC2947' }]} />
+                      <Text>Needs: ₱ {totalEssential} <Text style={{color: '#FC2947'}}>({needsRatio}%)</Text></Text>
+                    </View>
+                  )}
+                  {totalNonEssential > 0 && (
+                    <View style={styles.legendItem}>
+                      <View style={[styles.colorBox, { backgroundColor: '#FE6244' }]} />
+                      <Text>Wants: ₱ {totalNonEssential} <Text style={{color: '#FE6244'}}>({wantsRatio}%)</Text></Text>
+                    </View>
+                  )}
+                  {totalSavings > 0 && (
+                    <View style={styles.legendItem}>
+                      <View style={[styles.colorBox, { backgroundColor: '#FFD65A' }]} />
+                      <Text>Savings: ₱ {totalSavings} <Text style={{color: '#FFD65A'}}>({savingsRatio}%)</Text></Text>
+                    </View>
+                  )}
 
 
+                </View>
+                <View style={styles.total}>
+                  <Text style={[styles.text, { color: colors.red }]}>Total: <Text style={{}}>₱ {totalExpenses}</Text></Text>
+                </View>
+              </View>
+            )}
+          </>
+        ) : (
+          <>
+          {totalExpenses > 0 && (
+            <View style={{ justifyContent: 'center', alignItems: 'center'}}>
+              <View style={styles.total}> 
+                {totalEssential > 0 && (
+                  <View style={styles.legendItem}>
+                    <View style={[styles.colorBox, { backgroundColor: '#FC2947' }]} />
+                    <Text>Expense: ₱ {totalExpenses} <Text style={{color: '#FC2947'}}>({expenseRatio}%)</Text></Text>
+                  </View>
+                )}
+                {totalSavings > 0 && (
+                  <View style={styles.legendItem}>
+                    <View style={[styles.colorBox, { backgroundColor: '#FFD65A' }]} />
+                    <Text>Savings: ₱ {totalSavings} <Text style={{color: '#FFD65A'}}>({savingsRatio}%)</Text></Text>
+                  </View>
+                )}
+
+
+              </View>
+              <View style={styles.total}>
+                <Text style={[styles.text, { color: colors.red }]}>Total: <Text style={{}}>₱ {totalExpenses}</Text></Text>
+              </View>
             </View>
-            <View style={styles.total}>
-              <Text style={[styles.text, { color: colors.red }]}>Total: <Text style={{}}>₱ {totalExpenses}</Text></Text>
-            </View>
-          </View>
+          )}
+          </>
         )}
       </View>
     </View>
