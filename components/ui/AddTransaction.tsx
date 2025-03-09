@@ -17,7 +17,6 @@ export default function AddTransaction ({
     setselectedTypeIndex: React.Dispatch<React.SetStateAction<number>>;
     
 }) {
-    const [isUpdatingTransaction, setIsUpdatingTransaction] = React.useState<boolean>(false);
     // Return function of the Add transaction
     return (
       <View style={[styles.container, ]}>
@@ -29,7 +28,7 @@ export default function AddTransaction ({
                     setselectedTypeIndex(event.nativeEvent.selectedSegmentIndex)
                   }
                   tintColor={ selectedTypeIndex === 0 ? colors.red : colors.green} 
-                  backgroundColor={selectedTypeIndex === 0 ? "#FFB8E0" : "#B6FFA1"}
+                  backgroundColor={selectedTypeIndex === 0 ? colors.lightRed : colors.ligthGreen}
                   fontStyle={{ color: colors.dark }} 
                   activeFontStyle={{ color: colors.light }} 
                 />
@@ -39,7 +38,7 @@ export default function AddTransaction ({
                 )}
                 {/* Budget Form */}
                  {selectedTypeIndex === 1 && ( 
-                  <AddIncome setIsAddingTransaction={setIsAddingTransaction} setIsUpdatingTransaction={setIsUpdatingTransaction} />
+                  <AddIncome setIsAddingIncome={setIsAddingTransaction}/>
                 )}
         </View>
     );

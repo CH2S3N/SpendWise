@@ -76,7 +76,7 @@ const _layout = () => {
               </Text>
               
             ),
-            tabBarActiveTintColor: colors.yellow, 
+            tabBarActiveTintColor: colors.blue, 
             tabBarInactiveTintColor: colors.dark,          
           }}
           />

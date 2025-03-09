@@ -1,26 +1,29 @@
-import { View, TextInput, Button, Text, StyleSheet } from 'react-native'
+import { View, TextInput, Button, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { Goal } from '@/types';
 import { Divider } from '@rneui/base';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
 import Card from './Card';
+import ConfirmModal from '../Modal/ConfirmModal';
+import { FontAwesome6 } from '@expo/vector-icons';
+import { colors } from '@/constants/colors';
 
 export default function UpdateGoal({
     setIsUpdatingGoal, 
-    setIsModalVisible,
     currentGoal,
 }: {
-    setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
     setIsUpdatingGoal: React.Dispatch<React.SetStateAction<boolean>>;
     currentGoal: Goal;
 }) {
  
-    const { updateGoal } = UseTransactionService();
+    const { updateGoal, deleteGoal } = UseTransactionService();
     
     const [amount, setAmount] = React.useState<string>("");
     const [accumulatedAmount, setAccumulatedAmount] = React.useState<string>("");
     const [name, setName] = React.useState<string>("");
-
+    const [isConfirmModalVisible, setIsConfirmModalVisible] = React.useState(false);
+    const [isConfirmDelModalVisible, setIsConfirmDelModalVisible] = React.useState(false);
+    
     React.useEffect(() => {
       if (currentGoal) {
         setName(currentGoal.name || "");
@@ -48,8 +51,6 @@ export default function UpdateGoal({
         setName("");
         setAmount("");
         setAccumulatedAmount("")
-        setIsUpdatingGoal(false);
-        setIsModalVisible(false);
     }
 
   return (
@@ -105,23 +106,40 @@ export default function UpdateGoal({
             }
           }}
         />
-       
-
+          
         {/* Cancel and Save Button */}
         <View style={styles.btn}>
           <View
             style={{ flexDirection: "row", justifyContent: "space-around" }}
           >
-            <Button title="Cancel" color={'black'} onPress={() => {
+            <Button title="Cancel" color={colors.blue} onPress={() => {
               setIsUpdatingGoal(false)
-              setIsModalVisible(false);
             }}
             />
-            <Button title="Save" color={'black'} onPress={handleUpdateGoal}  disabled={!validateFields()}/>
+            <Button title="Save" color={colors.blue} onPress={()=> setIsConfirmModalVisible(true)}  disabled={!validateFields()}/>
           </View>
 
         </View>
+
+
+      <ConfirmModal
+      visible={isConfirmModalVisible} 
+      title={'Confirm Save'} 
+      message={'Are you sure you want to save this entry?'} 
+      onConfirm={()=> {
+        handleUpdateGoal();
+        setIsConfirmModalVisible(false);
+        setIsUpdatingGoal(false);
+      }} 
+      onCancel={() => {
+        setIsUpdatingGoal(false);
+        setIsConfirmModalVisible(false);
+      }}      
+      />
+
     </View>
+
+    
 
     }
     />

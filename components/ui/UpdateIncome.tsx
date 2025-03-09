@@ -7,6 +7,7 @@ import { Income } from '@/types';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
 import { ScrollView } from 'react-native-gesture-handler';
 import { colors } from '@/constants/colors';
+import ConfirmModal from '../Modal/ConfirmModal';
 
 
 interface Props {
@@ -23,7 +24,6 @@ export default function UpdateIncome({
   const [isRecurrence, setRecurrence] = React.useState<string>("");
   const [isRecurrenceInput, setRecurrenceInput] = React.useState<string>("");
   const [currentTab, setCurrentTab] = React.useState<number>(0);
-  const [typeSelected, setTypeSelected] = React.useState<string>("");
   const [amount, setAmount] = React.useState<string>("");
   const [description, setDescription] = React.useState<string>("");
   const [frequency, setFrequency] = React.useState<string>("Daily");
@@ -118,6 +118,7 @@ export default function UpdateIncome({
         <View style={styles.content}>
         <Text style={styles.btext}>Item</Text>
           <TextInput
+          value={description}
             placeholder="Provide an Item Description"
             style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
             onChangeText={setDescription}
@@ -128,6 +129,7 @@ export default function UpdateIncome({
         <View style={styles.content}>
           <Text style={styles.btext}>Amount</Text>
           <TextInput
+              value={amount}
               placeholder="Enter Amount"
               style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
               keyboardType="numeric"
@@ -297,39 +299,17 @@ export default function UpdateIncome({
 
     
       {/* Confirmation Modal */}
-      <Modal
-      visible={isConfirmModalVisible}
-      transparent={true}
-      animationType="fade"
-      onRequestClose={() => setIsConfirmModalVisible(false)}
-    >
-      <View style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      }}>
-        <View style={{
-          width: 300,
-          padding: 20,
-          backgroundColor: 'white',
-          borderRadius: 10,
-          alignItems: 'center',
-        }}>
-          <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 10 }}>
-            Confirm Save
-          </Text>
-          <Text style={{ marginBottom: 20 }}>
-            Are you sure you want to save the changes?
-          </Text>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-            <Button title="Cancel" color={colors.red} onPress={() => setIsConfirmModalVisible(false)} />
-            <Button title="Confirm" color={colors.green} onPress={handleConfirmSave} />
-          </View>
-        </View>
-      </View>
-      </Modal>
-    
+      <ConfirmModal
+      visible={isConfirmModalVisible} 
+      title={'Confirm Changes'} 
+      message={'Are you sure you want to save the changes?'} 
+      onConfirm={()=> {
+        handleSaveIncome();
+        setIsConfirmModalVisible(false)
+        setIsUpdatingIncome(false);
+      }} 
+      onCancel={() => setIsConfirmModalVisible(false)}      
+      />
     </View>
 
 
@@ -339,50 +319,7 @@ export default function UpdateIncome({
 }
 
 
-// ENTRY TYPE PICKER
-function CategoryButton({
-    id,
-    title,
-    isSelected,
-    setTypeSelected,
-    setIncomeCategoryId,
-} : {
-    id: number;
-    title: string;
-    isSelected: boolean;
-    setTypeSelected: React.Dispatch<React.SetStateAction<string>>
-    setIncomeCategoryId: React.Dispatch<React.SetStateAction<number>>;
-}) {
-    return (
-        <TouchableOpacity
-        onPress={() => {
-            setTypeSelected(title);
-            setIncomeCategoryId(id);
-        }}
-        activeOpacity={0.5}
-        style={{
-            height: 40,
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: isSelected? 'black' : 'white',
-            borderRadius: 15,
-            marginBottom: 6,
-          
-        }}
-        >
-            <Text
-                style={{
-                    fontWeight: "700",
-                    color: isSelected? 'white' : 'black',
-                    marginLeft: 5,
-                }}
-            >
-                {title}
-            </Text>
-        </TouchableOpacity>
-    )
-}
+
 
 
 const styles = StyleSheet.create({

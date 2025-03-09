@@ -2,11 +2,13 @@ import { View, TextInput, Button, Text, StyleSheet, ScrollView } from 'react-nat
 import React from 'react'
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
 import Card from './Card';
+import ConfirmModal from '../Modal/ConfirmModal';
+import { colors } from '@/constants/colors';
 
 export default function AddGoal({
-    setIsAddingTransaction, 
+    setIsAddingGoal, 
 }: {
-    setIsAddingTransaction: React.Dispatch<React.SetStateAction<boolean>>;
+    setIsAddingGoal: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
       const { insertGoal } = UseTransactionService();
     
@@ -16,6 +18,7 @@ export default function AddGoal({
     const [currentAmount, setCurrentAmount] = React.useState<string>("");
     const [name, setName] = React.useState<string>("");
     const [id] = React.useState<number>(0);
+    const [isConfirmModalVisible, setIsConfirmModalVisible] = React.useState(false);
     
 
     function validateFields() {
@@ -28,7 +31,7 @@ export default function AddGoal({
 
 
 
-    async function handleSaveExpense() {
+    async function handleSaveGoal() {
         // to insert transactions
         await insertGoal({
           name,
@@ -38,7 +41,8 @@ export default function AddGoal({
         });
         setName("");
         setAmount("");
-        setIsAddingTransaction(false);
+        setCurrentAmount("");
+        
     }
 
   return (
@@ -49,6 +53,7 @@ export default function AddGoal({
             {/* DESCRIPTION */}
             <Text style={styles.btext}>Item</Text>
             <TextInput
+            value={name}
               placeholder="Provide an Item Description"
               style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
               onChangeText={setName}
@@ -58,6 +63,7 @@ export default function AddGoal({
           <View style={styles.content}>
               <Text style={styles.btext}>Amount</Text>
             <TextInput
+            value={amount}
               placeholder="Enter Amount"
               style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
               keyboardType="numeric"
@@ -72,6 +78,7 @@ export default function AddGoal({
           <View style={styles.content}>
             <Text style={styles.btext}>Accumulated Amount</Text>
             <TextInput
+              value={currentAmount}
               placeholder="Enter Accumulated Amount"
               style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
               keyboardType="numeric"
@@ -90,11 +97,24 @@ export default function AddGoal({
         <View
           style={{ flexDirection: "row", justifyContent: "space-around" }}
         >
-          <Button title="Cancel" color={'black'} onPress={() => setIsAddingTransaction(false)}
+          <Button title="Cancel" color={colors.blue} onPress={() => setIsAddingGoal(false)}
           />
-          <Button title="Save" color={'black'} onPress={handleSaveExpense} disabled={!validateFields()}/>
+          <Button title="Save" color={colors.blue} onPress={()=> setIsConfirmModalVisible(true)} disabled={!validateFields()}/>
         </View>
       </View>
+
+
+
+      <ConfirmModal
+      visible={isConfirmModalVisible} 
+      title={'Confirm Save'} 
+      message={'Are you sure you want to save this entry?'} 
+      onConfirm={()=> {
+        handleSaveGoal();
+        setIsConfirmModalVisible(false);
+      }} 
+      onCancel={() => setIsConfirmModalVisible(false)}      
+      />
     </View>
   )
 }

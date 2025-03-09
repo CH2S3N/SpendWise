@@ -6,17 +6,12 @@ import { colors } from '@/constants/colors';
 import AddIncome from '@/components/ui/addIncome';
 import { RootState } from '@/state/store';
 import { useSelector } from 'react-redux';
-import { calculateTotalIncome } from '@/utils/calcTotalIncome';
 import { Divider } from 'react-native-paper';
 
 
 export default function IncomeInfo() {
-  const { transactions, incomes } = useSelector(
-    (state: RootState) => state.data
-    
-  );
-  const [isAddingTransaction, setIsAddingTransaction] = useState(false);
-  const [isUpdatingTransaction, setIsUpdatingTransaction] = React.useState<boolean>(false);
+  const { incomes } = useSelector((state: RootState) => state.data);
+  const [isAddingIncome, setIsAddingIncome] = useState(false);
 
   function calcIncome() {
     return incomes.reduce((total, income) => {
@@ -25,10 +20,10 @@ export default function IncomeInfo() {
     }, 0)  
 
   };
+
   return (
     <>
       {/* Add Transaction Button */}
-
       <View style={styles.container}>
           <View style={[styles.tableheader, ]}>
               <View style={[styles.row, {marginHorizontal: 20}]}>
@@ -53,16 +48,14 @@ export default function IncomeInfo() {
           </View>
       </View>
 
-
-
       {/* Add Income Modal*/}
-      <Modal isOpen={isAddingTransaction} transparent animationType="fade" onRequestClose={() => setIsAddingTransaction(false)}>
-        <TouchableWithoutFeedback onPress={() => setIsAddingTransaction(false)}>
+      <Modal isOpen={isAddingIncome} transparent animationType="fade" onRequestClose={() => setIsAddingIncome(false)}>
+        <TouchableWithoutFeedback onPress={() => setIsAddingIncome(false)}>
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback>
               <View style={styles.modalContent}>
                 <Text style={styles.title}>UPDATE INCOME</Text>                
-                <AddIncome setIsAddingTransaction={setIsAddingTransaction} setIsUpdatingTransaction={setIsUpdatingTransaction} />
+                <AddIncome setIsAddingIncome={setIsAddingIncome}/>
               </View>
             </TouchableWithoutFeedback>
           </View>

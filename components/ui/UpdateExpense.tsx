@@ -10,6 +10,7 @@ import { RootState } from '@/state/store';
 import { Modal } from 'react-native';
 import { colors } from '@/constants/colors';
 import RNPickerSelect from 'react-native-picker-select';
+import ConfirmModal from '../Modal/ConfirmModal';
 
 
 interface Props {
@@ -25,13 +26,12 @@ export default function UpdateExpense({
 }: Props) {
 
     const { updateTransaction } = UseTransactionService();
-    const { categories, transactions } = useSelector(
+    const { categories } = useSelector(
       (state: RootState) => state.data
     );
 
     const [recurrence, setRecurrence] = React.useState<string>("");
     const [isRecurrenceInput, setRecurrenceInput] = React.useState<string>("");
-    const [recurrenceId, setRecurrenceId] = React.useState<number>(1);
     const [currentTab, setCurrentTab] = React.useState<number>(0);
     const [typeSelected, setTypeSelected] = React.useState<string>("");
     const [amount, setAmount] = React.useState<string>("");
@@ -41,7 +41,6 @@ export default function UpdateExpense({
     const [prioritization, setPrioritization] = React.useState<string>("High");
     const [isfixedamount, setIsFixedAmount] = React.useState<string>("Yes");
     const [category, setCategory] = React.useState<string>("Essential");
-    const [subcategory, setSubCategory] = React.useState<string>("");
     const [categoryId, setCategoryId] = React.useState<number>(1);
    
     const [selectedIndex, setSelectedIndex] = React.useState<number>(1);
@@ -117,7 +116,6 @@ export default function UpdateExpense({
           interval: Number(recurrence),
           intervalInput: Number(isRecurrenceInput),
           subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
-          recurrence_id: recurrenceId,
         });
     }
     
@@ -146,6 +144,10 @@ export default function UpdateExpense({
                 onChange={(event) => {
                   setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
                 }}
+                fontStyle={{ color: colors.dark }}
+                activeFontStyle={{ color: colors.light }}
+                tintColor={colors.red} 
+                backgroundColor={colors.lightRed}
               />
           </View>
           <View style={styles.content}>
@@ -171,6 +173,10 @@ export default function UpdateExpense({
                       setRecurrence("20");
                     }
                   }}
+                  fontStyle={{ color: colors.dark }}
+                  activeFontStyle={{ color: colors.light }}
+                  tintColor={colors.red} 
+                  backgroundColor={colors.lightRed}
                 />
                 
               )}
@@ -264,6 +270,10 @@ export default function UpdateExpense({
               setIsFixedAmount(event.nativeEvent.selectedSegmentIndex === 0 ? "Yes" : "No")
 
             }}
+            fontStyle={{ color: colors.dark }}
+            activeFontStyle={{ color: colors.light }}
+            tintColor={colors.red} 
+            backgroundColor={colors.lightRed}
           />
           {/* AMOUNT */}
             <Text style={styles.btext}>Amount</Text>
@@ -289,6 +299,10 @@ export default function UpdateExpense({
           onChange={(event) => {
             setCategory(["Essential","Non_Essential"][event.nativeEvent.selectedSegmentIndex])
           }}
+          fontStyle={{ color: colors.dark }}
+          activeFontStyle={{ color: colors.light }}
+          tintColor={colors.red} 
+          backgroundColor={colors.lightRed}
         />
 
         <Text style={styles.btext}>Select an Expense Sub-type</Text>
@@ -317,7 +331,7 @@ export default function UpdateExpense({
       <View
         style={{ flexDirection: "row", justifyContent: "space-around", paddingTop: 10 }}
       >
-        <Button title="Cancel" color={'black'} 
+        <Button title="Cancel" color={colors.red} 
         onPress={
           () => {
             setIsModalVisible(false);
@@ -326,48 +340,24 @@ export default function UpdateExpense({
 
         }
         />
-        <Button title="Save" color={'black'} onPress={()=> setIsConfirmModalVisible(true)} disabled={!validateFields()}/>
+        <Button title="Save" color={colors.red} onPress={()=> setIsConfirmModalVisible(true)} disabled={!validateFields()}/>
       </View>
 
 
 
     {/* Confirmation Modal */}
-    <Modal
-      visible={isConfirmModalVisible}
-      transparent={true}
-      animationType="fade"
-      onRequestClose={() => setIsConfirmModalVisible(false)}
-    >
-      <View style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      }}>
-        <View style={{
-          width: 300,
-          padding: 20,
-          backgroundColor: 'white',
-          borderRadius: 10,
-          alignItems: 'center',
-        }}>
-          <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 10 }}>
-            Confirm Save
-          </Text>
-          <Text style={{ marginBottom: 20 }}>
-            Are you sure you want to save this entry?
-          </Text>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-            <Button title="Cancel" color={colors.red} onPress={() => setIsConfirmModalVisible(false)} />
-            <Button title="Confirm" color={colors.green} onPress={()=>{
-              handleConfirmSave();
-              setIsUpdatingTransaction(false);
-              
-              }} />
-          </View>
-        </View>
-      </View>
-    </Modal>
+    <ConfirmModal 
+      visible={isConfirmModalVisible} 
+      title={'Confirm Changes'} 
+      message={'Are you sure you want to save the changes?'} 
+      onConfirm={()=> {
+        handleSaveExpense();
+        setIsConfirmModalVisible(false)
+        setIsUpdatingTransaction(false);
+        setIsModalVisible(false);
+      }} 
+      onCancel={() => setIsConfirmModalVisible(false)}      
+      />
 
     </View>
     

@@ -1,5 +1,5 @@
 import { Income } from "@/types";
-import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View, Modal as RNModal } from "react-native";
+import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View, Modal as RNModal, Alert } from "react-native";
 import { Modal } from "@/components/Modal";
 import React, { useState } from "react";
 import IncomeDetails from "./IncomeDetails";
@@ -10,6 +10,7 @@ import { UseTransactionService } from "@/hooks/editData/TransactionService";
 import { colors } from "@/constants/colors";
 import { FontAwesome6 } from "@expo/vector-icons";
 import Card from "@/components/ui/Card";
+import ConfirmModal from "@/components/Modal/ConfirmModal";
 
 
 export default function IncomeList() {
@@ -35,7 +36,7 @@ export default function IncomeList() {
                       return (
                           <TouchableOpacity
                               key={income.id}
-                              style={[styles.card, isExpanded ? {backgroundColor: "#E7F0DC", } : { backgroundColor: "white", marginHorizontal: 20}]}
+                              style={[styles.card, isExpanded ? {backgroundColor: colors.ligthGreen, } : { backgroundColor: "white", marginHorizontal: 20}]}
                               onPress={() => setTappedTransactionId(isExpanded ? null : income.id)}
                           >
                                 <View style={styles.content}>
@@ -107,7 +108,7 @@ export default function IncomeList() {
                                                         </TouchableOpacity>
                                                         <TouchableOpacity onPress={() => setIsConfirmModalVisible(true)}>
                                                             <Text style={[styles.label, { marginRight: 20 }]}>
-                                                                <FontAwesome6 name="square-xmark" size={35} color={colors.red} />
+                                                                <FontAwesome6 name="square-xmark" size={35} color={colors.green} />
                                                             </Text>
                                                         </TouchableOpacity>
                                                     </View>
@@ -124,43 +125,19 @@ export default function IncomeList() {
 
 
             {/* Confirmation Modal */}
-            <RNModal
-            visible={isConfirmModalVisible}
-            transparent={true}
-            animationType="fade"
-            onRequestClose={() => setIsConfirmModalVisible(false)}
-            >
-            <View style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            }}>
-                <View style={{
-                width: 300,
-                padding: 20,
-                backgroundColor: 'white',
-                borderRadius: 10,
-                alignItems: 'center',
-                }}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 10 }}>
-                    Confirm Save
-                </Text>
-                <Text style={{ marginBottom: 20 }}>
-                    Are you sure you want to delete this entry?
-                </Text>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-                    <Button title="Cancel" color={colors.red} onPress={() => setIsConfirmModalVisible(false)} />
-                    <Button title="Confirm" color={colors.green} onPress={()=> {
-                        if (tappedTransactionId !== null) {
-                            deleteIncome(tappedTransactionId);
-                            setIsConfirmModalVisible(false); // Close modal after deletion
-                            }
-                    }} />
-                </View>
-                </View>
-            </View>
-            </RNModal>
+      {/* Confirmation Modal */}
+      <ConfirmModal
+      visible={isConfirmModalVisible} 
+      title={'Confirm Deletion'} 
+      message={'Are you sure you want to delete this entry?'} 
+      onConfirm={()=> {
+        if (tappedTransactionId !== null) {
+            deleteIncome(tappedTransactionId);
+            setIsConfirmModalVisible(false); // Close modal after deletion
+            }
+      }} 
+      onCancel={() => setIsConfirmModalVisible(false)}      
+      />
 
           <Modal isOpen={isModalVisible} transparent animationType="fade" onRequestClose={() => setIsModalVisible(false)}>
             <TouchableWithoutFeedback onPress={() => setIsModalVisible(false)}>
@@ -274,8 +251,8 @@ const styles=StyleSheet.create({
         color: colors.green,
     },
     details: {
-        borderTopWidth: 1,
-        borderColor: "#ddd",
+        borderTopWidth: 2,
+        borderColor: colors.light,
         paddingTop: 10,
     },
     row: {

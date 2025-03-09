@@ -54,7 +54,7 @@ const styles= StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.light,
+    backgroundColor: colors.red,
     borderRadius: 15,
     elevation: 5,
     shadowColor: "#000",
@@ -122,7 +122,6 @@ const styles= StyleSheet.create({
     padding: 10
   },
   btn: {
-
   },
   
   
@@ -187,7 +186,6 @@ const styles= StyleSheet.create({
     alignItems: 'flex-end',
 },
 genBudget:{
-  flex:1,
   paddingTop: 10,
   flexDirection: 'row',
   justifyContent: 'center',

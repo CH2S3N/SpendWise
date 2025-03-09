@@ -24,11 +24,9 @@ const Budget = () => {
   const data = firstUser?.hasData ?? "False";
 
   const [input, setInput] = useState(userName);
-  const [userHasData, setUserHasData] = useState(data);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSettingsModalVisible, setIsSettingsModalVisible] = useState(false);
-  const [isAddingTransaction, setIsAddingTransaction] = useState(false);
-  const [isUpdatingTransaction, setIsUpdatingTransaction] = React.useState<boolean>(false);
+  const [isAddingIncome, setIsAddingIncome] = useState(false);
 
   async function handleUpdateUser() {
     try {
@@ -58,14 +56,14 @@ const Budget = () => {
           </TouchableOpacity>
         </View>
         <Card
-        style={{ flex: 0.5, justifyContent: 'center', marginBottom: 10, marginHorizontal: 10}}
+        style={{ flex: 0.5, justifyContent: 'center', marginBottom: 10, marginHorizontal: 10, backgroundColor: colors.ligthGreen}}
         content={
           <IncomeChart />
         }
         />
         <View style={[styles.btn, {marginHorizontal:20}]}>
-          <TouchableOpacity onPress={() => setIsAddingTransaction(true)} style={styles.regen}>
-              <Text style={styles.btnTxt}>Add New Income Source</Text>
+          <TouchableOpacity onPress={() => setIsAddingIncome(true)} style={[styles.regen, {backgroundColor: colors.green}]}>
+              <Text style={[styles.btnTxt, {color: colors.light}]}>ADD INCOME</Text>
           </TouchableOpacity>
         </View>
         <IncomeInfo />
@@ -76,7 +74,7 @@ const Budget = () => {
         <TouchableWithoutFeedback onPress={() => setIsModalVisible(false)}>
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback>
-              <View style={styles.modalContent}>
+              <View style={[styles.modalContent1, {}]}>
                 <Text style={styles.modalTitle}>Profile</Text>
                 <FontAwesome6 name="circle-user" size={50} color={colors.dark} />
                 <View style={{ paddingTop: 10 }}>
@@ -88,7 +86,7 @@ const Budget = () => {
                     onChangeText={setInput}
                   />
                 </View>
-                <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-evenly' }}>
+                <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-evenly', alignItems: "center" }}>
                   <TouchableOpacity onPress={() => setIsModalVisible(false)}>
                     <Text style={styles.modalSubTitle}>Close</Text>
                   </TouchableOpacity>
@@ -111,7 +109,7 @@ const Budget = () => {
         <TouchableWithoutFeedback onPress={() => setIsSettingsModalVisible(false)}>
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback>
-              <View style={[styles.modalContent, {}]}>
+              <View style={[styles.modalContent1, {}]}>
                 <Text style={styles.modalTitle}>Settings</Text>
                 <TouchableOpacity onPress={()=>{
                   deleteAllData();
@@ -131,13 +129,13 @@ const Budget = () => {
 
       
       {/* Add Income Modal*/}
-      <Modal isOpen={isAddingTransaction} transparent animationType="fade">
-        <TouchableWithoutFeedback onPress={() => setIsAddingTransaction(false)}>
+      <Modal isOpen={isAddingIncome} transparent animationType="fade">
+        <TouchableWithoutFeedback onPress={() => setIsAddingIncome(false)}>
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback>
               <View style={styles.modalContent}>
                 <Text style={styles.title}>ADD INCOME </Text>
-                <AddIncome setIsAddingTransaction={setIsAddingTransaction} setIsUpdatingTransaction={setIsUpdatingTransaction} />
+                <AddIncome setIsAddingIncome={setIsAddingIncome}/>
               </View>
             </TouchableWithoutFeedback>
           </View>
@@ -190,6 +188,20 @@ const styles = StyleSheet.create({
     width: '80%',
     height: '80%',
 
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowRadius: 8,
+    shadowOffset: { height: 6, width: 0 },
+    shadowOpacity: 0.15,
+  },
+  modalContent1: {
+    width: '80%',
+    justifyContent: "center",
+    alignContent:"center",
     backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,

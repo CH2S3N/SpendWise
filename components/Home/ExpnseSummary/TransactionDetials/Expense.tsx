@@ -9,6 +9,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import { Divider } from "react-native-paper";
+import ConfirmModal from "@/components/Modal/ConfirmModal";
 
 
 export default function Expense() {
@@ -37,7 +38,6 @@ export default function Expense() {
         <View style={styles.maincontainer}>
                 {transactions.length > 0 ? (
                     <>
-                        <ScrollView>
                             {/* Expenses Lists */}
                             <View style={styles.container}>
                                 <View style={styles.tableheader}>
@@ -47,7 +47,9 @@ export default function Expense() {
                                 </View>
                                 </View>
                                 <Divider style={{marginBottom: 10}}/>
+                                
                                 <View style={styles.contentSection}>
+                        <ScrollView>
                                     {transactions.map((transaction) => {
                                         const categoryForCurrentItem = categories.find(
                                             (category) => category.id === transaction.category_id
@@ -56,7 +58,7 @@ export default function Expense() {
                                         return (
                                                 <TouchableOpacity
                                                     key={transaction.id}
-                                                    style={[styles.card, isExpanded ? {backgroundColor: "#FFEDFA", } : { backgroundColor: colors.light, marginHorizontal:20}]}
+                                                    style={[styles.card, isExpanded ? {backgroundColor: colors.lightRed, } : { backgroundColor: colors.light, marginHorizontal:20}]}
                                                     activeOpacity={.8}
                                                     onPress={() => setTappedTransactionId(isExpanded ? null : transaction.id)}
                                                 >
@@ -120,7 +122,7 @@ export default function Expense() {
                                                                     </View>
                                                                     <View style={styles.row}>
                                                                         <Text style={[styles.label]}>
-                                                                            <FontAwesome6 name="calendar-alt" size={18} color={colors.red} /> Occurrence Count:
+                                                                            <FontAwesome6 name="calendar-day" size={18} color={colors.red} /> Occurrence Count:
                                                                         </Text>
                                                                         <Text style={styles.value}>{transaction.interval} Time/s per Month</Text>
                                                                     </View>
@@ -138,7 +140,7 @@ export default function Expense() {
                                                                             setIsModalVisible(true);
                                                                         }}>
                                                                             <Text style={[[styles.label], { marginRight: 20 }]}>
-                                                                                <FontAwesome6 name="edit" size={35} color={colors.green} />
+                                                                                <FontAwesome6 name="edit" size={35} color={colors.red} />
                                                                             </Text>
                                                                         </TouchableOpacity>
                                                                         <TouchableOpacity onPress={() => setIsConfirmModalVisible(true)}>
@@ -156,9 +158,9 @@ export default function Expense() {
                                                 </TouchableOpacity>
                                         );
                                     })}
+                        </ScrollView>
                                 </View>
                             </View>
-                        </ScrollView>
                     </>
                 ) : (
                     <View style={[styles.container, { height: 400}]}>
@@ -187,44 +189,19 @@ export default function Expense() {
             </Modal>
 
 
-            {/* Confirmation Modal */}
-            <RNModal
-            visible={isConfirmModalVisible}
-            transparent={true}
-            animationType="fade"
-            onRequestClose={() => setIsConfirmModalVisible(false)}
-            >
-                <View style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                }}>
-                    <View style={{
-                    width: 300,
-                    padding: 20,
-                    backgroundColor: 'white',
-                    borderRadius: 10,
-                    alignItems: 'center',
-                    }}>
-                    <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 10 }}>
-                        Confirm Save
-                    </Text>
-                    <Text style={{ marginBottom: 20 }}>
-                        Are you sure you want to delete this entry?
-                    </Text>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-                        <Button title="Cancel" color={colors.red} onPress={() => setIsConfirmModalVisible(false)} />
-                        <Button title="Confirm" color={colors.red} onPress={()=> {
-                            if (tappedTransactionId !== null) {
-                                deleteTransaction(tappedTransactionId);
-                                setIsConfirmModalVisible(false); // Close modal after deletion
-                                }
-                        }} />
-                    </View>
-                    </View>
-                </View>
-            </RNModal>
+            {/* Confirmation Deletion  Modal */}
+            <ConfirmModal
+            visible={isConfirmModalVisible} 
+            title={'Confirm Deletion'} 
+            message={'Are you sure you want to delete this entry?'} 
+            onConfirm={()=> {
+                if (tappedTransactionId !== null) {
+                    deleteTransaction(tappedTransactionId);
+                    setIsConfirmModalVisible(false); // Close modal after deletion
+                    }
+            }} 
+            onCancel={() => setIsConfirmModalVisible(false)}      
+            />
         </View>
     );
 }
@@ -324,8 +301,8 @@ const styles=StyleSheet.create({
         color: colors.red,
     },
     details: {
-        borderTopWidth: 1,
-        borderColor: "#ddd",
+        borderTopWidth: 2,
+        borderColor: colors.light,
         paddingTop: 10,
     },
     row: {
@@ -351,7 +328,6 @@ const styles=StyleSheet.create({
     },
 
     tableheader: {
-        flex: 1,
         width: '100%',
         alignContent: 'center',
         alignItems: 'center',

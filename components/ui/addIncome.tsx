@@ -4,15 +4,15 @@ import SegmentedControl from '@react-native-segmented-control/segmented-control'
 import { useSQLiteContext } from 'expo-sqlite';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
 import { colors } from '@/constants/colors';
+import ConfirmModal from '../Modal/ConfirmModal';
 
 
 interface addIncomeProps {
-  setIsAddingTransaction: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsUpdatingTransaction: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsAddingIncome: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function AddIncome({
-    setIsAddingTransaction, setIsUpdatingTransaction
+    setIsAddingIncome,
 }: addIncomeProps) {
 
     const { insertIncome } = UseTransactionService();
@@ -27,14 +27,7 @@ export default function AddIncome({
     const [incomeCategoryId, setIncomeCategoryId] = React.useState<number>(1);
     const [id] = React.useState<number>(0);
   
-    const db = useSQLiteContext();
     const [isConfirmModalVisible, setIsConfirmModalVisible] = React.useState(false);
-  
-  
-    function handleConfirmSave() {
-        setIsConfirmModalVisible(false);
-        handleSaveIncome();
-    }
 
 
       function validateFields() {
@@ -65,7 +58,7 @@ export default function AddIncome({
         setFrequency("Daily");
         setAmount("");
         setIncomeCategory("Allowance");
-        setIsAddingTransaction(false);
+        setIsAddingIncome(false);
 
     }
     
@@ -266,8 +259,7 @@ export default function AddIncome({
         <Button title="Cancel" color={colors.green} 
           onPress={
             () => {
-              setIsAddingTransaction(false);
-              setIsUpdatingTransaction(false)
+              setIsAddingIncome(false);
             }
           }
         />
@@ -278,38 +270,17 @@ export default function AddIncome({
 
 
       {/* Confirmation Modal */}
-      <Modal
-        visible={isConfirmModalVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setIsConfirmModalVisible(false)}
-      >
-        <View style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        }}>
-          <View style={{
-            width: 300,
-            padding: 20,
-            backgroundColor: 'white',
-            borderRadius: 10,
-            alignItems: 'center',
-          }}>
-            <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 10 }}>
-              Confirm Save
-            </Text>
-            <Text style={{ marginBottom: 20 }}>
-              Are you sure you want to save this entry?
-            </Text>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-              <Button title="Cancel" color={colors.red} onPress={() => setIsConfirmModalVisible(false)} />
-              <Button title="Confirm" color={colors.green} onPress={handleConfirmSave} />
-            </View>
-          </View>
-        </View>
-      </Modal>
+      <ConfirmModal
+      visible={isConfirmModalVisible} 
+      title={'Confirm Save'} 
+      message={'Are you sure you want to save this entry?'} 
+      onConfirm={()=> {
+        handleSaveIncome();
+        setIsConfirmModalVisible(false)
+        setIsAddingIncome(false);
+      }} 
+      onCancel={() => setIsConfirmModalVisible(false)}      
+      />
     </View>
   )
 }

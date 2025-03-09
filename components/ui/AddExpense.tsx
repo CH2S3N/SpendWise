@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
 import { colors } from '@/constants/colors';
 import RNPickerSelect from 'react-native-picker-select';
+import ConfirmModal from '../Modal/ConfirmModal';
 
 
 
@@ -44,10 +45,7 @@ export default function AddExpense({
     const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
     const [isConfirmModalVisible, setIsConfirmModalVisible] = React.useState(false);
     const [categoryDescription, setCategoryDescription] = useState('');
-    function handleConfirmSave() {
-        setIsConfirmModalVisible(false);
-        handleSaveExpense();
-    }
+
     function validateFields() {
       if ( !description || (isfixedamount == 'Yes' && !amount) || !typeSelected || (frequency == 'Daily' && (isrecurrence === "0" || null)) || (frequency == 'Bi-Weekly' && (isrecurrence === "0" || null)) || (subType === 'Custom' && (isrecurrence === "0" || null)) || (frequency == 'Monthly' && (isrecurrence === "0" || null)))  {
         return false;
@@ -307,7 +305,6 @@ export default function AddExpense({
           <View style={styles.dropdownContainer}>
               <RNPickerSelect    
               style={{}}            
-                value={categoryId}
                 onValueChange={(value) => {
                   setTypeSelected(value);
                   const selectedCategory = categories.find((cat) => cat.name === value);
@@ -352,38 +349,16 @@ export default function AddExpense({
 
 
       {/* Confirmation Modal */}
-      <Modal
-        visible={isConfirmModalVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setIsConfirmModalVisible(false)}
-      >
-        <View style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        }}>
-          <View style={{
-            width: 300,
-            padding: 20,
-            backgroundColor: 'white',
-            borderRadius: 10,
-            alignItems: 'center',
-          }}>
-            <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 10 }}>
-              Confirm Save
-            </Text>
-            <Text style={{ marginBottom: 20 }}>
-              Are you sure you want to save this entry?
-            </Text>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-              <Button title="Cancel" color={colors.red} onPress={() => setIsConfirmModalVisible(false)} />
-              <Button title="Confirm" color={colors.green} onPress={handleConfirmSave} />
-            </View>
-          </View>
-        </View>
-      </Modal>
+      <ConfirmModal 
+      visible={isConfirmModalVisible} 
+      title={'Confirm Save'} 
+      message={'Are you sure you want to save this entry?'} 
+      onConfirm={()=> {
+        handleSaveExpense();
+        setIsConfirmModalVisible(false)
+      }} 
+      onCancel={() => setIsConfirmModalVisible(false)}      
+      />
     </View>
   )
 }

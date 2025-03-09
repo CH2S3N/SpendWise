@@ -1,6 +1,5 @@
 import { Text, TouchableOpacity, View, Switch, ScrollView, TouchableWithoutFeedback } from 'react-native'
 import React, { useState,  } from 'react'
-import MainContainer from '@/components/Containers/MainContainer';
 import { StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
@@ -10,7 +9,6 @@ import AccomplishedList from './AccomplishedList';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
 import { Modal } from '@/components/Modal';
 import AddGoal from '@/components/ui/AddGoal';
-import { AntDesign } from '@expo/vector-icons';
 import { colors } from '@/constants/colors';
 import Card from '@/components/ui/Card';
 
@@ -32,18 +30,12 @@ export default function GoalsInfo() {
       return total + (goals.amount || 0);
     }, 0)
   };
-  function calcTotalAccomplishedGoal() {
-    return goals.reduce((total, goals) => {
-      return total + (goals.currentAmount || 0);
-    }, 0)
-  };
-
 
  
   const accomplishedGoals = goals.filter(goal => goal.currentAmount === goal.amount);
 
-  const [isAddingTransaction, setIsAddingTransaction] = useState(false);
-  const [isUpdatingTransaction, setIsUpdatingTransaction] = React.useState<boolean>(false);
+  const [isAddingGoal, setIsAddingGoal] = useState(false);
+  const [isUpdatingGoal, setIsUpdatingGoal] = React.useState<boolean>(false);
 
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
@@ -57,10 +49,10 @@ export default function GoalsInfo() {
             style={styles.headercontent}
             content = {
               <>
-              <View style={{flexDirection: 'row',}}>
+              <View style={{flexDirection: 'row', }}>
                 <View style={{paddingRight: 10}}>
-                  <Text style={styles.text}> Total Amount</Text>
-                  <Text style={styles.text}>{calcTotalGoal()}</Text>
+                  <Text style={styles.textW}> Total Amount</Text>
+                  <Text style={styles.textW}>{calcTotalGoal()}</Text>
                 </View>
               </View>
               </>
@@ -71,8 +63,8 @@ export default function GoalsInfo() {
             style={styles.headercontent}
             content = {
               <>
-                <Text style={styles.text}>Goals Completed</Text>
-                <Text style={styles.text}>{accomplishedGoals.length}/{goals.length}</Text>
+                <Text style={styles.textW}>Goals Completed</Text>
+                <Text style={styles.textW}>{accomplishedGoals.length}/{goals.length}</Text>
               </>
             }
             />
@@ -84,8 +76,8 @@ export default function GoalsInfo() {
           <View style={{justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
             <Text style={styles.text}>Show Accomplished Goals? </Text>
             <Switch
-              trackColor={{false: '#767577', true: '#15B392'}}
-              thumbColor={isEnabled ? '#00FF9C' : '#f4f3f4'}
+              trackColor={{false: colors.gray, true: colors.lightBlue}}
+              thumbColor={isEnabled ? colors.blue : colors.lightBlue}
               ios_backgroundColor="#3e3e3e"
               onValueChange={toggleSwitch}
               value={isEnabled}
@@ -97,8 +89,8 @@ export default function GoalsInfo() {
           <Divider/>
           {/* Add Transaction Button */}
           <View style={styles.btn}>
-            <TouchableOpacity onPress={() => setIsAddingTransaction(true)} style={styles.regen}>
-              <Text style={styles.btnTxt}>Create a New Goal</Text>
+            <TouchableOpacity onPress={() => setIsAddingGoal(true)} style={[styles.regen, {backgroundColor: colors.blue, marginHorizontal: 30}]}>
+              <Text style={[styles.btnTxt, {color: colors.light}]}>Create a New Goal</Text>
             </TouchableOpacity>
           </View>
           {goals.length === 0 && (
@@ -118,7 +110,7 @@ export default function GoalsInfo() {
               </View>
                 <View style={styles.section}> 
                   <View style={styles.tablecontent}>
-                  <InProgressList goals={goals}/>
+                  <InProgressList/>
                   </View>
                 </View>
               </>
@@ -132,7 +124,7 @@ export default function GoalsInfo() {
               </View>
                 <View style={styles.section}> 
                   <View style={styles.tablecontent}>
-                    <AccomplishedList deleteGoal={deleteGoal} goals={goals}/>
+                    <AccomplishedList />
                   </View>
                 </View>
               </>
@@ -146,8 +138,8 @@ export default function GoalsInfo() {
 
 
 
-        <Modal isOpen={isAddingTransaction} transparent animationType="fade" onRequestClose={() => setIsAddingTransaction(false)}>
-          <TouchableWithoutFeedback onPress={() => setIsAddingTransaction(false)}>
+        <Modal isOpen={isAddingGoal} transparent animationType="fade" onRequestClose={() => setIsAddingGoal(false)}>
+          <TouchableWithoutFeedback onPress={() => setIsAddingGoal(false)}>
               <View style={styles.modalOverlay}>
               <TouchableWithoutFeedback>
                   <View style={styles.modalContent}>
@@ -155,7 +147,7 @@ export default function GoalsInfo() {
                     content={
                       <View style={{flex:1}}>
                         <Text style={[styles.title, {textAlign: 'center'}]}>Create a New Goal</Text>
-                        <AddGoal setIsAddingTransaction={setIsAddingTransaction} />
+                        <AddGoal setIsAddingGoal={setIsAddingGoal} />
                       </View>
                     }/>
                   </View>
@@ -186,7 +178,8 @@ const styles = StyleSheet.create({
     flex:1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 10
+    marginHorizontal: 10,
+    backgroundColor: colors.blue
   },
   section: {
     flex: 1,
@@ -194,6 +187,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
   text: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    
+  },
+  textW: {
+    color: colors.light,
     fontWeight: 'bold',
     textAlign: 'center',
     
@@ -238,7 +237,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     padding: 15,
     marginHorizontal: 5,
-    marginBottom: 10
   },
   btnTxt:{
     fontSize: 15,

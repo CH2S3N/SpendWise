@@ -49,6 +49,9 @@ export default function BudgetPlanInfo({
   const [stratSplit, setStratSplit] = useState(false);
   const [budgetStratSplit, setIsStratSplit] = useState(false);
 
+    const [isChartModalVisible, setChartModalVisible] = useState(false);
+    const [isBudgetPlanModalVisible, setBudgetPlanModalVisible] = useState(false);
+    const [selectedTypeIndex, setselectedTypeIndex] = React.useState<number>(0);
 
   useEffect(() => {
     const loadStratSplit = async () => {
@@ -209,11 +212,15 @@ export default function BudgetPlanInfo({
       {/* PopUp Screen */}    
       <>
       {/* Add Transaction */}
-      <Modal isOpen={isAddingTransaction} transparent={true} onRequestClose={()=> setIsAddingTransaction(false)}>
-        <View style={styles.modalAddContent}>
-            <AddTransaction setIsAddingTransaction={setIsAddingTransaction} />
-        </View>
+      <Modal isOpen={isAddingTransaction} transparent animationType="fade" onRequestClose={() => setIsAddingTransaction(false)}>
+          <View style={styles.modalOverlay}>
+              <View style={styles.modalContent}>
+                  <AddTransaction setIsAddingTransaction={setIsAddingTransaction} selectedTypeIndex={selectedTypeIndex}  setselectedTypeIndex={setselectedTypeIndex}/>
+              </View>
+          </View>
       </Modal>
+
+
       {/* Expense Summary */}
       <Modal isOpen={activeModal === 'expense'} onRequestClose={closeModal}>
         <View style={styles.modalContainer}>
@@ -223,7 +230,7 @@ export default function BudgetPlanInfo({
                     <AntDesign name="leftcircle" size={24} color="black" />
                 </TouchableOpacity>
             </View>
-                <Text style={styles.title}>EXPENSE</Text>
+                <Text style={styles.title}>Back</Text>
         </View >
         <View style={styles.modalcontent}>
           <Expense/>
@@ -239,7 +246,7 @@ export default function BudgetPlanInfo({
                     <AntDesign name="leftcircle" size={24} color="black" />
                 </TouchableOpacity>
             </View>
-                <Text style={styles.title}>Income</Text>
+                <Text style={styles.title}>Back</Text>
         </View >
         <View style={styles.modalcontent}>
               <IncomeInfo/>
@@ -364,6 +371,26 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
   },
 
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+  },
+  modalContent: {
+    width: '80%',
+    height: '80%',
+    
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowRadius: 8,
+    shadowOffset: { height: 6, width: 0 },
+    shadowOpacity: 0.15,
+  },
 
 
   // Loading Screen

@@ -45,25 +45,25 @@ export default function Index() {
         />
       ) : (
         <View style={styles.container}>
-          <ScrollView>
+          <View style={{flex:0.8}}>
             {/* Allocate / Summary Buttons */}
-            <View style={styles.genBudget}>
+            <View style={[styles.genBudget,]}>
               <TouchableOpacity 
                 onPress={() => setGenerateModalVisible(true)} 
                 style={styles.topbtn}
               >
-                <Text style={styles.btnTxt}>Allocate</Text>
+                <Text style={[styles.btnTxt, {color: colors.light}]}>Allocate</Text>
               </TouchableOpacity>
               <TouchableOpacity 
                 onPress={() => setBudgetPlanModalVisible(true)} 
                 style={styles.topbtn}
               >
-                <Text style={styles.btnTxt}>Summary</Text>
+                <Text style={[styles.btnTxt, {color: colors.light}]}>Summary</Text>
               </TouchableOpacity>
             </View>
 
             {/* Statistics */}
-            <Card style={{ marginHorizontal: 10, marginBottom: 10 }} content={
+            <Card style={{ flex: 1, marginHorizontal: 10, marginBottom: 10, }} content={
               <>
                 <Text style={styles.title2}>Overview</Text>
                 <Divider style={{ marginHorizontal: 10, marginBottom: 10 }} />
@@ -88,18 +88,18 @@ export default function Index() {
             <View style={[styles.btn, {marginHorizontal: 20, }]}>
               <TouchableOpacity 
                 onPress={() => setIsAddingTransaction(true)} 
-                style={styles.regen} 
+                style={[styles.regen, {backgroundColor: colors.red}]} 
                 activeOpacity={0.7}
               >
-                <Text style={styles.btnTxt}>Add Transactions</Text>
+                <Text style={[styles.btnTxt, {color: colors.light}]}>ADD TRANSACTION</Text>
               </TouchableOpacity>
             </View>
+          </View>
 
             {/* Transactions */}
-            <View>
-              <Expense/>
-            </View>
-          </ScrollView>
+          <View style={{flex:1}}>
+            <Expense/>
+          </View>
         </View>
       )}
 
@@ -111,7 +111,7 @@ export default function Index() {
           <TouchableWithoutFeedback onPress={() => setIsAddingTransaction(false)}>
             <View style={styles.modalOverlay}>
               <TouchableWithoutFeedback>
-                <View style={[styles.modalContent, selectedTypeIndex === 0 ? {backgroundColor: "#FFEDFA"} : { backgroundColor: "#E7F0DC"}]}>
+                <View style={[styles.modalContent]}>
                   <AddTransaction setIsAddingTransaction={setIsAddingTransaction} selectedTypeIndex={selectedTypeIndex}  setselectedTypeIndex={setselectedTypeIndex}/>
                 </View>
               </TouchableWithoutFeedback>
