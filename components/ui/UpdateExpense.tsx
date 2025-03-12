@@ -146,8 +146,8 @@ export default function UpdateExpense({
                 }}
                 fontStyle={{ color: colors.dark }}
                 activeFontStyle={{ color: colors.light }}
-                tintColor={colors.red} 
-                backgroundColor={colors.lightRed}
+                tintColor={colors.green} 
+                backgroundColor={colors.ligthGreen}
               />
           </View>
           <View style={styles.content}>
@@ -175,8 +175,8 @@ export default function UpdateExpense({
                   }}
                   fontStyle={{ color: colors.dark }}
                   activeFontStyle={{ color: colors.light }}
-                  tintColor={colors.red} 
-                  backgroundColor={colors.lightRed}
+                  tintColor={colors.green} 
+                  backgroundColor={colors.ligthGreen}
                 />
                 
               )}
@@ -272,8 +272,8 @@ export default function UpdateExpense({
             }}
             fontStyle={{ color: colors.dark }}
             activeFontStyle={{ color: colors.light }}
-            tintColor={colors.red} 
-            backgroundColor={colors.lightRed}
+            tintColor={colors.green} 
+            backgroundColor={colors.ligthGreen}
           />
           {/* AMOUNT */}
             <Text style={styles.btext}>Amount</Text>
@@ -301,8 +301,8 @@ export default function UpdateExpense({
           }}
           fontStyle={{ color: colors.dark }}
           activeFontStyle={{ color: colors.light }}
-          tintColor={colors.red} 
-          backgroundColor={colors.lightRed}
+          tintColor={colors.green} 
+          backgroundColor={colors.ligthGreen}
         />
 
         <Text style={styles.btext}>Select an Expense Sub-type</Text>
@@ -331,7 +331,7 @@ export default function UpdateExpense({
       <View
         style={{ flexDirection: "row", justifyContent: "space-around", paddingTop: 10 }}
       >
-        <Button title="Cancel" color={colors.red} 
+        <Button title="Cancel" color={colors.green} 
         onPress={
           () => {
             setIsModalVisible(false);
@@ -340,7 +340,7 @@ export default function UpdateExpense({
 
         }
         />
-        <Button title="Save" color={colors.red} onPress={()=> setIsConfirmModalVisible(true)} disabled={!validateFields()}/>
+        <Button title="Save" color={colors.green} onPress={()=> setIsConfirmModalVisible(true)} disabled={!validateFields()}/>
       </View>
 
 

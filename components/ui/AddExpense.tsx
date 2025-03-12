@@ -139,8 +139,8 @@ export default function AddExpense({
                   }}
                   fontStyle={{ color: colors.dark }}
                   activeFontStyle={{ color: colors.light }}
-                  tintColor={colors.red} 
-                  backgroundColor={colors.lightRed}
+                  tintColor={colors.green} 
+                  backgroundColor={colors.ligthGreen}
                 />
             </View>
             <View style={styles.content}>
@@ -168,8 +168,8 @@ export default function AddExpense({
                     }}
                     fontStyle={{ color: colors.dark }}
                     activeFontStyle={{ color: colors.light }}
-                    tintColor={colors.red} 
-                    backgroundColor={colors.lightRed}
+                    tintColor={colors.green} 
+                    backgroundColor={colors.ligthGreen}
                   />
                   
                 )}
@@ -267,8 +267,8 @@ export default function AddExpense({
               }}
               fontStyle={{ color: colors.dark }}
               activeFontStyle={{ color: colors.light }}
-              tintColor={colors.red} 
-              backgroundColor={colors.lightRed}
+              tintColor={colors.green} 
+              backgroundColor={colors.ligthGreen}
             />
             {/* AMOUNT */}
               <Text style={styles.btext}>Amount</Text>
@@ -297,8 +297,8 @@ export default function AddExpense({
             }}
             fontStyle={{ color: colors.dark }}
             activeFontStyle={{ color: colors.light }}
-            tintColor={colors.red} 
-            backgroundColor={colors.lightRed}
+            tintColor={colors.green} 
+            backgroundColor={colors.ligthGreen}
           />
 
           <Text style={styles.btext}>Select an Expense Sub-type</Text>
@@ -330,7 +330,7 @@ export default function AddExpense({
         <View
           style={{ flexDirection: "row", justifyContent: "space-around", paddingTop: 10}}
         >
-          <Button title="Cancel" color={colors.red} 
+          <Button title="Cancel" color={colors.green} 
           onPress={
             () => {
               setIsAddingTransaction(false);
@@ -338,7 +338,7 @@ export default function AddExpense({
           
           }
           />
-          <Button title="Save" color={colors.red} 
+          <Button title="Save" color={colors.green} 
           onPress={()=> {
               setIsConfirmModalVisible(true)
             }} disabled={!validateFields() } 

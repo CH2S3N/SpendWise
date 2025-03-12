@@ -76,8 +76,8 @@ export default function GoalsInfo() {
           <View style={{justifyContent: 'center', alignItems: 'center', flexDirection: 'row'}}>
             <Text style={styles.text}>Show Accomplished Goals? </Text>
             <Switch
-              trackColor={{false: colors.gray, true: colors.lightBlue}}
-              thumbColor={isEnabled ? colors.blue : colors.lightBlue}
+              trackColor={{false: colors.gray, true: colors.ligthGreen}}
+              thumbColor={isEnabled ? colors.green : colors.ligthGreen}
               ios_backgroundColor="#3e3e3e"
               onValueChange={toggleSwitch}
               value={isEnabled}
@@ -89,7 +89,7 @@ export default function GoalsInfo() {
           <Divider/>
           {/* Add Transaction Button */}
           <View style={styles.btn}>
-            <TouchableOpacity onPress={() => setIsAddingGoal(true)} style={[styles.regen, {backgroundColor: colors.blue, marginHorizontal: 30}]}>
+            <TouchableOpacity onPress={() => setIsAddingGoal(true)} style={[styles.regen, {backgroundColor: colors.green, marginHorizontal: 30}]}>
               <Text style={[styles.btnTxt, {color: colors.light}]}>Create a New Goal</Text>
             </TouchableOpacity>
           </View>
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: 10,
-    backgroundColor: colors.blue
+    backgroundColor: colors.green
   },
   section: {
     flex: 1,

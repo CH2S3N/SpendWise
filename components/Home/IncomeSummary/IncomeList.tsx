@@ -108,7 +108,7 @@ export default function IncomeList() {
                                                         </TouchableOpacity>
                                                         <TouchableOpacity onPress={() => setIsConfirmModalVisible(true)}>
                                                             <Text style={[styles.label, { marginRight: 20 }]}>
-                                                                <FontAwesome6 name="square-xmark" size={35} color={colors.green} />
+                                                                <FontAwesome6 name="square-xmark" size={35} color={colors.red} />
                                                             </Text>
                                                         </TouchableOpacity>
                                                     </View>

@@ -15,6 +15,7 @@ import { Divider } from 'react-native-paper';
 import BudgetPlan from '@/components/Home/BudgetPlan/BudgetPlan';
 import Expense from '@/components/Home/ExpnseSummary/TransactionDetials/Expense';
 import { colors } from '@/constants/colors';
+import OnBoarding from '@/components/onBoarding/onBoarding';
 
 export default function Index() {
   const { transactions, incomes, user } = useSelector((state: RootState) => state.data);
@@ -63,7 +64,7 @@ export default function Index() {
             </View>
 
             {/* Statistics */}
-            <Card style={{ flex: 1, marginHorizontal: 10, marginBottom: 10, }} content={
+            <Card style={{ flex: 1, marginHorizontal: 10, marginBottom: 10, backgroundColor: colors.ligthGreen}} content={
               <>
                 <Text style={styles.title2}>Overview</Text>
                 <Divider style={{ marginHorizontal: 10, marginBottom: 10 }} />
@@ -88,7 +89,7 @@ export default function Index() {
             <View style={[styles.btn, {marginHorizontal: 20, }]}>
               <TouchableOpacity 
                 onPress={() => setIsAddingTransaction(true)} 
-                style={[styles.regen, {backgroundColor: colors.red}]} 
+                style={[styles.regen, {backgroundColor: colors.green}]} 
                 activeOpacity={0.7}
               >
                 <Text style={[styles.btnTxt, {color: colors.light}]}>ADD TRANSACTION</Text>
@@ -102,6 +103,7 @@ export default function Index() {
           </View>
         </View>
       )}
+
 
 
       {/* PopUp Screens */}

@@ -20,7 +20,7 @@ export default function RootLayout() {
       // Show loading screen until database is loaded
       if (!isDbLoaded) {
         return (
-          <View>
+          <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
             <ActivityIndicator size="large" />
             <Text>Loading Database...</Text>
           </View>

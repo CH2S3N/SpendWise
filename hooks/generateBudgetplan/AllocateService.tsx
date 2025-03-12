@@ -30,9 +30,9 @@ export default function AllocateAllService() {
     const remainingPercentage = Math.max(100 - savings, 0);
 
     const totalNeedsWants = needs + wants;
-    const scaledNeeds = totalNeedsWants > 0 ? (needs / totalNeedsWants) * remainingPercentage : 0;
+    const scaledNeedsWants = totalNeedsWants > 0 ? (needs / totalNeedsWants) * remainingPercentage : 0;
 
-    const Allocation = Math.round(budget * (scaledNeeds / 100));
+    const Allocation = Math.round(budget * (scaledNeedsWants / 100));
 
     const allTransactions = transactions.filter(transaction =>
       categories.find(category => category.id === transaction.category_id)

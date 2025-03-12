@@ -182,7 +182,7 @@ export function UseTransactionService() {
       const transactionResult = await db.getAllAsync<Transaction>('SELECT * FROM Transactions');
       dispatch(setData({ transactions: transactionResult, categories, goals, user, incomes, varDataStates }));
     });
-  };
+  }; 
   
 
   // Update Expense
@@ -359,6 +359,7 @@ export function UseTransactionService() {
     deleteAllIncome,
     deleteAllExpense,
     deleteAllGoal,
-    deleteAllData
+    deleteAllData,
+    updateVarDataState
   };
 }

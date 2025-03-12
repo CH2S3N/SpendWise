@@ -27,8 +27,8 @@ export default function AddTransaction ({
                   onChange={(event) => 
                     setselectedTypeIndex(event.nativeEvent.selectedSegmentIndex)
                   }
-                  tintColor={ selectedTypeIndex === 0 ? colors.red : colors.green} 
-                  backgroundColor={selectedTypeIndex === 0 ? colors.lightRed : colors.ligthGreen}
+                  tintColor={ selectedTypeIndex === 0 ? colors.green : colors.green} 
+                  backgroundColor={selectedTypeIndex === 0 ? colors.ligthGreen : colors.ligthGreen}
                   fontStyle={{ color: colors.dark }} 
                   activeFontStyle={{ color: colors.light }} 
                 />

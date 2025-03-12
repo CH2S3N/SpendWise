@@ -54,7 +54,7 @@ const styles= StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.red,
+    backgroundColor: colors.green,
     borderRadius: 15,
     elevation: 5,
     shadowColor: "#000",

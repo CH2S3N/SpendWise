@@ -5,8 +5,6 @@ import Slider from '@react-native-community/slider';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
 import { setNeeds, setWants, setSavings, resetCat} from '@/state/budgetSlice';
-import SubCatNeeds from './SubCatNeeds';
-import SubCatWants from './SubCatWants';
 import SubCatAll from './SubCatAll';
 import { AntDesign } from '@expo/vector-icons';
 
@@ -66,7 +64,8 @@ const Categories = ({
     setStratSplit: React.Dispatch<React.SetStateAction<boolean>>  
   }) => {
     const dispatch = useDispatch();
-    const { needs, wants, savings} = useSelector((state: RootState) => state.budget); 
+    const { needs, wants, savings, } = useSelector((state: RootState) => state.budget); 
+    
     const [isEnabled, setIsEnabled] = useState(true);
     useEffect(() => {
       setIsEnabled(stratSplit);

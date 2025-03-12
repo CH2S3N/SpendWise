@@ -40,7 +40,7 @@ export default function InProgressList() {
                 const progressPercentage = (progress * 100).toFixed(0);
 
                 return (
-                    <View key={goal.id} style={[detailStyles.card, isExpanded ? {backgroundColor: colors.lightBlue, } : { backgroundColor: colors.light, marginHorizontal:20}]}>
+                    <View key={goal.id} style={[detailStyles.card, isExpanded ? {backgroundColor: colors.ligthGreen, } : { backgroundColor: colors.light, marginHorizontal:20}]}>
                         <TouchableOpacity     
                                 
                         onPress={() =>{
@@ -57,9 +57,9 @@ export default function InProgressList() {
                                         </View>
                                         <View style={detailStyles.row}>
                                             <Text style={detailStyles.text}>Accumulated Amount: <Text  style={detailStyles.value}>₱ {goal.currentAmount}</Text> </Text>
-                                            <Text style={[detailStyles.text, {color: colors.blue}]}>{progressPercentage}%</Text>
+                                            <Text style={[detailStyles.text, {color: colors.green}]}>{progressPercentage}%</Text>
                                         </View>
-                                        <ProgressBar progress={progress} theme={{ colors: { primary: colors.blue } }} />
+                                        <ProgressBar progress={progress} theme={{ colors: { primary: colors.green } }} />
 
                                     </>
                                 ) : (
@@ -72,7 +72,7 @@ export default function InProgressList() {
                                         <Text style={detailStyles.text}>Accumulated Amount: <Text  style={detailStyles.value}>₱ {goal.currentAmount}</Text> </Text>
                                         <Text style={[detailStyles.value,]}>{progressPercentage}%</Text>
                                         </View>
-                                        <ProgressBar progress={progress} theme={{ colors: { primary: colors.blue } }} />
+                                        <ProgressBar progress={progress} theme={{ colors: { primary: colors.green } }} />
 
                                         <View style={[detailStyles.row, {justifyContent: "flex-end", paddingTop: 20, alignItems: "center"}]}>
                                             <TouchableOpacity onPress={() => {
@@ -80,14 +80,14 @@ export default function InProgressList() {
 
                                             }}>
                                                 <Text style={[[detailStyles.label], { marginRight: 20 }]}>
-                                                    <FontAwesome6 name="edit" size={35} color={colors.blue} />
+                                                    <FontAwesome6 name="edit" size={35} color={colors.green} />
                                                 </Text>
                                             </TouchableOpacity>
                                             <TouchableOpacity onPress={() =>{
                                                 setisDeletionModal(true)
                                             }}>
                                                 <Text style={[[detailStyles.label], { marginRight: 20 }]}>
-                                                    <FontAwesome6 name="square-xmark" size={35} color={colors.blue} />
+                                                    <FontAwesome6 name="square-xmark" size={35} color={colors.red} />
                                                 </Text>
                                             </TouchableOpacity>
                                         </View>
@@ -162,7 +162,7 @@ const detailStyles = StyleSheet.create({
         fontSize: 15,
     },
     value: {
-        color: colors.blue,
+        color: colors.green,
         fontWeight: "bold",
         fontSize: 15,
     },

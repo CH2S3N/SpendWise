@@ -11,6 +11,7 @@ interface DataState {
   varDataStates: VarDataState[];
   loading: boolean;
   budgetStratSplit: boolean;
+  viewed: boolean;
   error: string | null;
 }
 
@@ -24,7 +25,8 @@ const initialState: DataState = {
   loading: false,
   error: null,
   budgetStratSplit: false,
-};
+  viewed: false,
+};  
 
 const dataSlice = createSlice({
   name: "data",
@@ -49,6 +51,9 @@ const dataSlice = createSlice({
     setBudgetStratSplit: (state, action: PayloadAction<boolean>) => {
       state.budgetStratSplit = action.payload;
     },
+    setViewedOnboarding: (state, action: PayloadAction<boolean>) => {
+      state.viewed = action.payload;
+    },
 
     setError(state, action: PayloadAction<string>) {
       state.error = action.payload;
@@ -63,5 +68,5 @@ const dataSlice = createSlice({
   },
 });
 
-export const { setLoading, setData, setError, clearData, setBudgetStratSplit  } = dataSlice.actions;
+export const { setLoading, setData, setError, clearData, setBudgetStratSplit, setViewedOnboarding  } = dataSlice.actions;
 export default dataSlice.reducer;

@@ -13,5 +13,5 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-, "app/_layout.tsx", "app/index.jsx", "components/TabBar.jsx", "components/TabBar.jsx"  ]
+, "app/_layout.tsx", "app/index.jsx", "components/TabBar.jsx", "components/TabBar.jsx", "components/onBoarding/Paginator.js", "components/onBoarding/onBoardingItem.js", "components/onBoarding/onBoarding.js", "components/onBoarding/NextButton.js"  ]
 }

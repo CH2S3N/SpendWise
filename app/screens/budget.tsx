@@ -48,11 +48,11 @@ const Budget = () => {
           <TouchableOpacity 
             onPress={() => setIsModalVisible(true)} 
             style={styles.userButton}>
-            <FontAwesome6 name="circle-user" size={30} color={colors.dark} />
+            <FontAwesome6 name="circle-user" size={30} color={colors.green} />
             <Text style={styles.userText}>{userName}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setIsSettingsModalVisible(true)} style={styles.iconButton}>
-            <FontAwesome6 name="gear" size={30} color={colors.dark} />
+            <FontAwesome6 name="gear" size={30} color={colors.green} />
           </TouchableOpacity>
         </View>
         <Card
@@ -165,7 +165,8 @@ const styles = StyleSheet.create({
   userText: {
     paddingLeft: 10,
     fontSize: 20,
-    color: colors.dark,
+    fontWeight: 'bold',
+    color: colors.green,
   },
   iconButton: {
     justifyContent: 'center',

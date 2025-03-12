@@ -37,10 +37,6 @@ export default function UpdateIncome({
   const [isConfirmModalVisible, setIsConfirmModalVisible] = React.useState(false);
 
 
-  function handleConfirmSave() {
-      setIsConfirmModalVisible(false);
-      handleSaveIncome(); 
-  }
 
    useEffect(() => {
     if (frequency === 'Daily') {

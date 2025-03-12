@@ -43,7 +43,7 @@ export default function Expense() {
                                 <View style={styles.tableheader}>
                                 <View style={styles.row}>
                                     <Text style={styles.title}>Expenses</Text>
-                                    <Text style={[styles.title, {color: colors.red}]}>Total: ₱ {calcTransactions()}</Text>
+                                    <Text style={[styles.title, {color: colors.green}]}>Total: ₱ {calcTransactions()}</Text>
                                 </View>
                                 </View>
                                 <Divider style={{marginBottom: 10}}/>
@@ -58,7 +58,7 @@ export default function Expense() {
                                         return (
                                                 <TouchableOpacity
                                                     key={transaction.id}
-                                                    style={[styles.card, isExpanded ? {backgroundColor: colors.lightRed, } : { backgroundColor: colors.light, marginHorizontal:20}]}
+                                                    style={[styles.card, isExpanded ? {backgroundColor: colors.ligthGreen, } : { backgroundColor: colors.light, marginHorizontal:20}]}
                                                     activeOpacity={.8}
                                                     onPress={() => setTappedTransactionId(isExpanded ? null : transaction.id)}
                                                 >
@@ -94,43 +94,43 @@ export default function Expense() {
                                                                 <View style={styles.details}>
                                                                 <View style={styles.row}>
                                                                         <Text style={[styles.label]}>
-                                                                            <FontAwesome6 name="calendar-day" size={18} color={colors.red} /> Budget per Occurrence:
+                                                                            <FontAwesome6 name="calendar-day" size={18} color={colors.green} /> Budget per Occurrence:
                                                                         </Text>
-                                                                        <Text style={[styles.value, { color: colors.red, fontSize:15, }]} >₱ {Math.round(transaction.amount)}</Text>
+                                                                        <Text style={[styles.value, { color: colors.green, fontSize:15, }]} >₱ {Math.round(transaction.amount)}</Text>
                                                                     </View>
                                                                     <View style={styles.row}>
                                                                         <Text style={[styles.label]}>
-                                                                            <FontAwesome6 name="bag-shopping" size={18} color={colors.red} /> Expense Type:
+                                                                            <FontAwesome6 name="bag-shopping" size={18} color={colors.green} /> Expense Type:
                                                                         </Text>
                                                                         { transaction.type === "Non_Essential" ? (
                                                                             <Text style={styles.value}>Non Essential</Text>
                                                                         ) : (
                                                                             <Text style={styles.value}>Essential</Text>
                                                                         )}
-                                                                    </View>
+                                                                    </View> 
                                                                     <View style={styles.row}>
                                                                         <Text style={[styles.label]}>
-                                                                            <FontAwesome6 name="bag-shopping" size={18} color={colors.red} /> Expense Subtype:
+                                                                            <FontAwesome6 name="bag-shopping" size={18} color={colors.green} /> Expense Subtype:
                                                                         </Text>
                                                                         <Text style={styles.value}>{categoryForCurrentItem?.name}</Text>
                                                                     </View>
                                                                     <View style={styles.row}>
                                                                         <Text style={[styles.label]}>
-                                                                            <FontAwesome6 name="calendar-alt" size={18} color={colors.red} /> Recurrence Pattern:
+                                                                            <FontAwesome6 name="calendar-alt" size={18} color={colors.green} /> Recurrence Pattern:
                                                                         </Text>
                                                                         <Text style={styles.value}>{transaction.frequency}{transaction.subtype === "Custom" ? (null) : (<Text>/{transaction.subtype}</Text>)}</Text>
                                                                     </View>
                                                                     <View style={styles.row}>
                                                                         <Text style={[styles.label]}>
-                                                                            <FontAwesome6 name="calendar-day" size={18} color={colors.red} /> Occurrence Count:
+                                                                            <FontAwesome6 name="calendar-day" size={18} color={colors.green} /> Occurrence Count:
                                                                         </Text>
                                                                         <Text style={styles.value}>{transaction.interval} Time/s per Month</Text>
                                                                     </View>
                                                                     <View style={styles.row}>
                                                                         <Text style={[styles.label]}>
-                                                                            <FontAwesome6 name="lock" size={18} color={colors.red} /> Fixed Amount?
+                                                                            <FontAwesome6 name="lock" size={18} color={colors.green} /> Fixed Amount?
                                                                         </Text>
-                                                                        <Text style={[styles.value, { color: transaction.isfixedamount  === "Yes" ? colors.red : colors.red }]}>
+                                                                        <Text style={[styles.value, { color: transaction.isfixedamount  === "Yes" ? colors.green : colors.red }]}>
                                                                             {transaction.isfixedamount === "Yes" ? "Yes" : "No"}
                                                                         </Text>
                                                                     </View>
@@ -140,7 +140,7 @@ export default function Expense() {
                                                                             setIsModalVisible(true);
                                                                         }}>
                                                                             <Text style={[[styles.label], { marginRight: 20 }]}>
-                                                                                <FontAwesome6 name="edit" size={35} color={colors.red} />
+                                                                                <FontAwesome6 name="edit" size={35} color={colors.green} />
                                                                             </Text>
                                                                         </TouchableOpacity>
                                                                         <TouchableOpacity onPress={() => setIsConfirmModalVisible(true)}>
@@ -298,7 +298,7 @@ const styles=StyleSheet.create({
         textAlign: 'center',
         fontSize: 18,
         fontWeight: "bold",
-        color: colors.red,
+        color: colors.green,
     },
     details: {
         borderTopWidth: 2,

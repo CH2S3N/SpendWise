@@ -1,5 +1,7 @@
+import { colors } from "@/constants/colors";
 import { RootState } from "@/state/store";
 import { Income, Transaction } from "@/types";
+import { color } from "@rneui/base";
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -185,7 +187,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginVertical: 10,
     textAlign: 'center',
-    color: "#333",
+    color: colors.dark,
   },
   table: {
     borderWidth: 1,
@@ -196,7 +198,7 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: "row",
-    backgroundColor: "#fff",
+    backgroundColor: colors.ligthGreen,
   },
 
   celltitle: {
@@ -207,7 +209,8 @@ const styles = StyleSheet.create({
     borderColor: "#ddd",
     textAlign: "center",
     fontWeight: "bold",
-    backgroundColor: "#f0f0f0",
+    backgroundColor: colors.green,
+    color: colors.light
   },
   cell: {
     flex: 1,

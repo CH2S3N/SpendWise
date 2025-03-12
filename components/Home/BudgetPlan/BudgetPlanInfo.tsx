@@ -26,11 +26,11 @@ export default function BudgetPlanInfo({
 }) {
   const { updateUser } = UseTransactionService();
   const { allocateAll, splitAllocation } = AllocateAllService();
-  const { transactions, user, incomes } = useSelector((state: RootState) => state.data);
+  const { transactions, user, incomes, budgetStratSplit } = useSelector((state: RootState) => state.data);
   const { fetchData } = useFetchData();
   const dispatch = useDispatch();
 
-
+  // User
   const firstUser = user?.[0];  
   const userName = firstUser?.userName || "";
   const userId = firstUser?.id ?? 1;  
@@ -47,50 +47,25 @@ export default function BudgetPlanInfo({
   const [isAddingTransaction, setIsAddingTransaction] = useState(false);
   const [hasBudgetStrat, setHasBudgetStrat] = useState(false);
   const [stratSplit, setStratSplit] = useState(false);
-  const [budgetStratSplit, setIsStratSplit] = useState(false);
-
-    const [isChartModalVisible, setChartModalVisible] = useState(false);
-    const [isBudgetPlanModalVisible, setBudgetPlanModalVisible] = useState(false);
-    const [selectedTypeIndex, setselectedTypeIndex] = React.useState<number>(0);
+  const [selectedTypeIndex, setselectedTypeIndex] = React.useState<number>(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const loadStratSplit = async () => {
       try {
-        const storedValue = await AsyncStorage.getItem('stratSplit');
+        const storedValue = await AsyncStorage.getItem('stratSplitted'); 
         if (storedValue !== null) {
           const parsedValue = JSON.parse(storedValue);
           setStratSplit(parsedValue);
-          console.log("Loaded stratSplit:", parsedValue);
+          dispatch(setBudgetStratSplit(parsedValue)); 
+          console.log('is Strat Splitted? ', parsedValue);
         }
       } catch (error) {
         console.error("Error loading stratSplit:", error);
       }
     };
-   
     loadStratSplit();
-  }, []); 
-  
-  useEffect(() => {
-    const saveStratSplit = async () => {
-      try {
-        await AsyncStorage.setItem('stratSplit', JSON.stringify(stratSplit));
-        console.log("Saved stratSplit:", stratSplit);
-      } catch (error) {
-        console.error("Error saving stratSplit:", error);
-      }
-    };
-  
-    if (stratSplit !== null) {
-      saveStratSplit();
-    }
-  }, [stratSplit]);
-  
-
-
-
-
-  const [isLoading, setIsLoading] = useState(false);
-
+  }, [dispatch]); 
 
   const handleAllocate = async () => {
     try {
@@ -111,11 +86,13 @@ export default function BudgetPlanInfo({
         hasData: "True",
       });
   
+      const newStratSplit = stratSplit;
+      dispatch(setBudgetStratSplit(newStratSplit));
   
-      dispatch(setBudgetStratSplit(stratSplit));
-      await AsyncStorage.setItem('budgetStratSplit', JSON.stringify(stratSplit));
+      // Save updated value in AsyncStorage
+      await AsyncStorage.setItem('stratSplitted', JSON.stringify(newStratSplit));
   
-      console.log("Strategy split? ", stratSplit);
+      console.log("Strategy split? ", newStratSplit);
   
       await fetchData();
     } catch (error) {
@@ -125,7 +102,22 @@ export default function BudgetPlanInfo({
     }
   };
   
-  
+  useEffect(() => {
+    const loadStratSplit = async () => {
+      try {
+        const storedValue = await AsyncStorage.getItem('stratSplitted'); 
+        if (storedValue !== null) {
+          const parsedValue = JSON.parse(storedValue);
+          setStratSplit(parsedValue);
+          dispatch(setBudgetStratSplit(parsedValue));
+          console.log('is Strat Splitted? ', parsedValue);
+        }
+      } catch (error) {
+        console.error("Error loading stratSplit:", error);
+      }
+    };
+    loadStratSplit();
+  }, [dispatch]);
   
   
 
@@ -158,6 +150,7 @@ export default function BudgetPlanInfo({
                       ) : (
                         <Button onPress={()=> setAdvanceBtnTapped(false)}>Go Back</Button>
                       )}
+                      {/* <Text>{stratSplit.toString()}</Text> */}
                   </View>
 
                 </View>
