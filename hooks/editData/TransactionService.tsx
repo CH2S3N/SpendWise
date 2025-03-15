@@ -51,7 +51,6 @@ export function UseTransactionService() {
       );
   
       console.log('Updated Goal:', updatedGoal);
-  
       // Reload data
       const goalResult = await db.getAllAsync<Goal>('SELECT * FROM Goals');
       dispatch(setData({ goals: goalResult, categories, transactions, user, incomes, varDataStates  }));

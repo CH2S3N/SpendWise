@@ -41,12 +41,12 @@ export default function Expense() {
                             {/* Expenses Lists */}
                             <View style={styles.container}>
                                 <View style={styles.tableheader}>
-                                <View style={styles.row}>
-                                    <Text style={styles.title}>Expenses</Text>
-                                    <Text style={[styles.title, {color: colors.green}]}>Total: ₱ {calcTransactions()}</Text>
+                                    <View style={styles.row}>
+                                        <Text style={styles.title}>Expenses</Text>
+                                        <Text style={[styles.amount, {color: colors.green}]}>Total: ₱ {calcTransactions()}</Text>
+                                    </View>
                                 </View>
-                                </View>
-                                <Divider style={{marginBottom: 10}}/>
+                                
                                 
                                 <View style={styles.contentSection}>
                         <ScrollView>
@@ -96,7 +96,7 @@ export default function Expense() {
                                                                         <Text style={[styles.label]}>
                                                                             <FontAwesome6 name="calendar-day" size={18} color={colors.green} /> Budget per Occurrence:
                                                                         </Text>
-                                                                        <Text style={[styles.value, { color: colors.green, fontSize:15, }]} >₱ {Math.round(transaction.amount)}</Text>
+                                                                        <Text style={[styles.amount, { color: colors.green, fontSize:15, }]} >₱ {Math.round(transaction.amount)}</Text>
                                                                     </View>
                                                                     <View style={styles.row}>
                                                                         <Text style={[styles.label]}>
@@ -139,12 +139,12 @@ export default function Expense() {
                                                                             setCurrentTransaction(transaction);
                                                                             setIsModalVisible(true);
                                                                         }}>
-                                                                            <Text style={[[styles.label], { marginRight: 20 }]}>
+                                                                            <Text style={[[styles.icon], { marginRight: 20 }]}>
                                                                                 <FontAwesome6 name="edit" size={35} color={colors.green} />
                                                                             </Text>
                                                                         </TouchableOpacity>
                                                                         <TouchableOpacity onPress={() => setIsConfirmModalVisible(true)}>
-                                                                            <Text style={[[styles.label], { marginRight: 20 }]}>
+                                                                            <Text style={[[styles.icon], { marginRight: 20 }]}>
                                                                                 <FontAwesome6 name="square-xmark" size={35} color={colors.red} />
                                                                             </Text>
                                                                         </TouchableOpacity>
@@ -208,7 +208,7 @@ export default function Expense() {
 
 const styles=StyleSheet.create({
     maincontainer: {
-        flex: 1
+        flex: 1,
     },
     container: {
         flex: 1,
@@ -269,8 +269,10 @@ const styles=StyleSheet.create({
     },
 
     card: {
+        marginHorizontal: 10,
         padding: 15,
         borderRadius: 15,
+        borderWidth: 1,
         backgroundColor: 'white',
         elevation: 5,
         shadowColor: "#000",
@@ -299,6 +301,9 @@ const styles=StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
         color: colors.green,
+        textShadowColor: 'black', 
+        textShadowOffset: { width: .2, height: .2 }, 
+        textShadowRadius: .2,
     },
     details: {
         borderTopWidth: 2,
@@ -320,6 +325,7 @@ const styles=StyleSheet.create({
         fontSize: 14,
         fontWeight: "600",
         color: colors.dark,
+        
     },
     value: {
         color: colors.dark,
@@ -334,6 +340,8 @@ const styles=StyleSheet.create({
         flexDirection: 'row',
         paddingHorizontal: 20,
         paddingBottom: 5,  
+        borderBottomWidth:1,
+        marginBottom:10
     },
     noData:{
         flex: 1,
@@ -351,5 +359,11 @@ const styles=StyleSheet.create({
         color: colors.dark,
         fontSize: 20,
       },
+      icon:{
+        width: 40,
+        textShadowColor: 'black', 
+        textShadowOffset: { width: .7, height: .7 }, 
+        textShadowRadius: .7, 
+      }
 
 })

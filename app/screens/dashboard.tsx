@@ -53,18 +53,18 @@ export default function Index() {
                 onPress={() => setGenerateModalVisible(true)} 
                 style={styles.topbtn}
               >
-                <Text style={[styles.btnTxt, {color: colors.light}]}>Allocate</Text>
+                <Text style={[styles.btnTxt, {color: colors.light}]}>ALLOCATE</Text>
               </TouchableOpacity>
               <TouchableOpacity 
                 onPress={() => setBudgetPlanModalVisible(true)} 
                 style={styles.topbtn}
               >
-                <Text style={[styles.btnTxt, {color: colors.light}]}>Summary</Text>
+                <Text style={[styles.btnTxt, {color: colors.light}]}>SUMMARY</Text>
               </TouchableOpacity>
             </View>
 
             {/* Statistics */}
-            <Card style={{ flex: 1, marginHorizontal: 10, marginBottom: 10, backgroundColor: colors.ligthGreen}} content={
+            <Card style={{ flex: 1, marginHorizontal: 10, marginBottom: 10, backgroundColor: colors.light, borderWidth:1}} content={
               <>
                 <Text style={styles.title2}>Overview</Text>
                 <Divider style={{ marginHorizontal: 10, marginBottom: 10 }} />
@@ -127,7 +127,7 @@ export default function Index() {
             <View style={styles.modalheader}>
               <View style={styles.icon}>
                 <TouchableOpacity onPress={() => setGenerateModalVisible(false)}>
-                  <AntDesign name="leftcircle" size={24} color="black" />
+                  <AntDesign name="leftcircle" size={24} color={colors.green} />
                 </TouchableOpacity>
               </View>
               <Text style={styles.title}>Allocate</Text>
@@ -144,7 +144,7 @@ export default function Index() {
             <View style={styles.modalheader}>
               <View style={styles.icon}>
                 <TouchableOpacity onPress={() => setBudgetPlanModalVisible(false)}>
-                  <AntDesign name="leftcircle" size={24} color="black" />
+                  <AntDesign name="leftcircle" size={24} color={colors.green} />
                 </TouchableOpacity>
               </View>
               <Text style={styles.title}>Monthly Transaction Summary</Text>
@@ -161,7 +161,7 @@ export default function Index() {
             <View style={styles.modalheader}>
               <View style={styles.icon}>
                 <TouchableOpacity onPress={() => setChartModalVisible(false)}>
-                  <AntDesign name="leftcircle" size={24} color="black" />
+                  <AntDesign name="leftcircle" size={24} color={colors.green} />
                 </TouchableOpacity>
               </View>
               <Text style={styles.title}>STATISTICS</Text>

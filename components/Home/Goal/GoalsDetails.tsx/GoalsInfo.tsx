@@ -1,29 +1,27 @@
 import { Text, TouchableOpacity, View, Switch, ScrollView, TouchableWithoutFeedback } from 'react-native'
-import React, { useState,  } from 'react'
+import React, { useEffect, useState,  } from 'react'
 import { StyleSheet } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
 import { Divider } from '@rneui/base';
 import InProgressList from './InProgressList';
 import AccomplishedList from './AccomplishedList';
-import { UseTransactionService } from '@/hooks/editData/TransactionService';
 import { Modal } from '@/components/Modal';
 import AddGoal from '@/components/ui/AddGoal';
 import { colors } from '@/constants/colors';
 import Card from '@/components/ui/Card';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setAccGoalSwitch } from '@/state/dataSlice';
 
 
 
 export default function GoalsInfo() {
- 
+  const dispatch = useDispatch();
+
 
   const { goals } = useSelector(
     (state: RootState) => state.data
   );
-
-  const { deleteGoal } = UseTransactionService();
-
-
 
   function calcTotalGoal() {
     return goals.reduce((total, goals) => {
@@ -35,11 +33,41 @@ export default function GoalsInfo() {
   const accomplishedGoals = goals.filter(goal => goal.currentAmount === goal.amount);
 
   const [isAddingGoal, setIsAddingGoal] = useState(false);
-  const [isUpdatingGoal, setIsUpdatingGoal] = React.useState<boolean>(false);
-
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
+
+  useEffect(() => {
+    const goalSwitch = async () => {
+      try {
+        const storedValue = await AsyncStorage.getItem('showAccGoal'); 
+        if (storedValue !== null) {
+          const parsedValue = JSON.parse(storedValue);
+          setIsEnabled(parsedValue);
+          dispatch(setAccGoalSwitch(parsedValue)); 
+          console.log('is Accomplished Goal Shown? ', parsedValue);
+        }
+      } catch (error) {
+        console.log("Error loading Goal Switch", error);
+      }
+    };
+    goalSwitch();
+}, []);
+
+useEffect(() => {
+    const updateGoalSwitch = async () => {
+      try {
+        const newVal = isEnabled;  
+        dispatch(setAccGoalSwitch(newVal));  
+        await AsyncStorage.setItem('showAccGoal', JSON.stringify(newVal));  
+        console.log("is Accomplished Goal Shown? ", newVal);
+      } catch (error) {
+        console.log("Error updating Goal Switch", error);
+      }
+    };
+    
+    updateGoalSwitch();
+}, [isEnabled]);  
   return (
     <>
       <View style={styles.MainContainer}>
@@ -144,6 +172,7 @@ export default function GoalsInfo() {
               <TouchableWithoutFeedback>
                   <View style={styles.modalContent}>
                     <Card
+                    style={{borderWidth:1,}}
                     content={
                       <View style={{flex:1}}>
                         <Text style={[styles.title, {textAlign: 'center'}]}>Create a New Goal</Text>
@@ -176,6 +205,7 @@ const styles = StyleSheet.create({
   },
   headercontent: {
     flex:1,
+    borderWidth:1,
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: 10,
@@ -195,7 +225,9 @@ const styles = StyleSheet.create({
     color: colors.light,
     fontWeight: 'bold',
     textAlign: 'center',
-    
+    textShadowColor: 'black', 
+    textShadowOffset: { width: .5, height: .5 }, 
+    textShadowRadius: .5, 
   },
   titletext:{
     fontWeight: 'bold',
@@ -230,6 +262,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: colors.light,
     borderRadius: 15,
+    borderWidth:1,
     elevation: 5,
     shadowColor: "#000",
     shadowRadius: 8,
@@ -241,7 +274,10 @@ const styles = StyleSheet.create({
   btnTxt:{
     fontSize: 15,
     fontWeight: 'bold',
-    color: colors.dark
+    color: colors.dark,
+    textShadowColor: 'black', 
+    textShadowOffset: { width: .5, height: .5 }, 
+    textShadowRadius: .5, 
   },
   btn: {
 
@@ -260,6 +296,7 @@ const styles = StyleSheet.create({
   modalContent: {
     width: '80%',
     height: '80%',
+    
   },
 
 })

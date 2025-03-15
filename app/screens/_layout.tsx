@@ -23,7 +23,7 @@ const _layout = () => {
     fetchData().catch((e) => console.error(e));
   }, []);
 
-
+  // set Onboarding
     useEffect(() => {
         const loadStratSplit = async () => {
           try {
@@ -41,6 +41,7 @@ const _layout = () => {
         loadStratSplit();
       }, [dispatch]); 
 
+      
     const checkOnboarding = async () => {
       // await AsyncStorage.removeItem('@viewedOnboarding');
       try {
@@ -76,22 +77,32 @@ const _layout = () => {
             headerTitle: () => (
               <Image
                 source={require("./../../assets/images/Logo/Spendwise.gif")}
-                style={{ width: 120, height: 40, resizeMode: 'cover' }}
+                style={{ width: 200, height: 80, resizeMode: 'center'}}
                 />
             ),
 
             tabBarStyle: {
+              marginTop:2,
+              borderWidth:1,
               backgroundColor: colors.green,
               paddingBottom: 10,
               paddingTop: 10,
               height: 70,
+              borderTopWidth: 1,
               marginHorizontal: 10,
               borderRadius: 10,
               marginBottom: 10,
+              justifyContent:'center',
+              alignItems: 'center',
+              borderColor: 'black',
             },
             tabBarLabelStyle: {
               fontSize: 14,
               fontWeight: 'bold',
+              color: colors.dark,
+              textShadowColor: 'black', 
+              textShadowOffset: { width: 1, height: 1 }, 
+              textShadowRadius: .1, 
               
             },
             tabBarActiveTintColor: colors.light,
@@ -102,9 +113,21 @@ const _layout = () => {
             name="goal"
             options={{
               title: 'GOALS',
-              tabBarIcon: ({ color }) => <AntDesign name="plussquareo" size={24} color={color} />,
+              tabBarIcon: ({ focused, color }) => <AntDesign name="plussquareo" size={focused ? 30:24} color={color} 
+              style={{
+                textShadowColor: 'black', 
+                textShadowOffset: { width: .2, height: .2 }, 
+                textShadowRadius: .2,
+              }}
+              />,
               tabBarLabel: ({ focused, color }) => (
-                <Text style={{ fontSize: focused ? 15 : 10, fontWeight: 'bold', color }}>
+                <Text style={{ 
+                  fontSize: focused ? 15 : 13, fontWeight: 'bold', 
+                  color,   
+                  textShadowColor: 'black', 
+                  textShadowOffset: { width:.5, height:.5 }, 
+                  textShadowRadius:.5,  
+                  }}>
                   GOALS
                 </Text>
               ),
@@ -115,22 +138,45 @@ const _layout = () => {
             name="dashboard"
             options={{
               title: 'TRANSACTIONS',
-              tabBarIcon: ({ color }) => <AntDesign name="profile" size={24} color={color} />,
+              tabBarIcon: ({ focused, color }) => <AntDesign name="profile" size={focused ? 30:24} color={color} 
+              style={{
+                textShadowColor: 'black', 
+                textShadowOffset: { width: .2, height: .2 }, 
+                textShadowRadius: .2,
+              }}
+              />,
               tabBarLabel: ({ focused, color }) => (
-                <Text style={{ fontSize: focused ? 15 : 10, fontWeight: 'bold', color }}>
+                <Text style={{ 
+                  fontSize: focused ? 15 : 13, fontWeight: 'bold', 
+                  color,   
+                  textShadowColor: 'black', 
+                  textShadowOffset: { width: .5, height: .5 }, 
+                  textShadowRadius: .5,  
+                  }}>
                   TRANSACTIONS
                 </Text>
               ),
-
             }}
           />
           <Tabs.Screen
             name="budget"
             options={{
               title: 'WALLET',
-              tabBarIcon: ({ color }) => <AntDesign name="wallet" size={24} color={color} />,
+              tabBarIcon: ({ focused, color }) => <AntDesign name="wallet" size={ focused ? 30:24} color={color} 
+              style={{
+                textShadowColor: 'black', 
+                textShadowOffset: { width: .2, height: .2 }, 
+                textShadowRadius: .2,
+              }}
+              />,
               tabBarLabel: ({ focused, color }) => (
-                <Text style={{ fontSize: focused ? 15 : 10, fontWeight: 'bold', color }}>
+                <Text style={{ 
+                  fontSize: focused ? 15 : 13, fontWeight: 'bold', 
+                  color,   
+                  textShadowColor: 'black', 
+                  textShadowOffset: { width: .5, height: .5 }, 
+                  textShadowRadius: .5,  
+                  }}>
                   WALLET
                 </Text>
               ),

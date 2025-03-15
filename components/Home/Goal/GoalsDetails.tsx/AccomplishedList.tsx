@@ -179,6 +179,7 @@ const detailStyles = StyleSheet.create({
         padding: 15,
         paddingBottom: 5,
         borderRadius: 15,
+        borderWidth:1,
         backgroundColor: 'white',
         elevation: 5,
         shadowColor: "#000",
@@ -197,6 +198,10 @@ const detailStyles = StyleSheet.create({
     label: {
         fontSize: 14,
         fontWeight: "600",
+        width: 40,
         color: colors.dark,
+        textShadowColor: 'black', 
+        textShadowOffset: { width: .7, height: .7 }, 
+        textShadowRadius: .7, 
     },
 });

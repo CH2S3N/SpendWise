@@ -1,5 +1,5 @@
-import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Button, Switch, FlatList, ScrollView } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Button, Switch, FlatList, ScrollView, Animated } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
 import { colors } from '@/constants/colors';
 import Slider from '@react-native-community/slider';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,6 +7,7 @@ import { RootState } from '@/state/store';
 import { setNeeds, setWants, setSavings, resetCat} from '@/state/budgetSlice';
 import SubCatAll from './SubCatAll';
 import { AntDesign } from '@expo/vector-icons';
+import { TextStyle } from 'react-native';
 
 
 
@@ -30,10 +31,10 @@ const CustomDropdown: React.FC<DropdownProps> = ({ selectedValue, onValueChange 
   };
 
   return (
-    <View style={[{justifyContent: "flex-start"}]}>
+    <View style={[{justifyContent: "flex-start", }]}>
       {/* Dropdown Box */}
       <TouchableOpacity 
-        style={styles.dropdown} 
+        style={[styles.dropdown, {backgroundColor: colors.green, borderWidth:1}]} 
         onPress={() => setIsDropdownVisible(!isDropdownVisible)}
       >
         <Text style={styles.selectedText}>{selectedValue ? (selectedValue) : (<Text style={{color: colors.gray,}}>Select a Stragtegy</Text>)}</Text>
@@ -41,7 +42,7 @@ const CustomDropdown: React.FC<DropdownProps> = ({ selectedValue, onValueChange 
       </TouchableOpacity>
       {/* Dropdown List */}
       {isDropdownVisible && (
-        <View style={styles.dropdownList}>
+        <View style={[styles.dropdownList, {backgroundColor: colors.ligthGreen, borderWidth:1}]}>
           {options.map((item) => (
             <TouchableOpacity key={item.value} style={styles.dropdownItem} onPress={() => handleSelect(item.value)}>
               <Text style={styles.itemText}>{item.label}</Text>
@@ -165,11 +166,24 @@ const Categories = ({
       }
     };
 
+    const handleReset = () => {
+      if (isEnabled) {
+        dispatch(setNeeds(50));
+        dispatch(setWants(30));
+        dispatch(setSavings(20));
+      } else {
+        dispatch(setNeeds(70));
+        dispatch(setWants(0));
+        dispatch(setSavings(30));
+      }
+    };
 
     useEffect(() => {
       setHasBudgetStrat(strat1 || strat2 || customStrat);
     }, [strat1, strat2, customStrat]);
-    
+    useEffect(() => {
+      handleReset();
+    }, [isEnabled])
   return (
       <View style={[styles.container]}>
         <Text style={[styles.title, {paddingBottom: 10}]}>BUDGETING STRATEGY</Text>
@@ -186,8 +200,8 @@ const Categories = ({
                 <View style={[styles.row, {justifyContent: "flex-end", alignItems: "center"}]}>
                         <Text style={styles.text}>Split Expense? </Text>
                         <Switch
-                          trackColor={{false: '#767577', true: '#15B392'}}
-                          thumbColor={isEnabled ? '#00FF9C' : '#f4f3f4'}
+                          trackColor={{false: colors.darkGreen, true: colors.light}}
+                          thumbColor={isEnabled ? colors.green : colors.ligthGreen}
                           ios_backgroundColor="#3e3e3e"
                           onValueChange={(value) => {
                             setStratSplit(value);
@@ -196,8 +210,13 @@ const Categories = ({
                         />
                 </View>
                 {isEnabled === true ? (
-                  <>
-                    <Text>Needs: {needs}%</Text>
+                  <View style={{}}>
+                    <View style={styles.row}>
+                      <Text>Needs: {needs}%</Text>
+                      {needs === 0 && (
+                        <BlinkingText children={<Text style={styles.lowVal}>(value too low!)</Text>} condition={needs === 0}/>
+                      )}
+                    </View>
                     <Slider
                       value={needs}
                       onValueChange={(value) => handleCategorySliderChange(1, value)}
@@ -208,8 +227,12 @@ const Categories = ({
                       maximumTrackTintColor= {colors.green}
                       thumbTintColor= {colors.green}
                     />
-    
-                    <Text>Wants: {wants}%</Text>
+                    <View style={styles.row}>
+                      <Text>Wants: {wants}% </Text>
+                      {wants === 0 && 
+                      <BlinkingText children={<Text style={styles.lowVal}>(value too low!)</Text>} condition={wants === 0}/>
+                      }
+                    </View>
                     <Slider
                       value={wants}
                       minimumValue={0}
@@ -221,7 +244,12 @@ const Categories = ({
                       thumbTintColor= {colors.green}
                     />
     
-                    <Text>Savings: {savings}%</Text>
+                    <View style={styles.row}>
+                      <Text>Wants: {savings}% </Text>
+                      {savings === 0 && 
+                      <BlinkingText children={<Text style={styles.lowVal}>(value too low!)</Text>} condition={savings === 0}/>
+                      }
+                    </View>
                     <Slider
                       value={savings}
                       onValueChange={(value) => handleCategorySliderChange(3, value)}
@@ -235,10 +263,15 @@ const Categories = ({
                     <View style={{ paddingTop: 10, alignItems: "flex-end"}}>
                       <TouchableOpacity style={{alignItems: 'flex-end'}} onPressOut={()=>  dispatch(resetCat())}><Text>Reset</Text></TouchableOpacity>
                     </View>
-                  </>
+                  </View>
                 ): (
                   <>
-                    <Text>Expenses: {needs}%</Text>
+                    <View style={styles.row}>
+                      <Text>Expenses: {needs}% </Text>
+                      {needs === 0 && 
+                        <BlinkingText children={<Text style={styles.lowVal}>(value too low!)</Text>} condition={needs === 0}/>
+                        }
+                    </View>
                     <Slider
                       value={needs}
                       onValueChange={(value) => handleCategorySliderChange(1, value)}
@@ -250,7 +283,12 @@ const Categories = ({
                       thumbTintColor= {colors.green}
                     />
     
-                    <Text>Savings: {savings}%</Text>
+                    <View style={styles.row}>
+                      <Text>Expenses: {savings}% </Text>
+                      {savings === 0 && 
+                        <BlinkingText children={<Text style={styles.lowVal}>(value too low!)</Text>} condition={savings === 0}/>
+                        }
+                    </View>
                     <Slider
                       value={savings}
                       onValueChange={(value) => handleCategorySliderChange(3, value)}
@@ -262,7 +300,7 @@ const Categories = ({
                       thumbTintColor= {colors.green}
                     />
                     <View style={{ paddingTop: 10, alignItems: "flex-end"}}>
-                      <TouchableOpacity style={{alignItems: 'flex-end'}} onPressOut={()=>  dispatch(resetCat())}><Text>Reset</Text></TouchableOpacity>
+                      <TouchableOpacity style={{alignItems: 'flex-end'}} onPressOut={()=>  handleReset()}><Text>Reset</Text></TouchableOpacity>
                     </View>          
                   </>
                 )}
@@ -324,13 +362,16 @@ const Categories = ({
 
            
         {/* Slider */}
-        {isAdvanceBtnTapped === true && (
+        {isAdvanceBtnTapped === true  && (
             <>
-             
+             {customStrat || strat1 || strat2 ? (
                 <View style={[styles.container, {flex: 5,}]}>
                   <Text style={styles.title}>Sub-Type</Text>
                   <SubCatAll/>
                 </View>
+             ): (
+               null
+             )}
               
             </>
         )}
@@ -340,11 +381,58 @@ const Categories = ({
   )
 }
 
+
+
+
+
+
 export default Categories
+
+interface BlinkingTextProps {
+  condition: boolean;
+  children: React.ReactNode;
+  style?: TextStyle;
+}
+
+const BlinkingText: React.FC<BlinkingTextProps> = ({ condition, children, style }) => {
+  const fadeAnim = useRef(new Animated.Value(1)).current;
+  const animation = useRef<Animated.CompositeAnimation | null>(null);
+
+  useEffect(() => {
+    if (condition) {
+      animation.current = Animated.loop(
+        Animated.sequence([
+          Animated.timing(fadeAnim, {
+            toValue: 0.5,
+            duration: 1000,
+            useNativeDriver: true,
+          }),
+          Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 1000,
+            useNativeDriver: true,
+          }),
+        ])
+      );
+      animation.current.start();
+    } else {
+      animation.current?.stop(); 
+      fadeAnim.setValue(1); 
+    }
+
+    return () => {
+      animation.current?.stop(); 
+    };
+  }, [condition, fadeAnim]);
+
+  return <Animated.Text style={[style, { opacity: fadeAnim }]}>{children}</Animated.Text>;
+};
+
+
 
 const styles = StyleSheet.create({
   container:{
-    flex: 1
+    flex: 1,
   },
   descon:{
     flex: 1,
@@ -365,6 +453,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
 
   },
+  lowVal:{
+    color: colors.red
+  },
   txt:{
     fontSize: 18,
     color: colors.light,
@@ -384,6 +475,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 20,
+    color: colors.dark,
+
   },
   row: {
     flexDirection: "row",
@@ -410,7 +503,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 12,
     borderWidth: 1,
-    borderColor: "#ccc",
+    
+    borderColor: colors.dark,
     borderRadius: 5,
     backgroundColor: "#fff",
   },
@@ -418,7 +512,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 20,
     fontWeight: "bold",
-    color: colors.dark,
+    color: colors.light,
     textAlign: "center",
     textAlignVertical: "center"
   },
@@ -427,7 +521,7 @@ const styles = StyleSheet.create({
     top: 50, 
     left: 0,
     width: "100%",
-    backgroundColor: "#fff",
+    backgroundColor: colors.ligthGreen,
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 5,
@@ -435,12 +529,19 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   dropdownItem: {
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderColor: colors.green,
+    borderLeftWidth:1,
+    borderRightWidth:1
   },
   itemText: {
     fontSize: 16,
-    color: "#333",
+    color: colors.green,
+    textShadowColor: 'black', 
+    textShadowOffset: { width: .5, height: .5 }, 
+    textShadowRadius: .5,
   },
 })

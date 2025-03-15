@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
 import { colors } from '@/constants/colors';
 import styles from './styles';
-import { Income } from '@/types';
 import { calculateTotalIncome } from '@/utils/calcTotalIncome';
 
 
@@ -39,15 +38,15 @@ export default function IncomeChart () {
 
       if (totalAllowance > 0) {
         newValues.push(totalAllowance);
-        newColors.push('#059212');
+        newColors.push('#15B392');
       }
       if (totalSalary > 0) {
         newValues.push(totalSalary);
-        newColors.push('#06D001');
+        newColors.push('#54C392');
       }
       if (totalOthers > 0) {
         newValues.push(totalOthers);
-        newColors.push('#9BEC00');
+        newColors.push('#73EC8B');
       }
 
       setValues(newValues);
@@ -78,20 +77,20 @@ export default function IncomeChart () {
             <View style={styles.total}>
               {totalAllowance > 0 && (
                 <View style={styles.legendItem}>
-                  <View style={[styles.colorBox, { backgroundColor: '#059212' }]} />
-                  <Text>Allowance: ₱ {totalAllowance} <Text style={{color: '#059212'}}>({allowanceRatio}%)</Text></Text>
+                  <View style={[styles.colorBox, { backgroundColor: '#15B392' }]} />
+                  <Text>Allowance: ₱ {totalAllowance} <Text style={{color: '#15B392'}}>({allowanceRatio}%)</Text></Text>
                 </View>
               )}
               {totalSalary > 0 && (
                 <View style={styles.legendItem}>
-                  <View style={[styles.colorBox, { backgroundColor: '#06D001' }]} />
-                  <Text>Salary: ₱ {totalSalary} <Text style={{color: '#06D001'}}>({salaryRatio}%)</Text></Text>
+                  <View style={[styles.colorBox, { backgroundColor: '#54C392' }]} />
+                  <Text>Salary: ₱ {totalSalary} <Text style={{color: '#54C392'}}>({salaryRatio}%)</Text></Text>
                 </View>
               )}
               {totalOthers > 0 && (
                 <View style={styles.legendItem}>
-                  <View style={[styles.colorBox, { backgroundColor: '#9BEC00' }]} />
-                  <Text>Others: ₱ {totalOthers} <Text style={{color: '#9BEC00'}}>({othersRatio}%)</Text></Text>
+                  <View style={[styles.colorBox, { backgroundColor: '#73EC8B' }]} />
+                  <Text>Others: ₱ {totalOthers} <Text style={{color: '#73EC8B'}}>({othersRatio}%)</Text></Text>
                 </View>
               )}
             </View>

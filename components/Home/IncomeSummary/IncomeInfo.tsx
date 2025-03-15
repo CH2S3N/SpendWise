@@ -20,7 +20,7 @@ export default function IncomeInfo() {
     }, 0)  
 
   };
-
+ 
   return (
     <>
       {/* Add Transaction Button */}
@@ -28,10 +28,9 @@ export default function IncomeInfo() {
           <View style={[styles.tableheader, ]}>
               <View style={[styles.row, {marginHorizontal: 20}]}>
                 <Text style={styles.title}>Income Sources</Text>
-                <Text style={[styles.title, {color: colors.green}]}>Total: ₱ {calcIncome()}</Text>
+                <Text style={[styles.amount, {color: colors.green}]}>Total: ₱ {calcIncome()}</Text>
             </View>
           </View>
-          <Divider style={{marginBottom: 10}}/>
           <View style={styles.section}> 
             <View style={styles.tablecontent}>
               <ScrollView>
@@ -149,6 +148,8 @@ const styles = StyleSheet.create({
   },
   tableheader: {
     width: '100%',
+    borderBottomWidth:1,
+    marginBottom:10,
     alignContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
@@ -164,6 +165,13 @@ row: {
 title: {
   fontSize: 20,
   fontWeight: "bold",
+},
+amount: {
+  fontSize: 20,
+  fontWeight: "bold",
+  textShadowColor: 'black', 
+  textShadowOffset: { width: .2, height: .2 }, 
+  textShadowRadius: .2,
 },
 
 })

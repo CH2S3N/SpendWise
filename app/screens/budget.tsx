@@ -45,18 +45,24 @@ const Budget = () => {
     <MainContainer>
       <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity 
+          {/* <TouchableOpacity 
             onPress={() => setIsModalVisible(true)} 
             style={styles.userButton}>
             <FontAwesome6 name="circle-user" size={30} color={colors.green} />
             <Text style={styles.userText}>{userName}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setIsSettingsModalVisible(true)} style={styles.iconButton}>
-            <FontAwesome6 name="gear" size={30} color={colors.green} />
+          </TouchableOpacity> */}
+          <TouchableOpacity onPress={() => setIsSettingsModalVisible(true)} style={styles.iconButton} >
+            <FontAwesome6 name="gear" size={30} color={colors.green} 
+            style={{
+              textShadowColor: 'black', 
+              textShadowOffset: { width: .5, height: .5 }, 
+              textShadowRadius: .5,
+            }}
+            />
           </TouchableOpacity>
         </View>
         <Card
-        style={{ flex: 0.5, justifyContent: 'center', marginBottom: 10, marginHorizontal: 10, backgroundColor: colors.ligthGreen}}
+        style={{ flex: 0.5, justifyContent: 'center', marginBottom: 10, marginHorizontal: 10, backgroundColor: colors.light, borderWidth: 1,}}
         content={
           <IncomeChart />
         }
@@ -169,8 +175,9 @@ const styles = StyleSheet.create({
     color: colors.green,
   },
   iconButton: {
+    flex:1,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-end',
   },
   text: {
     textAlign: 'center',
@@ -188,7 +195,7 @@ const styles = StyleSheet.create({
   modalContent: {
     width: '80%',
     height: '80%',
-
+    borderWidth:1,
     backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
@@ -206,6 +213,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
+    borderWidth:1,
     alignItems: 'center',
     elevation: 5,
     shadowColor: '#000',
@@ -252,11 +260,15 @@ const styles = StyleSheet.create({
   btnTxt:{
     fontSize: 15,
     fontWeight: 'bold',
-    color: colors.dark
+    color: colors.dark,
+    textShadowColor: 'black', 
+    textShadowOffset: { width: .5, height: .5 }, 
+    textShadowRadius: .5, 
   },
   btn: {
   },
   regen: {
+    borderWidth:1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

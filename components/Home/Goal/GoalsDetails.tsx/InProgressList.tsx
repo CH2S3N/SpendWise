@@ -1,5 +1,5 @@
 import { Goal } from "@/types";
-import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import React, { useState } from "react";
 import UpdateGoal from "@/components/ui/UpdateGoal";
 import { UseTransactionService } from "@/hooks/editData/TransactionService";
@@ -14,11 +14,11 @@ import ConfirmModal from "@/components/Modal/ConfirmModal";
 
 export default function InProgressList() {
 
+    const { deleteGoal } = UseTransactionService();
     const { goals } = useSelector(
         (state: RootState) => state.data
       );
 
-    const { deleteGoal } = UseTransactionService();
 
     const [isUpdatingGoal, setIsUpdatingGoal] = React.useState<boolean>(false);
     const [isDeletionModal, setisDeletionModal] = React.useState<boolean>(false);
@@ -26,7 +26,7 @@ export default function InProgressList() {
     const [tappedTransactionId, setTappedTransactionId] = useState<number | null>(null);
 
 
-    
+     
 
     return (
         <View style={detailStyles.container}>
@@ -40,12 +40,11 @@ export default function InProgressList() {
                 const progressPercentage = (progress * 100).toFixed(0);
 
                 return (
-                    <View key={goal.id} style={[detailStyles.card, isExpanded ? {backgroundColor: colors.ligthGreen, } : { backgroundColor: colors.light, marginHorizontal:20}]}>
                         <TouchableOpacity     
-                                
+                        key={goal.id} 
+                        style={[detailStyles.card, isExpanded ? {backgroundColor: colors.ligthGreen, } : { backgroundColor: colors.light, marginHorizontal:20}]}
                         onPress={() =>{
                                 setTappedTransactionId(isExpanded ? null : goal.id);
-                                setCurrentGoal(goal)   
                             }}
                         >
                             <View style={detailStyles.content}>
@@ -74,19 +73,19 @@ export default function InProgressList() {
                                         </View>
                                         <ProgressBar progress={progress} theme={{ colors: { primary: colors.green } }} />
 
-                                        <View style={[detailStyles.row, {justifyContent: "flex-end", paddingTop: 20, alignItems: "center"}]}>
+                                        <View style={[detailStyles.row, {justifyContent: "flex-end", paddingTop: 20, alignItems: "center", }]}>
                                             <TouchableOpacity onPress={() => {
                                                 setIsUpdatingGoal(true)
-
+                                                setCurrentGoal(goal)
                                             }}>
-                                                <Text style={[[detailStyles.label], { marginRight: 20 }]}>
+                                                <Text style={[[detailStyles.label], { }]}>
                                                     <FontAwesome6 name="edit" size={35} color={colors.green} />
                                                 </Text>
                                             </TouchableOpacity>
                                             <TouchableOpacity onPress={() =>{
                                                 setisDeletionModal(true)
                                             }}>
-                                                <Text style={[[detailStyles.label], { marginRight: 20 }]}>
+                                                <Text style={[[detailStyles.label], {  }]}>
                                                     <FontAwesome6 name="square-xmark" size={35} color={colors.red} />
                                                 </Text>
                                             </TouchableOpacity>
@@ -96,11 +95,27 @@ export default function InProgressList() {
                                 )}
                             </View>
                         </TouchableOpacity>                        
-                    </View>
                 )
             })}   
 
-            <Modal isOpen={isUpdatingGoal} transparent animationType="fade" onRequestClose={() => setIsUpdatingGoal(false)}>
+            {/* Confirmation Deletion  Modal */}
+            <ConfirmModal
+            visible={isDeletionModal} 
+            title={'Confirm Deletion'} 
+            message={'Are you sure you want to delete this entry?'} 
+            onConfirm={()=> {
+                if (tappedTransactionId !== null) {
+                    deleteGoal(tappedTransactionId);
+                    setisDeletionModal(false); 
+                    }
+            }} 
+            onCancel={() => setisDeletionModal(false)}      
+            />
+
+
+            <Modal isOpen={isUpdatingGoal} transparent animationType="fade" onRequestClose={() => {
+                setIsUpdatingGoal(false)
+                }}>
                 <TouchableWithoutFeedback onPress={() => setIsUpdatingGoal(false)}>
                     <View style={detailStyles.modalOverlay}>
                     <TouchableWithoutFeedback>
@@ -115,23 +130,6 @@ export default function InProgressList() {
                     </View>
                 </TouchableWithoutFeedback>
             </Modal>
-
-
-
-
-            {/* Confirmation Deletion  Modal */}
-            <ConfirmModal
-            visible={isDeletionModal} 
-            title={'Confirm Deletion'} 
-            message={'Are you sure you want to delete this entry?'} 
-            onConfirm={()=> {
-                if (tappedTransactionId !== null) {
-                    deleteGoal(tappedTransactionId);
-                    setisDeletionModal(false); // Close modal after deletion
-                    }
-            }} 
-            onCancel={() => setisDeletionModal(false)}      
-            />
         </View>
 
         
@@ -165,6 +163,9 @@ const detailStyles = StyleSheet.create({
         color: colors.green,
         fontWeight: "bold",
         fontSize: 15,
+        textShadowColor: 'black', 
+        textShadowOffset: { width: .2, height: .2 }, 
+        textShadowRadius: .2, 
     },
     modalOverlay: {
         flex: 1,
@@ -180,6 +181,7 @@ const detailStyles = StyleSheet.create({
         padding: 15,
         paddingBottom: 5,
         borderRadius: 15,
+        borderWidth:1,
         backgroundColor: 'white',
         elevation: 5,
         shadowColor: "#000",
@@ -199,5 +201,10 @@ const detailStyles = StyleSheet.create({
         fontSize: 14,
         fontWeight: "600",
         color: colors.dark,
-    },
+        marginRight: 20,
+        width: 40,
+        textShadowColor: 'black', 
+        textShadowOffset: { width: .7, height: .7 }, 
+        textShadowRadius: .7, 
+    }, 
 });

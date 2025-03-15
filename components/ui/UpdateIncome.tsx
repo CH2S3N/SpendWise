@@ -1,14 +1,11 @@
-import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet, Modal } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet, Modal, ScrollView } from 'react-native'
 import React, { useEffect } from 'react'
-import Card from './Card';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
-import { useSQLiteContext } from 'expo-sqlite';
 import { Income } from '@/types';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
-import { ScrollView } from 'react-native-gesture-handler';
 import { colors } from '@/constants/colors';
 import ConfirmModal from '../Modal/ConfirmModal';
-
+ 
 
 interface Props {
   setIsUpdatingIncome: React.Dispatch<React.SetStateAction<boolean>>;
@@ -23,16 +20,12 @@ export default function UpdateIncome({
 }: Props) {
   const [isRecurrence, setRecurrence] = React.useState<string>("");
   const [isRecurrenceInput, setRecurrenceInput] = React.useState<string>("");
-  const [currentTab, setCurrentTab] = React.useState<number>(0);
   const [amount, setAmount] = React.useState<string>("");
   const [description, setDescription] = React.useState<string>("");
   const [frequency, setFrequency] = React.useState<string>("Daily");
   const [subType, setSubType] = React.useState<string>("Weekends");
   const [incomeCategory, setIncomeCategory] = React.useState<string>("Essential");
   const [incomeCategoryId, setIncomeCategoryId] = React.useState<number>(1);
-  
-  const db = useSQLiteContext();
-
   const { updateIncome } = UseTransactionService();
   const [isConfirmModalVisible, setIsConfirmModalVisible] = React.useState(false);
 
@@ -87,15 +80,7 @@ export default function UpdateIncome({
       interval: Number(isRecurrence),
       intervalInput: Number(isRecurrenceInput),
       subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
-    });
-    setDescription("");
-    setFrequency("Daily");
-    setAmount("");
-    setIncomeCategoryId(1);
-    setCurrentTab(0);
-    setIsModalVisible(false);
-    setIsUpdatingIncome(false);
-      
+    });  
   }
   
     
@@ -103,7 +88,6 @@ export default function UpdateIncome({
     if ( !description || !amount || !frequency  )  {
       return false;
     }
-    
     return true;
   }
 
@@ -144,7 +128,7 @@ export default function UpdateIncome({
               <Text style={styles.btext}>Recurrence</Text>
               <SegmentedControl
                 values={["Daily", "Weekly", "Bi-Weekly", "Monthly"]}
-                style={{ marginTop: 10, }}
+                style={[styles.segmentCon, {marginBottom:0}]}
                 selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
                 onChange={(event) => {
                   setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
@@ -163,7 +147,7 @@ export default function UpdateIncome({
               {frequency === 'Weekly' && (
                 <SegmentedControl
                   values={["Weekends", "Weekdays", "Custom"]}
-                  style={{ marginTop: 10, }}
+                  style={[styles.segmentCon, {marginTop:0}]}
                   selectedIndex={["Weekends", "Weekdays", "Custom"].indexOf(subType)}
                   onChange={(event) => {
                     setSubType(["Weekends", "Weekdays", "Custom"][event.nativeEvent.selectedSegmentIndex]);
@@ -264,7 +248,7 @@ export default function UpdateIncome({
         <Text style={styles.btext}>Income Type</Text>
         <SegmentedControl
           values={["Allowance", "Salary", "Others"]}
-          style={{ marginTop: 10, }}
+          style={styles.segmentCon}
           selectedIndex={["Allowance", "Salary", "Others"].indexOf(incomeCategory)}
           onChange={(event) => {
             setIncomeCategory(["Allowance", "Salary", "Others"][event.nativeEvent.selectedSegmentIndex]);
@@ -290,7 +274,7 @@ export default function UpdateIncome({
         
         }
         />
-        <Button title="Save" color={colors.green} onPress={()=> setIsConfirmModalVisible(true)} disabled={!validateFields()}/>
+        <Button title="Save" color={colors.green} onPress={()=> {setIsConfirmModalVisible(true); setIsUpdatingIncome(false); }} disabled={!validateFields()}/>
       </View>
 
     
@@ -302,7 +286,7 @@ export default function UpdateIncome({
       onConfirm={()=> {
         handleSaveIncome();
         setIsConfirmModalVisible(false)
-        setIsUpdatingIncome(false);
+        setIsModalVisible(false);
       }} 
       onCancel={() => setIsConfirmModalVisible(false)}      
       />
@@ -332,5 +316,9 @@ const styles = StyleSheet.create({
   },
   btext:{
     fontWeight: 'bold'
+  },
+  segmentCon:{
+    borderWidth:1, 
+    marginVertical:10
   }
 })

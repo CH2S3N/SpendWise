@@ -9,7 +9,6 @@ import { useSelector } from "react-redux";
 import { UseTransactionService } from "@/hooks/editData/TransactionService";
 import { colors } from "@/constants/colors";
 import { FontAwesome6 } from "@expo/vector-icons";
-import Card from "@/components/ui/Card";
 import ConfirmModal from "@/components/Modal/ConfirmModal";
 
 
@@ -71,7 +70,7 @@ export default function IncomeList() {
                                                         <Text style={styles.label}>
                                                             <FontAwesome6 name="bag-shopping" size={18} color={colors.green} /> Income per Ocurrence:
                                                         </Text>
-                                                        <Text style={[styles.value, {color: colors.green, fontSize:15}]}>₱ {income.amount}</Text>
+                                                        <Text style={[styles.amount, {color: colors.green, fontSize:15}]}>₱ {income.amount}</Text>
                                                     </View>
                                                     <View style={styles.row}>
                                                         <Text style={styles.label}>
@@ -102,12 +101,12 @@ export default function IncomeList() {
                                                             setCurrentIncome(income);
                                                             setIsModalVisible(true);
                                                         }}>
-                                                            <Text style={[styles.label, { marginRight: 20 }]}>
+                                                            <Text style={[styles.icon, { marginRight: 20 }]}>
                                                                 <FontAwesome6 name="edit" size={35} color={colors.green} />
                                                             </Text>
                                                         </TouchableOpacity>
                                                         <TouchableOpacity onPress={() => setIsConfirmModalVisible(true)}>
-                                                            <Text style={[styles.label, { marginRight: 20 }]}>
+                                                            <Text style={[styles.icon, { marginRight: 20 }]}>
                                                                 <FontAwesome6 name="square-xmark" size={35} color={colors.red} />
                                                             </Text>
                                                         </TouchableOpacity>
@@ -125,38 +124,37 @@ export default function IncomeList() {
 
 
             {/* Confirmation Modal */}
-      {/* Confirmation Modal */}
-      <ConfirmModal
-      visible={isConfirmModalVisible} 
-      title={'Confirm Deletion'} 
-      message={'Are you sure you want to delete this entry?'} 
-      onConfirm={()=> {
-        if (tappedTransactionId !== null) {
-            deleteIncome(tappedTransactionId);
-            setIsConfirmModalVisible(false); // Close modal after deletion
-            }
-      }} 
-      onCancel={() => setIsConfirmModalVisible(false)}      
-      />
-
-          <Modal isOpen={isModalVisible} transparent animationType="fade" onRequestClose={() => setIsModalVisible(false)}>
-            <TouchableWithoutFeedback onPress={() => setIsModalVisible(false)}>
-              <View style={styles.modalOverlay}>
-                <TouchableWithoutFeedback>
-                  <View style={styles.modalContent}>
-                    <Text style={styles.title}>UPDATE INCOME</Text>
-                    {currentIncome && (
-                    <UpdateIncome
-                      setIsModalVisible={setIsModalVisible}
-                      setIsUpdatingIncome={setIsUpdatingIncome}
-                      currentIncome={currentIncome}
-                    />
-                  )}
-                  </View>
+            <ConfirmModal
+            visible={isConfirmModalVisible} 
+            title={'Confirm Deletion'} 
+            message={'Are you sure you want to delete this entry?'} 
+            onConfirm={()=> {
+                if (tappedTransactionId !== null) {
+                    deleteIncome(tappedTransactionId);
+                    setIsConfirmModalVisible(false);
+                    }
+            }} 
+            onCancel={() => setIsConfirmModalVisible(false)}      
+            />
+            {/* Update Modal */}
+            <Modal isOpen={isModalVisible} transparent animationType="fade" onRequestClose={() => setIsModalVisible(false)}>
+                <TouchableWithoutFeedback onPress={() => setIsModalVisible(false)}>
+                <View style={styles.modalOverlay}>
+                    <TouchableWithoutFeedback>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.title}>UPDATE INCOME</Text>
+                        {currentIncome && (
+                        <UpdateIncome
+                        setIsModalVisible={setIsModalVisible}
+                        setIsUpdatingIncome={setIsUpdatingIncome}
+                        currentIncome={currentIncome}
+                        />
+                    )}
+                    </View>
+                    </TouchableWithoutFeedback>
+                </View>
                 </TouchableWithoutFeedback>
-              </View>
-            </TouchableWithoutFeedback>
-          </Modal>
+            </Modal>
         </View>
       );
 }
@@ -225,6 +223,7 @@ const styles=StyleSheet.create({
     card: {
         padding: 15,
         borderRadius: 15,
+        borderWidth:1,
         backgroundColor: 'white',
         elevation: 5,
         shadowColor: "#000",
@@ -249,6 +248,9 @@ const styles=StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
         color: colors.green,
+        textShadowColor: 'black', 
+        textShadowOffset: { width: .2, height: .2 }, 
+        textShadowRadius: .2,
     },
     details: {
         borderTopWidth: 2,
@@ -285,5 +287,10 @@ const styles=StyleSheet.create({
         paddingHorizontal: 5,
         paddingBottom: 5,  
     },
-
+    icon:{
+        width: 40,
+        textShadowColor: 'black', 
+        textShadowOffset: { width: .7, height: .7 }, 
+        textShadowRadius: .7, 
+    }
 })

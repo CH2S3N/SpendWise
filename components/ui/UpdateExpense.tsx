@@ -139,7 +139,7 @@ export default function UpdateExpense({
               <Text style={styles.btext}>Recurrence</Text>
               <SegmentedControl
                 values={["Daily", "Weekly", "Bi-Weekly", "Monthly"]}
-                style={{ marginTop: 10, }}
+                style={[styles.segmentCon, {marginBottom:0}]}
                 selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
                 onChange={(event) => {
                   setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
@@ -161,7 +161,7 @@ export default function UpdateExpense({
               {frequency === 'Weekly' && (
                 <SegmentedControl
                   values={["Weekends", "Weekdays", "Custom"]}
-                  style={{ marginTop: 10, }}
+                  style={[styles.segmentCon, {marginTop:0}]}
                   selectedIndex={["Weekends", "Weekdays", "Custom"].indexOf(subType)}
                   onChange={(event) => {
                     const selectedType = ["Weekends", "Weekdays", "Custom"][event.nativeEvent.selectedSegmentIndex];
@@ -263,6 +263,7 @@ export default function UpdateExpense({
         <View>
           <Text style={styles.btext}>Is a Fixed Amount?</Text>
           <SegmentedControl
+            style={styles.segmentCon}
             values={['Yes', 'No']}
             selectedIndex={selectedIndex}
             onChange={(event) => {
@@ -294,7 +295,7 @@ export default function UpdateExpense({
         <Text style={styles.btext}>Select an Expense Type</Text>
         <SegmentedControl
           values={["Needs", "Wants"]}
-          style={{ marginBottom: 15 }}
+          style={styles.segmentCon}
           selectedIndex={["Essential","Non_Essential"].indexOf(category)}
           onChange={(event) => {
             setCategory(["Essential","Non_Essential"][event.nativeEvent.selectedSegmentIndex])
@@ -307,7 +308,11 @@ export default function UpdateExpense({
 
         <Text style={styles.btext}>Select an Expense Sub-type</Text>
         <View style={styles.dropdownContainer}>
-            <RNPickerSelect                
+            <RNPickerSelect   
+              style={{
+                placeholder: {color: colors.dark},
+                inputAndroid: { color: colors.dark},
+              }}               
               value={categoryId}
               onValueChange={(value) => {
                 setTypeSelected(value);
@@ -332,6 +337,7 @@ export default function UpdateExpense({
         style={{ flexDirection: "row", justifyContent: "space-around", paddingTop: 10 }}
       >
         <Button title="Cancel" color={colors.green} 
+        
         onPress={
           () => {
             setIsModalVisible(false);
@@ -340,7 +346,7 @@ export default function UpdateExpense({
 
         }
         />
-        <Button title="Save" color={colors.green} onPress={()=> setIsConfirmModalVisible(true)} disabled={!validateFields()}/>
+        <Button title="Save" color={colors.green}  onPress={()=> setIsConfirmModalVisible(true)} disabled={!validateFields()}/>
       </View>
 
 
@@ -364,51 +370,6 @@ export default function UpdateExpense({
   )
 }
 
-
-// ENTRY TYPE PICKER
-function CategoryButton({
-    id,
-    title,
-    isSelected,
-    setTypeSelected,
-    setCategoryId,
-} : {
-    id: number;
-    title: string;
-    isSelected: boolean;
-    setTypeSelected: React.Dispatch<React.SetStateAction<string>>
-    setCategoryId: React.Dispatch<React.SetStateAction<number>>;
-}) {
-    return (
-        <TouchableOpacity
-        onPress={() => {
-            setTypeSelected(title);
-            setCategoryId(id);
-        }}
-        activeOpacity={0.5}
-        style={{
-            height: 30,
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: isSelected? 'black' : 'white',
-            borderRadius: 15,
-            marginBottom: 6,
-          
-        }}
-        >
-            <Text
-                style={{
-                    fontWeight: "700",
-                    color: isSelected? 'white' : 'black',
-                    marginLeft: 5,
-                }}
-            >
-                {title}
-            </Text>
-        </TouchableOpacity>
-    )
-}
 
 
 const styles = StyleSheet.create({
@@ -435,5 +396,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'black',
     borderRadius: 5,
+    backgroundColor: colors.ligthGreen,
+
   },
+  segmentCon:{
+    borderWidth:1, 
+    marginVertical:10
+  }
 })

@@ -132,7 +132,7 @@ export default function AddExpense({
                 <Text style={styles.btext}>Recurrence</Text>
                 <SegmentedControl
                   values={["Daily", "Weekly", "Bi-Weekly", "Monthly"]}
-                  style={{ marginTop: 10, }}
+                  style={[styles.segmentCon, { marginBottom: 0}]}
                   selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
                   onChange={(event) => {
                     setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
@@ -154,7 +154,7 @@ export default function AddExpense({
                 {frequency === 'Weekly' && (
                   <SegmentedControl
                     values={["Weekends", "Weekdays", "Custom"]}
-                    style={{ marginTop: 10, }}
+                    style={[styles.segmentCon, {marginVertical: 0, marginBottom: 10}]}
                     selectedIndex={["Weekends", "Weekdays", "Custom"].indexOf(subType)}
                     onChange={(event) => {
                       const selectedType = ["Weekends", "Weekdays", "Custom"][event.nativeEvent.selectedSegmentIndex];
@@ -256,6 +256,7 @@ export default function AddExpense({
           <View>
             <Text style={styles.btext}>Is a Fixed Amount?</Text>
             <SegmentedControl
+              style={styles.segmentCon}
               values={['Yes', 'No']}
               selectedIndex={selectedIndex}
               onChange={(event) => {
@@ -273,7 +274,7 @@ export default function AddExpense({
             {/* AMOUNT */}
               <Text style={styles.btext}>Amount</Text>
               <TextInput
-                placeholder="Enter Amount"
+                placeholder={isfixedamount === "Yes" ? ("Enter Amount (Required)"): ("Enter Amount (Not required)")}
                 style={{ marginBottom: 15, marginTop: 10, borderBottomWidth: 1, borderBottomColor: 'black' }}
                 value={amount}
                 keyboardType="numeric"
@@ -289,8 +290,9 @@ export default function AddExpense({
             {/* ENTRY TYPE, ESSENTIAL & NON ESSENTIAL */}
           <Text style={styles.btext}>Select an Expense Type</Text>
           <SegmentedControl
+          
             values={["Needs", "Wants"]}
-            style={{ marginBottom: 15 }}
+            style={styles.segmentCon}
             selectedIndex={["Essential","Non_Essential"].indexOf(category)}
             onChange={(event) => {
               setCategory(["Essential","Non_Essential"][event.nativeEvent.selectedSegmentIndex])
@@ -304,7 +306,10 @@ export default function AddExpense({
           <Text style={styles.btext}>Select an Expense Sub-type</Text>
           <View style={styles.dropdownContainer}>
               <RNPickerSelect    
-              style={{}}            
+              style={{
+                placeholder: {color: colors.dark},
+                inputAndroid: { color: colors.dark},
+              }}            
                 onValueChange={(value) => {
                   setTypeSelected(value);
                   const selectedCategory = categories.find((cat) => cat.name === value);
@@ -313,7 +318,6 @@ export default function AddExpense({
                     setCategoryDescription(selectedCategory.description);
                   }
                 }}
-               
                 items={categories.map((cat) => ({
                   label: cat.name.charAt(0).toUpperCase() + cat.name.slice(1) ,
                   value: (cat.id ),
@@ -321,6 +325,7 @@ export default function AddExpense({
                 placeholder={{ label: "Select a sub-type...", value: null }}
               />
           </View>
+
 
 
       </ScrollView>
@@ -379,6 +384,7 @@ const styles = StyleSheet.create({
     paddingTop: 10
   },
   btext:{
+
     fontWeight: 'bold'
   },
 
@@ -412,15 +418,20 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   dropdownContainer: {
+    alignItems: 'center',
     marginTop: 10,
     borderWidth: 1,
-    borderColor: 'black',
-    borderRadius: 5,
+    borderRadius: 10,
+    backgroundColor: colors.ligthGreen,
   },
   descriptionText: {
     marginTop: 10,
     fontSize: 14,
-    color: 'gray',
+    color: colors.green,
   },
+  segmentCon:{
+    borderWidth:1, 
+    marginVertical:10
+  }
 })
 

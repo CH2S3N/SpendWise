@@ -1,13 +1,12 @@
-import { View, TextInput, Button, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, TextInput, Button, StyleSheet } from 'react-native'
 import React from 'react'
 import { Goal } from '@/types';
-import { Divider } from '@rneui/base';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
-import Card from './Card';
-import ConfirmModal from '../Modal/ConfirmModal';
-import { FontAwesome6 } from '@expo/vector-icons';
 import { colors } from '@/constants/colors';
-
+import ConfirmModal from '../Modal/ConfirmModal';
+import Card from './Card';
+import { useFetchData } from '@/hooks/useFetchData';
+ 
 export default function UpdateGoal({
     setIsUpdatingGoal, 
     currentGoal,
@@ -15,163 +14,151 @@ export default function UpdateGoal({
     setIsUpdatingGoal: React.Dispatch<React.SetStateAction<boolean>>;
     currentGoal: Goal;
 }) {
- 
-    const { updateGoal, deleteGoal } = UseTransactionService();
-    
+    const { fetchData } = useFetchData();
+    const { updateGoal } = UseTransactionService();
+    const [name, setName] = React.useState<string>("");
     const [amount, setAmount] = React.useState<string>("");
     const [accumulatedAmount, setAccumulatedAmount] = React.useState<string>("");
-    const [name, setName] = React.useState<string>("");
     const [isConfirmModalVisible, setIsConfirmModalVisible] = React.useState(false);
-    const [isConfirmDelModalVisible, setIsConfirmDelModalVisible] = React.useState(false);
     
     React.useEffect(() => {
-      if (currentGoal) {
-        setName(currentGoal.name || "");
-        setAmount(String(currentGoal.amount || ""));
-        setAccumulatedAmount(String(currentGoal.currentAmount || ""));
-       
-      }
+      console.log("currentGoal changed:", currentGoal);
+        if (currentGoal) {
+            setName(currentGoal.name || "");
+            setAmount(String(currentGoal.amount || ""));
+            setAccumulatedAmount(String(currentGoal.currentAmount || ""));
+        }
     }, [currentGoal]);
 
-    function validateFields() {
-      if ( !amount || !name || !accumulatedAmount ) {
-        return false;
-      }
-      
-      return true;
-    }
-
+    
     async function handleUpdateGoal() {
-        await updateGoal({
+      await updateGoal({
           id: currentGoal.id,
           name,
           amount: Number(amount),
-          currentAmount: Number(accumulatedAmount)
-        });
-        setName("");
-        setAmount("");
-        setAccumulatedAmount("")
+          currentAmount: Number(accumulatedAmount),
+      });
+      setAccumulatedAmount("");
+      setAmount("");
+      setAmount("");
+      setIsConfirmModalVisible(false);
+      setIsUpdatingGoal(false);
+  }
+
+
+    function validateFields() {
+        if ( amount === "" || name === "" || accumulatedAmount === ""){
+        return false;
+      }
+      return true;
     }
+  
 
-  return (
-    <Card
-    content={
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Update Goal</Text>
-      </View>
-      {/* DESCRIPTION */}
-      <View style={styles.content}>
-        <Text style={styles.textTitle}>Item</Text>
-          <TextInput
-            placeholder="Provide an entry description"
-            style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
-            value={name}
-            onChangeText={setName}
-          />
-      </View>
-        {/* AMOUNT */}
-        <View style={styles.content}>
-        <Text style={styles.textTitle}>Total Amount</Text>
-        <TextInput
-          placeholder="₱Amount"
-          style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
-          value={amount}
-          keyboardType="numeric"
-          onChangeText={(text) => {
-            // Remove any non-numeric characters before setting the state
-            const numericValue = text.replace(/[^0-9.]/g, "");
-            setAmount(numericValue);
-          }}
+    return (
+      <>
+        <Card
+          content={
+            <View style={styles.container}>
+              <View style={styles.header}>
+                <Text style={styles.title}>UPDATE GOAL</Text>
+              </View>
+
+              {/* Item Name Input */}
+              <View style={styles.content}>
+                <Text style={styles.textTitle}>Item</Text>
+                <TextInput
+                  placeholder="Provide an entry description"
+                  style={styles.input}
+                  value={name}
+                  onChangeText={setName}
+                />
+              </View>
+
+              {/* Total Amount Input */}
+              <View style={styles.content}>
+                <Text style={styles.textTitle}>Total Amount</Text>
+                <TextInput
+                  value={amount}
+                  placeholder="₱Amount"
+                  style={styles.input}
+                  keyboardType="numeric"
+                  onChangeText={(text) => {
+                    // Remove any non-numeric characters before setting the state
+                    const numericValue = text.replace(/[^0-9.]/g, "");
+                    setAmount(numericValue);
+                }}
+                />
+              </View>
+
+              {/* Accumulated Amount Input */}
+              <View style={styles.content}>
+                <Text style={styles.textTitle}>Accumulated Amount</Text>
+                <TextInput
+                  value={accumulatedAmount}
+                  placeholder="Enter Amount"
+                  style={styles.input}
+                  keyboardType="numeric"
+                  onChangeText={(text) => {
+                    // Remove any non-numeric characters before setting the state
+                    const numericValue = text.replace(/[^0-9.]/g, "");
+                    setAccumulatedAmount(numericValue);
+                }}
+                />
+              </View>
+
+              {/* Buttons */}
+              <View style={styles.btn}>
+                <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+                  <Button title="Cancel" color={colors.green} onPress={() => setIsUpdatingGoal(false)} />
+                  <Button title="Save" color={colors.green} onPress={() => setIsConfirmModalVisible(true)} disabled={!validateFields()} />
+                </View>
+              </View>
+            </View>
+          }
         />
-        </View>
-        <Text style={styles.textTitle}>Accumulated Amount</Text>
-        {/* ACCUMULATED AMOUNT */}
-        <TextInput
-          placeholder="Enter Amount"
-          style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
-          value={accumulatedAmount}
-          keyboardType="numeric"
-          onChangeText={(text) => {
-            // Remove any non-numeric characters before setting the state
-            const numericValue = text.replace(/[^0-9.]/g, "");
-            setAccumulatedAmount(numericValue);
-          }}
-          onBlur={() => {
-            const numericAccumulatedAmount = parseFloat(accumulatedAmount);
-            const numericAmount = parseFloat(amount);
 
-            if (numericAccumulatedAmount > numericAmount) {
-              setAccumulatedAmount(amount);
-            }
-          }}
+        {/* Confirmation Modal */}
+        <ConfirmModal
+          visible={isConfirmModalVisible} 
+          title="Confirm Save" 
+          message="Are you sure you want to save this entry?" 
+          onConfirm={handleUpdateGoal}
+          onCancel={() => setIsConfirmModalVisible(false)}
         />
-          
-        {/* Cancel and Save Button */}
-        <View style={styles.btn}>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-around" }}
-          >
-            <Button title="Cancel" color={colors.green} onPress={() => {
-              setIsUpdatingGoal(false)
-            }}
-            />
-            <Button title="Save" color={colors.green} onPress={()=> setIsConfirmModalVisible(true)}  disabled={!validateFields()}/>
-          </View>
-
-        </View>
-
-
-      <ConfirmModal
-      visible={isConfirmModalVisible} 
-      title={'Confirm Save'} 
-      message={'Are you sure you want to save this entry?'} 
-      onConfirm={()=> {
-        handleUpdateGoal();
-        setIsConfirmModalVisible(false);
-        setIsUpdatingGoal(false);
-      }} 
-      onCancel={() => {
-        setIsUpdatingGoal(false);
-        setIsConfirmModalVisible(false);
-      }}      
-      />
-
-    </View>
-
-    
-
-    }
-    />
-  )
+      </>
+    );
 }
 
 const styles = StyleSheet.create({
-  header:{
+  header: {
     width: "100%",
     alignItems: "center",
-    justifyContent:'center'
+    justifyContent: "center",
   },
-  title:{
+  title: {
     fontSize: 30,
-    fontWeight: 'bold'
+    fontWeight: "bold",
   },
-  textTitle:{
-    fontWeight: 'bold'
+  textTitle: {
+    fontWeight: "bold",
   },
-  container:{
-    flex:1,
-    height: '100%',
-  },
-  btn:{
+  container: {
     flex: 1,
-    flexDirection: 'column-reverse',
-    paddingBottom: 20
+    height: "100%",
   },
-  content:{
-    paddingTop: 10
+  btn: {
+    flex: 1,
+    flexDirection: "column-reverse",
+    paddingBottom: 20,
   },
-  btext:{
-    fontWeight: 'bold'
-  }
-})
+  content: {
+    paddingTop: 10,
+    paddingHorizontal: 15,
+  },
+  input: {
+    marginBottom: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.green,
+  },
+});
+

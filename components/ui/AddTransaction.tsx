@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
   height: '97%',
   },
   segmentCon:{
-
+    borderWidth:1, 
+    marginVertical:10
   }
 })

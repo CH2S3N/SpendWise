@@ -117,8 +117,9 @@ export default function AddIncome({
             <View style={styles.content}>
                 <Text style={styles.btext}>Recurrence</Text>
                 <SegmentedControl
+                
                   values={["Daily", "Weekly", "Bi-Weekly", "Monthly"]}
-                  style={{ marginTop: 10, }}
+                  style={[styles.segmentCon, {marginBottom: 0}]}
                   selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
                   onChange={(event) => {
                     setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
@@ -137,7 +138,7 @@ export default function AddIncome({
                 {frequency === 'Weekly' && (
                   <SegmentedControl
                     values={["Weekends", "Weekdays", "Custom"]}
-                    style={{ marginTop: 10, }}
+                    style={[styles.segmentCon, {marginTop:0}]}
                     selectedIndex={["Weekends", "Weekdays", "Custom"].indexOf(subType)}
                     onChange={(event) => {
                       setSubType(["Weekends", "Weekdays", "Custom"][event.nativeEvent.selectedSegmentIndex]);
@@ -238,7 +239,7 @@ export default function AddIncome({
           <Text style={styles.btext}>Income Type</Text>
           <SegmentedControl
             values={["Allowance", "Salary", "Others"]}
-            style={{ marginTop: 10, }}
+            style={styles.segmentCon}
             selectedIndex={["Allowance", "Salary", "Others"].indexOf(incomeCategory)}
             onChange={(event) => {
               setIncomeCategory(["Allowance", "Salary", "Others"][event.nativeEvent.selectedSegmentIndex]);
@@ -301,5 +302,9 @@ const styles = StyleSheet.create({
   },
   btext:{
     fontWeight: 'bold'
+  },
+  segmentCon:{
+    borderWidth:1, 
+    marginVertical:10
   }
 })

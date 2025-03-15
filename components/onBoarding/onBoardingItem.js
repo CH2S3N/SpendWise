@@ -30,19 +30,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontWeight: '800',
+    fontWeight: 'bold',
     fontSize: 28,
     marginBottom: 10,
-    color: colors.dark,
+    color: colors.green,
     textAlign: 'center',
+    textShadowColor: 'black', 
+    textShadowOffset: { width: .5, height: .5 }, 
+    textShadowRadius: .5, 
   },
   description: {
     fontSize: 20,
-    fontWeight: '300',
-    color: colors.dark,
+    fontWeight: '400',
+    color: colors.green,
     paddingHorizontal: 30,
     textAlign: 'center',
-    textAlignVertical: 'center'
-
+    textAlignVertical: 'center',
+    // textShadowColor: 'black', 
+    // textShadowOffset: { width: .5, height: .5 }, 
+    // textShadowRadius: 1, 
   },
 });

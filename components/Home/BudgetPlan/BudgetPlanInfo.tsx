@@ -19,7 +19,7 @@ import { setBudgetStratSplit } from '@/state/dataSlice';
 
 export default function BudgetPlanInfo({
   setBudgetPlanGenerated,
-  setGenerateModalVisible
+  setGenerateModalVisible 
 }: {
   setBudgetPlanGenerated: React.Dispatch<React.SetStateAction<boolean>>;
   setGenerateModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -57,7 +57,7 @@ export default function BudgetPlanInfo({
         if (storedValue !== null) {
           const parsedValue = JSON.parse(storedValue);
           setStratSplit(parsedValue);
-          dispatch(setBudgetStratSplit(parsedValue)); 
+          dispatch(setBudgetStratSplit(parsedValue));
           console.log('is Strat Splitted? ', parsedValue);
         }
       } catch (error) {
@@ -65,7 +65,18 @@ export default function BudgetPlanInfo({
       }
     };
     loadStratSplit();
-  }, [dispatch]); 
+  }, [dispatch]);
+
+// To Validate requirements
+  function validateFields() {
+    if ( transactions.length === 0 || incomes.length === 0 || !hasBudgetStrat)  {
+      return false;
+    }
+    
+    return true;
+  }
+
+
 
   const handleAllocate = async () => {
     try {
@@ -90,8 +101,7 @@ export default function BudgetPlanInfo({
       dispatch(setBudgetStratSplit(newStratSplit));
   
       // Save updated value in AsyncStorage
-      await AsyncStorage.setItem('stratSplitted', JSON.stringify(newStratSplit));
-  
+      await AsyncStorage.setItem('stratSplitted', JSON.stringify(newStratSplit));  
       console.log("Strategy split? ", newStratSplit);
   
       await fetchData();
@@ -101,40 +111,12 @@ export default function BudgetPlanInfo({
       setIsLoading(false);
     }
   };
-  
-  useEffect(() => {
-    const loadStratSplit = async () => {
-      try {
-        const storedValue = await AsyncStorage.getItem('stratSplitted'); 
-        if (storedValue !== null) {
-          const parsedValue = JSON.parse(storedValue);
-          setStratSplit(parsedValue);
-          dispatch(setBudgetStratSplit(parsedValue));
-          console.log('is Strat Splitted? ', parsedValue);
-        }
-      } catch (error) {
-        console.error("Error loading stratSplit:", error);
-      }
-    };
-    loadStratSplit();
-  }, [dispatch]);
-  
-  
-
-
-  function validateFields() {
-    if ( transactions.length === 0 || incomes.length === 0 || !hasBudgetStrat)  {
-      return false;
-    }
-    
-    return true;
-  }
 
   return (
     <View style={styles.mainCon}>
        {isLoading === true && (
           <View style={styles.loadingOverlay}>
-          <ActivityIndicator size="large" color="black" />
+          <ActivityIndicator size="large" color={colors.dark} />
           <Text style={styles.loadingText}>Allocating Budget...</Text>
           </View>
        )}
@@ -143,7 +125,7 @@ export default function BudgetPlanInfo({
             <View style={[styles.container,]}>
               {/* Categories */}
                 <View style={[styles.container, {flex: 1.2, }]}>
-                  <View style={[styles.card, {}]}>
+                  <View style={[styles.card, {backgroundColor: colors.light}]}>
                       <Categories setHasBudgetStrat={setHasBudgetStrat} isAdvanceBtnTapped={isAdvanceBtnTapped} setIsAdvanceBtnTapped={setAdvanceBtnTapped} setStratSplit={setStratSplit} stratSplit={stratSplit}/>
                       {isAdvanceBtnTapped === false ? (
                         <Button onPress={()=>{setAdvanceBtnTapped(true)}}>Advance</Button>
@@ -161,7 +143,7 @@ export default function BudgetPlanInfo({
                   <View style={[styles.row, {justifyContent: "center", }]}>
                     {/* Income */}
                     <View style={[styles.card, {flex: 1, backgroundColor: colors.green,  marginLeft: 20, marginRight: 5, marginVertical: 5,}]}>
-                      <TouchableOpacity onPress={() => openModal('income')} activeOpacity={0.5}>
+                      <TouchableOpacity onPress={() => openModal('income')} activeOpacity={0.5} >
                         <Text style={styles.titleW}>INCOME</Text>
                         <Divider/>
                         <Text style={styles.txtW}>Expand</Text>
@@ -169,7 +151,7 @@ export default function BudgetPlanInfo({
                     </View>
 
                     {/* Expense */}
-                    <View style={[styles.card, {flex: 1, backgroundColor: colors.red, marginRight: 20, marginLeft: 5, marginVertical: 5,}]}>
+                    <View style={[styles.card, {flex: 1, backgroundColor: colors.green, marginRight: 20, marginLeft: 5, marginVertical: 5, }]}>
                       <TouchableOpacity onPress={() => openModal('expense')} activeOpacity={0.5}>
                         <Text style={styles.titleW}>EXPENSE</Text>
                         <Divider/>
@@ -185,7 +167,7 @@ export default function BudgetPlanInfo({
             <View style={styles.btncontainer}>
               <View style={[styles.content, {flexDirection: "row"}]}>
                 <TouchableOpacity style={styles.btn} onPress={() =>setIsAddingTransaction(true)}>
-                  <Text style={styles.title}>ADD</Text>   
+                  <Text style={styles.titleW}>ADD</Text>   
                 </TouchableOpacity>
                 <TouchableOpacity onPress={handleAllocate}
                    disabled={!validateFields()} 
@@ -194,7 +176,7 @@ export default function BudgetPlanInfo({
                     (!validateFields()) && styles.disabledButton
                   ]}
                   >
-                  <Text style={styles.title}>ALLOCATE</Text>   
+                  <Text style={styles.titleW}>ALLOCATE</Text>   
                 </TouchableOpacity>
               </View>
             </View>
@@ -289,6 +271,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: 'white',
     elevation: 5,
+    borderWidth:1,
     shadowColor: "#000",
     shadowRadius: 8,
     shadowOffset: { height: 6, width: 0 },
@@ -301,25 +284,33 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 20,
+    color: colors.dark,
   },
   titleW:{
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 20,
-    color: colors.light
+    color: colors.light,
+    textShadowColor: 'black', 
+    textShadowOffset: { width: .5, height: .5 }, 
+    textShadowRadius: .5,
   },
   txtW:{
     fontWeight: "bold",
     color: colors.light,
     textAlign: 'center',
+    textShadowColor: 'black', 
+    textShadowOffset: { width: .5, height: .5 }, 
+    textShadowRadius: .2,
 
   },
   btn:{
     marginHorizontal: 10,
     flex: 1,
+    borderWidth:1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.light,
+    backgroundColor: colors.green,
     borderRadius: 45,
     elevation: 5,
     shadowColor: "#000",
@@ -331,8 +322,8 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   disabledButton: {
-    color: colors.gray,
-    opacity: 0.5
+    backgroundColor: colors.green,
+    opacity: .5
   },
 
 

@@ -41,6 +41,7 @@ const styles= StyleSheet.create({
     backgroundColor: colors.light,
     borderRadius: 15,
     elevation: 5,
+    borderWidth:1,
     shadowColor: "#000",
     shadowRadius: 8,
     shadowOffset: { height: 6, width: 0 },
@@ -57,6 +58,7 @@ const styles= StyleSheet.create({
     backgroundColor: colors.green,
     borderRadius: 15,
     elevation: 5,
+    borderWidth:1,
     shadowColor: "#000",
     shadowRadius: 8,
     shadowOffset: { height: 6, width: 0 },
@@ -80,11 +82,15 @@ const styles= StyleSheet.create({
     padding: 10,
     marginHorizontal: 5
   },
-  btnTxt:{
+  btnTxt: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: colors.dark
+    color: colors.dark,
+    textShadowColor: 'black', 
+    textShadowOffset: { width: .5, height: .5 }, 
+    textShadowRadius: .5, 
   },
+  
  
 
   // Goals & Budget Plan Container
@@ -145,6 +151,7 @@ const styles= StyleSheet.create({
   },
   
   modalcontainer:{
+    margin:0,
     flex:1,
     backgroundColor: colors.background,
   },
@@ -220,7 +227,7 @@ modalOverlay: {
 modalContent: {
   width: '80%',
   height: '80%',
-  
+  borderWidth:1,
   backgroundColor: 'white',
   padding: 20,
   borderRadius: 10,

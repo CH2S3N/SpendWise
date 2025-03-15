@@ -97,9 +97,9 @@ export default function AddGoal({
         <View
           style={{ flexDirection: "row", justifyContent: "space-around" }}
         >
-          <Button title="Cancel" color={colors.blue} onPress={() => setIsAddingGoal(false)}
+          <Button title="Cancel" color={colors.green} onPress={() => setIsAddingGoal(false)}
           />
-          <Button title="Save" color={colors.blue} onPress={()=> setIsConfirmModalVisible(true)} disabled={!validateFields()}/>
+          <Button title="Save" color={colors.green} onPress={()=> setIsConfirmModalVisible(true)} disabled={!validateFields()}/>
         </View>
       </View>
 
