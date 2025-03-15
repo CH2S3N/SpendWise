@@ -45,7 +45,6 @@ export default function GoalsInfo() {
           const parsedValue = JSON.parse(storedValue);
           setIsEnabled(parsedValue);
           dispatch(setAccGoalSwitch(parsedValue)); 
-          console.log('is Accomplished Goal Shown? ', parsedValue);
         }
       } catch (error) {
         console.log("Error loading Goal Switch", error);
@@ -60,7 +59,6 @@ useEffect(() => {
         const newVal = isEnabled;  
         dispatch(setAccGoalSwitch(newVal));  
         await AsyncStorage.setItem('showAccGoal', JSON.stringify(newVal));  
-        console.log("is Accomplished Goal Shown? ", newVal);
       } catch (error) {
         console.log("Error updating Goal Switch", error);
       }

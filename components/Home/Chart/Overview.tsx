@@ -88,12 +88,11 @@ export default Overview;
 const styles = StyleSheet.create({
     mainContainer:{
         flex:1,
-        justifyContent: 'center',
+        justifyContent: 'space-evenly',
         alignItems: 'flex-start',  
-        paddingHorizontal: 10      
+        paddingHorizontal: 0     
     },
     item:{
-        paddingBottom: 5,
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 10,

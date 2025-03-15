@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text, TouchableOpacity, View, StyleSheet, TextInput } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Tabs } from 'expo-router';
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -10,59 +10,77 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import OnBoarding from '@/components/onBoarding/onBoarding';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
-import { setViewedOnboarding } from '@/state/dataSlice';
+import { setHasName, setViewedOnboarding, setWelcomed } from '@/state/dataSlice';
 import { Image } from 'react-native';
 import { setBudgetStratSplit } from '@/state/dataSlice'
+import { UseTransactionService } from '@/hooks/editData/TransactionService';
+import { Modal } from '@/components/Modal';
+import { setUsername } from '@/state/userSlice';
 
 const _layout = () => {
   const { fetchData } = useFetchData();
   const dispatch = useDispatch();
-  const { viewed } = useSelector((state: RootState) => state.data);
+    const { updateUser } = UseTransactionService(); 
+  
+  const { viewed, nameSetted, welcomed, user } = useSelector((state: RootState) => state.data);
+  const [isSetUserModalVisible, setSetUserModalVisible] = useState(true);
+  const [isWelcomeModalVisible, setWelcomeModalVisible] = useState(false);
 
+  const firstUser = user?.[0];  
+  const userName = firstUser?.userName || "";
+  const userId = firstUser?.id ?? 1;
+  const data = firstUser?.hasData ?? "False";
+
+  const [input, setInput] = useState(userName);
+
+  // load data
   useEffect(() => {
-    fetchData().catch((e) => console.error(e));
-  }, []);
-
-  // set Onboarding
-    useEffect(() => {
-        const loadStratSplit = async () => {
-          try {
-            const storedValue = await AsyncStorage.getItem('stratSplitted'); 
-            if (storedValue !== null) {
-              const parsedValue = JSON.parse(storedValue);
-              setBudgetStratSplit(parsedValue);
-              dispatch(setBudgetStratSplit(parsedValue)); 
-              console.log('is Strat Splitted? ', parsedValue);
-            }
-          } catch (error) {
-            console.error("Error loading stratSplit:", error);
-          }
-        };
-        loadStratSplit();
-      }, [dispatch]); 
-
-      
-    const checkOnboarding = async () => {
-      // await AsyncStorage.removeItem('@viewedOnboarding');
+    const initializeData = async () => {
       try {
-        const value = await AsyncStorage.getItem('@viewedOnboarding');
-        if (value !== null) {
-          dispatch(setViewedOnboarding(true))
+        // Fetch data
+        await fetchData().catch((e) => console.error(e));
+        
+        // Check Onboarding
+        // await AsyncStorage.removeItem('@viewedOnboarding');
+        const onboardingVal = await AsyncStorage.getItem('@viewedOnboarding');
+        if (onboardingVal !== null) {
+          const parsedValue = JSON.parse(onboardingVal); 
+          console.log('Onboarding Viewed: ', parsedValue);
+          dispatch(setViewedOnboarding(parsedValue));
         }
-      } catch (err) {
-        console.log('Error @checkOnboarding:', err);
+
+        // Load StratSplit
+        // await AsyncStorage.removeItem('stratSplitted');
+        const stratVal = await AsyncStorage.getItem('stratSplitted');
+        if (stratVal !== null) {
+          const parsedValue = JSON.parse(stratVal);
+          console.log('HasStratSplit: ', parsedValue);
+          dispatch(setBudgetStratSplit(parsedValue));
+        }
+        // await AsyncStorage.removeItem('@hasNamesetted');
+        const setNameVal = await AsyncStorage.getItem('@hasNamesetted');
+        if (setNameVal !== null) {
+          const parsedValue = JSON.parse(setNameVal);
+          console.log('@hasNamesetted: ', parsedValue);
+          dispatch(setHasName(parsedValue));
+        }
+        // await AsyncStorage.removeItem('@firstOpen');
+        const firstOpenVal = await AsyncStorage.getItem('@firstOpen');
+        if (firstOpenVal !== null) {
+          const parsedValue = JSON.parse(firstOpenVal);
+          console.log('@firstOpen: ', parsedValue);
+          dispatch(setWelcomed(parsedValue));
+        }
+
+
+      } catch (error) {
+        console.error('Error initializing data:', error);
       }
     };
 
+    initializeData();
+  }, []);
 
-  useEffect(() => {
-    checkOnboarding();
-
-  }, [])
-
-  useEffect(() => {
-    console.log('viewed state updated:', viewed);
-  }, [viewed]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -189,8 +207,50 @@ const _layout = () => {
           <OnBoarding />
         </View>
       )}
+
+
+
+
+      
     </GestureHandlerRootView>
   );
 };
 
 export default _layout;
+
+
+const styles = StyleSheet.create({
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+  },
+  modalContent: {
+    width: '80%',
+    borderWidth:1,
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowRadius: 8,
+    shadowOffset: { height: 6, width: 0 },
+    shadowOpacity: 0.15,
+  },
+  modalTitle:{
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 20,
+    paddingTop: 10,
+    paddingBottom: 15,
+  },
+  modalSubTitle: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 15,
+    paddingTop: 10,
+    paddingBottom: 3
+  },
+})

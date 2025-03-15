@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Button, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View, Linking } from 'react-native'
 import React, { useState } from 'react'
 import MainContainer from '@/components/Containers/MainContainer';
 import IncomeInfo from '@/components/Home/IncomeSummary/IncomeInfo';
@@ -12,6 +12,7 @@ import { UseTransactionService } from '@/hooks/editData/TransactionService';
 import Card from '@/components/ui/Card';
 import { setUsername } from '@/state/userSlice';
 import AddIncome from '@/components/ui/addIncome';
+import ConfirmModal from '@/components/Modal/ConfirmModal';
 
 const Budget = () => {
   const { user } = useSelector((state: RootState) => state.data);
@@ -27,7 +28,7 @@ const Budget = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSettingsModalVisible, setIsSettingsModalVisible] = useState(false);
   const [isAddingIncome, setIsAddingIncome] = useState(false);
-
+  const [isConfirmModalVisible, setIsConfirmModalVisible] = React.useState(false);
   async function handleUpdateUser() {
     try {
       await updateUser({
@@ -45,12 +46,12 @@ const Budget = () => {
     <MainContainer>
       <View style={styles.container}>
         <View style={styles.header}>
-          {/* <TouchableOpacity 
+          <TouchableOpacity 
             onPress={() => setIsModalVisible(true)} 
             style={styles.userButton}>
             <FontAwesome6 name="circle-user" size={30} color={colors.green} />
             <Text style={styles.userText}>{userName}</Text>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
           <TouchableOpacity onPress={() => setIsSettingsModalVisible(true)} style={styles.iconButton} >
             <FontAwesome6 name="gear" size={30} color={colors.green} 
             style={{
@@ -117,12 +118,17 @@ const Budget = () => {
             <TouchableWithoutFeedback>
               <View style={[styles.modalContent1, {}]}>
                 <Text style={styles.modalTitle}>Settings</Text>
+                <TouchableOpacity onPress={() => {
+                  setIsSettingsModalVisible(false);
+                  Linking.openURL('https://www.youtube.com/shorts/41iWg91yFv0')
+                  
+                  }}>
+                  <Text style={styles.modalSubTitle}>Feedback</Text>
+                </TouchableOpacity>
                 <TouchableOpacity onPress={()=>{
-                  deleteAllData();
-                  handleUpdateUser();
-                  setIsSettingsModalVisible(false)
+                  setIsConfirmModalVisible(true)
                 }}>
-                  <Text style={styles.modalSubTitle}>Delete all data</Text>
+                  <Text style={[styles.modalSubTitle, {color: colors.red}]}>Delete all data</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => setIsSettingsModalVisible(false)}>
                   <Text style={styles.modalSubTitle}>Close</Text>
@@ -147,6 +153,21 @@ const Budget = () => {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
+
+
+
+      {/* Confirmation Deletion  Modal */}
+      <ConfirmModal
+      visible={isConfirmModalVisible} 
+      title={'Confirm Deletion'} 
+      message={'Are you sure you want to delete all data?'} 
+      onConfirm={()=> {
+        deleteAllData();
+        handleUpdateUser();
+        setIsSettingsModalVisible(false)
+      }} 
+      onCancel={() => setIsConfirmModalVisible(false)}      
+      />
     </MainContainer>
   );
 };

@@ -7,59 +7,88 @@ import IncomeChart from './IncomeChart ';
 import { Divider } from '@rneui/base';
 import Overview from './Overview';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import Card from '@/components/ui/Card';
+import { colors } from '@/constants/colors';
 
 export default function ChartInfo() {
   const [isOverview, setOverview] = useState(false);
   return (
-    <MainContainer style={{paddingLeft: 1243132}}>
-    {isOverview === false && (
+    <View style={styles.container}>
       <>
-        <Divider/>
-          <BigText content='Overview'/>
-        <View style={styles.overview}>
-          <Overview/>
-        </View>
-        <Divider/>
-        <BigText content='Expense Structure'/>
-        <View style={styles.content}>
-          <CircularChart/>
-        </View>
-        <Divider/>
-        <BigText content='Income Structure'/>
-        <View style={styles.content}>
-          <IncomeChart/>
-        </View>
-        <Divider/>
+          <Card
+          
+          style={styles.overview}
+          content={
+            <>
+              <View style={styles.title}>
+                <BigText content='OVERVIEW'/>
+              </View>
+              <View style={styles.info}>
+                <Overview/>
+              </View>
+            </>
+          }/>
+          <Card
+          style={styles.content}
+          content={
+            <>
+              <View style={styles.title}>
+                <BigText content='EXPENSE STRUCTURE'/>
+              </View>
+              <View style={styles.info}>
+                <CircularChart/>
+              </View>
+            </>
+          }/>
+          <Card
+          style={styles.content}
+          content={
+            <>
+              <View style={styles.title}>
+                <BigText content='INCOME STRACTURE'/>
+              </View>
+              <View style={styles.info}>
+                <IncomeChart/>
+              </View>
+            </>
+          }/>
       </>
-    )}
-    {isOverview === true && (
-      <>
-        <Divider/>
-        <TouchableOpacity onPress={() => setOverview(false)}>
-          <BigText content='Overview'/>
-        </TouchableOpacity>
-      
-        <Divider/>
-      </>
-    )}
-    
-    </MainContainer>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
+  container:{
+    flex:1,
+    marginHorizontal: 10,
+    marginBottom:10
+  },
   overview: {
-    flex: 1,
+    marginBottom:20,
+    borderWidth:1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: colors.ligthGreen
   },
   content: {
-    flex: 2,
+    flex: 1,
+    marginBottom:20,
+    borderWidth:1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  text: {
-    fontWeight: 'bold',
-    fontSize: 30
+  title:{
+    flex: 1,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  info: {
+    flex: 4,
+    borderTopWidth: 1,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center'
+
   }
 })

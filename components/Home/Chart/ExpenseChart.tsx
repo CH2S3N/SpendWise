@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, useWindowDimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import PieChart from 'react-native-pie-chart';
 import { useSelector } from 'react-redux';
@@ -12,7 +12,8 @@ import { Income, Transaction } from '@/types';
 export default function ExpenseChart() {
   const { categories, transactions, goals, incomes, budgetStratSplit } = useSelector(
     (state: RootState) => state.data);
-  const widthAndHeight = 150;
+  const { width } = useWindowDimensions();
+  const widthAndHeight = width * 0.3;
   const [values, setValues] = useState([1]);
   const [sliceColor, setSliceColor] = useState(['#CCCCCC']);
 
@@ -64,7 +65,7 @@ export default function ExpenseChart() {
     <View>
       <View style={styles.container}>
         {/* Chart */}
-        <View style={styles.item1}>
+        <View style={styles.item}>
           <PieChart
             widthAndHeight={widthAndHeight}
             series={values}
@@ -78,8 +79,8 @@ export default function ExpenseChart() {
         {budgetStratSplit === true ? (
           <>
             {totalExpenses > 0 && (
-              <View style={{ justifyContent: 'center', alignItems: 'center'}}>
-                <View style={styles.total}> 
+              <View style={[styles.item,{ justifyContent: 'center', alignItems: 'center'}]}>
+                <View style={styles.legend}> 
                   {totalEssential > 0 && (
                     <View style={styles.legendItem}>
                       <View style={[styles.colorBox, { backgroundColor: '#FC2947' }]} />
@@ -102,7 +103,7 @@ export default function ExpenseChart() {
 
                 </View>
                 <View style={styles.total}>
-                  <Text style={[styles.text, { color: colors.red }]}>Total: <Text style={{}}>₱ {totalExpenses}</Text></Text>
+                  <Text style={[styles.totalTxt, { color: colors.red }]}>Total: <Text style={{}}>₱ {totalExpenses}</Text></Text>
                 </View>
               </View>
             )}
@@ -110,8 +111,8 @@ export default function ExpenseChart() {
         ) : (
           <>
           {totalExpenses > 0 && (
-            <View style={{ justifyContent: 'center', alignItems: 'center'}}>
-              <View style={styles.total}> 
+            <View style={[styles.item,{ justifyContent: 'center', alignItems: 'center'}]}>
+              <View style={styles.legend}> 
                 {totalEssential > 0 && (
                   <View style={styles.legendItem}>
                     <View style={[styles.colorBox, { backgroundColor: '#FC2947' }]} />
@@ -128,7 +129,7 @@ export default function ExpenseChart() {
 
               </View>
               <View style={styles.total}>
-                <Text style={[styles.text, { color: colors.red }]}>Total: <Text style={{}}>₱ {totalExpenses}</Text></Text>
+                <Text style={[styles.totalTxt, { color: colors.red }]}>Total: <Text style={{}}>₱ {totalExpenses}</Text></Text>
               </View>
             </View>
           )}

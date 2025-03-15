@@ -9,6 +9,7 @@ import { setViewedOnboarding } from '@/state/dataSlice';
 import { useDispatch } from 'react-redux';
 
 const OnBoarding = () => {
+  
   const scrollX = useRef(new Animated.Value(0)).current;
   const [currentIndex, setCurrentIndex] = useState(0);
   const slidesRef = useRef(null);
@@ -32,7 +33,7 @@ const OnBoarding = () => {
         dispatch(setViewedOnboarding(true))
         console.log('Onboarding Viewed');
       } catch (err) {
-        console.log('Error @setItem:', err);
+        console.log('Error @viewedOnboarding:', err);
       }
     }
   };

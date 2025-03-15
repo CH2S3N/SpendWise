@@ -12,7 +12,7 @@ export const useFetchData = () => {
     try {
       await loadDatabase()
       
-      console.log("Fetching data..."); 
+      // console.log("Fetching data..."); 
       dispatch(setLoading()); // Set loading state
       const [transactionResult, categoriesResult, goalsResult, userResult, incomeResult, varDataStatesResult] = await Promise.all([
         db.getAllAsync<Transaction>('SELECT * FROM Transactions'),

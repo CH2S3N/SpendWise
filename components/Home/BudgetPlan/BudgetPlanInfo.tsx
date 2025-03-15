@@ -58,7 +58,6 @@ export default function BudgetPlanInfo({
           const parsedValue = JSON.parse(storedValue);
           setStratSplit(parsedValue);
           dispatch(setBudgetStratSplit(parsedValue));
-          console.log('is Strat Splitted? ', parsedValue);
         }
       } catch (error) {
         console.error("Error loading stratSplit:", error);
@@ -208,7 +207,7 @@ export default function BudgetPlanInfo({
                 <Text style={styles.title}>Back</Text>
         </View >
         <View style={styles.modalcontent}>
-          <Expense/>
+            <Expense/>
         </View>
         </View>
       </Modal>

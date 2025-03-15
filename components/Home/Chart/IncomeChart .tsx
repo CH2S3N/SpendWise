@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, useWindowDimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import PieChart from 'react-native-pie-chart';
 import { useSelector } from 'react-redux';
@@ -11,8 +11,8 @@ import { calculateTotalIncome } from '@/utils/calcTotalIncome';
 
 export default function IncomeChart () {
   const { incomes } = useSelector((state: RootState) => state.data);
-
-  const widthAndHeight = 150;
+  const { width } = useWindowDimensions();
+  const widthAndHeight = width * 0.3;
   const [values, setValues] = useState([1]);
   const [sliceColor, setSliceColor] = useState(['black']);
   
@@ -61,7 +61,7 @@ export default function IncomeChart () {
     <View style={styles.mainContainer}>
       <View style={styles.container}>
         {/* Chart */}
-        <View style={styles.item1}>
+        <View style={styles.item}>
           <PieChart
             widthAndHeight={widthAndHeight}
             series={values}
@@ -73,8 +73,8 @@ export default function IncomeChart () {
         </View>
         {/* Legends */}
         {total > 0 && (
-          <View style={[styles.item1, { justifyContent: 'center', alignItems: 'center'}]}>
-            <View style={styles.total}>
+          <View style={[styles.item, { justifyContent: 'center', alignItems: 'center'}]}>
+            <View style={styles.legend}>
               {totalAllowance > 0 && (
                 <View style={styles.legendItem}>
                   <View style={[styles.colorBox, { backgroundColor: '#15B392' }]} />
@@ -95,7 +95,7 @@ export default function IncomeChart () {
               )}
             </View>
             <View style={styles.total}>
-              <Text style={[styles.text, {color: colors.green}]}>Total: <Text style={{}}>₱ {total}</Text></Text>
+              <Text style={[styles.totalTxt, {color: colors.green}]}>Total: <Text style={{}}>₱ {total}</Text></Text>
             </View>
           </View>
         )}

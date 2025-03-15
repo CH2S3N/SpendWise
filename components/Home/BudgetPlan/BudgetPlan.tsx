@@ -33,7 +33,7 @@ const BudgetPlanner = () => {
     <ScrollView style={styles.container}>
       {/* Income Section */}
       <View style={styles.container}>
-        <Text style={styles.header}>INCOME</Text>
+        <Text style={styles.header}>Income Sources</Text>
         <View style={styles.table}>
           <View style={styles.row}>
             <Text style={styles.celltitle}>Item</Text>
@@ -47,7 +47,7 @@ const BudgetPlanner = () => {
                     <View key={income.id} style={styles.row}>
                       <Text style={styles.cell}>{income.description}</Text>
                       <Text style={styles.cell}>{income.type}</Text>
-                      <Text style={styles.cell}>{income.frequency}/ {income.subtype} ({income.interval})</Text>
+                      <Text style={styles.cell}>{income.frequency}/ {income.subtype === "Custom" ? (null) : (<Text>/{income.subtype}</Text>)} ({income.interval})</Text>
                       <Text style={styles.cell}>₱ {income.amount}</Text>
                       <Text style={styles.cell}>₱ {income.amount  * income.interval}</Text>
                 </View>
@@ -152,7 +152,7 @@ const BudgetPlanner = () => {
       {/* Summary Section */}
       {/* Wants */}
       <View style={styles.container}>
-        <Text style={styles.header}>SUMMARY</Text>
+        <Text style={styles.header}>Summary</Text>
         <View style={styles.table}>
           <View style={styles.row}>
             <Text style={styles.celltitle}>Category</Text>
@@ -181,6 +181,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 8,
+
   },
   header: {
     fontSize: 20,
@@ -188,13 +189,14 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     textAlign: 'center',
     color: colors.dark,
-  },
+  }, 
   table: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 6,
+    borderWidth: 2,
+    borderColor: colors.dark,
+    borderRadius: 20,
     overflow: "hidden",
     marginBottom: 10,
+    
   },
   row: {
     flexDirection: "row",
@@ -210,7 +212,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     backgroundColor: colors.green,
-    color: colors.light
+    color: colors.light,
+    textShadowColor: 'black', 
+    textShadowOffset: { width: .5, height: .5 }, 
+    textShadowRadius: .5, 
+    
   },
   cell: {
     flex: 1,

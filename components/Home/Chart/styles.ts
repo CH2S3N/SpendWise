@@ -13,13 +13,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     },
-    item1: {
+    item: {
+    flex:1,
     justifyContent: 'center',
     alignItems: 'center',
     },
     legendItem: {
     flexDirection: 'row',
-    marginBottom: 5,
+    marginBottom: 1,
     },
     colorBox: {
     width: 16,
@@ -27,21 +28,33 @@ const styles = StyleSheet.create({
     marginRight: 8,
     borderRadius: 2,
     },
-    text: {
+    totalTxt: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 25,
     color: colors.dark,
+    },
+    legend: {
+    flex: 1,
+    width:'100%',
+    alignItems: 'flex-start',
     },
     total: {
     flex: 1,
+    width:'100%',
     justifyContent: 'center',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     },
     placeholderText: {
-    marginTop: 10,
-    fontSize: 16,
-    color: colors.dark,
-    opacity: 0.5,
+    position: 'absolute',
+    marginTop: '50%',
+    marginBottom: '50%',
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: colors.gray,
+    opacity: 1,
+    textShadowColor: 'white', 
+    textShadowOffset: { width: 1, height: 1 }, 
+    textShadowRadius: 1, 
     },
 });
 

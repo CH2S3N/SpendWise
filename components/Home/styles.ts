@@ -9,7 +9,12 @@ const styles= StyleSheet.create({
     justifyContent: 'space-evenly',
   },
 
-  
+  image: {
+    width: '100%',
+    height: 300,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 
   // Income & Expense Button
   btnContainer: {
@@ -149,7 +154,12 @@ const styles= StyleSheet.create({
     alignItems: 'center',
     
   },
-  
+  cardStyle:{
+     flex: 1, 
+     marginHorizontal: 10, 
+     marginBottom: 10, 
+     borderWidth:1
+  },
   modalcontainer:{
     margin:0,
     flex:1,
@@ -209,9 +219,7 @@ noDataTxt:{
   color: colors.dark,
   opacity: 0.5
 },
-button: {
-  padding: 10,
-  borderRadius: 5,
+overviewBtn: {
 },
 disabledButton: {
   color: colors.dark,
@@ -227,6 +235,19 @@ modalOverlay: {
 modalContent: {
   width: '80%',
   height: '80%',
+  borderWidth:1,
+  backgroundColor: 'white',
+  padding: 20,
+  borderRadius: 10,
+  alignItems: 'center',
+  elevation: 5,
+  shadowColor: '#000',
+  shadowRadius: 8,
+  shadowOffset: { height: 6, width: 0 },
+  shadowOpacity: 0.15,
+},
+welcomeModalContent: {
+  width: '80%',
   borderWidth:1,
   backgroundColor: 'white',
   padding: 20,
