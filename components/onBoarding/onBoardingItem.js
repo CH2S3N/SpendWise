@@ -13,7 +13,7 @@ const OnBoardingItem = ({ item }) => {
         <Text style={styles.description}>{item.description}</Text>
       </View>
     </View>
-  );
+  ); 
 };
 
 export default OnBoardingItem;

@@ -19,143 +19,112 @@ import { TextInput } from 'react-native';
 import { setUsername } from '@/state/userSlice';
 import { setHasName, setWelcomed } from '@/state/dataSlice';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
+import { Dimensions } from 'react-native';
+import Animated, { BounceIn, BounceOut, FadeIn, FadeOut, SlideInLeft, SlideInRight, SlideOutLeft, SlideOutRight } from 'react-native-reanimated';
+
 
 export default function Index() {
-    const { width } = useWindowDimensions();
-  const { transactions, incomes, user, viewed, nameSetted, welcomed } = useSelector((state: RootState) => state.data);
+  const { width } = useWindowDimensions();
+  const { transactions, incomes, user, viewed, nameSetted, welcomed, allocation, budgetStratSplit } = useSelector((state: RootState) => state.data);
   const [isBudgetPlanGenerated, setBudgetPlanGenerated] = useState(false);
   const [hasName, setName] = useState(false);
   const userHasData = user.length > 0 ? user[0] : null;
   const dispatch = useDispatch();
   const [isUserModalVisible, setUserModalVisible] = useState(false);
   const { updateUser } = UseTransactionService(); 
-
+  const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
   // Modals
   const [isAddingTransaction, setIsAddingTransaction] = useState(false);
+  const [isAllocationComplete, setAllocationComplete] = useState(true);
   const [isChartModalVisible, setChartModalVisible] = useState(false);
   const [isGenerateModalVisible, setGenerateModalVisible] = useState(false);
   const [isBudgetPlanModalVisible, setBudgetPlanModalVisible] = useState(false);
   const [isWelcomeModalVisible, setWelcomeModalVisible] = useState(true);
   const [selectedTypeIndex, setselectedTypeIndex] = React.useState<number>(0);
-  
+  const [isLoading, setIsLoading] = useState(false);
 
 
-  const firstUser = user?.[0];  
-  const userName = firstUser?.userName || "";
-  const userId = firstUser?.id ?? 1;
-  const data = firstUser?.hasData ?? "False";
-  
-    const [input, setInput] = useState(userName);
 
     useEffect(() => {
-      
-      if (userName === "") {
-        setUserModalVisible(true); 
-        setWelcomeModalVisible(false) 
-      } else {
-        setUserModalVisible(false); 
-      }
+      setBudgetPlanGenerated(
+        transactions?.length > 0 && incomes?.length > 0
+      );
+    }, [transactions, incomes]);
 
 
-    }, [userName]);
+
   
-    useEffect(()=>{
-      async function firstOpen() {
-        await AsyncStorage.setItem('@firstOpen', 'false');
-        dispatch(setWelcomed(true))
-      }
-      firstOpen()
-    },[])
 
-
-  useEffect(() => {
-    setBudgetPlanGenerated(
-      Array.isArray(transactions) &&
-      transactions.length > 0 &&
-      Array.isArray(incomes) &&
-      incomes.length > 0
-    );
-  }, [transactions, incomes]);
-
- async function handleUpdateUser() {
-    try {
-      await updateUser({
-        id: userId,
-        userName: input,
-        hasData: data,
-      });
-      await AsyncStorage.setItem('@hasNamesetted', 'true');
-      dispatch(setHasName(true))
-      console.log("User updated successfully!");
-    } catch (error) {
-      console.error("Failed to update user:", error);
-    }
-  }
+  
   return (
     <MainContainer style={styles.container}>
-      {userHasData && userHasData.hasData === "False" ? (
-        <BudgetPlanInfo 
-          setBudgetPlanGenerated={setBudgetPlanGenerated} 
-          setGenerateModalVisible={setGenerateModalVisible} 
-        />
-      ) : (
-        <ScrollView >
-          <View style={{flex:0.8}}>
-            {/* Allocate / Summary Buttons */}
-            <View style={[styles.genBudget,]}>
-              <TouchableOpacity 
-                onPress={() => setGenerateModalVisible(true)} 
-                style={styles.topbtn}
-              >
-                <Text style={[styles.btnTxt, {color: colors.light}]}>ALLOCATE</Text>
-              </TouchableOpacity>
-              <TouchableOpacity 
-                onPress={() => {setBudgetPlanModalVisible(true); }} 
-                style={styles.topbtn}
-              >
-                <Text style={[styles.btnTxt, {color: colors.light}]}>SUMMARY</Text>
-              </TouchableOpacity>
+        {userHasData && userHasData.hasData === "False" ? (
+          <BudgetPlanInfo 
+            setBudgetPlanGenerated={setBudgetPlanGenerated} 
+            setGenerateModalVisible={setGenerateModalVisible} 
+            setAllocationComplete={setAllocationComplete}
+            setIsLoading={setIsLoading}
+          />
+        ) : (
+          <ScrollView >
+            <View style={{flex:0.8}}>
+              {/* Allocate / Summary Buttons */}
+              <View style={[styles.genBudget,]}>
+                <TouchableOpacity 
+                  onPress={() => setGenerateModalVisible(true)} 
+                  style={styles.topbtn}
+                >
+                  <Text style={[styles.btnTxt, {color: colors.light}]}>ALLOCATE</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  onPress={() => {setBudgetPlanModalVisible(true); }} 
+                  style={styles.topbtn}
+                >
+                  <Text style={[styles.btnTxt, {color: colors.light}]}>SUMMARY</Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* Statistics */}
+              <Card style={styles.cardStyle} content={
+                <>
+                  <Text style={[styles.title2, {borderBottomWidth:1, marginBottom:5, paddingBottom:5, textAlign: 'center'}]}>
+                    OVERVIEW
+                  </Text>
+                  <View style={{flex:1}}>
+                    <Overview />
+                  </View>
+                  <View style={{ justifyContent: 'center', alignItems: 'flex-end', marginTop:5}}>
+                    <TouchableOpacity
+                      onPress={() => setChartModalVisible(true)}
+                      disabled={transactions.length === 0 || incomes.length === 0}
+                      style={[styles.overviewBtn,(transactions.length === 0 || incomes.length === 0) && styles.disabledButton]}
+                    >
+                      <Text style={{fontWeight: 'bold', marginRight:10}}>Show more</Text>
+                    </TouchableOpacity>
+                  </View>
+                </>
+              }/>
+
+              {/* Add Transactions */}
+              <View style={[styles.btn, {marginHorizontal: 20, }]}>
+                <TouchableOpacity 
+                  onPress={() => setIsAddingTransaction(true)} 
+                  style={[styles.regen, {backgroundColor: colors.green}]} 
+                  activeOpacity={0.7}
+                >
+                  <Text style={[styles.btnTxt, {color: colors.light}]}>ADD TRANSACTION</Text>
+                </TouchableOpacity>
+              </View>
             </View>
 
-            {/* Statistics */}
-            <Card style={styles.cardStyle} content={
-              <>
-                <Text style={[styles.title2, {borderBottomWidth:1, marginBottom:5, paddingBottom:5, textAlign: 'center'}]}>
-                  OVERVIEW
-                </Text>
-                <View style={{flex:1}}>
-                  <Overview />
-                </View>
-                <View style={{ justifyContent: 'center', alignItems: 'flex-end', marginTop:5}}>
-                  <TouchableOpacity
-                    onPress={() => setChartModalVisible(true)}
-                    disabled={transactions.length === 0 || incomes.length === 0}
-                    style={[styles.overviewBtn,(transactions.length === 0 || incomes.length === 0) && styles.disabledButton]}
-                  >
-                    <Text style={{fontWeight: 'bold', marginRight:10}}>Show more</Text>
-                  </TouchableOpacity>
-                </View>
-              </>
-            }/>
-
-            {/* Add Transactions */}
-            <View style={[styles.btn, {marginHorizontal: 20, }]}>
-              <TouchableOpacity 
-                onPress={() => setIsAddingTransaction(true)} 
-                style={[styles.regen, {backgroundColor: colors.green}]} 
-                activeOpacity={0.7}
-              >
-                <Text style={[styles.btnTxt, {color: colors.light}]}>ADD TRANSACTION</Text>
-              </TouchableOpacity>
+              {/* Transactions */}
+            <View style={{flex:1}}>
+              <Expense/>
             </View>
-          </View>
+          </ScrollView>
+        )}
+      
 
-            {/* Transactions */}
-          <View style={{flex:1}}>
-            <Expense/>
-          </View>
-        </ScrollView>
-      )}
 
 
 
@@ -186,7 +155,7 @@ export default function Index() {
               <Text style={styles.title}>Allocate</Text>
             </View>
             <View style={styles.modalcontent}>
-              <BudgetPlanInfo setBudgetPlanGenerated={setBudgetPlanGenerated} setGenerateModalVisible={setGenerateModalVisible} />
+              <BudgetPlanInfo setBudgetPlanGenerated={setBudgetPlanGenerated} setGenerateModalVisible={setGenerateModalVisible} setAllocationComplete={setAllocationComplete} setIsLoading={setIsLoading}/>
             </View>
           </View>
         </Modal>
@@ -225,55 +194,34 @@ export default function Index() {
           </View>
         </Modal>
 
-
-        {/* Welcome Modal */}
-      <Modal isOpen={isWelcomeModalVisible} transparent animationType="fade">
-        <TouchableWithoutFeedback onPress={() => setWelcomeModalVisible(false)}>
-          <View style={styles.modalOverlay}>
+    {/* Loading Display */}
+    <Modal isOpen={isLoading} transparent animationType="fade">
+        <TouchableWithoutFeedback >
+          <View style={[styles.modalOverlay, {backgroundColor: 'rgba(255, 255, 255, 0.59)',}]}>
             <TouchableWithoutFeedback>
-              <View style={styles.welcomeModalContent}>
-                {welcomed === true  ? (
-                  <>
-                    <Text style={[styles.title, {fontSize: 30, color: colors.green, fontWeight: '900'}]}>Welcome {userName}! To</Text>
+              <View style={[styles.TransModalContent, { }]}>
+                <Image source={require("@/assets/images/Allocating.gif")} style={[styles.image, { width, resizeMode: 'contain' }]} />
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+    {/* Allocation Complete */}
+    <Modal isOpen={!isAllocationComplete} transparent animationType="fade">
+        <TouchableWithoutFeedback onPress={() => setAllocationComplete(true)}>
+          <View style={[styles.modalOverlay, {backgroundColor: 'rgba(255, 255, 255, 0.59)',}]}>
+            <TouchableWithoutFeedback onPress={() => setAllocationComplete(true)}>
+              <View style={[styles.TransModalContent, { }]}>
                     <Image
-                      source={require("./../../assets/images/onboardingImge/Spendwise.gif")} 
+                      source={require("./../../assets/images/AllocationComplete.gif")} 
                       style={[styles.image, { width: '100%', resizeMode: 'cover' }]} 
-                    />                    
-                  </>
-                ):(
-                  <>
-                    <Text style={styles.title}>Welcome Back!</Text>
-                    <Text style={styles.title}>{userName}</Text>
-                  </>
-                )}
+                    />   
               </View>
             </TouchableWithoutFeedback>
           </View>
         </TouchableWithoutFeedback>
       </Modal>
 
-
-      <Modal isOpen={isUserModalVisible} transparent animationType="fade">
-        <View style={styles.modalOverlay}>
-            <View style={styles.welcomeModalContent}>
-              <Text style={styles.modalTitle}>Set a Username</Text>
-              <TextInput
-                placeholder="Enter Username"
-                style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black', textAlign: 'center' }}
-                value={input}
-                onChangeText={setInput}
-              />
-              <TouchableOpacity onPress={() => {
-                dispatch(setUsername(input));
-                handleUpdateUser();
-                setUserModalVisible(false)
-                setWelcomeModalVisible(true);
-              }}>
-                <Text style={styles.modalSubTitle}>Save</Text>
-              </TouchableOpacity>
-            </View>
-        </View>
-      </Modal>
       </>
     </MainContainer>
   );

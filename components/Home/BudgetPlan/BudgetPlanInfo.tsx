@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Switch, ScrollView } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Switch, ScrollView, useWindowDimensions, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import AddTransaction from '@/components/ui/AddTransaction';
@@ -14,21 +14,26 @@ import Categories from './Categories';
 import Expense from '../ExpnseSummary/TransactionDetials/Expense';
 import AllocateAllService from '@/hooks/generateBudgetplan/AllocateService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { setBudgetStratSplit } from '@/state/dataSlice';
+import { setAllocation, setBudgetStratSplit } from '@/state/dataSlice';
 
 
 export default function BudgetPlanInfo({
   setBudgetPlanGenerated,
-  setGenerateModalVisible 
+  setGenerateModalVisible,
+  setAllocationComplete,
+  setIsLoading
 }: {
   setBudgetPlanGenerated: React.Dispatch<React.SetStateAction<boolean>>;
+  setAllocationComplete: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setGenerateModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { updateUser } = UseTransactionService();
   const { allocateAll, splitAllocation } = AllocateAllService();
-  const { transactions, user, incomes, budgetStratSplit } = useSelector((state: RootState) => state.data);
+  const { transactions, user, incomes, budgetStratSplit, allocation } = useSelector((state: RootState) => state.data);
   const { fetchData } = useFetchData();
   const dispatch = useDispatch();
+  const { width } = useWindowDimensions();
 
   // User
   const firstUser = user?.[0];  
@@ -48,7 +53,6 @@ export default function BudgetPlanInfo({
   const [hasBudgetStrat, setHasBudgetStrat] = useState(false);
   const [stratSplit, setStratSplit] = useState(false);
   const [selectedTypeIndex, setselectedTypeIndex] = React.useState<number>(0);
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const loadStratSplit = async () => {
@@ -78,9 +82,10 @@ export default function BudgetPlanInfo({
 
 
   const handleAllocate = async () => {
+    setGenerateModalVisible(false);
     try {
       setIsLoading(true);
-  
+      
       if (stratSplit === true) {
         await splitAllocation();
       } else {
@@ -88,7 +93,6 @@ export default function BudgetPlanInfo({
       }
   
       setBudgetPlanGenerated(true);
-      setGenerateModalVisible(false);
   
       await updateUser({
         id: userId,
@@ -97,29 +101,26 @@ export default function BudgetPlanInfo({
       });
   
       const newStratSplit = stratSplit;
-      dispatch(setBudgetStratSplit(newStratSplit));
+      dispatch(
+        setBudgetStratSplit(newStratSplit),
+      );
   
+      
       // Save updated value in AsyncStorage
       await AsyncStorage.setItem('stratSplitted', JSON.stringify(newStratSplit));  
       console.log("Strategy split? ", newStratSplit);
-  
       await fetchData();
+      console.log("Allocation Complete?", allocation);
     } catch (error) {
       console.error("Error during allocation:", error);
     } finally {
       setIsLoading(false);
+      setAllocationComplete(false)
     }
   };
 
   return (
-    <View style={styles.mainCon}>
-       {isLoading === true && (
-          <View style={styles.loadingOverlay}>
-          <ActivityIndicator size="large" color={colors.dark} />
-          <Text style={styles.loadingText}>Allocating Budget...</Text>
-          </View>
-       )}
-       {isLoading === false && (
+    <View style={[styles.mainCon,]}>
          <>
             <View style={[styles.container,]}>
               {/* Categories */}
@@ -127,9 +128,9 @@ export default function BudgetPlanInfo({
                   <View style={[styles.card, {backgroundColor: colors.light}]}>
                       <Categories setHasBudgetStrat={setHasBudgetStrat} isAdvanceBtnTapped={isAdvanceBtnTapped} setIsAdvanceBtnTapped={setAdvanceBtnTapped} setStratSplit={setStratSplit} stratSplit={stratSplit}/>
                       {isAdvanceBtnTapped === false ? (
-                        <Button onPress={()=>{setAdvanceBtnTapped(true)}}>Advance</Button>
+                        <Button buttonColor={colors.light} textColor={colors.green} onPress={()=>{setAdvanceBtnTapped(true)}}>Advance</Button>
                       ) : (
-                        <Button onPress={()=> setAdvanceBtnTapped(false)}>Go Back</Button>
+                        <Button buttonColor={colors.light} textColor={colors.green} onPress={()=> setAdvanceBtnTapped(false)}>Go Back</Button>
                       )}
                       {/* <Text>{stratSplit.toString()}</Text> */}
                   </View>
@@ -180,8 +181,6 @@ export default function BudgetPlanInfo({
               </View>
             </View>
          </>
-       )}
-
 
       {/* PopUp Screen */}    
       <>
@@ -263,6 +262,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+  },
+  image: {
+    flex: 0.7,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   card:{
     flex: 1,

@@ -11,7 +11,7 @@ import { colors } from "@/constants/colors";
 export default function SubCatAll() {
   const { updateCategory } = UseTransactionService();
   const dispatch = useDispatch();
-  const { categories, transactions, incomeCategories, goals, user, incomes, recurrence } = useSelector((state: RootState) => state.data);
+  const { categories, transactions, goals, user, incomes, varDataStates } = useSelector((state: RootState) => state.data);
   const [sliderValue, setSliderValue] = useState<{ [key: number]: number }>({});
 
   useEffect(() => {
@@ -34,7 +34,9 @@ export default function SubCatAll() {
       cat.id === categoryId ? { ...cat, proportion: roundedValue } : cat
     );
 
-    dispatch(setData({ categories: updatedCategories, transactions, incomeCategories, goals, user, incomes, recurrence }));
+    dispatch(setData({
+      categories: updatedCategories, transactions, goals, user, incomes, varDataStates
+    }));
     await updateCategory({ ...category, proportion: roundedValue });
   };
 
@@ -44,7 +46,9 @@ export default function SubCatAll() {
         return { ...cat, proportion: cat.initialProp };
       });
 
-      dispatch(setData({ categories: updatedCategories, transactions, incomeCategories, goals, user, incomes, recurrence }));
+      dispatch(setData({
+        categories: updatedCategories, transactions, goals, user, incomes, varDataStates
+      }));
 
       const initialSliderValues = updatedCategories.reduce((id, cat) => {
         id[cat.id] = cat.proportion;

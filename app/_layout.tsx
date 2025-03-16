@@ -5,10 +5,12 @@ import { Provider } from 'react-redux';
 import { store } from '@/state/store';
 import loadDatabase from '@/context/db';
 import { ActivityIndicator } from 'react-native-paper';
-import { Text, View } from 'react-native';
+import { Image, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { colors } from '@/constants/colors';
 
 export default function RootLayout() {
     const [ isDbLoaded, setDbLoaded ] = React.useState<boolean>(false);
+    const { width } = useWindowDimensions();
   
     // Load the database on initial load
     React.useEffect(() => {
@@ -21,8 +23,7 @@ export default function RootLayout() {
       if (!isDbLoaded) {
         return (
           <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
-            <ActivityIndicator size="large" />
-            <Text>Loading Database...</Text>
+            <Image source={require("@/assets/images/Loading.gif")} style={[styles.image, { width, resizeMode: 'contain' }]} />
           </View>
         );
       }
@@ -36,3 +37,27 @@ export default function RootLayout() {
       </Provider>
   );
 }
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    flex: 0.7,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontWeight: 'bold',
+    fontSize: 28,
+    marginBottom: 10,
+    color: colors.green,
+    textAlign: 'center',
+    textShadowColor: 'black', 
+    textShadowOffset: { width: .5, height: .5 }, 
+    textShadowRadius: .5, 
+  }
+});

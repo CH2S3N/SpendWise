@@ -14,6 +14,7 @@ interface DataState {
   viewed: boolean;
   accGoalSwitch: boolean
   welcomed: boolean
+  allocation: boolean
   nameSetted: boolean
   error: string | null;
 }
@@ -31,6 +32,7 @@ const initialState: DataState = {
   viewed: false,
   accGoalSwitch: false,
   welcomed: false,
+  allocation: false,
   nameSetted: false
 };  
 
@@ -69,6 +71,9 @@ const dataSlice = createSlice({
     setHasName: (state, action: PayloadAction<boolean>) => {
       state.nameSetted = action.payload;
     },
+    setAllocation: (state) => {
+      state.allocation = true
+    },
 
     setError(state, action: PayloadAction<string>) {
       state.error = action.payload;
@@ -83,5 +88,5 @@ const dataSlice = createSlice({
   },
 });
 
-export const { setLoading, setData, setError, clearData, setBudgetStratSplit, setViewedOnboarding, setAccGoalSwitch, setWelcomed, setHasName  } = dataSlice.actions;
+export const { setLoading, setData, setError, clearData, setBudgetStratSplit, setViewedOnboarding, setAccGoalSwitch, setWelcomed, setHasName, setAllocation  } = dataSlice.actions;
 export default dataSlice.reducer;

@@ -1,14 +1,16 @@
 import { Category, Income, Transaction } from '@/types';
 import { RootState } from '@/state/store';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { UseTransactionService } from '../editData/TransactionService';
 import { useFetchData } from '../useFetchData';
+import { setAllocation } from '@/state/dataSlice';
 
 export default function AllocateAllService() {
   const { fetchData } = useFetchData();
   const { categories, transactions, incomes } = useSelector((state: RootState) => state.data);
   const { updateTransaction } = UseTransactionService();
   const { needs, wants, savings } = useSelector((state: RootState) => state.budget);
+  const dispatch = useDispatch();
 
   const adjustProportions = (categories: Category[], transactions: Transaction[]) => {
     const availableCategories = categories.filter(cat =>
@@ -87,7 +89,6 @@ export default function AllocateAllService() {
       }
 
       await fetchData();
-      alert('Budget Allocaated Successfully');
     } catch (error) {
       console.error('Unexpected error while allocating budget:', error);
       alert('An unexpected error occurred while allocating budget.');
@@ -204,7 +205,6 @@ export default function AllocateAllService() {
       }
 
       await fetchData();
-      alert('Budget Plan Generated Successfully!');
     } catch (error) {
       console.error('Unexpected error while saving expenses:', error);
       alert('An unexpected error occurred while saving expenses.');

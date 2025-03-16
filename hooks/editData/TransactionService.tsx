@@ -238,22 +238,31 @@ export function UseTransactionService() {
   const updateCategory = async (category: Category) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
-        `UPDATE Categories SET name = ?, initialProp = ?, proportion = ? description = ?  WHERE id = ?`,
+        `UPDATE Categories
+         SET name = ?,
+             initialProp = ?,
+             proportion = ?,
+             description = ?
+         WHERE id = ?;`,
         [category.name, category.initialProp, category.proportion, category.description, category.id]
       );
-            // Fetch the updated transaction
-            const updatedCategory = await db.getAllAsync<Category>(
-              `SELECT * FROM Categories WHERE id = ?`, 
-              [category.id]
-            );
-        
-            console.log('Updated Category:', updatedCategory);
-        
+  
+      // Fetch the updated category
+      const updatedCategory = await db.getAllAsync<Category>(
+        `SELECT * FROM Categories WHERE id = ?`,
+        [category.id]
+      );
+  
+      console.log('Updated Category:', updatedCategory);
+  
       // Reload data after updating
       const categoryResult = await db.getAllAsync<Category>("SELECT * FROM Categories");
       dispatch(setData({ categories: categoryResult, transactions, goals, user, incomes, varDataStates }));
     });
   };
+
+
+
   const updateVarDataState = async (vardata: VarDataState) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
@@ -289,6 +298,7 @@ export function UseTransactionService() {
         const userResult = await db.getAllAsync<User>('SELECT * FROM User');
         console.log('Updated user:', userResult);
         dispatch(setData({ user: userResult, categories, goals, transactions, incomes, varDataStates }));
+        await fetchData();
       });
   };
 

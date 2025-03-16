@@ -8,7 +8,7 @@ export default [
     {
         id: '2',
         title: ' Smart Budget Allocation',
-        description: 'Just input your income and key expenses, and we’ll help you allocate your budget efficiently using well-known budgeting techniques, such as the 50/30/20 rule, to keep your finances balanced.',
+        description: 'Optimally allocate your budget using a greedy algorithm along with proven financial strategies to ensure better financial balance.',
         image: require("./../../assets/images/onboardingImge/Allocate.gif")
     },
     {

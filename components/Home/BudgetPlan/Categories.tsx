@@ -284,7 +284,7 @@ const Categories = ({
                     />
     
                     <View style={styles.row}>
-                      <Text>Expenses: {savings}% </Text>
+                      <Text>Savings: {savings}% </Text>
                       {savings === 0 && 
                         <BlinkingText children={<Text style={styles.lowVal}>(value too low!)</Text>} condition={savings === 0}/>
                         }
@@ -300,7 +300,7 @@ const Categories = ({
                       thumbTintColor= {colors.green}
                     />
                     <View style={{ paddingTop: 10, alignItems: "flex-end"}}>
-                      <TouchableOpacity style={{alignItems: 'flex-end'}} onPressOut={()=>  handleReset()}><Text>Reset</Text></TouchableOpacity>
+                      <TouchableOpacity style={{alignItems: 'flex-end', }} onPressOut={()=>  handleReset()}><Text style={{color:colors.green}}>Reset</Text></TouchableOpacity>
                     </View>          
                   </>
                 )}

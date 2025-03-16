@@ -190,7 +190,8 @@ const styles= StyleSheet.create({
   },
   title:{
     fontSize: 20,
-    fontWeight:'bold'
+    fontWeight:'bold',
+    
   },
   title2:{
     fontSize: 20,
@@ -259,6 +260,11 @@ welcomeModalContent: {
   shadowOffset: { height: 6, width: 0 },
   shadowOpacity: 0.15,
 },
+TransModalContent: {
+  width: '100%',
+  padding: 20,
+  alignItems: 'center',
+},
 modalTitle: {
   textAlign: 'center',
   fontWeight: 'bold',
@@ -272,6 +278,13 @@ modalSubTitle: {
   fontSize: 15,
   paddingTop: 10,
 },
+  // Loading Screen
+  loadingOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+  },
 })
 
 export default styles;

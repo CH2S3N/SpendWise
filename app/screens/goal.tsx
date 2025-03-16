@@ -2,12 +2,17 @@ import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import GoalsInfo from '@/components/Home/Goal/GoalsDetails.tsx/GoalsInfo';
 import { colors } from '@/constants/colors';
+import Animated, { BounceIn, BounceOut, FadeIn, FadeOut, SlideInLeft, SlideInRight, SlideInUp, SlideOutDown, SlideOutLeft, SlideOutRight } from 'react-native-reanimated';
 
 const Goal = () => {
   return (
-    <View style={styles.container}>
+    <Animated.View 
+      // entering={SlideInUp.duration(300)}
+      // exiting={SlideOutDown.duration(300)}
+      style={styles.container}
+    >
         <GoalsInfo/>
-   </View>
+   </Animated.View>
  )
 }
 
