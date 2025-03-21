@@ -91,6 +91,8 @@ export default function AddExpense({
       setCategoryId(1);
       setRecurrenceId(1);
       setCurrentTab(0);
+      setSelectedIndex(0)
+      setTypeSelected("")
       Alert.alert(
         "Expense",      
         "Expense Added Successfully", 
@@ -341,7 +343,8 @@ export default function AddExpense({
               style={{
                 placeholder: {color: colors.dark},
                 inputAndroid: { color: colors.dark},
-              }}            
+              }}     
+              value={typeSelected}       
                 onValueChange={(value) => {
                   setTypeSelected(value);
                   const selectedCategory = categories.find((cat) => cat.name === value);

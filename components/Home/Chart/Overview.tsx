@@ -111,11 +111,12 @@ const styles = StyleSheet.create({
     },
       noData:{
         flex: 1,
+        width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
       },
       noDataTxt:{
-        fontSize: 15,
+        fontSize: 20,
         textAlign: 'center',
         fontWeight: 'bold',
         color: colors.dark,

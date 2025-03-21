@@ -178,6 +178,7 @@ export default function Expense() {
                                 setIsModalVisible={setIsModalVisible}
                                 setIsUpdatingTransaction={setIsModalVisible} // Fix incorrect prop
                                 currentTransaction={currentTransaction}
+                                
                             />
                         )}
                     </View>

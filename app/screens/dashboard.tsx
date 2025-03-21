@@ -21,6 +21,7 @@ import { setHasName, setWelcomed } from '@/state/dataSlice';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
 import { Dimensions } from 'react-native';
 import Animated, { BounceIn, BounceOut, FadeIn, FadeOut, SlideInLeft, SlideInRight, SlideOutLeft, SlideOutRight } from 'react-native-reanimated';
+import { opacity } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 
 
 export default function Index() {
@@ -52,7 +53,13 @@ export default function Index() {
     }, [transactions, incomes]);
 
 
-
+    function validateFields() {
+      if (transactions.length > 0 && incomes.length > 0 )  {
+        return true;
+      }
+      
+      return false;
+    }
   
 
   
@@ -66,7 +73,7 @@ export default function Index() {
             setIsLoading={setIsLoading}
           />
         ) : (
-          <ScrollView >
+          < >
             <View style={{flex:0.8}}>
               {/* Allocate / Summary Buttons */}
               <View style={[styles.genBudget,]}>
@@ -77,10 +84,11 @@ export default function Index() {
                   <Text style={[styles.btnTxt, {color: colors.light}]}>ALLOCATE</Text>
                 </TouchableOpacity>
                 <TouchableOpacity 
-                  onPress={() => {setBudgetPlanModalVisible(true); }} 
-                  style={styles.topbtn}
+                  onPress={() => setBudgetPlanModalVisible(true)}
+                  style={[styles.topbtn, !validateFields() && { opacity: 0.5 }]}
+                  disabled={!validateFields()}
                 >
-                  <Text style={[styles.btnTxt, {color: colors.light}]}>SUMMARY</Text>
+                  <Text style={[styles.btnTxt, { color: colors.light }]}>SUMMARY</Text>
                 </TouchableOpacity>
               </View>
 
@@ -121,7 +129,7 @@ export default function Index() {
             <View style={{flex:1}}>
               <Expense/>
             </View>
-          </ScrollView>
+          </>
         )}
       
 

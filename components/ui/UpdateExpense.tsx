@@ -71,7 +71,9 @@ export default function UpdateExpense({
        }, [frequency]);
 
 
-
+       const categoryForCurrentItem = categories.find(
+        (category) => category.id === currentTransaction.category_id
+    );
 
     React.useEffect(() => {
       if (currentTransaction) {
@@ -86,10 +88,10 @@ export default function UpdateExpense({
         setCategory(currentTransaction.type);
         setCategoryId(currentTransaction.category_id);
         setCurrentTab(currentTransaction.type === "Essential" ? 0 : 1);
-        setTypeSelected(currentTransaction.type);
+        setTypeSelected(categoryForCurrentItem ? categoryForCurrentItem.name : "");
         setSelectedIndex(currentTransaction.isfixedamount === "Yes" ? 0 : 1);
       }
-    }, [currentTransaction]);
+    }, [currentTransaction, categories]);
 
 
     function validateFields() {
@@ -345,7 +347,7 @@ export default function UpdateExpense({
                 placeholder: {color: colors.dark},
                 inputAndroid: { color: colors.dark},
               }}               
-              value={categoryId}
+              value={typeSelected}
               onValueChange={(value) => {
                 setTypeSelected(value);
                 const selectedCategory = categories.find((cat) => cat.name === value);
