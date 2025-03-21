@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native'
+import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native'
 import React from 'react'
 import { Goal } from '@/types';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
@@ -42,6 +42,13 @@ export default function UpdateGoal({
       setAmount("");
       setIsConfirmModalVisible(false);
       setIsUpdatingGoal(false);
+      Alert.alert(
+        "Goal",      
+        "Goal Updated Successfully", 
+        [
+          { text: "OK", onPress: () => console.log("OK Pressed") }
+        ]
+      );
   }
 
 
@@ -142,8 +149,8 @@ export default function UpdateGoal({
         {/* Confirmation Modal */}
         <ConfirmModal
           visible={isConfirmModalVisible} 
-          title="Confirm Save" 
-          message="Are you sure you want to save this entry?" 
+          title="Confirm Changes" 
+          message="Are you sure you want to save the changes?" 
           onConfirm={handleUpdateGoal}
           onCancel={() => setIsConfirmModalVisible(false)}
         />

@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet, ScrollView, Modal } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet, ScrollView, Modal, Alert } from 'react-native'
 import React, { useEffect } from 'react'
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { useSQLiteContext } from 'expo-sqlite';
@@ -54,11 +54,18 @@ export default function AddIncome({
             subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
             id,
         });
-        alert("Income Added Successfully")
         setDescription("");
         setFrequency("Daily");
         setAmount("");
+        setRecurrenceInput("")
         setIncomeCategory("Allowance");
+        Alert.alert(
+          "Income",      
+          "Income Added Successfully", 
+          [
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+          ]
+        );
 
     }
     

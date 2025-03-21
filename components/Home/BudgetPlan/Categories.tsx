@@ -188,191 +188,172 @@ const Categories = ({
     <>
       <View style={[styles.container]}>
         <Text style={[styles.title, {paddingBottom: 10}]}>BUDGETING STRATEGY</Text>
-        <View style={[ { zIndex: 1, justifyContent: "center", }]}>
-          <CustomDropdown 
-            selectedValue={selectedStrategy} 
-            onValueChange={handleStrategyChange} 
-          />
-        </View>
+        <CustomDropdown 
+          selectedValue={selectedStrategy} 
+          onValueChange={handleStrategyChange} 
+        />
         {customStrat === true && (
-              <>
-              {/* Switch */}
-              <View style={[styles.container]}>
-                <View style={[styles.row, {justifyContent: "flex-end", alignItems: "center"}]}>
-                        <Text style={styles.text}>Split Expense? </Text>
-                        <Switch
-                          trackColor={{false: colors.darkGreen, true: colors.light}}
-                          thumbColor={isEnabled ? colors.green : colors.ligthGreen}
-                          ios_backgroundColor="#3e3e3e"
-                          onValueChange={(value) => {
-                            setStratSplit(value);
-                          }}
-                          value={isEnabled}
-                        />
+          <View>
+            {/* Switch */}
+            <View style={[styles.row, {justifyContent: "flex-end", alignItems: "center", marginBottom: 0}]}>
+                    <Text style={styles.text}>Split Expense? </Text>
+                    <Switch
+                      trackColor={{false: colors.darkGreen, true: colors.light}}
+                      thumbColor={isEnabled ? colors.green : colors.ligthGreen}
+                      ios_backgroundColor="#3e3e3e"
+                      onValueChange={(value) => {
+                        setStratSplit(value);
+                      }}
+                      value={isEnabled}
+                    />
+            </View>
+            {isEnabled === true ? (
+              <View style={{}}>
+                <View style={[styles.row, {marginBottom: 0}]}>
+                  <Text>Needs: {needs}%</Text>
+                  {needs === 0 && (
+                    <BlinkingText children={<Text style={styles.lowVal}>(value too low!)</Text>} condition={needs === 0}/>
+                  )}
                 </View>
-                {isEnabled === true ? (
-                  <View style={{}}>
-                    <View style={styles.row}>
-                      <Text>Needs: {needs}%</Text>
-                      {needs === 0 && (
-                        <BlinkingText children={<Text style={styles.lowVal}>(value too low!)</Text>} condition={needs === 0}/>
-                      )}
-                    </View>
-                    <Slider
-                      value={needs}
-                      onValueChange={(value) => handleCategorySliderChange(1, value)}
-                      minimumValue={0}
-                      maximumValue={100}
-                      step={1}
-                      minimumTrackTintColor= {colors.green}
-                      maximumTrackTintColor= {colors.green}
-                      thumbTintColor= {colors.green}
-                    />
-                    <View style={styles.row}>
-                      <Text>Wants: {wants}% </Text>
-                      {wants === 0 && 
-                      <BlinkingText children={<Text style={styles.lowVal}>(value too low!)</Text>} condition={wants === 0}/>
-                      }
-                    </View>
-                    <Slider
-                      value={wants}
-                      minimumValue={0}
-                      onValueChange={(value) => handleCategorySliderChange(2, value)}
-                      maximumValue={100}
-                      step={1}
-                      minimumTrackTintColor= {colors.green}
-                      maximumTrackTintColor= {colors.green}
-                      thumbTintColor= {colors.green}
-                    />
-    
-                    <View style={styles.row}>
-                      <Text>Savings: {savings}% </Text>
-                      {savings === 0 && 
-                      <BlinkingText children={<Text style={styles.lowVal}>(value too low!)</Text>} condition={savings === 0}/>
-                      }
-                    </View>
-                    <Slider
-                      value={savings}
-                      onValueChange={(value) => handleCategorySliderChange(3, value)}
-                      minimumValue={0}
-                      maximumValue={100}
-                      step={1}
-                      minimumTrackTintColor= {colors.green}
-                      maximumTrackTintColor= {colors.green}
-                      thumbTintColor= {colors.green}
-                    />
-                    <View style={{ paddingTop: 10, alignItems: "flex-end"}}>
-                      <TouchableOpacity style={{alignItems: 'flex-end'}} onPressOut={()=>  dispatch(resetCat())}><Text>Reset</Text></TouchableOpacity>
-                    </View>
-                  </View>
-                ): (
-                  <>
-                    <View style={styles.row}>
-                      <Text>Expenses: {needs}% </Text>
-                      {needs === 0 && 
-                        <BlinkingText children={<Text style={styles.lowVal}>(value too low!)</Text>} condition={needs === 0}/>
-                        }
-                    </View>
-                    <Slider
-                      value={needs}
-                      onValueChange={(value) => handleCategorySliderChange(1, value)}
-                      minimumValue={0}
-                      maximumValue={100}
-                      step={1}
-                      minimumTrackTintColor= {colors.green}
-                      maximumTrackTintColor= {colors.green}
-                      thumbTintColor= {colors.green}
-                    />
-    
-                    <View style={styles.row}>
-                      <Text>Savings: {savings}% </Text>
-                      {savings === 0 && 
-                        <BlinkingText children={<Text style={styles.lowVal}>(value too low!)</Text>} condition={savings === 0}/>
-                        }
-                    </View>
-                    <Slider
-                      value={savings}
-                      onValueChange={(value) => handleCategorySliderChange(3, value)}
-                      minimumValue={0}
-                      maximumValue={100}
-                      step={1}
-                      minimumTrackTintColor= {colors.green}
-                      maximumTrackTintColor= {colors.green}
-                      thumbTintColor= {colors.green}
-                    />
-                    <View style={{ paddingTop: 10, alignItems: "flex-end"}}>
-                      <TouchableOpacity style={{alignItems: 'flex-end', }} onPressOut={()=>  handleReset()}><Text style={{color:colors.green}}>Reset</Text></TouchableOpacity>
-                    </View>          
-                  </>
-                )}
+                <Slider
+                  value={needs}
+                  onValueChange={(value) => handleCategorySliderChange(1, value)}
+                  minimumValue={0}
+                  maximumValue={100}
+                  step={1}
+                  minimumTrackTintColor= {colors.green}
+                  maximumTrackTintColor= {colors.green}
+                  thumbTintColor= {colors.green}
+                />
+                <View style={[styles.row, {marginBottom: 0}]}>
+                  <Text>Wants: {wants}% </Text>
+                  {wants === 0 && 
+                  <BlinkingText children={<Text style={styles.lowVal}>(value too low!)</Text>} condition={wants === 0}/>
+                  }
+                </View>
+                <Slider
+                  value={wants}
+                  minimumValue={0}
+                  onValueChange={(value) => handleCategorySliderChange(2, value)}
+                  maximumValue={100}
+                  step={1}
+                  minimumTrackTintColor= {colors.green}
+                  maximumTrackTintColor= {colors.green}
+                  thumbTintColor= {colors.green}
+                />
+
+                <View style={[styles.row, {marginBottom: 0}]}>
+                  <Text>Savings: {savings}% </Text>
+                  {savings === 0 && 
+                  <BlinkingText children={<Text style={styles.lowVal}>(value too low!)</Text>} condition={savings === 0}/>
+                  }
+                </View>
+                <Slider
+                  value={savings}
+                  onValueChange={(value) => handleCategorySliderChange(3, value)}
+                  minimumValue={0}
+                  maximumValue={100}
+                  step={1}
+                  minimumTrackTintColor= {colors.green}
+                  maximumTrackTintColor= {colors.green}
+                  thumbTintColor= {colors.green}
+                />
+                <View style={{ paddingTop: 5, alignItems: "flex-end"}}>
+                  <TouchableOpacity style={{alignItems: 'flex-end'}} onPressOut={()=>  dispatch(resetCat())}><Text style={{color:colors.green}}>Reset</Text></TouchableOpacity>
+                </View>
               </View>
+            ): (
+              <>
+                <View style={[styles.row, {marginBottom: 0}]}>
+                  <Text>Expenses: {needs}% </Text>
+                  {needs === 0 && 
+                    <BlinkingText children={<Text style={styles.lowVal}>(value too low!)</Text>} condition={needs === 0}/>
+                    }
+                </View>
+                <Slider
+                  value={needs}
+                  onValueChange={(value) => handleCategorySliderChange(1, value)}
+                  minimumValue={0}
+                  maximumValue={100}
+                  step={1}
+                  minimumTrackTintColor= {colors.green}
+                  maximumTrackTintColor= {colors.green}
+                  thumbTintColor= {colors.green}
+                />
+
+                <View style={[styles.row, {marginBottom: 0}]}>
+                  <Text>Savings: {savings}% </Text>
+                  {savings === 0 && 
+                    <BlinkingText children={<Text style={styles.lowVal}>(value too low!)</Text>} condition={savings === 0}/>
+                    }
+                </View>
+                <Slider
+                  value={savings}
+                  onValueChange={(value) => handleCategorySliderChange(3, value)}
+                  minimumValue={0}
+                  maximumValue={100}
+                  step={1}
+                  minimumTrackTintColor= {colors.green}
+                  maximumTrackTintColor= {colors.green}
+                  thumbTintColor= {colors.green}
+                />
+                <View style={{ paddingTop: 10, alignItems: "flex-end"}}>
+                  <TouchableOpacity style={{alignItems: 'flex-end', }} onPressOut={()=>  handleReset()}><Text style={{color:colors.green}}>Reset</Text></TouchableOpacity>
+                </View>          
               </>
+            )}
+          </View>
         )}
-        <View style={{flex:2.5, justifyContent: "center", alignItems: "center"}}>
-          { isAdvanceBtnTapped === true ? (
-            <View  style={{flex: 1, justifyContent: "center",}}>
-             {strat1 === false && strat2 === false && customStrat === false && (
-              <Text style={[styles.description]}>
-                Pick a <Text style={{ color: colors.green, fontWeight: "bold" }}>Budgeting Strategy</Text> to manage spending, control expenses, and grow savings effectively.
-              </Text>
+        { isAdvanceBtnTapped === true ? (
+        <>
+            {strat1 === false && strat2 === false && customStrat === false && (
+            <Text style={[styles.description]}>
+              Pick a <Text style={{ color: colors.green, fontWeight: "bold" }}>Budgeting Strategy</Text> to manage spending, control expenses, and grow savings effectively.
+            </Text>
+          )}
+          {strat1 && (
+            <Text style={[styles.description, { textAlign: "center" }]}>
+              The <Text style={{ color: colors.green, fontWeight: "bold" }}>50/30/20 BUDGETING RULE</Text> is a simple money management strategy that divides your income into three categories:{"\n\n"}
+              <Text style={{ color: colors.green, fontWeight: "bold" }}>50%</Text> Essentials (Basic Needs),{" "}
+              <Text style={{ color: colors.green, fontWeight: "bold" }}>30%</Text> Non-Essentials (Wants & Optional Spending) &{" "}
+              <Text style={{ color: colors.green, fontWeight: "bold" }}>20%</Text> Savings
+            </Text>
+          )}
+          {strat2 && (
+            <Text style={[styles.description]}>
+              The <Text style={{ color: colors.green, fontWeight: "bold" }}>70/30 BUDGETING RULE</Text> splits income into{" "}
+              <Text style={{ color: colors.green, fontWeight: "bold" }}>70%</Text> for expenses and lifestyle and{" "}
+              <Text style={{ color: colors.green, fontWeight: "bold" }}>30%</Text> for savings, promoting financial stability while allowing flexibility.
+            </Text>
+          )}
+          <SubCatAll/>
+        </>
+        ) : (
+          <View style={{flex: 1, justifyContent: 'center'}}>
+            {strat1 === false && strat2 === false && customStrat === false && (
+                <Text style={[styles.description, ]}>
+                  Pick a  <Text style={{color: colors.green, fontWeight: "bold", }}>Budgeting Strategy</Text> to manage spending, control expenses, and grow savings effectively.
+                </Text>     
             )}
             {strat1 && (
               <Text style={[styles.description, { textAlign: "center" }]}>
-                The <Text style={{ color: colors.green, fontWeight: "bold" }}>50/30/20 BUDGETING RULE</Text> is a simple money management strategy that divides your income into three categories:{"\n\n"}
-                <Text style={{ color: colors.green, fontWeight: "bold" }}>50%</Text> Essentials (Basic Needs),{" "}
-                <Text style={{ color: colors.green, fontWeight: "bold" }}>30%</Text> Non-Essentials (Wants & Optional Spending) &{" "}
-                <Text style={{ color: colors.green, fontWeight: "bold" }}>20%</Text> Savings
-              </Text>
+              The <Text style={{ color: colors.green, fontWeight: "bold" }}>50/30/20 BUDGETING RULE</Text> is a simple money management strategy that divides your income into three categories:{"\n\n"}
+              <Text style={{ color: colors.green, fontWeight: "bold" }}>50%</Text> Essentials (Basic Needs),{" "}
+              <Text style={{ color: colors.green, fontWeight: "bold" }}>30%</Text> Non-Essentials (Wants & Optional Spending) &{" "}
+              <Text style={{ color: colors.green, fontWeight: "bold" }}>20%</Text> Savings
+              </Text>       
             )}
             {strat2 && (
               <Text style={[styles.description]}>
-                The <Text style={{ color: colors.green, fontWeight: "bold" }}>70/30 BUDGETING RULE</Text> splits income into{" "}
-                <Text style={{ color: colors.green, fontWeight: "bold" }}>70%</Text> for expenses and lifestyle and{" "}
-                <Text style={{ color: colors.green, fontWeight: "bold" }}>30%</Text> for savings, promoting financial stability while allowing flexibility.
+              The <Text style={{ color: colors.green, fontWeight: "bold" }}>70/30 BUDGETING RULE</Text> splits income into{" "}
+              <Text style={{ color: colors.green, fontWeight: "bold" }}>70%</Text> for expenses and lifestyle and{" "}
+              <Text style={{ color: colors.green, fontWeight: "bold" }}>30%</Text> for savings, promoting financial stability while allowing flexibility.
               </Text>
             )}
+          </View>
+        )}
+    
 
-            </View >
-          ) : (
-            <>
-              {strat1 === false && strat2 === false && customStrat === false && (
-                  <Text style={[styles.description, ]}>
-                   Pick a  <Text style={{color: colors.green, fontWeight: "bold", }}>Budgeting Strategy</Text> to manage spending, control expenses, and grow savings effectively.
-                  </Text>     
-              )}
-              {strat1 && (
-                <Text style={[styles.description, { textAlign: "center" }]}>
-                The <Text style={{ color: colors.green, fontWeight: "bold" }}>50/30/20 BUDGETING RULE</Text> is a simple money management strategy that divides your income into three categories:{"\n\n"}
-                <Text style={{ color: colors.green, fontWeight: "bold" }}>50%</Text> Essentials (Basic Needs),{" "}
-                <Text style={{ color: colors.green, fontWeight: "bold" }}>30%</Text> Non-Essentials (Wants & Optional Spending) &{" "}
-                <Text style={{ color: colors.green, fontWeight: "bold" }}>20%</Text> Savings
-                </Text>       
-              )}
-              {strat2 && (
-                <Text style={[styles.description]}>
-                The <Text style={{ color: colors.green, fontWeight: "bold" }}>70/30 BUDGETING RULE</Text> splits income into{" "}
-                <Text style={{ color: colors.green, fontWeight: "bold" }}>70%</Text> for expenses and lifestyle and{" "}
-                <Text style={{ color: colors.green, fontWeight: "bold" }}>30%</Text> for savings, promoting financial stability while allowing flexibility.
-                </Text>
-              )}
-            </>
-          )}
-        </View>
-        
-        {/* Slider */}
-        {isAdvanceBtnTapped === true  && (
-            <>
-             {customStrat || strat1 || strat2 ? (
-                <View style={[styles.container, {flex: 5,}]}>
-                  <Text style={styles.title}>Sub-Type</Text>
-                  <SubCatAll/>
-                </View>
-             ): (
-               null
-             )}
-              
-            </>
-        )} 
       </View>
     </>
 
@@ -468,7 +449,9 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: colors.dark,
     textAlign: 'center',
-    textAlignVertical: "center"
+    textAlignVertical: "center",
+    paddingVertical:10,
+    paddingHorizontal:10
   },
   title:{
     textAlign: 'center',

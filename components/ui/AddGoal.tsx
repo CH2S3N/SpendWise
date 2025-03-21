@@ -1,4 +1,4 @@
-import { View, TextInput, Button, Text, StyleSheet, ScrollView } from 'react-native'
+import { View, TextInput, Button, Text, StyleSheet, ScrollView, Alert } from 'react-native'
 import React from 'react'
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
 import Card from './Card';
@@ -42,7 +42,13 @@ export default function AddGoal({
         setName("");
         setAmount("");
         setAccumulatedAmount("");
-        
+        Alert.alert(
+          "Goal",      
+          "Goal Added Successfully", 
+          [
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+          ]
+        );
     }
 
   return (

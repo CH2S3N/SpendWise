@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet, ScrollView } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet, ScrollView, Alert } from 'react-native'
 import React, { useEffect } from 'react'
 import Card from './Card';
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
@@ -117,6 +117,13 @@ export default function UpdateExpense({
           intervalInput: Number(isRecurrenceInput),
           subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
         });
+        Alert.alert(
+          "Expense",      
+          "Expense Updated Successfully", 
+          [
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+          ]
+        );
     }
     
     

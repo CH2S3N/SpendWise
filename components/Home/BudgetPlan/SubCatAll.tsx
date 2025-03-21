@@ -67,6 +67,7 @@ export default function SubCatAll() {
 
   return (
     <View style={{ flex: 1 }}>
+      <Text style={styles.title}>Sub-Type</Text>
       <ScrollView>
         {categories.map((category) => {
           const value = sliderValue[category.id] ?? category.proportion;
@@ -97,11 +98,19 @@ export default function SubCatAll() {
       </ScrollView>
       <View style={{ paddingTop: 10, alignItems: "flex-end" }}>
         <TouchableOpacity onPress={() => resetProportions()}>
-          <Text>Reset</Text>
+          <Text style={{color:colors.green}}>Reset</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  title:{
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 20,
+    color: colors.dark,
+
+  },
+});

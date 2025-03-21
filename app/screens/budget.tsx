@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View, Linking } from 'react-native'
+import { Button, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View, Linking, Alert } from 'react-native'
 import React, { useState } from 'react'
 import MainContainer from '@/components/Containers/MainContainer';
 import IncomeInfo from '@/components/Home/IncomeSummary/IncomeInfo';
@@ -29,7 +29,8 @@ const Budget = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSettingsModalVisible, setIsSettingsModalVisible] = useState(false);
   const [isAddingIncome, setIsAddingIncome] = useState(false);
-  const [isConfirmModalVisible, setIsConfirmModalVisible] = React.useState(false);
+  const [isConfirmDeletionModalVisible, setIsConfirmDeletionModalVisible] = React.useState(false);
+  const [isConfirmSaveModalVisible, setIsConfirmSaveModalVisible] = React.useState(false);
   async function handleUpdateUser() {
     try {
       await updateUser({
@@ -109,13 +110,14 @@ const Budget = () => {
                       placeholder="Enter Username"
                       style={{ color: colors.green ,marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black', textAlign: 'center' }}
                       value={input}
-                      onChangeText={(text) => {
-                        const sanitizedText = text.replace(/\s/g, "");
-                        if (sanitizedText.length <= 12) {
-                          setInput(sanitizedText);
-                        }
+                      onChangeText={(txt)=>{
+                        setInput(
+                          txt
+                            .toLowerCase()
+                            .replace(/\b\w/g, (char) => char.toUpperCase())
+                        )
                       }}
-                      maxLength={12} 
+                      maxLength={12}
                     />
                   </View>
                   <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-evenly', alignItems: "center" }}>
@@ -124,8 +126,7 @@ const Budget = () => {
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => {
                       dispatch(setUsername(input));
-                      handleUpdateUser();
-                      setIsModalVisible(false);
+                      setIsConfirmSaveModalVisible(true)
                     }}
                     disabled={!validateFields()}
                     style={[
@@ -157,7 +158,7 @@ const Budget = () => {
                     <Text style={styles.modalSubTitle}>Feedback</Text>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={()=>{
-                    setIsConfirmModalVisible(true)
+                    setIsConfirmDeletionModalVisible(true)
                   }}>
                     <Text style={[styles.modalSubTitle, {color: colors.red}]}>Delete all data</Text>
                   </TouchableOpacity>
@@ -186,18 +187,44 @@ const Budget = () => {
         </Modal>
 
 
-
+        {/* Save Confirmation Modal */}
+        <ConfirmModal
+        visible={isConfirmSaveModalVisible} 
+        title={'Confirm Changes'} 
+        message={'Are you sure you want save the changes?'} 
+        onConfirm={()=> {
+          handleUpdateUser();
+          setIsSettingsModalVisible(false);
+          setIsConfirmSaveModalVisible(false)
+          setIsModalVisible(false);
+          Alert.alert(
+            "Username",    
+            "Changes Saved!", 
+            [
+              { text: "OK", onPress: () => console.log("OK Pressed") }
+            ]
+          );
+        }} 
+        onCancel={() => setIsConfirmSaveModalVisible(false)}      
+        />
         {/* Confirmation Deletion  Modal */}
         <ConfirmModal
-        visible={isConfirmModalVisible} 
+        visible={isConfirmDeletionModalVisible} 
         title={'Confirm Deletion'} 
         message={'Are you sure you want to delete all data?'} 
         onConfirm={()=> {
           deleteAllData();
-          handleUpdateUser();
+          setIsConfirmDeletionModalVisible(false)
           setIsSettingsModalVisible(false)
+          Alert.alert(
+            "Deletion",      
+            "User Data Deleted!", 
+            [
+              { text: "OK", onPress: () => console.log("OK Pressed") }
+            ]
+          );
         }} 
-        onCancel={() => setIsConfirmModalVisible(false)}      
+        onCancel={() => setIsConfirmDeletionModalVisible(false)}      
         />
       </MainContainer>
 

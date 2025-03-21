@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet, ScrollView, Modal } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Button, StyleSheet, ScrollView, Modal, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { useSQLiteContext } from 'expo-sqlite';
@@ -81,15 +81,23 @@ export default function AddExpense({
         subtype: subType as "Weekends" | "Weekdays" | "All" | "Custom",
         id,
       });
-      alert("Expense Added Successfully")
+      
       setDescription("");
       setFrequency("Daily");
       setPrioritization("High");
       setIsFixedAmount("Yes");
       setAmount("");
+      setRecurrenceInput("")
       setCategoryId(1);
       setRecurrenceId(1);
       setCurrentTab(0);
+      Alert.alert(
+        "Expense",      
+        "Expense Added Successfully", 
+        [
+          { text: "OK", onPress: () => console.log("OK Pressed") }
+        ]
+      );
     }
     
     
