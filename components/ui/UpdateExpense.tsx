@@ -93,7 +93,7 @@ export default function UpdateExpense({
 
 
     function validateFields() {
-      if (!description || (subType === 'Custom' && !recurrence) || !category || !prioritization || !typeSelected ) {
+      if (!description ||  description.length < 3 || (subType === 'Custom' && !recurrence) || !category || !prioritization || !typeSelected ) {
         return false;
       }
       
@@ -128,9 +128,16 @@ export default function UpdateExpense({
         {/* DESCRIPTION */}
         <TextInput
           placeholder="Provide an entry description"
-          style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
+          style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
           value={description}
-          onChangeText={setDescription}
+          onChangeText={(txt) => {
+            setDescription(
+              txt
+                .toLowerCase()
+                .replace(/\b\w/g, (char) => char.toUpperCase())
+            )
+          }}
+          maxLength={25} 
         />
 
         {/* FREQUENCY */}
@@ -189,7 +196,10 @@ export default function UpdateExpense({
                 keyboardType="numeric"
                 onChangeText={(text) => {
                   // Remove any non-numeric characters before setting the state
-                  const numericValue = text.replace(/[^0-9.]/g, "");
+                  let numericValue = text.replace(/[^0-9.]/g, "");
+                  if (numericValue.startsWith("0") && numericValue.length > 1) {
+                    numericValue = numericValue.replace(/^0+/, ""); // Remove leading zeros
+                  }
                   setRecurrenceInput(numericValue);
                   setRecurrence(numericValue ? String(parseInt(numericValue) * 4) : "");
                 }}
@@ -201,6 +211,7 @@ export default function UpdateExpense({
                   setRecurrenceInput(numericValue.toString()); 
                   setRecurrence(numericValue ? String(numericValue * 4) : ""); 
                 }}
+                maxLength={2}
                 />
                 <Text>Time(s) per Week</Text>
                 </View>
@@ -215,7 +226,10 @@ export default function UpdateExpense({
                 keyboardType="numeric"
                 onChangeText={(text) => {
                   // Remove any non-numeric characters before setting the state
-                  const numericValue = text.replace(/[^0-9.]/g, "");
+                  let numericValue = text.replace(/[^0-9.]/g, "");
+                  if (numericValue.startsWith("0") && numericValue.length > 1) {
+                    numericValue = numericValue.replace(/^0+/, ""); // Remove leading zeros
+                  }
                   setRecurrenceInput(numericValue);
                   setRecurrence(numericValue ? String(parseInt(numericValue) * 2) : "");                  }}
                   onBlur={() => {
@@ -226,6 +240,7 @@ export default function UpdateExpense({
                     setRecurrenceInput(numericValue.toString()); 
                     setRecurrence(numericValue ? String(numericValue * 2) : ""); 
                   }}
+                  maxLength={2}
                 />
                 <Text>Time(s) per Bi-Week</Text>
                 </View>
@@ -240,7 +255,10 @@ export default function UpdateExpense({
                 keyboardType="numeric"
                 onChangeText={(text) => {
                   // Remove any non-numeric characters before setting the state
-                  const numericValue = text.replace(/[^0-9]/g, "");
+                  let numericValue = text.replace(/[^0-9.]/g, "");
+                  if (numericValue.startsWith("0") && numericValue.length > 1) {
+                    numericValue = numericValue.replace(/^0+/, ""); // Remove leading zeros
+                  }
                   setRecurrenceInput(numericValue);
                   setRecurrence(numericValue);
                 }}
@@ -252,6 +270,7 @@ export default function UpdateExpense({
                   setRecurrenceInput(numericValue.toString()); 
                   setRecurrence(numericValue.toString()); 
                 }}
+                maxLength={2}
               />
               <Text>Time(s) per Month</Text>
                 </View>
@@ -279,15 +298,21 @@ export default function UpdateExpense({
           {/* AMOUNT */}
             <Text style={styles.btext}>Amount</Text>
             <TextInput
-              placeholder="Enter Amount"
-              style={{ marginBottom: 15, marginTop: 10, borderBottomWidth: 1, borderBottomColor: 'black' }}
+              placeholder={isfixedamount === "Yes" ? ("Enter Amount (Required)"): ("Enter Amount (Not required)")}
               value={amount}
+              style={{ marginBottom: 15, marginTop: 10, borderBottomWidth: 1, borderBottomColor: 'black' }}
               keyboardType="numeric"
               onChangeText={(text) => {
-                // Remove any non-numeric characters before setting the state
-                const numericValue = text.replace(/[^0-9.]/g, "");
+                let numericValue = text.replace(/[^0-9]/g, "");
+                if (numericValue.length > 1) {
+                  numericValue = numericValue.replace(/^0+/, ""); 
+                }
+
                 setAmount(numericValue);
+                setIsFixedAmount('Yes')
               }}
+            
+              maxLength={7}
             />
         </View>
 

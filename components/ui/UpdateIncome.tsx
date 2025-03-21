@@ -101,7 +101,14 @@ export default function UpdateIncome({
           value={description}
             placeholder="Provide an Item Description"
             style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
-            onChangeText={setDescription}
+            onChangeText={(txt) => {
+              setDescription(
+                txt
+                  .toLowerCase()
+                  .replace(/\b\w/g, (char) => char.toUpperCase())
+              )
+            }}
+            maxLength={25} 
           />
         </View>
 
@@ -109,16 +116,19 @@ export default function UpdateIncome({
         <View style={styles.content}>
           <Text style={styles.btext}>Amount</Text>
           <TextInput
-              value={amount}
               placeholder="Enter Amount"
+              value={amount}
               style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
               keyboardType="numeric"
-              
               onChangeText={(text) => {
-                  // Remove any non-numeric characters before setting the state
-                  const numericValue = text.replace(/[^0-9.]/g, "");
-                  setAmount(numericValue);
+                let numericValue = text.replace(/[^0-9]/g, "");
+                if (numericValue.length > 1) {
+                  numericValue = numericValue.replace(/^0+/, ""); 
+                }
+
+                setAmount(numericValue);
               }}
+              maxLength={7} 
           />
         </View>
 
@@ -176,7 +186,10 @@ export default function UpdateIncome({
                 keyboardType="numeric"
                 onChangeText={(text) => {
                   // Remove any non-numeric characters before setting the state
-                  const numericValue = text.replace(/[^0-9.]/g, "");
+                  let numericValue = text.replace(/[^0-9.]/g, "");
+                  if (numericValue.startsWith("0") && numericValue.length > 1) {
+                    numericValue = numericValue.replace(/^0+/, ""); // Remove leading zeros
+                  }
                   setRecurrenceInput(numericValue);
                   setRecurrence(numericValue ? String(parseInt(numericValue) * 4) : "");                  }}
                   onBlur={() => {
@@ -187,6 +200,7 @@ export default function UpdateIncome({
                     setRecurrenceInput(numericValue.toString()); 
                     setRecurrence(numericValue ? String(numericValue * 4) : ""); 
                   }}
+                  maxLength={2}
                 />
                 <Text>Time/s per Week</Text>
                 </View>
@@ -200,7 +214,10 @@ export default function UpdateIncome({
                   keyboardType="numeric"
                   onChangeText={(text) => {
                     // Remove any non-numeric characters before setting the state
-                    const numericValue = text.replace(/[^0-9.]/g, "");
+                    let numericValue = text.replace(/[^0-9.]/g, "");
+                    if (numericValue.startsWith("0") && numericValue.length > 1) {
+                      numericValue = numericValue.replace(/^0+/, ""); // Remove leading zeros
+                    }
                     setRecurrenceInput(numericValue);
                     setRecurrence(numericValue ? String(parseInt(numericValue) * 2) : "");                  }}
                     onBlur={() => {
@@ -211,6 +228,7 @@ export default function UpdateIncome({
                       setRecurrenceInput(numericValue.toString()); 
                       setRecurrence(numericValue ? String(numericValue * 2) : ""); 
                     }}
+                    maxLength={2}
                 />
                 <Text>Time/s per Bi-Week</Text>
                 </View>
@@ -225,7 +243,10 @@ export default function UpdateIncome({
                     keyboardType="numeric"
                     onChangeText={(text) => {
                       // Remove any non-numeric characters before setting the state
-                      const numericValue = text.replace(/[^0-9]/g, "");
+                      let numericValue = text.replace(/[^0-9.]/g, "");
+                      if (numericValue.startsWith("0") && numericValue.length > 1) {
+                        numericValue = numericValue.replace(/^0+/, ""); // Remove leading zeros
+                      }
                       setRecurrenceInput(numericValue);
                       setRecurrence(numericValue);
                     }}
@@ -237,6 +258,7 @@ export default function UpdateIncome({
                       setRecurrenceInput(numericValue.toString()); 
                       setRecurrence(numericValue.toString());
                     }}
+                    maxLength={2}
                   />
                   <Text>Time/s per Month</Text>
                 </View>
@@ -265,7 +287,7 @@ export default function UpdateIncome({
       <View
         style={{ flexDirection: "row", justifyContent: "space-around", paddingTop: 10}}
       >
-        <Button title="Cancel" color={colors.green} 
+        <Button title="Cancel" color={colors.red} 
         onPress={
           () => {
             setIsModalVisible(false);

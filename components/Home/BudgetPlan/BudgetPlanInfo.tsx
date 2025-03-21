@@ -53,7 +53,8 @@ export default function BudgetPlanInfo({
   const [hasBudgetStrat, setHasBudgetStrat] = useState(false);
   const [stratSplit, setStratSplit] = useState(false);
   const [selectedTypeIndex, setselectedTypeIndex] = React.useState<number>(0);
-
+  const [isFocused, setIsFocused] = useState(false);
+  
   useEffect(() => {
     const loadStratSplit = async () => {
       try {
@@ -124,7 +125,7 @@ export default function BudgetPlanInfo({
          <>
             <View style={[styles.container,]}>
               {/* Categories */}
-                <View style={[styles.container, {flex: 1.2, }]}>
+                <View style={[styles.container, {flex: 2, }]}>
                   <View style={[styles.card, {backgroundColor: colors.light}]}>
                       <Categories setHasBudgetStrat={setHasBudgetStrat} isAdvanceBtnTapped={isAdvanceBtnTapped} setIsAdvanceBtnTapped={setAdvanceBtnTapped} setStratSplit={setStratSplit} stratSplit={stratSplit}/>
                       {isAdvanceBtnTapped === false ? (
@@ -206,7 +207,7 @@ export default function BudgetPlanInfo({
                 <Text style={styles.title}>Back</Text>
         </View >
         <View style={styles.modalcontent}>
-            <Expense/>
+            <Expense/> 
         </View>
         </View>
       </Modal>

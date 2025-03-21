@@ -16,7 +16,6 @@ import { setBudgetStratSplit } from '@/state/dataSlice'
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
 import { Modal } from '@/components/Modal';
 import { setUsername } from '@/state/userSlice';
-import { useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
 
 
 const _layout = () => {
@@ -24,32 +23,14 @@ const _layout = () => {
   const dispatch = useDispatch();
     const { updateUser } = UseTransactionService(); 
   
-  const { viewed, nameSetted, welcomed, user, transactions, incomes } = useSelector((state: RootState) => state.data);
-  const [isSetUserModalVisible, setSetUserModalVisible] = useState(true);
+  const { viewed, nameSetted, welcomed, user } = useSelector((state: RootState) => state.data);
   const [isWelcomeModalVisible, setWelcomeModalVisible] = useState(false);
-  const [isBudgetPlanGenerated, setBudgetPlanGenerated] = useState(false);
-  const [hasName, setName] = useState(false);
-  const userHasData = user.length > 0 ? user[0] : null;
   const [isUserModalVisible, setUserModalVisible] = useState(false);
 
   const firstUser = user?.[0];  
   const userName = firstUser?.userName || "";
   const userId = firstUser?.id ?? 1;
   const data = firstUser?.hasData ?? "False";
-
-    useEffect(() => {
-      if (viewed === true){
-        setUserModalVisible(userName === ""); 
-        setWelcomeModalVisible(userName !== "");
-      }
-    }, [viewed]);
-    
-
-    useEffect(() => {
-      setBudgetPlanGenerated(
-        transactions?.length > 0 && incomes?.length > 0
-      );
-    }, [transactions, incomes]);
 
   const [input, setInput] = useState(userName);
 
@@ -58,13 +39,13 @@ const _layout = () => {
     const initializeData = async () => {
       try {
         //  fetching data and AsyncStorage calls
-        fetchData().catch((e) => console.error(e));
-
+        fetchData();
+        // await AsyncStorage.setItem('@viewedOnboarding', 'false');
+        // await AsyncStorage.setItem('stratSplitted', 'false');
+        // await AsyncStorage.setItem('@hasNamesetted', 'false');
+        // await AsyncStorage.setItem('@firstOpen', 'true');
         const [onboardingVal, stratVal, setNameVal, firstOpenVal] = await Promise.all([
-          // AsyncStorage.removeItem('@viewedOnboarding'),
-          // AsyncStorage.removeItem('stratSplitted'),
-          // AsyncStorage.removeItem('@hasNamesetted'),
-          // AsyncStorage.removeItem('@firstOpen'),
+
           
           AsyncStorage.getItem('@viewedOnboarding'),
           AsyncStorage.getItem('stratSplitted'),
@@ -103,7 +84,13 @@ const _layout = () => {
     };
   
     initializeData();
+
   }, []);
+
+  useEffect(() => {
+    setUserModalVisible(!nameSetted && viewed);
+    setWelcomeModalVisible(nameSetted && viewed);
+  }, [nameSetted, viewed]);
 
   async function handleUpdateUser() {
     try {
@@ -112,10 +99,11 @@ const _layout = () => {
         userName: input,
         hasData: data,
       });
-      await AsyncStorage.setItem('@hasNamesetted', 'true');
-    
+      await AsyncStorage.multiSet([
+        ['@hasNamesetted', 'true'],
+        ['@firstOpen', 'false']
+      ]);
       dispatch(setHasName(true))
-      await AsyncStorage.setItem('@firstOpen', 'false');
       dispatch(setWelcomed(true));
       console.log("User updated successfully!");
     } catch (error) {
@@ -123,7 +111,7 @@ const _layout = () => {
     }
   }
   function validateFields() {
-    if (input === "" )  {
+    if (!input || input.length < 3 )  {
       return false;
     }
     
@@ -264,77 +252,88 @@ const _layout = () => {
         </View>
       )}
 
-
-              {/* Welcome Modal */}
-              <Modal isOpen={isWelcomeModalVisible} transparent animationType="fade">
-                  <TouchableWithoutFeedback onPress={() => setWelcomeModalVisible(false)}>
-                    <View style={styles.modalOverlay}>
-                      <TouchableWithoutFeedback>
-                        <View style={[styles.welcomeModalContent, {borderRadius:30}]}>
-                          { welcomed === true  ? (
-                            <>
-                              <Image
-                                source={require("./../../assets/images/onboardingImge/Spendwise.gif")} 
-                                style={[styles.image, { width: '100%', resizeMode: 'cover' }]} 
-                              />    
-                              <View style={[styles.overlay, {bottom: 200}]}>
-                                <Text style={[styles.Wtitle, {fontSize: 30, textAlign:'center', color: colors.green,}]}>Welcome {userName}! To</Text>
-                              </View>                
-                            </>
-                          ):(
-                            <>
-                              
-                                <Image
-                                  source={require('./../../assets/images/WelcomeBack.gif')}
-                                  style={styles.image}
-                                />
-                               <View style={[styles.overlay, {top: 60}]}>
-                                  <Text style={styles.Wtitle}>{userName}</Text>
-                                </View>
-                            
-                            </>
-                          )}
-                        </View>
-                      </TouchableWithoutFeedback>
-                    </View>
-                  </TouchableWithoutFeedback>
-                </Modal>
+      {/* Welcome Modal */}
+      <Modal isOpen={isWelcomeModalVisible} transparent animationType="fade">
+            <TouchableWithoutFeedback onPress={() => {
+              setWelcomeModalVisible(false)
               
-
-            <Modal isOpen={isUserModalVisible} transparent animationType="fade">
+              }}>
               <View style={styles.modalOverlay}>
-                  <View style={[styles.welcomeModalContent, {borderRadius:15}]}>
-                    <Text style={[styles.title, {
-                            fontSize: 30,
-                            color: colors.green, 
-                            fontWeight: '900',    
-                          }]}>Please set a Username</Text>
-                    <TextInput
-                    
-                      placeholder="Enter Username"
-                      style={[styles.modalSubTitle,{width: '80%', marginBottom: 15, borderBottomWidth: 1, borderBottomColor: colors.green, textAlign: 'center', color: colors.green, fontSize: 20 }]}
-                      value={input}
-                      onChangeText={setInput}
-                    />
-                    <TouchableOpacity 
-                    disabled={!validateFields()}
-                    onPress={() => {
-                      setInput(input)
-                      dispatch(setUsername(input));
-                      handleUpdateUser();
-                      setUserModalVisible(false)
-                      setWelcomeModalVisible(true);
-                    }}
-                    style={[
-                      styles.btn,
-                      (!validateFields()) && styles.disabledButton
-                    ]}
-                    >
-                      <Text style={{ color:colors.light}}>Save</Text>
-                    </TouchableOpacity>
+                <TouchableWithoutFeedback>
+                  <View style={[styles.welcomeModalContent, {borderRadius:30}]}>
+                    { welcomed === true  ? (
+                      <>
+                        <Image
+                          source={require("./../../assets/images/onboardingImge/Spendwise.gif")} 
+                          style={[styles.image, { width: '100%', resizeMode: 'cover' }]} 
+                        />    
+                        <View style={[styles.overlay, {bottom: 200}]}>
+                          <Text style={[styles.Wtitle, {fontSize: 30, textAlign:'center', color: colors.green,}]}>Welcome {userName}! To</Text>
+                        </View>                
+                      </>
+                    ):(
+                      <>
+                        
+                          <Image
+                            source={require('./../../assets/images/WelcomeBack.gif')}
+                            style={styles.image}
+                          />
+                          <View style={[styles.overlay, {top: 60}]}>
+                            <Text style={styles.Wtitle}>{userName}</Text>
+                          </View>
+                      
+                      </>
+                    )}
                   </View>
+                </TouchableWithoutFeedback>
               </View>
-            </Modal> 
+            </TouchableWithoutFeedback>
+      </Modal>
+        
+
+      <Modal isOpen={isUserModalVisible} transparent animationType="fade">
+        <View style={styles.modalOverlay}>
+            <View style={[styles.welcomeModalContent, {borderRadius:15}]}>
+              <Text style={[styles.title, {
+                      fontSize: 20,
+                      textAlign:'center',
+                      color: colors.green, 
+                      fontWeight: '900',    
+                    }]}>Please set a Username</Text>
+              <TextInput
+              
+                placeholder="Enter Username"
+                style={[styles.modalSubTitle,{width: '80%', marginBottom: 15, borderBottomWidth: 1, borderBottomColor: colors.green, textAlign: 'center', color: colors.green, fontSize: 20 }]}
+                value={input}
+                onChangeText={(txt)=>{
+                  setInput(
+                    txt
+                      .toLowerCase()
+                      .replace(/\b\w/g, (char) => char.toUpperCase())
+                  )
+                }}
+                maxLength={12}
+              />
+              <TouchableOpacity 
+              disabled={!validateFields()}
+              onPress={() => {
+                setInput(input)
+                dispatch(setUsername(input));
+                handleUpdateUser();
+                setUserModalVisible(false)
+                setWelcomeModalVisible(true);
+                
+              }}
+              style={[
+                styles.btn,
+                (!validateFields()) && styles.disabledButton
+              ]}
+              >
+                <Text style={{ color:colors.light}}>Save</Text>
+              </TouchableOpacity>
+            </View>
+        </View>
+      </Modal> 
 
       
     </GestureHandlerRootView>
@@ -395,6 +394,7 @@ const styles = StyleSheet.create({
   title:{
     fontSize: 20,
     fontWeight:'bold',
+    textAlign: 'center'
     
   },
   image: {

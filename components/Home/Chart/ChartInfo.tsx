@@ -49,7 +49,7 @@ export default function ChartInfo() {
               </View>
               <View style={styles.info}>
                 <IncomeChart/>
-              </View>
+              </View> 
             </>
           }/>
       </>

@@ -12,7 +12,7 @@ import { Divider } from "react-native-paper";
 import ConfirmModal from "@/components/Modal/ConfirmModal";
 
 
-export default function Expense() {
+export default function Expense() { 
     const { categories, transactions } = useSelector(
         (state: RootState) => state.data
       );
@@ -36,18 +36,16 @@ export default function Expense() {
 
     return (
         <View style={styles.maincontainer}>
+                <View style={styles.tableheader}>
+                    <View style={styles.row}>
+                        <Text style={styles.title}>Expenses</Text>
+                        <Text style={[styles.amount, {color: colors.green}]}>Total: ₱ {calcTransactions()}</Text>
+                    </View>
+                </View>
                 {transactions.length > 0 ? (
                     <>
                             {/* Expenses Lists */}
-                            <View style={styles.container}>
-                                <View style={styles.tableheader}>
-                                    <View style={styles.row}>
-                                        <Text style={styles.title}>Expenses</Text>
-                                        <Text style={[styles.amount, {color: colors.green}]}>Total: ₱ {calcTransactions()}</Text>
-                                    </View>
-                                </View>
-                                
-                                
+                            <View style={styles.container}>  
                                 <View style={styles.contentSection}>
                                     <ScrollView>
                                         {transactions.map((transaction) => {
@@ -163,12 +161,10 @@ export default function Expense() {
                             </View>
                     </>
                 ) : (
-                    <View style={[styles.container, { height: 400}]}>
                         <View style={styles.noData}>
                             <Text style={styles.noDataTxt}>No Expense Data!</Text>
-                            <Text style={styles.titletext}>Please add some Expenses</Text>
+                            <Text style={styles.titletext}>Add your Expenses</Text>
                         </View>
-                    </View>
                 )}
 
 

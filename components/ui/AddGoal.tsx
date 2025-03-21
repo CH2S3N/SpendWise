@@ -15,14 +15,14 @@ export default function AddGoal({
 
 
     const [amount, setAmount] = React.useState<string>("");
-    const [currentAmount, setCurrentAmount] = React.useState<string>("");
+    const [accumulatedAmount, setAccumulatedAmount] = React.useState<string>("");
     const [name, setName] = React.useState<string>("");
     const [id] = React.useState<number>(0);
     const [isConfirmModalVisible, setIsConfirmModalVisible] = React.useState(false);
     
 
     function validateFields() {
-      if ( !amount || !name ) {
+      if ( !amount || !name || name.length < 3 ) {
         return false;
       }
       
@@ -36,12 +36,12 @@ export default function AddGoal({
         await insertGoal({
           name,
           amount: Number(amount),
-          currentAmount: Number(currentAmount),
+          currentAmount: Number(accumulatedAmount),
           id,
         });
         setName("");
         setAmount("");
-        setCurrentAmount("");
+        setAccumulatedAmount("");
         
     }
 
@@ -56,7 +56,14 @@ export default function AddGoal({
             value={name}
               placeholder="Provide an Item Description"
               style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
-              onChangeText={setName}
+              onChangeText={(txt) => {
+                setName(
+                  txt
+                    .toLowerCase()
+                    .replace(/\b\w/g, (char) => char.toUpperCase())
+                )
+          }}
+          maxLength={25} 
             />
           </View>
 
@@ -69,24 +76,40 @@ export default function AddGoal({
               keyboardType="numeric"
               onChangeText={(text) => {
                 // Remove any non-numeric characters before setting the state
-                const numericValue = text.replace(/[^0-9.]/g, "");
+                let numericValue = text.replace(/[^0-9]/g, "");
+                if (numericValue.length > 1) {
+                  numericValue = numericValue.replace(/^0+/, ""); 
+                }
                 setAmount(numericValue);
               }}
+              maxLength={7}
             />
           </View>
 
           <View style={styles.content}>
             <Text style={styles.btext}>Accumulated Amount</Text>
             <TextInput
-              value={currentAmount}
-              placeholder="Enter Accumulated Amount"
-              style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
-              keyboardType="numeric"
-              onChangeText={(text) => {
-                // Remove any non-numeric characters before setting the state
-                const numericValue = text.replace(/[^0-9.]/g, "");
-                setCurrentAmount(numericValue);
-              }}
+                  value={accumulatedAmount}
+                  placeholder="Enter Accumulated Amount"
+                  style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
+                  keyboardType="numeric"
+                  onChangeText={(text) => {
+                    // Remove any non-numeric characters before setting the state
+                    let numericValue = text.replace(/[^0-9]/g, "");
+                    if (numericValue.length > 1) {
+                      numericValue = numericValue.replace(/^0+/, ""); 
+                    }
+                    setAccumulatedAmount(numericValue);
+                    
+                  }}                  
+                  onBlur={() => {
+                    let accAmount = parseInt(accumulatedAmount) || 0; 
+                    if (accAmount > parseInt(amount)) {
+                      accAmount = parseInt(amount);
+                    }
+                    setAccumulatedAmount(accAmount.toString()); 
+                  }}
+                  maxLength={7}
             />
           </View>
         </ScrollView>
@@ -97,7 +120,7 @@ export default function AddGoal({
         <View
           style={{ flexDirection: "row", justifyContent: "space-around" }}
         >
-          <Button title="Cancel" color={colors.green} onPress={() => setIsAddingGoal(false)}
+          <Button title="Cancel" color={colors.red} onPress={() => setIsAddingGoal(false)}
           />
           <Button title="Save" color={colors.green} onPress={()=> setIsConfirmModalVisible(true)} disabled={!validateFields()}/>
         </View>

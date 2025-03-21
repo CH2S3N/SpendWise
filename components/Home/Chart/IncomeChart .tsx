@@ -78,19 +78,19 @@ export default function IncomeChart () {
               {totalAllowance > 0 && (
                 <View style={styles.legendItem}>
                   <View style={[styles.colorBox, { backgroundColor: '#5F939A' }]} />
-                  <Text>Allowance: ₱ {totalAllowance} <Text style={{color: '#5F939A'}}>({allowanceRatio}%)</Text></Text>
+                  <Text numberOfLines={1} ellipsizeMode="tail">Allowance: ₱ {totalAllowance} <Text style={{color: '#5F939A'}}>({allowanceRatio}%)</Text></Text>
                 </View>
               )}
               {totalSalary > 0 && (
                 <View style={styles.legendItem}>
                   <View style={[styles.colorBox, { backgroundColor: '#54C392' }]} />
-                  <Text>Salary: ₱ {totalSalary} <Text style={{color: '#54C392'}}>({salaryRatio}%)</Text></Text>
+                  <Text numberOfLines={1} ellipsizeMode="tail">Salary: ₱ {totalSalary} <Text style={{color: '#54C392'}}>({salaryRatio}%)</Text></Text>
                 </View>
               )}
               {totalOthers > 0 && (
                 <View style={styles.legendItem}>
                   <View style={[styles.colorBox, { backgroundColor: '#73EC8B' }]} />
-                  <Text>Others: ₱ {totalOthers} <Text style={{color: '#73EC8B'}}>({othersRatio}%)</Text></Text>
+                  <Text numberOfLines={1} ellipsizeMode="tail">Others: ₱ {totalOthers} <Text style={{color: '#73EC8B'}}>({othersRatio}%)</Text></Text>
                 </View>
               )}
             </View>

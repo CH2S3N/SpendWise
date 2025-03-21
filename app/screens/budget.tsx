@@ -43,6 +43,13 @@ const Budget = () => {
     }
   }
 
+  function validateFields() {
+    if (input === "" || input.length < 3)  {
+      return false;
+    }
+    
+    return true;
+  }
   return (
     <Animated.View 
       // entering={SlideInUp.duration(300)}
@@ -69,12 +76,18 @@ const Budget = () => {
             </TouchableOpacity>
           </View>
           <Card
-          style={{ flex: 0.5, justifyContent: 'center', marginBottom: 10, marginHorizontal: 10, backgroundColor: colors.light, borderWidth: 1,}}
+          style={{ 
+            flex: .5,
+            marginBottom:20,
+            borderWidth:1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
           content={
             <IncomeChart />
           }
           />
-          <View style={[styles.btn, {marginHorizontal:20}]}>
+          <View style={[{marginHorizontal:20}]}>
             <TouchableOpacity onPress={() => setIsAddingIncome(true)} style={[styles.regen, {backgroundColor: colors.green}]}>
                 <Text style={[styles.btnTxt, {color: colors.light}]}>ADD INCOME</Text>
             </TouchableOpacity>
@@ -96,19 +109,31 @@ const Budget = () => {
                       placeholder="Enter Username"
                       style={{ color: colors.green ,marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black', textAlign: 'center' }}
                       value={input}
-                      onChangeText={setInput}
+                      onChangeText={(text) => {
+                        const sanitizedText = text.replace(/\s/g, "");
+                        if (sanitizedText.length <= 12) {
+                          setInput(sanitizedText);
+                        }
+                      }}
+                      maxLength={12} 
                     />
                   </View>
                   <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-evenly', alignItems: "center" }}>
-                    <TouchableOpacity onPress={() => setIsModalVisible(false)}>
-                      <Text style={styles.modalSubTitle}>Close</Text>
+                    <TouchableOpacity onPress={() => setIsModalVisible(false)} style={styles.btn}>
+                      <Text style={{color: colors.light}}>Close</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => {
                       dispatch(setUsername(input));
                       handleUpdateUser();
                       setIsModalVisible(false);
-                    }}>
-                      <Text style={styles.modalSubTitle}>Save</Text>
+                    }}
+                    disabled={!validateFields()}
+                    style={[
+                      styles.btn,
+                      (!validateFields()) && styles.disabledButton
+                    ]}
+                    >
+                      <Text style={{color: colors.light}}>Save</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -288,6 +313,10 @@ const styles = StyleSheet.create({
     color: colors.dark,
     opacity: 0.5,
   },
+  disabledButton: {
+    backgroundColor: colors.green,
+    opacity: .5
+  },
   btnTxt:{
     fontSize: 15,
     fontWeight: 'bold',
@@ -297,6 +326,20 @@ const styles = StyleSheet.create({
     textShadowRadius: .5, 
   },
   btn: {
+        marginHorizontal: 10,
+        borderWidth:1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: colors.green,
+        borderRadius: 45,
+        elevation: 5,
+        shadowColor: "#000",
+        shadowRadius: 8,
+        shadowOffset: { height: 6, width: 0 },
+        shadowOpacity: 0.15,
+        paddingHorizontal: 20,
+        paddingVertical: 5,
+        
   },
   regen: {
     borderWidth:1,

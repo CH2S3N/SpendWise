@@ -185,6 +185,7 @@ const Categories = ({
       handleReset();
     }, [isEnabled])
   return (
+    <>
       <View style={[styles.container]}>
         <Text style={[styles.title, {paddingBottom: 10}]}>BUDGETING STRATEGY</Text>
         <View style={[ { zIndex: 1, justifyContent: "center", }]}>
@@ -196,7 +197,7 @@ const Categories = ({
         {customStrat === true && (
               <>
               {/* Switch */}
-              <View style={[styles.container, {flex: 1}]}>
+              <View style={[styles.container]}>
                 <View style={[styles.row, {justifyContent: "flex-end", alignItems: "center"}]}>
                         <Text style={styles.text}>Split Expense? </Text>
                         <Switch
@@ -245,7 +246,7 @@ const Categories = ({
                     />
     
                     <View style={styles.row}>
-                      <Text>Wants: {savings}% </Text>
+                      <Text>Savings: {savings}% </Text>
                       {savings === 0 && 
                       <BlinkingText children={<Text style={styles.lowVal}>(value too low!)</Text>} condition={savings === 0}/>
                       }
@@ -307,7 +308,7 @@ const Categories = ({
               </View>
               </>
         )}
-        <View style={{flex:2, justifyContent: "center", alignItems: "center"}}>
+        <View style={{flex:2.5, justifyContent: "center", alignItems: "center"}}>
           { isAdvanceBtnTapped === true ? (
             <View  style={{flex: 1, justifyContent: "center",}}>
              {strat1 === false && strat2 === false && customStrat === false && (
@@ -358,9 +359,6 @@ const Categories = ({
           )}
         </View>
         
-
-
-           
         {/* Slider */}
         {isAdvanceBtnTapped === true  && (
             <>
@@ -374,8 +372,9 @@ const Categories = ({
              )}
               
             </>
-        )}
+        )} 
       </View>
+    </>
 
 
   )

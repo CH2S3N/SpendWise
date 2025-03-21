@@ -47,7 +47,7 @@ export default function AddExpense({
     const [categoryDescription, setCategoryDescription] = useState('');
 
     function validateFields() {
-      if ( !description || (isfixedamount == 'Yes' && !amount) || !typeSelected || (frequency == 'Daily' && (isrecurrence === "0" || null)) || (frequency == 'Bi-Weekly' && (isrecurrence === "0" || null)) || (subType === 'Custom' && (isrecurrence === "0" || null)) || (frequency == 'Monthly' && (isrecurrence === "0" || null)))  {
+      if ( !description || description.length < 3 || (isfixedamount == 'Yes' && (!amount || parseInt(amount) < 1)) || !typeSelected || (frequency == 'Daily' && (isrecurrence === "0" || null)) || (frequency == 'Bi-Weekly' && (isrecurrence === "0" || null)) || (subType === 'Custom' && (isrecurrence === "0" || null)) || (frequency == 'Monthly' && (isrecurrence === "0" || null)))  {
         return false;
       }
       
@@ -123,7 +123,14 @@ export default function AddExpense({
             placeholder="Provide an entry description"
             style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
             value={description}
-            onChangeText={setDescription}
+            onChangeText={(txt) => {
+                setDescription(
+                  txt
+                    .toLowerCase()
+                    .replace(/\b\w/g, (char) => char.toUpperCase())
+                )
+          }}
+          maxLength={25} 
           />
 
           {/* Recurrence */}
@@ -182,7 +189,10 @@ export default function AddExpense({
                   keyboardType="numeric"
                   onChangeText={(text) => {
                     // Remove any non-numeric characters before setting the state
-                    const numericValue = text.replace(/[^0-9.]/g, "");
+                    let numericValue = text.replace(/[^0-9.]/g, "");
+                    if (numericValue.startsWith("0") && numericValue.length > 1) {
+                      numericValue = numericValue.replace(/^0+/, ""); // Remove leading zeros
+                    }
                     setRecurrenceInput(numericValue);
                     setRecurrence(numericValue ? String(parseInt(numericValue) * 4) : "");
                   }}
@@ -194,6 +204,7 @@ export default function AddExpense({
                     setRecurrenceInput(numericValue.toString()); 
                     setRecurrence(numericValue ? String(numericValue * 4) : ""); 
                   }}
+                  maxLength={2}
                   />
                   <Text>Time(s) per Week</Text>
                   </View>
@@ -208,7 +219,10 @@ export default function AddExpense({
                   keyboardType="numeric"
                   onChangeText={(text) => {
                     // Remove any non-numeric characters before setting the state
-                    const numericValue = text.replace(/[^0-9.]/g, "");
+                    let numericValue = text.replace(/[^0-9.]/g, "");
+                    if (numericValue.startsWith("0") && numericValue.length > 1) {
+                      numericValue = numericValue.replace(/^0+/, ""); // Remove leading zeros
+                    }
                     setRecurrenceInput(numericValue);
                     setRecurrence(numericValue ? String(parseInt(numericValue) * 2) : "");                  }}
                     onBlur={() => {
@@ -219,6 +233,7 @@ export default function AddExpense({
                       setRecurrenceInput(numericValue.toString()); 
                       setRecurrence(numericValue ? String(numericValue * 2) : ""); 
                     }}
+                    maxLength={2}
                   />
                   <Text>Time(s) per Bi-Week</Text>
                   </View>
@@ -233,7 +248,10 @@ export default function AddExpense({
                   keyboardType="numeric"
                   onChangeText={(text) => {
                     // Remove any non-numeric characters before setting the state
-                    const numericValue = text.replace(/[^0-9]/g, "");
+                    let numericValue = text.replace(/[^0-9]/g, "");
+                    if (numericValue.startsWith("0") && numericValue.length > 1) {
+                      numericValue = numericValue.replace(/^0+/, ""); // Remove leading zeros
+                    }
                     setRecurrenceInput(numericValue);
                     setRecurrence(numericValue);
                   }}
@@ -245,6 +263,7 @@ export default function AddExpense({
                     setRecurrenceInput(numericValue.toString()); 
                     setRecurrence(numericValue.toString()); 
                   }}
+                  maxLength={2}
                 />
                 <Text>Time(s) per Month</Text>
                   </View>
@@ -275,15 +294,20 @@ export default function AddExpense({
               <Text style={styles.btext}>Amount</Text>
               <TextInput
                 placeholder={isfixedamount === "Yes" ? ("Enter Amount (Required)"): ("Enter Amount (Not required)")}
-                style={{ marginBottom: 15, marginTop: 10, borderBottomWidth: 1, borderBottomColor: 'black' }}
                 value={amount}
+                style={{ marginBottom: 15, marginTop: 10, borderBottomWidth: 1, borderBottomColor: 'black' }}
                 keyboardType="numeric"
                 onChangeText={(text) => {
-                  // Remove any non-numeric characters before setting the state
-                  const numericValue = text.replace(/[^0-9.]/g, "");
+                  let numericValue = text.replace(/[^0-9]/g, "");
+                  if (numericValue.length > 1) {
+                    numericValue = numericValue.replace(/^0+/, ""); 
+                  }
+  
                   setAmount(numericValue);
                   setIsFixedAmount('Yes')
                 }}
+              
+                maxLength={7}
               />
           </View>
 
@@ -335,7 +359,7 @@ export default function AddExpense({
         <View
           style={{ flexDirection: "row", justifyContent: "space-around", paddingTop: 10}}
         >
-          <Button title="Cancel" color={colors.green} 
+          <Button title="Cancel" color={colors.red} 
           onPress={
             () => {
               setIsAddingTransaction(false);

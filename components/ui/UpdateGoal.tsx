@@ -22,7 +22,6 @@ export default function UpdateGoal({
     const [isConfirmModalVisible, setIsConfirmModalVisible] = React.useState(false);
     
     React.useEffect(() => {
-      console.log("currentGoal changed:", currentGoal);
         if (currentGoal) {
             setName(currentGoal.name || "");
             setAmount(String(currentGoal.amount || ""));
@@ -67,10 +66,17 @@ export default function UpdateGoal({
               <View style={styles.content}>
                 <Text style={styles.textTitle}>Item</Text>
                 <TextInput
-                  placeholder="Provide an entry description"
-                  style={styles.input}
                   value={name}
-                  onChangeText={setName}
+                  placeholder="Provide an Item Description"
+                  style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
+                  onChangeText={(txt) => {
+                    setName(
+                      txt
+                        .toLowerCase()
+                        .replace(/\b\w/g, (char) => char.toUpperCase())
+                    )
+                    }}
+                    maxLength={25} 
                 />
               </View>
 
@@ -79,14 +85,19 @@ export default function UpdateGoal({
                 <Text style={styles.textTitle}>Total Amount</Text>
                 <TextInput
                   value={amount}
-                  placeholder="₱Amount"
-                  style={styles.input}
+                  placeholder="Enter Accumulated Amount"
+                  style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
                   keyboardType="numeric"
                   onChangeText={(text) => {
                     // Remove any non-numeric characters before setting the state
-                    const numericValue = text.replace(/[^0-9.]/g, "");
+                    let numericValue = text.replace(/[^0-9]/g, "");
+                    if (numericValue.length > 1) {
+                      numericValue = numericValue.replace(/^0+/, ""); 
+                    }
                     setAmount(numericValue);
-                }}
+                    
+                  }}
+                  maxLength={7}
                 />
               </View>
 
@@ -95,21 +106,32 @@ export default function UpdateGoal({
                 <Text style={styles.textTitle}>Accumulated Amount</Text>
                 <TextInput
                   value={accumulatedAmount}
-                  placeholder="Enter Amount"
-                  style={styles.input}
+                  placeholder="Enter Accumulated Amount"
+                  style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
                   keyboardType="numeric"
                   onChangeText={(text) => {
-                    // Remove any non-numeric characters before setting the state
-                    const numericValue = text.replace(/[^0-9.]/g, "");
+                    let numericValue = text.replace(/[^0-9]/g, "");
+                    if (numericValue.length > 1) {
+                      numericValue = numericValue.replace(/^0+/, ""); 
+                    }
                     setAccumulatedAmount(numericValue);
-                }}
+                    
+                  }}                  
+                  onBlur={() => {
+                    let accAmount = parseInt(accumulatedAmount) || 0; 
+                    if (accAmount > parseInt(amount)) {
+                      accAmount = parseInt(amount);
+                    }
+                    setAccumulatedAmount(accAmount.toString()); 
+                  }}
+                  maxLength={7}
                 />
               </View>
 
               {/* Buttons */}
               <View style={styles.btn}>
                 <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-                  <Button title="Cancel" color={colors.green} onPress={() => setIsUpdatingGoal(false)} />
+                  <Button title="Cancel" color={colors.red} onPress={() => setIsUpdatingGoal(false)} />
                   <Button title="Save" color={colors.green} onPress={() => setIsConfirmModalVisible(true)} disabled={!validateFields()} />
                 </View>
               </View>

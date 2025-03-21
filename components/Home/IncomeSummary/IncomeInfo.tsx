@@ -33,16 +33,16 @@ export default function IncomeInfo() {
           </View>
           <View style={styles.section}> 
             <View style={styles.tablecontent}>
-              <ScrollView>
                 {incomes.length > 0 ? (
-                  <IncomeList/>
+                <ScrollView>
+                    <IncomeList/>
+                </ScrollView>
                 ) : (
-                  <View style={styles.noData}>
-                  <Text style={styles.noDataTxt}>No Income Data!</Text>
-                  <Text style={styles.titletext}>Please add some Income</Text>
-                </View>
+                    <View style={styles.noData}>
+                      <Text style={styles.noDataTxt}>No Income Data!</Text>
+                      <Text style={styles.titletext}>Add your Income Sources</Text>
+                    </View>
                 )}
-              </ScrollView>
             </View>
           </View>
       </View>

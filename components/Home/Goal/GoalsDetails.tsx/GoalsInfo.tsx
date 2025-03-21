@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View, Switch, ScrollView, TouchableWithoutFeedback } from 'react-native'
+import { Text, TouchableOpacity, View, Switch, ScrollView, TouchableWithoutFeedback, Image } from 'react-native'
 import React, { useEffect, useState,  } from 'react'
 import { StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
