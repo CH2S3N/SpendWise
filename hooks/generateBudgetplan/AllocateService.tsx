@@ -51,19 +51,18 @@ export default function AllocateAllService() {
 
     try {
       // Allocation of all Transactions
-      const totalFixedTransactions = allTransactions
-        .filter(transaction => transaction.isfixedamount === "Yes")
-        .reduce((sum, transaction) => sum + (transaction.amount * transaction.interval), 0);
-
-      let remainingAllocation = Allocation - totalFixedTransactions;
-      remainingAllocation = Math.max(remainingAllocation, 0);
-
       for (const category of adjustedCategories) {
         const cattransactions = allTransactions.filter(transaction => transaction.category_id === category.id);
         const fixedTransactions = cattransactions.filter(transaction => transaction.isfixedamount === "Yes");
         const variableTransactions = cattransactions.filter(transaction => transaction.isfixedamount !== "Yes");
 
-        // Allocate fixed transactions (even if amount is 0)
+        const totalFixedTransactions = allTransactions
+        .filter(transaction => transaction.isfixedamount === "Yes")
+        .reduce((sum, transaction) => sum + (transaction.amount * transaction.interval), 0);
+
+        let remainingAllocation = Allocation - totalFixedTransactions;
+        remainingAllocation = Math.max(remainingAllocation, 0);
+
         for (const transaction of fixedTransactions) {
           try {
             await updateTransaction({ ...transaction, amount: transaction.amount });
@@ -73,14 +72,13 @@ export default function AllocateAllService() {
           }
         }
 
-        // Allocate 0 if budget is 0, otherwise distribute normally
         let categoryBudget = remainingAllocation > 0 ? Math.round(remainingAllocation * (category.adjustedProportion / 100)) : 0;
         let remainingBudget = categoryBudget;
 
         for (const transaction of variableTransactions) {
           let allocation = remainingBudget > 0 ? Math.floor(remainingBudget / variableTransactions.length) : 0;
           try {
-            await updateTransaction({ ...transaction, amount: (Math.round(allocation / transaction.interval)) });
+            await updateTransaction({ ...transaction, amount: Math.floor(allocation / transaction.interval) });
           } catch (error) {
             console.error(`Error updating variable essential transaction ${transaction.id}:`, error);
             alert(`An error occurred while saving expense ${transaction.description}.`);
@@ -129,17 +127,17 @@ export default function AllocateAllService() {
 
     try {
       // Essentials
-      const totalFixedEssentials = essentialTransactions
+      for (const category of adjustedEssentialCategories) {
+        const cattransactions = essentialTransactions.filter(transaction => transaction.category_id === category.id);
+        const fixedTransactions = cattransactions.filter(transaction => transaction.isfixedamount === "Yes");
+        const variableTransactions = cattransactions.filter(transaction => transaction.isfixedamount !== "Yes");
+
+        const totalFixedEssentials = essentialTransactions
         .filter(transaction => transaction.isfixedamount === "Yes")
         .reduce((sum, transaction) => sum + (transaction.amount * transaction.interval), 0);
 
       let remainingEssentialsAllocation = essentialsAllocation - totalFixedEssentials;
       remainingEssentialsAllocation = Math.max(remainingEssentialsAllocation, 0);
-
-      for (const category of adjustedEssentialCategories) {
-        const cattransactions = essentialTransactions.filter(transaction => transaction.category_id === category.id);
-        const fixedTransactions = cattransactions.filter(transaction => transaction.isfixedamount === "Yes");
-        const variableTransactions = cattransactions.filter(transaction => transaction.isfixedamount !== "Yes");
 
         // Allocate fixed transactions (even if amount is 0)
         for (const transaction of fixedTransactions) {
@@ -151,7 +149,6 @@ export default function AllocateAllService() {
           }
         }
 
-        // Allocate 0 if budget is 0, otherwise distribute normally
         let categoryBudget = remainingEssentialsAllocation > 0 ? Math.round(remainingEssentialsAllocation * (category.adjustedProportion / 100)) : 0;
         let remainingBudget = categoryBudget;
 
@@ -167,19 +164,19 @@ export default function AllocateAllService() {
       }
 
       // Non-Essentials
-      const totalFixedNonEssentials = nonEssentialTransactions
-        .filter(transaction => transaction.isfixedamount === "Yes")
-        .reduce((sum, transaction) => sum + transaction.amount, 0);
-
-      let remainingNonEssentialsAllocation = nonEssentialsAllocation - totalFixedNonEssentials;
-      remainingNonEssentialsAllocation = Math.max(remainingNonEssentialsAllocation, 0);
-
       for (const category of adjustedNonEssentialCategories) {
         const cattransactions = nonEssentialTransactions.filter(transaction => transaction.category_id === category.id);
         const fixedTransactions = cattransactions.filter(transaction => transaction.isfixedamount === "Yes");
         const variableTransactions = cattransactions.filter(transaction => transaction.isfixedamount !== "Yes");
 
-        // Allocate fixed transactions (even if amount is 0)
+        const totalFixedNonEssentials = nonEssentialTransactions
+        .filter(transaction => transaction.isfixedamount === "Yes")
+        .reduce((sum, transaction) => sum + transaction.amount, 0);
+
+        let remainingNonEssentialsAllocation = nonEssentialsAllocation - totalFixedNonEssentials;
+        remainingNonEssentialsAllocation = Math.max(remainingNonEssentialsAllocation, 0);
+
+       
         for (const transaction of fixedTransactions) {
           try {
             await updateTransaction({ ...transaction, amount: transaction.amount });
@@ -189,7 +186,6 @@ export default function AllocateAllService() {
           }
         }
 
-        // Allocate 0 if budget is 0, otherwise distribute normally
         let categoryBudget = remainingNonEssentialsAllocation > 0 ? Math.round(remainingNonEssentialsAllocation * (category.adjustedProportion / 100)) : 0;
         let remainingBudget = categoryBudget;
 

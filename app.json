@@ -22,7 +22,10 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/Logo/Logo.png",
         "backgroundColor": "#ffffff",
-        "permissions": ["READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"]
+        "permissions": [
+          "READ_EXTERNAL_STORAGE",
+          "WRITE_EXTERNAL_STORAGE"
+        ]
       },
       "package": "com.chosan01.SpendWise"
     },
@@ -37,7 +40,6 @@
     },
     "plugins": [
       "expo-router"
-      
     ],
     "experiments": {
       "typedRoutes": true
@@ -47,7 +49,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "82274527-7cc7-419c-ae79-fb741f1a55c9"
+        "projectId": "043c4a5e-4a36-48b7-8437-39ee16df0407"
       }
     }
   }

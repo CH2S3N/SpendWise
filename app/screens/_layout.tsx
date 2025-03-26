@@ -35,11 +35,16 @@ const _layout = () => {
   const [input, setInput] = useState(userName);
 
   // load data
-  useEffect(() => {
+  useEffect(() => { 
     const initializeData = async () => {
       try {
         //  fetching data and AsyncStorage calls
         fetchData();
+        // await AsyncStorage.removeItem('@viewedOnboarding');
+        // await AsyncStorage.removeItem('stratSplitted');
+        // await AsyncStorage.removeItem('@hasNamesetted');
+        // await AsyncStorage.removeItem('@firstOpen');
+
         // await AsyncStorage.setItem('@viewedOnboarding', 'false');
         // await AsyncStorage.setItem('stratSplitted', 'false');
         // await AsyncStorage.setItem('@hasNamesetted', 'false');
