@@ -11,7 +11,7 @@ import { Button, Divider } from 'react-native-paper';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
 import { useFetchData } from '@/hooks/useFetchData';
 import Categories from './Categories';
-import Expense from '../ExpnseSummary/TransactionDetials/Expense';
+import Expense from '../ExpnseSummary/Expense';
 import AllocateAllService from '@/hooks/generateBudgetplan/AllocateService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setAllocation, setBudgetStratSplit } from '@/state/dataSlice';

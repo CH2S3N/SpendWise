@@ -6,7 +6,6 @@ import { colors } from '@/constants/colors';
 import AddIncome from '@/components/ui/addIncome';
 import { RootState } from '@/state/store';
 import { useSelector } from 'react-redux';
-import { Divider } from 'react-native-paper';
 
 
 export default function IncomeInfo() {
@@ -26,7 +25,7 @@ export default function IncomeInfo() {
       {/* Add Transaction Button */}
       <View style={styles.container}>
           <View style={[styles.tableheader, ]}>
-              <View style={[styles.row, {marginHorizontal: 20}]}>
+              <View style={[styles.row, ]}>
                 <Text style={styles.title}>Income Sources</Text>
                 <Text style={[styles.amount, {color: colors.green}]}>Total: ₱ {calcIncome()}</Text>
             </View>
@@ -68,6 +67,33 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  tableheader: {
+    width: '100%',
+    alignContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+    paddingBottom: 5,  
+    borderBottomWidth:1,
+    marginBottom:10 
+  },
+  row: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 5,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  amount: {
+    fontSize: 20,
+    fontWeight: "bold",
+    textShadowColor: 'black', 
+    textShadowOffset: { width: .2, height: .2 }, 
+    textShadowRadius: .2,
+  },
   section: {
     flex: 1,
     alignItems: 'flex-start',
@@ -75,41 +101,6 @@ const styles = StyleSheet.create({
   tablecontent: {
     flex: 10,
     flexDirection: 'row',
-  },
-  modalAddContent:{
-    flex: 1,
-    justifyContent: 'center',
-    padding: 15,
-    backgroundColor: 'white',
-    elevation: 5,
-    shadowColor: "#000",
-    shadowRadius: 8,
-    shadowOffset: { height: 6, width: 0 },
-    shadowOpacity: 0.15,
-  },
-  regen: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.dark,
-    borderRadius: 15,
-    elevation: 5,
-    shadowColor: "#000",
-    shadowRadius: 8,
-    shadowOffset: { height: 6, width: 0 },
-    shadowOpacity: 0.15,
-    padding: 15,
-    marginHorizontal: 5,
-    marginBottom: 10
-    
-
-  },
-  btnTxt:{
-    fontSize: 15,
-    fontWeight: 'bold',
-    color: 'white'
-  },
-  btn: {
   },
   noData:{
     flex: 1,
@@ -146,32 +137,5 @@ const styles = StyleSheet.create({
     shadowOffset: { height: 6, width: 0 },
     shadowOpacity: 0.15,
   },
-  tableheader: {
-    width: '100%',
-    borderBottomWidth:1,
-    marginBottom:10,
-    alignContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    paddingHorizontal: 20,
-    paddingBottom: 5,  
-},
-row: {
-  flex: 1,
-  flexDirection: "row",
-  justifyContent: "space-between",
-  marginBottom: 5,
-},
-title: {
-  fontSize: 20,
-  fontWeight: "bold",
-},
-amount: {
-  fontSize: 20,
-  fontWeight: "bold",
-  textShadowColor: 'black', 
-  textShadowOffset: { width: .2, height: .2 }, 
-  textShadowRadius: .2,
-},
 
 })

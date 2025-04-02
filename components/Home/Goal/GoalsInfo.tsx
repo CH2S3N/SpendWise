@@ -161,27 +161,24 @@ useEffect(() => {
 
       </View>
 
-
-
-
-        <Modal isOpen={isAddingGoal} transparent animationType="fade" onRequestClose={() => setIsAddingGoal(false)}>
-          <TouchableWithoutFeedback onPress={() => setIsAddingGoal(false)}>
-              <View style={styles.modalOverlay}>
-              <TouchableWithoutFeedback>
-                  <View style={styles.modalContent}>
-                    <Card
-                    style={{borderWidth:1,}}
-                    content={
-                      <View style={{flex:1}}>
-                        <Text style={[styles.title, {textAlign: 'center'}]}>Create a New Goal</Text>
-                        <AddGoal setIsAddingGoal={setIsAddingGoal} />
-                      </View>
-                    }/>
-                  </View>
-              </TouchableWithoutFeedback>
-              </View>
-          </TouchableWithoutFeedback>
-          </Modal>
+      <Modal isOpen={isAddingGoal} transparent animationType="fade" onRequestClose={() => setIsAddingGoal(false)}>
+        <TouchableWithoutFeedback onPress={() => setIsAddingGoal(false)}>
+            <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+                <View style={styles.modalContent}>
+                  <Card
+                  style={{borderWidth:1,}}
+                  content={
+                    <View style={{flex:1}}>
+                      <Text style={[styles.title, {textAlign: 'center'}]}>Create a New Goal</Text>
+                      <AddGoal setIsAddingGoal={setIsAddingGoal} />
+                    </View>
+                  }/>
+                </View>
+            </TouchableWithoutFeedback>
+            </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </>
   )
 }
@@ -212,7 +209,6 @@ const styles = StyleSheet.create({
   section: {
     flex: 1,
     alignItems: 'flex-start',
-    paddingHorizontal: 5,
   },
   text: {
     fontWeight: 'bold',

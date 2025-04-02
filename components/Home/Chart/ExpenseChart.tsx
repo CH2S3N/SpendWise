@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import PieChart from 'react-native-pie-chart';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
-import Budget from '../Budget/totalIncome';
 import { colors } from '@/constants/colors';
 import styles from './styles';
 import { calculateTotalExpense } from '@/utils/calcTotalExpense';

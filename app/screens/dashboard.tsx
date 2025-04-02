@@ -12,7 +12,7 @@ import styles from '@/components/Home/styles';
 import Overview from '@/components/Home/Chart/Overview';
 import Card from '@/components/ui/Card';
 import BudgetPlan from '@/components/Home/BudgetPlan/BudgetPlan';
-import Expense from '@/components/Home/ExpnseSummary/TransactionDetials/Expense';
+import Expense from '@/components/Home/ExpnseSummary/Expense';
 import { colors } from '@/constants/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TextInput } from 'react-native';

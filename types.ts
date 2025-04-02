@@ -23,6 +23,7 @@ export interface Income {
     subtype: "Weekends" | "Weekdays" | "All" | "Custom"
 }
 export interface Category {
+    type: string;
     map(arg0: (category: any) => any): import("react").ReactNode;
     id: number;
     name: string;

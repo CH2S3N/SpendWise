@@ -52,183 +52,176 @@ const Budget = () => {
     return true;
   }
   return (
-    <Animated.View 
-      // entering={SlideInUp.duration(300)}
-      // exiting={SlideOutDown.duration(300)}
-    style={styles.container}
-    >
-      <MainContainer>
-        <View style={styles.container}>
-          <View style={styles.header}>
-            <TouchableOpacity 
-              onPress={() => setIsModalVisible(true)} 
-              style={styles.userButton}>
-              <FontAwesome6 name="circle-user" size={30} color={colors.green} />
-              <Text style={styles.userText}>{userName}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => setIsSettingsModalVisible(true)} style={styles.iconButton} >
-              <FontAwesome6 name="gear" size={30} color={colors.green} 
-              style={{
-                textShadowColor: 'black', 
-                textShadowOffset: { width: .5, height: .5 }, 
-                textShadowRadius: .5,
-              }}
-              />
-            </TouchableOpacity>
-          </View>
-          <Card
-          style={{ 
-            flex: .5,
-            marginBottom:20,
-            borderWidth:1,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-          content={
-            <IncomeChart />
-          }
-          />
-          <View style={[{marginHorizontal:20}]}>
-            <TouchableOpacity onPress={() => setIsAddingIncome(true)} style={[styles.regen, {backgroundColor: colors.green}]}>
-                <Text style={[styles.btnTxt, {color: colors.light}]}>ADD INCOME</Text>
-            </TouchableOpacity>
-          </View>
-          <IncomeInfo />
+    <MainContainer>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity 
+            onPress={() => setIsModalVisible(true)} 
+            style={styles.userButton}>
+            <FontAwesome6 name="circle-user" size={30} color={colors.green} />
+            <Text style={styles.userText}>{userName}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setIsSettingsModalVisible(true)} style={styles.iconButton} >
+            <FontAwesome6 name="gear" size={30} color={colors.green} 
+            style={{
+              textShadowColor: 'black', 
+              textShadowOffset: { width: .5, height: .5 }, 
+              textShadowRadius: .5,
+            }}
+            />
+          </TouchableOpacity>
         </View>
+        <Card
+        style={{  
+          flex: .5,
+          marginBottom:20,
+          borderWidth:1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        content={
+          <IncomeChart />
+        }
+        />
+        <View style={[{marginHorizontal:20}]}>
+          <TouchableOpacity onPress={() => setIsAddingIncome(true)} style={[styles.regen, {backgroundColor: colors.green}]}>
+              <Text style={[styles.btnTxt, {color: colors.light}]}>ADD INCOME</Text>
+          </TouchableOpacity>
+        </View>
+        <IncomeInfo />
+      </View>
 
-        {/* Profile Modal */}
-        <Modal isOpen={isModalVisible} transparent animationType="fade">
-          <TouchableWithoutFeedback onPress={() => setIsModalVisible(false)}>
-            <View style={styles.modalOverlay}>
-              <TouchableWithoutFeedback>
-                <View style={[styles.modalContent1, {}]}>
-                  <Text style={styles.modalTitle}>Profile</Text>
-                  <FontAwesome6 name="circle-user" size={50} color={colors.green} />
-                  <View style={{ paddingTop: 10 }}>
-                    <Text style={{color: colors.green, fontWeight: 'bold'}}>Current Username</Text>
-                    <TextInput
-                      placeholder="Enter Username"
-                      style={{ color: colors.green ,marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black', textAlign: 'center' }}
-                      value={input}
-                      onChangeText={(txt)=>{
-                        setInput(
-                          txt
-                            .toLowerCase()
-                            .replace(/\b\w/g, (char) => char.toUpperCase())
-                        )
-                      }}
-                      maxLength={12}
-                    />
-                  </View>
-                  <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-evenly', alignItems: "center" }}>
-                    <TouchableOpacity onPress={() => setIsModalVisible(false)} style={styles.btn}>
-                      <Text style={{color: colors.light}}>Close</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => {
-                      dispatch(setUsername(input));
-                      setIsConfirmSaveModalVisible(true)
+      {/* Profile Modal */}
+      <Modal isOpen={isModalVisible} transparent animationType="fade">
+        <TouchableWithoutFeedback onPress={() => setIsModalVisible(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={[styles.modalContent1, {}]}>
+                <Text style={styles.modalTitle}>Profile</Text>
+                <FontAwesome6 name="circle-user" size={50} color={colors.green} />
+                <View style={{ paddingTop: 10 }}>
+                  <Text style={{color: colors.green, fontWeight: 'bold'}}>Current Username</Text>
+                  <TextInput
+                    placeholder="Enter Username"
+                    style={{ color: colors.green ,marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black', textAlign: 'center' }}
+                    value={input}
+                    onChangeText={(txt)=>{
+                      setInput(
+                        txt
+                          .toLowerCase()
+                          .replace(/\b\w/g, (char) => char.toUpperCase())
+                      )
                     }}
-                    disabled={!validateFields()}
-                    style={[
-                      styles.btn,
-                      (!validateFields()) && styles.disabledButton
-                    ]}
-                    >
-                      <Text style={{color: colors.light}}>Save</Text>
-                    </TouchableOpacity>
-                  </View>
+                    maxLength={12}
+                  />
                 </View>
-              </TouchableWithoutFeedback>
-            </View>
-          </TouchableWithoutFeedback>
-        </Modal>
-
-        {/* Settings Modal */}
-        <Modal isOpen={isSettingsModalVisible} transparent animationType="fade">
-          <TouchableWithoutFeedback onPress={() => setIsSettingsModalVisible(false)}>
-            <View style={styles.modalOverlay}>
-              <TouchableWithoutFeedback>
-                <View style={[styles.modalContent1, {}]}>
-                  <Text style={styles.modalTitle}>Settings</Text>
+                <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-evenly', alignItems: "center" }}>
+                  <TouchableOpacity onPress={() => setIsModalVisible(false)} style={styles.btn}>
+                    <Text style={{color: colors.light}}>Close</Text>
+                  </TouchableOpacity>
                   <TouchableOpacity onPress={() => {
-                    setIsSettingsModalVisible(false);
-                    Linking.openURL('https://www.youtube.com/shorts/41iWg91yFv0')
-                    
-                    }}>
-                    <Text style={styles.modalSubTitle}>Feedback</Text>
+                    dispatch(setUsername(input));
+                    setIsConfirmSaveModalVisible(true)
+                  }}
+                  disabled={!validateFields()}
+                  style={[
+                    styles.btn,
+                    (!validateFields()) && styles.disabledButton
+                  ]}
+                  >
+                    <Text style={{color: colors.light}}>Save</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={()=>{
-                    setIsConfirmDeletionModalVisible(true)
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+
+      {/* Settings Modal */}
+      <Modal isOpen={isSettingsModalVisible} transparent animationType="fade">
+        <TouchableWithoutFeedback onPress={() => setIsSettingsModalVisible(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={[styles.modalContent1, {}]}>
+                <Text style={styles.modalTitle}>Settings</Text>
+                <TouchableOpacity onPress={() => {
+                  setIsSettingsModalVisible(false);
+                  Linking.openURL('https://forms.gle/b6Arx9oTMbKAYQqi7')
+                  
                   }}>
-                    <Text style={[styles.modalSubTitle, {color: colors.red}]}>Delete all data</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => setIsSettingsModalVisible(false)}>
-                    <Text style={styles.modalSubTitle}>Close</Text>
-                  </TouchableOpacity>
-                </View>
-              </TouchableWithoutFeedback>
-            </View>
-          </TouchableWithoutFeedback>
-        </Modal>
+                  <Text style={styles.modalSubTitle}>Feedback</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=>{
+                  setIsConfirmDeletionModalVisible(true)
+                }}>
+                  <Text style={[styles.modalSubTitle, {color: colors.red}]}>Delete all data</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setIsSettingsModalVisible(false)}>
+                  <Text style={styles.modalSubTitle}>Close</Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
 
-        
-        {/* Add Income Modal*/}
-        <Modal isOpen={isAddingIncome} transparent animationType="fade">
-          <TouchableWithoutFeedback onPress={() => setIsAddingIncome(false)}>
-            <View style={styles.modalOverlay}>
-              <TouchableWithoutFeedback>
-                <View style={styles.modalContent}>
-                  <Text style={styles.title}>ADD INCOME </Text>
-                  <AddIncome setIsAddingIncome={setIsAddingIncome}/>
-                </View>
-              </TouchableWithoutFeedback>
-            </View>
-          </TouchableWithoutFeedback>
-        </Modal>
+      
+      {/* Add Income Modal*/}
+      <Modal isOpen={isAddingIncome} transparent animationType="fade">
+        <TouchableWithoutFeedback onPress={() => setIsAddingIncome(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContent}>
+                <Text style={styles.title}>ADD INCOME </Text>
+                <AddIncome setIsAddingIncome={setIsAddingIncome}/>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
 
 
-        {/* Save Confirmation Modal */}
-        <ConfirmModal
-        visible={isConfirmSaveModalVisible} 
-        title={'Confirm Changes'} 
-        message={'Are you sure you want save the changes?'} 
-        onConfirm={()=> {
-          handleUpdateUser();
-          setIsSettingsModalVisible(false);
-          setIsConfirmSaveModalVisible(false)
-          setIsModalVisible(false);
-          Alert.alert(
-            "Username",    
-            "Changes Saved!", 
-            [
-              { text: "OK", onPress: () => console.log("OK Pressed") }
-            ]
-          );
-        }} 
-        onCancel={() => setIsConfirmSaveModalVisible(false)}      
-        />
-        {/* Confirmation Deletion  Modal */}
-        <ConfirmModal
-        visible={isConfirmDeletionModalVisible} 
-        title={'Confirm Deletion'} 
-        message={'Are you sure you want to delete all data?'} 
-        onConfirm={()=> {
-          deleteAllData();
-          setIsConfirmDeletionModalVisible(false)
-          setIsSettingsModalVisible(false)
-          Alert.alert(
-            "Deletion",      
-            "User Data Deleted!", 
-            [
-              { text: "OK", onPress: () => console.log("OK Pressed") }
-            ]
-          );
-        }} 
-        onCancel={() => setIsConfirmDeletionModalVisible(false)}      
-        />
-      </MainContainer>
-
-    </Animated.View>
+      {/* Save Confirmation Modal */}
+      <ConfirmModal
+      visible={isConfirmSaveModalVisible} 
+      title={'Confirm Changes'} 
+      message={'Are you sure you want save the changes?'} 
+      onConfirm={()=> {
+        handleUpdateUser();
+        setIsSettingsModalVisible(false);
+        setIsConfirmSaveModalVisible(false)
+        setIsModalVisible(false);
+        Alert.alert(
+          "Username",    
+          "Changes Saved!", 
+          [
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+          ]
+        );
+      }} 
+      onCancel={() => setIsConfirmSaveModalVisible(false)}      
+      />
+      {/* Confirmation Deletion  Modal */}
+      <ConfirmModal
+      visible={isConfirmDeletionModalVisible} 
+      title={'Confirm Deletion'} 
+      message={'Are you sure you want to delete all data?'} 
+      onConfirm={()=> {
+        deleteAllData();
+        setIsConfirmDeletionModalVisible(false)
+        setIsSettingsModalVisible(false)
+        Alert.alert(
+          "Deletion",      
+          "User Data Deleted!", 
+          [
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+          ]
+        );
+      }} 
+      onCancel={() => setIsConfirmDeletionModalVisible(false)}      
+      />
+    </MainContainer>
   );
 };
 

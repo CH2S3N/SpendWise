@@ -18,8 +18,8 @@ export function UseTransactionService() {
   const insertGoal = async (goal: Goal) => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
-        `INSERT INTO Goals (name, amount) VALUES(?, ?)`,
-        [goal.name, goal.amount]
+        `INSERT INTO Goals (name, amount, currentAmount) VALUES(?, ?, ?)`,
+        [goal.name, goal.amount, goal.currentAmount]
       );
   
       // Fetch the newly inserted goal using last_insert_rowid()

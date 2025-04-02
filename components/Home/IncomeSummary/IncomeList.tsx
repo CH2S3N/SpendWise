@@ -2,7 +2,6 @@ import { Income } from "@/types";
 import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View, Modal as RNModal, Alert } from "react-native";
 import { Modal } from "@/components/Modal";
 import React, { useState } from "react";
-import IncomeDetails from "./IncomeDetails";
 import UpdateIncome from "@/components/ui/UpdateIncome";
 import { RootState } from "@/state/store";
 import { useSelector } from "react-redux";
@@ -166,7 +165,6 @@ const styles=StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        paddingHorizontal: 5
     },
     content: {
         flex: 1,

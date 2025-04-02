@@ -11,7 +11,7 @@ import { colors } from "@/constants/colors";
 export default function SubCatWants() {
   const { updateCategory } = UseTransactionService();
   const dispatch = useDispatch();
-  const { categories, transactions, incomeCategories, goals, user, incomes, recurrence } = useSelector((state: RootState) => state.data);
+  const { categories, transactions, goals, user, incomes } = useSelector((state: RootState) => state.data);
   const nonEssentialSubCat = categories.filter((category) => category.type === "Non_Essential");
   const [sliderValue, setSliderValue] = useState<{ [key: number]: number }>({});
 
@@ -35,7 +35,10 @@ export default function SubCatWants() {
       cat.id === categoryId ? { ...cat, proportion: roundedValue } : cat
     );
 
-    dispatch(setData({ categories: updatedCategories, transactions, incomeCategories, goals, user, incomes, recurrence }));
+    dispatch(setData({
+      categories: updatedCategories, transactions, goals, user, incomes,
+      varDataStates: []
+    }));
     await updateCategory({ ...category, proportion: roundedValue });
   };
 
@@ -47,7 +50,10 @@ export default function SubCatWants() {
           : cat
       );
 
-      dispatch(setData({ categories: updatedCategories, transactions, incomeCategories, goals, user, incomes, recurrence }));
+      dispatch(setData({
+        categories: updatedCategories, transactions, goals, user, incomes,
+        varDataStates: []
+      }));
 
       const initialSliderValues = updatedCategories.reduce((id, cat) => {
         id[cat.id] = cat.proportion;
