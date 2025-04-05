@@ -136,7 +136,7 @@ export default function AddIncome({
             <View style={styles.content}>
                 <Text style={styles.btext}>Recurrence</Text>
                 <SegmentedControl
-                
+                  testID="income-recurrence-segmented-control"
                   values={["Daily", "Weekly", "Bi-Weekly", "Monthly"]}
                   style={[styles.segmentCon, {marginBottom: 0}]}
                   selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
@@ -269,6 +269,7 @@ export default function AddIncome({
           {/* Income Type */}
           <Text style={styles.btext}>Income Type</Text>
           <SegmentedControl
+            testID="income-segmented-control"
             values={["Allowance", "Salary", "Others"]}
             style={styles.segmentCon}
             selectedIndex={["Allowance", "Salary", "Others"].indexOf(incomeCategory)}

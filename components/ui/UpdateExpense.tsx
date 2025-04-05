@@ -73,7 +73,7 @@ export default function UpdateExpense({
 
        const categoryForCurrentItem = categories.find(
         (category) => category.id === currentTransaction.category_id
-    );
+    ); 
 
     React.useEffect(() => {
       if (currentTransaction) {
@@ -154,6 +154,7 @@ export default function UpdateExpense({
           <View style={styles.content}>
               <Text style={styles.btext}>Recurrence</Text>
               <SegmentedControl
+              testID='recurrence-segment-control'
                 values={["Daily", "Weekly", "Bi-Weekly", "Monthly"]}
                 style={[styles.segmentCon, {marginBottom:0}]}
                 selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
@@ -289,6 +290,7 @@ export default function UpdateExpense({
 
         {/* IS FIXED AMOUNT */}
         <View>
+          
           <Text style={styles.btext}>Is a Fixed Amount?</Text>
           <SegmentedControl
             style={styles.segmentCon}
@@ -307,6 +309,7 @@ export default function UpdateExpense({
           {/* AMOUNT */}
             <Text style={styles.btext}>Amount</Text>
             <TextInput
+            testID='amount'
               placeholder={isfixedamount === "Yes" ? ("Enter Amount (Required)"): ("Enter Amount (Not required)")}
               value={amount}
               style={{ marginBottom: 15, marginTop: 10, borderBottomWidth: 1, borderBottomColor: 'black' }}
@@ -328,6 +331,7 @@ export default function UpdateExpense({
           {/* ENTRY TYPE, ESSENTIAL & NON ESSENTIAL */}
         <Text style={styles.btext}>Select an Expense Type</Text>
         <SegmentedControl
+        testID='category-segment-control'
           values={["Needs", "Wants"]}
           style={styles.segmentCon}
           selectedIndex={["Essential","Non_Essential"].indexOf(category)}

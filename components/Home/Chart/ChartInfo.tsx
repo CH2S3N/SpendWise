@@ -1,17 +1,13 @@
 import { View, StyleSheet, Text } from 'react-native'
 import React, { useState } from 'react'
-import MainContainer from '@/components/Containers/MainContainer';
 import CircularChart from './ExpenseChart';
 import BigText from '@/components/Texts/BigText';
 import IncomeChart from './IncomeChart ';
-import { Divider } from '@rneui/base';
 import Overview from './Overview';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import Card from '@/components/ui/Card';
 import { colors } from '@/constants/colors';
 
 export default function ChartInfo() {
-  const [isOverview, setOverview] = useState(false);
   return (
     <View style={styles.container}>
       <>

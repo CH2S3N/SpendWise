@@ -1,22 +1,26 @@
 BEGIN TRANSACTION;
-DROP TABLE IF EXISTS "Categories";
-CREATE TABLE "Categories" (
+CREATE TABLE IF NOT EXISTS "Categories" (
 	"id"	INTEGER,
 	"name"	TEXT NOT NULL,
-	"type"	TEXT NOT NULL CHECK("type" IN ('Essential', 'Non_Essential')),
+	"description"	TEXT,
+	"initialProp"	INTEGER,
 	"proportion"	INTEGER,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
-DROP TABLE IF EXISTS "Goals";
-CREATE TABLE "Goals" (
+CREATE TABLE IF NOT EXISTS "DataStates" (
+	"id"	INTEGER,
+	"name"	TEXT NOT NULL,
+	"value"	TEXT NOT NULL CHECK("value" IN ('True', 'Falsel')),
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS "Goals" (
 	"id"	INTEGER,
 	"name"	TEXT NOT NULL,
 	"amount"	INTEGER NOT NULL,
 	"currentAmount"	INTEGER,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
-DROP TABLE IF EXISTS "Income";
-CREATE TABLE "Income" (
+CREATE TABLE IF NOT EXISTS "Income" (
 	"id"	INTEGER,
 	"incomeCategoryId"	INTEGER,
 	"amount"	INTEGER NOT NULL,
@@ -24,24 +28,22 @@ CREATE TABLE "Income" (
 	"frequency"	TEXT NOT NULL CHECK("frequency" IN ('Daily', 'Weekly', 'Bi-Weekly', 'Monthly')),
 	"type"	TEXT NOT NULL CHECK("type" IN ('Allowance', 'Salary', 'Others')),
 	"interval"	INTEGER,
+	"intervalInput"	INTEGER,
 	"subtype"	TEXT CHECK("subtype" IN ('Weekdays', 'Weekends', 'All', 'Custom')),
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
-DROP TABLE IF EXISTS "IncomeCategory";
-CREATE TABLE "IncomeCategory" (
+CREATE TABLE IF NOT EXISTS "IncomeCategory" (
 	"id"	INTEGER,
 	"name"	TEXT NOT NULL,
 	"type"	TEXT CHECK("type" IN ('Allowance', 'Salary', 'Others')),
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
-DROP TABLE IF EXISTS "Recurrence";
-CREATE TABLE "Recurrence" (
+CREATE TABLE IF NOT EXISTS "Recurrence" (
 	"id"	INTEGER,
 	"name"	TEXT,
 	PRIMARY KEY("id")
 );
-DROP TABLE IF EXISTS "Transactions";
-CREATE TABLE "Transactions" (
+CREATE TABLE IF NOT EXISTS "Transactions" (
 	"id"	INTEGER,
 	"category_id"	INTEGER,
 	"description"	TEXT NOT NULL,
@@ -49,38 +51,35 @@ CREATE TABLE "Transactions" (
 	"prioritization"	TEXT NOT NULL CHECK("prioritization" IN ('High', 'Medium', 'Low')),
 	"isfixedamount"	TEXT CHECK("isfixedamount" IN ('Yes', 'No')),
 	"amount"	INTEGER,
-	"type"	TEXT NOT NULL CHECK("type" IN ('Essential', 'Non_Essential')),
+	"type"	TEXT CHECK("type" IN ('Essential', 'Non_Essential')),
 	"interval"	INTEGER,
+	"intervalInput"	INTEGER,
 	"recurrence_id"	INTEGER,
 	"subtype"	TEXT CHECK("subtype" IN ('Weekdays', 'Weekends', 'All', 'Custom')),
 	PRIMARY KEY("id" AUTOINCREMENT),
 	FOREIGN KEY("category_id") REFERENCES "Categories"("id"),
 	FOREIGN KEY("recurrence_id") REFERENCES "Recurrence"("id")
 );
-DROP TABLE IF EXISTS "User";
-CREATE TABLE "User" (
-	"userName"	INTEGER NOT NULL,
+CREATE TABLE IF NOT EXISTS "User" (
 	"id"	INTEGER,
-	"budget_Amount"	INTEGER NOT NULL,
+	"userName"	INTEGER,
+	"hasData"	INTEGER CHECK("hasData" IN ('True', 'False')),
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
-INSERT INTO "Categories" VALUES (1,'Housing','Essential',35);
-INSERT INTO "Categories" VALUES (2,'Transportation','Essential',10);
-INSERT INTO "Categories" VALUES (3,'Groceries','Essential',25);
-INSERT INTO "Categories" VALUES (4,'Healthcare','Essential',15);
-INSERT INTO "Categories" VALUES (5,'Entertainment','Non_Essential',40);
-INSERT INTO "Categories" VALUES (6,'Dining out','Non_Essential',30);
-INSERT INTO "Categories" VALUES (7,'Shopping','Non_Essential',10);
-INSERT INTO "Categories" VALUES (8,'Travel','Non_Essential',10);
-INSERT INTO "Categories" VALUES (9,'Subscription','Non_Essential',10);
-INSERT INTO "Categories" VALUES (10,'Utilities','Essential',15);
-INSERT INTO "Goals" VALUES (1,'new Phone',1000,0);
-INSERT INTO "Goals" VALUES (2,'clothing',100,0);
-INSERT INTO "Goals" VALUES (3,'book',700,0);
-INSERT INTO "Goals" VALUES (4,'new shoes',100,0);
-INSERT INTO "Income" VALUES (1,1,1000,'Allowance','Monthly','Allowance',1,NULL);
-INSERT INTO "Income" VALUES (2,2,16000,'Salary','Monthly','Salary',1,NULL);
-INSERT INTO "Income" VALUES (3,3,3000,'Others','Monthly','Others',1,NULL);
+INSERT INTO "Categories" VALUES (1,'Housing & Utilities','Rent, Mortgage, Electricity, Water, Internet, Gas)',30,30);
+INSERT INTO "Categories" VALUES (2,'Transportation','Gas, Jeepney/Bus/Train Fare, Parking, Motorbike Maintenance',10,10);
+INSERT INTO "Categories" VALUES (3,'Grocery','Food, Household Essentials',15,15);
+INSERT INTO "Categories" VALUES (4,'Healthcare','Medical Checkups, Medicines, Insurance',10,10);
+INSERT INTO "Categories" VALUES (5,'Childcare & Education','Tuition, School Supplies, Allowance, Daycare',5,5);
+INSERT INTO "Categories" VALUES (6,'Debt Payments','Loan Repayments, Credit Card Payments',5,5);
+INSERT INTO "Categories" VALUES (7,'Dining Out','Fast Food, Street Food, Cafés, Occasional Restaurant Meals',5,5);
+INSERT INTO "Categories" VALUES (8,'Entertainment','Netflix, Mobile Load/Data, Gaming, Movies, Karaoke',5,5);
+INSERT INTO "Categories" VALUES (9,'Shopping','Clothes, Shoes, Accessories, Basic Home Items',5,5);
+INSERT INTO "Categories" VALUES (10,'Travel','Weekend Getaways, Flights, Hotels',5,5);
+INSERT INTO "Categories" VALUES (11,'Hobbies','Gym, Cycling, Sports, Arts & Crafts, Music',5,5);
+INSERT INTO "Categories" VALUES (12,'Personal Care','Haircuts, Skincare, Grooming, Salon, Gym Membership',5,5);
+INSERT INTO "Categories" VALUES (13,'Others','Miscellaneous, Emergency Funds, Gifts, Unplanned Expenses',5,5);
+INSERT INTO "DataStates" VALUES (1,'SplitStrat','True');
 INSERT INTO "IncomeCategory" VALUES (1,'allowance','Allowance');
 INSERT INTO "IncomeCategory" VALUES (2,'Salary','Salary');
 INSERT INTO "IncomeCategory" VALUES (3,'others','Others');
@@ -91,12 +90,5 @@ INSERT INTO "Recurrence" VALUES (4,'Wed');
 INSERT INTO "Recurrence" VALUES (5,'Thu');
 INSERT INTO "Recurrence" VALUES (6,'Fri');
 INSERT INTO "Recurrence" VALUES (7,'Sat');
-INSERT INTO "Transactions" VALUES (1,1,'rent','Monthly','High','No','','Essential',1,NULL,'Custom');
-INSERT INTO "Transactions" VALUES (2,2,'commute','Daily','High','No','','Essential',30,NULL,'Custom');
-INSERT INTO "Transactions" VALUES (3,3,'food','Daily','High','No','','Essential',30,NULL,'Custom');
-INSERT INTO "Transactions" VALUES (4,4,'medicine','Weekly','High','No','','Essential',7,NULL,'All');
-INSERT INTO "Transactions" VALUES (5,10,'utility','Monthly','Medium','No','','Non_Essential',1,NULL,'Custom');
-INSERT INTO "Transactions" VALUES (6,5,'entertainment','Bi-Weekly','Low','No','','Non_Essential',1,NULL,'Custom');
-INSERT INTO "Transactions" VALUES (13,9,'Subscription','Monthly','High','Yes',450,'Non_Essential',1,NULL,'Custom');
-INSERT INTO "User" VALUES ('User',1,10000);
+INSERT INTO "User" VALUES (1,'','False');
 COMMIT;

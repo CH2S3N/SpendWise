@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
 import { colors } from '@/constants/colors';
 import styles from './styles';
-import { calculateTotalExpense } from '@/utils/calcTotalExpense';
 import { Income, Transaction } from '@/types';
 
 export default function ExpenseChart() {

@@ -62,89 +62,88 @@ export default function UpdateGoal({
 
     return (
       <>
-        <Card
-          content={
-            <View style={styles.container}>
-              <View style={styles.header}>
-                <Text style={styles.title}>UPDATE GOAL</Text>
-              </View>
 
-              {/* Item Name Input */}
-              <View style={styles.content}>
-                <Text style={styles.textTitle}>Item</Text>
-                <TextInput
-                  value={name}
-                  placeholder="Provide an Item Description"
-                  style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
-                  onChangeText={(txt) => {
-                    setName(
-                      txt
-                        .toLowerCase()
-                        .replace(/\b\w/g, (char) => char.toUpperCase())
-                    )
-                    }}
-                    maxLength={25} 
-                />
-              </View>
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Text style={styles.title}>UPDATE GOAL</Text>
+          </View>
 
-              {/* Total Amount Input */}
-              <View style={styles.content}>
-                <Text style={styles.textTitle}>Total Amount</Text>
-                <TextInput
-                  value={amount}
-                  placeholder="Enter Accumulated Amount"
-                  style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
-                  keyboardType="numeric"
-                  onChangeText={(text) => {
-                    // Remove any non-numeric characters before setting the state
-                    let numericValue = text.replace(/[^0-9]/g, "");
-                    if (numericValue.length > 1) {
-                      numericValue = numericValue.replace(/^0+/, ""); 
-                    }
-                    setAmount(numericValue);
-                    
-                  }}
-                  maxLength={7}
-                />
-              </View>
+          {/* Item Name Input */}
+          <View style={styles.content}>
+            <Text style={styles.textTitle}>Item</Text>
+            <TextInput
+              value={name}
+              placeholder="Provide an Item Description"
+              style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black'}}
+              onChangeText={(txt) => {
+                setName(
+                  txt
+                    .toLowerCase()
+                    .replace(/\b\w/g, (char) => char.toUpperCase())
+                )
+                }}
+                maxLength={25} 
+            />
+          </View>
 
-              {/* Accumulated Amount Input */}
-              <View style={styles.content}>
-                <Text style={styles.textTitle}>Accumulated Amount</Text>
-                <TextInput
-                  value={accumulatedAmount}
-                  placeholder="Enter Accumulated Amount"
-                  style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
-                  keyboardType="numeric"
-                  onChangeText={(text) => {
-                    let numericValue = text.replace(/[^0-9]/g, "");
-                    if (numericValue.length > 1) {
-                      numericValue = numericValue.replace(/^0+/, ""); 
-                    }
-                    setAccumulatedAmount(numericValue);
-                    
-                  }}                  
-                  onBlur={() => {
-                    let accAmount = parseInt(accumulatedAmount) || 0; 
-                    if (accAmount > parseInt(amount)) {
-                      accAmount = parseInt(amount);
-                    }
-                    setAccumulatedAmount(accAmount.toString()); 
-                  }}
-                  maxLength={7}
-                />
-              </View>
+          {/* Total Amount Input */}
+          <View style={styles.content}>
+            <Text style={styles.textTitle}>Total Amount</Text>
+            <TextInput
+              value={amount}
+              placeholder="Enter Amount"
+              style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
+              keyboardType="numeric"
+              onChangeText={(text) => {
+                // Remove any non-numeric characters before setting the state
+                let numericValue = text.replace(/[^0-9]/g, "");
+                if (numericValue.length > 1) {
+                  numericValue = numericValue.replace(/^0+/, ""); 
+                }
+                setAmount(numericValue);
+                
+              }}
+              maxLength={7}
+            />
+          </View>
 
-              {/* Buttons */}
-              <View style={styles.btn}>
-                <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-                  <Button title="Cancel" color={colors.red} onPress={() => setIsUpdatingGoal(false)} />
-                  <Button title="Save" color={colors.green} onPress={() => setIsConfirmModalVisible(true)} disabled={!validateFields()} />
-                </View>
-              </View>
+          {/* Accumulated Amount Input */}
+          <View style={styles.content}>
+            <Text style={styles.textTitle}>Accumulated Amount</Text>
+            <TextInput
+              value={accumulatedAmount}
+              placeholder="Enter Accumulated Amount"
+              style={{ marginBottom: 15, borderBottomWidth: 1, borderBottomColor: 'black' }}
+              keyboardType="numeric"
+              onChangeText={(text) => {
+                let numericValue = text.replace(/[^0-9]/g, "");
+                if (numericValue.length > 1) {
+                  numericValue = numericValue.replace(/^0+/, ""); 
+                }
+                setAccumulatedAmount(numericValue);
+                
+              }}                  
+              onBlur={() => {
+                let accAmount = parseInt(accumulatedAmount) || 0; 
+                if (accAmount > parseInt(amount)) {
+                  accAmount = parseInt(amount);
+                }
+                setAccumulatedAmount(accAmount.toString()); 
+              }}
+              maxLength={7}
+            />
+          </View>
+
+          {/* Buttons */}
+          <View style={styles.btn}>
+            <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+              <Button title="Cancel" color={colors.red} onPress={() => setIsUpdatingGoal(false)} />
+              <Button title="Save" testID='save-button' color={colors.green} onPress={() => setIsConfirmModalVisible(true)} disabled={!validateFields()} />
             </View>
-          }
-        />
+          </View>
+        </View>
+          
+        
 
         {/* Confirmation Modal */}
         <ConfirmModal
@@ -172,8 +171,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   container: {
+    padding: 15,
+    borderRadius: 15,
+    backgroundColor: 'white',
+    elevation: 5,
+    shadowColor: "#000",
+    shadowRadius: 8,
+    shadowOffset: { height: 6, width: 0 },
+    shadowOpacity: 0.15,
     flex: 1,
-    height: "100%",
   },
   btn: {
     flex: 1,

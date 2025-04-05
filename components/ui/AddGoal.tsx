@@ -1,7 +1,6 @@
 import { View, TextInput, Button, Text, StyleSheet, ScrollView, Alert } from 'react-native'
 import React from 'react'
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
-import Card from './Card';
 import ConfirmModal from '../Modal/ConfirmModal';
 import { colors } from '@/constants/colors';
 

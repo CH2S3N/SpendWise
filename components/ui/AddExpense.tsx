@@ -21,7 +21,7 @@ export default function AddExpense({
 }: addExpenseProps) {
 
     const { insertTransaction } = UseTransactionService();
-    const { categories, transactions } = useSelector(
+    const { categories, transactions  } = useSelector(
       (state: RootState) => state.data
     );
 
@@ -148,6 +148,7 @@ export default function AddExpense({
             <View style={styles.content}>
                 <Text style={styles.btext}>Recurrence</Text>
                 <SegmentedControl
+                  testID="recurrence-segment-control"
                   values={["Daily", "Weekly", "Bi-Weekly", "Monthly"]}
                   style={[styles.segmentCon, { marginBottom: 0}]}
                   selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
@@ -303,6 +304,7 @@ export default function AddExpense({
             {/* AMOUNT */}
               <Text style={styles.btext}>Amount</Text>
               <TextInput
+              testID='amount'
                 placeholder={isfixedamount === "Yes" ? ("Enter Amount (Required)"): ("Enter Amount (Not required)")}
                 value={amount}
                 style={{ marginBottom: 15, marginTop: 10, borderBottomWidth: 1, borderBottomColor: 'black' }}
@@ -323,8 +325,9 @@ export default function AddExpense({
 
             {/* ENTRY TYPE, ESSENTIAL & NON ESSENTIAL */}
           <Text style={styles.btext}>Select an Expense Type</Text>
-          <SegmentedControl
           
+          <SegmentedControl
+            testID='category-segment-control'
             values={["Needs", "Wants"]}
             style={styles.segmentCon}
             selectedIndex={["Essential","Non_Essential"].indexOf(category)}
@@ -343,8 +346,10 @@ export default function AddExpense({
               style={{
                 placeholder: {color: colors.dark},
                 inputAndroid: { color: colors.dark},
-              }}     
-              value={typeSelected}       
+              }}  
+                 
+              value={typeSelected} 
+                    
                 onValueChange={(value) => {
                   setTypeSelected(value);
                   const selectedCategory = categories.find((cat) => cat.name === value);

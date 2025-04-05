@@ -13,7 +13,6 @@ import Card from '@/components/ui/Card';
 import { setUsername } from '@/state/userSlice';
 import AddIncome from '@/components/ui/addIncome';
 import ConfirmModal from '@/components/Modal/ConfirmModal';
-import Animated, { BounceIn, BounceOut, FadeIn, FadeOut, SlideInLeft, SlideInRight, SlideInUp, SlideOutDown, SlideOutLeft, SlideOutRight, ZoomInEasyDown } from 'react-native-reanimated';
 
 const Budget = () => {
   const { user } = useSelector((state: RootState) => state.data);
