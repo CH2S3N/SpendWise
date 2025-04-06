@@ -41,6 +41,7 @@ const mockState:Transaction = {
   intervalInput: 1,
   subtype: "Custom" as "All" | "Weekends" | "Weekdays" | "Custom",
 };
+
 describe('Add Expense Component', () => {
   // Description input Testing
   it('should update description text and capitalize first letter of each word', () => {
@@ -120,6 +121,7 @@ describe('Add Expense Component', () => {
   });
 
 });
+
 describe('Update Expense Component', () => {
   // Description input Testing
   it('should update description text and capitalize first letter of each word', () => {
@@ -176,7 +178,6 @@ describe('Update Expense Component', () => {
       throw new Error('Function not implemented.');
     } } currentTransaction={mockState} />);
     const segmentControl = getByTestId("recurrence-segment-control");
-
 
     fireEvent(segmentControl, "onChange", { nativeEvent: { selectedSegmentIndex: 3 } });
     await waitFor(() => expect(segmentControl.props.selectedIndex).toBe(3));

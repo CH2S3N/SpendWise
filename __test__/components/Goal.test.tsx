@@ -140,7 +140,7 @@ describe("Update Goal Component", () => {
       fireEvent.changeText(getByPlaceholderText("Enter Amount"), "1000");
       fireEvent.press(getByText("Save"));
     })
-
+ 
     
     expect(screen.getByText("Save")).toBeTruthy();
   });

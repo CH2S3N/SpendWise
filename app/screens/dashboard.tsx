@@ -14,7 +14,6 @@ import Card from '@/components/ui/Card';
 import BudgetPlan from '@/components/Home/BudgetPlan/BudgetPlan';
 import Expense from '@/components/Home/ExpnseSummary/Expense';
 import { colors } from '@/constants/colors';
-import { setHasName, setWelcomed } from '@/state/dataSlice';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
 import { Dimensions } from 'react-native';
 

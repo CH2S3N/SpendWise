@@ -3,7 +3,6 @@ import { RootState } from '@/state/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { UseTransactionService } from '../editData/TransactionService';
 import { useFetchData } from '../useFetchData';
-import { setAllocation } from '@/state/dataSlice';
 
 export default function AllocateAllService() {
   const { fetchData } = useFetchData();

@@ -5,6 +5,11 @@ import UpdateIncome from '@/components/ui/UpdateIncome';
 import { Alert } from 'react-native';
 import { Income } from '@/types';
 
+// Mock sqlite
+jest.mock('expo-sqlite', () => ({
+  useSQLiteContext: jest.fn().mockReturnValue({}),
+}));
+
 // Mock the UseTransactionService hook to prevent actual API calls
 jest.mock('@/hooks/editData/TransactionService', () => ({
   UseTransactionService: jest.fn(() => ({

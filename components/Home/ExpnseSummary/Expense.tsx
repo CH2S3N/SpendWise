@@ -8,7 +8,6 @@ import { colors } from "@/constants/colors";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
-import { Divider } from "react-native-paper";
 import ConfirmModal from "@/components/Modal/ConfirmModal";
 
 
