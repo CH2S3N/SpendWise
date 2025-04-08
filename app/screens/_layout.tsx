@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Text, TouchableOpacity, View, StyleSheet, TextInput, TouchableWithoutFeedback, Animated } from 'react-native';
+import { Text, TouchableOpacity, View, StyleSheet, TextInput, TouchableWithoutFeedback, Animated, Dimensions } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Tabs, useFocusEffect } from 'expo-router';
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -10,23 +10,27 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import OnBoarding from '@/components/onBoarding/onBoarding';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
-import { setHasName, setViewedOnboarding, setWelcomed } from '@/state/dataSlice';
+import { setHasName, setViewedOnboarding, setViewedUserManual, setWelcomed } from '@/state/dataSlice';
 import { Image } from 'react-native';
 import { setBudgetStratSplit } from '@/state/dataSlice'
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
 import { Modal } from '@/components/Modal';
 import { setUsername } from '@/state/userSlice';
+import UserManual from '@/components/userManual/userManual';
 
+
+const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get('window').width;
 
 const _layout = () => {
   const { fetchData } = useFetchData();
   const dispatch = useDispatch();
     const { updateUser } = UseTransactionService(); 
   
-  const { viewed, nameSetted, welcomed, user } = useSelector((state: RootState) => state.data);
+  const { viewed, nameSetted, welcomed, user, userManual } = useSelector((state: RootState) => state.data);
   const [isWelcomeModalVisible, setWelcomeModalVisible] = useState(false);
   const [isUserModalVisible, setUserModalVisible] = useState(false);
-
+  const [isUserInstructionModalVisible, setUserInstructionModalVisible] = useState(false);
   const firstUser = user?.[0];  
   const userName = firstUser?.userName || "";
   const userId = firstUser?.id ?? 1;
@@ -44,18 +48,21 @@ const _layout = () => {
         // await AsyncStorage.removeItem('stratSplitted');
         // await AsyncStorage.removeItem('@hasNamesetted');
         // await AsyncStorage.removeItem('@firstOpen');
+        // await AsyncStorage.removeItem('@userManual');
 
         // await AsyncStorage.setItem('@viewedOnboarding', 'false');
         // await AsyncStorage.setItem('stratSplitted', 'false');
         // await AsyncStorage.setItem('@hasNamesetted', 'false');
         // await AsyncStorage.setItem('@firstOpen', 'true');
-        const [onboardingVal, stratVal, setNameVal, firstOpenVal] = await Promise.all([
+        // await AsyncStorage.setItem('@userManual', 'false');
+        const [onboardingVal, stratVal, setNameVal, firstOpenVal, userManual] = await Promise.all([
 
           
           AsyncStorage.getItem('@viewedOnboarding'),
           AsyncStorage.getItem('stratSplitted'),
           AsyncStorage.getItem('@hasNamesetted'),
           AsyncStorage.getItem('@firstOpen'),
+          AsyncStorage.getItem('@userManual'),
         ]);
   
 
@@ -64,6 +71,12 @@ const _layout = () => {
           const parsedValue = JSON.parse(onboardingVal);
           console.log('Onboarding Viewed: ', parsedValue);
           dispatch(setViewedOnboarding(parsedValue));
+        }
+
+        if (userManual !== null) {
+          const parsedValue = JSON.parse(userManual);
+          console.log('@userManual: ', parsedValue);
+          dispatch(setViewedUserManual(parsedValue));
         }
   
         if (stratVal !== null) {
@@ -95,7 +108,12 @@ const _layout = () => {
   useEffect(() => {
     setUserModalVisible(!nameSetted && viewed);
     setWelcomeModalVisible(nameSetted && viewed);
-  }, [nameSetted, viewed]);
+  }, [nameSetted, viewed,]);
+    useEffect(() => {
+      setUserInstructionModalVisible(nameSetted === true && isUserModalVisible === false && isWelcomeModalVisible === false && viewed === true && userManual === false)
+      
+  }, [nameSetted, viewed, isUserModalVisible, isWelcomeModalVisible, userManual]);
+
 
   async function handleUpdateUser() {
     try {
@@ -259,9 +277,10 @@ const _layout = () => {
 
       {/* Welcome Modal */}
       <Modal isOpen={isWelcomeModalVisible} transparent animationType="fade">
-            <TouchableWithoutFeedback onPress={() => {
+            <TouchableWithoutFeedback onPress={async () => {
               setWelcomeModalVisible(false)
-              
+              await AsyncStorage.setItem('@viewedOnboarding', 'true')
+              dispatch(setViewedOnboarding(true))
               }}>
               <View style={styles.modalOverlay}>
                 <TouchableWithoutFeedback>
@@ -340,7 +359,40 @@ const _layout = () => {
         </View>
       </Modal> 
 
-      
+        {/* User Manual */}
+        <Modal isOpen={isUserInstructionModalVisible} transparent animationType="fade" onRequestClose={async () => { 
+        setUserInstructionModalVisible(false); 
+        dispatch(setViewedUserManual(true)); 
+        await AsyncStorage.setItem('@userManual', 'true'); 
+        console.log("User Manual Viewed:", userManual);
+      }}>
+            <TouchableWithoutFeedback onPress={async () => { 
+              setUserInstructionModalVisible(false); 
+              dispatch(setViewedUserManual(true)); 
+              await AsyncStorage.setItem('@userManual', 'true'); 
+              console.log("User Manual Viewed:", userManual);
+            }}>
+              <View style={styles.modalOverlay}>
+                <TouchableWithoutFeedback>
+                  <View style={[styles.modalContent, {height: windowHeight * 0.9, width: windowWidth * 0.9}]}>
+                    <View style={{width: '100%', justifyContent: 'center', alignItems: 'flex-end'}}>
+                      <TouchableOpacity 
+                        style={{alignSelf: 'flex-end', margin: 10}}
+                        onPress={async () => { 
+                        setUserInstructionModalVisible(false); 
+                        dispatch(setViewedUserManual(true)); 
+                        await AsyncStorage.setItem('@userManual', 'true'); 
+                        console.log("User Manual Viewed:", userManual);
+                      }}>
+                        <AntDesign name="closecircle" size={24} color={colors.green} />
+                      </TouchableOpacity>
+                    </View>
+                      <UserManual />
+                  </View>
+                </TouchableWithoutFeedback>
+              </View>
+            </TouchableWithoutFeedback>
+      </Modal>
     </GestureHandlerRootView>
   );
 };

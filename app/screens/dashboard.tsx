@@ -16,16 +16,17 @@ import Expense from '@/components/Home/ExpnseSummary/Expense';
 import { colors } from '@/constants/colors';
 import { UseTransactionService } from '@/hooks/editData/TransactionService';
 import { Dimensions } from 'react-native';
-
+import UserManual from '../../components/userManual/userManual';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setViewedUserManual } from '@/state/dataSlice';
 
 export default function Index() {
   const { width } = useWindowDimensions();
-  const { transactions, incomes, user, viewed, nameSetted, welcomed, allocation, budgetStratSplit } = useSelector((state: RootState) => state.data);
+  const { transactions, incomes, user, viewed, nameSetted, welcomed, allocation, budgetStratSplit, userManual } = useSelector((state: RootState) => state.data);
   const [isBudgetPlanGenerated, setBudgetPlanGenerated] = useState(false);
   const [hasName, setName] = useState(false);
   const userHasData = user.length > 0 ? user[0] : null;
   const dispatch = useDispatch();
-  const [isUserModalVisible, setUserModalVisible] = useState(false);
   const { updateUser } = UseTransactionService(); 
   const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
   // Modals
@@ -47,6 +48,7 @@ export default function Index() {
     }, [transactions, incomes]);
 
 
+    
     function validateFields() {
       if (transactions.length > 0 && incomes.length > 0 )  {
         return true;
@@ -54,8 +56,7 @@ export default function Index() {
       
       return false;
     }
-  
-
+    
   
   return (
     <MainContainer style={styles.container}>
@@ -126,9 +127,6 @@ export default function Index() {
           </>
         )}
       
-
-
-
 
       {/* PopUp Screens */}
       <>
@@ -224,6 +222,9 @@ export default function Index() {
         </TouchableWithoutFeedback>
       </Modal>
 
+
+    
+      
       </>
     </MainContainer>
   );

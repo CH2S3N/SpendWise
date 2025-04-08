@@ -129,9 +129,13 @@ export default function BudgetPlanInfo({
                   <View style={[styles.card, {backgroundColor: colors.light}]}>
                       <Categories setHasBudgetStrat={setHasBudgetStrat} isAdvanceBtnTapped={isAdvanceBtnTapped} setIsAdvanceBtnTapped={setAdvanceBtnTapped} setStratSplit={setStratSplit} stratSplit={stratSplit}/>
                       {isAdvanceBtnTapped === false ? (
-                        <Button buttonColor={colors.light} textColor={colors.green} onPress={()=>{setAdvanceBtnTapped(true)}}>Advance</Button>
+                        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                          <Button buttonColor={colors.light} textColor={colors.green} onPress={()=>{setAdvanceBtnTapped(true)}}>Advance</Button>
+                        </View>
                       ) : (
-                        <Button buttonColor={colors.light} textColor={colors.green} onPress={()=> setAdvanceBtnTapped(false)}>Go Back</Button>
+                        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                          <Button buttonColor={colors.light} textColor={colors.green} onPress={()=> setAdvanceBtnTapped(false)}>Go Back</Button>
+                        </View>
                       )}
                       {/* <Text>{stratSplit.toString()}</Text> */}
                   </View>

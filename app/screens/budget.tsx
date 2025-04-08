@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View, Linking, Alert } from 'react-native'
+import { Button, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View, Linking, Alert, Dimensions } from 'react-native'
 import React, { useState } from 'react'
 import MainContainer from '@/components/Containers/MainContainer';
 import IncomeInfo from '@/components/Home/IncomeSummary/IncomeInfo';
@@ -13,11 +13,17 @@ import Card from '@/components/ui/Card';
 import { setUsername } from '@/state/userSlice';
 import AddIncome from '@/components/ui/addIncome';
 import ConfirmModal from '@/components/Modal/ConfirmModal';
+import UserManual from '@/components/userManual/userManual';
+import { AntDesign } from '@expo/vector-icons';
 
 const Budget = () => {
   const { user } = useSelector((state: RootState) => state.data);
   const { updateUser, deleteAllData } = UseTransactionService(); 
   const dispatch = useDispatch();
+
+  
+  const windowHeight = Dimensions.get('window').height;
+  const windowWidth = Dimensions.get('window').width;
 
   const firstUser = user?.[0];  
   const userName = firstUser?.userName || "";
@@ -26,6 +32,7 @@ const Budget = () => {
 
   const [input, setInput] = useState(userName);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isManualVisible, setManualVisible] = useState(false);
   const [isSettingsModalVisible, setIsSettingsModalVisible] = useState(false);
   const [isAddingIncome, setIsAddingIncome] = useState(false);
   const [isConfirmDeletionModalVisible, setIsConfirmDeletionModalVisible] = React.useState(false);
@@ -91,7 +98,7 @@ const Budget = () => {
       </View>
 
       {/* Profile Modal */}
-      <Modal isOpen={isModalVisible} transparent animationType="fade">
+      <Modal isOpen={isModalVisible} transparent animationType="fade" onRequestClose={() => setIsModalVisible(false)}>
         <TouchableWithoutFeedback onPress={() => setIsModalVisible(false)}>
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback>
@@ -138,11 +145,11 @@ const Budget = () => {
       </Modal>
 
       {/* Settings Modal */}
-      <Modal isOpen={isSettingsModalVisible} transparent animationType="fade">
+      <Modal isOpen={isSettingsModalVisible} transparent animationType="fade" onRequestClose={() => setIsSettingsModalVisible(false)}>
         <TouchableWithoutFeedback onPress={() => setIsSettingsModalVisible(false)}>
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback>
-              <View style={[styles.modalContent1, {}]}>
+              <View style={[styles.modalContent1, ]}>
                 <Text style={styles.modalTitle}>Settings</Text>
                 <TouchableOpacity onPress={() => {
                   setIsSettingsModalVisible(false);
@@ -151,10 +158,16 @@ const Budget = () => {
                   }}>
                   <Text style={styles.modalSubTitle}>Feedback</Text>
                 </TouchableOpacity>
+                <TouchableOpacity onPress={() => {setManualVisible(true); setIsSettingsModalVisible(false)}}>
+                  <Text style={styles.modalSubTitle}>User Manual</Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Text style={styles.modalSubTitle}>About Us</Text>
+                </TouchableOpacity>
                 <TouchableOpacity onPress={()=>{
                   setIsConfirmDeletionModalVisible(true)
                 }}>
-                  <Text style={[styles.modalSubTitle, {color: colors.red}]}>Delete all data</Text>
+                  <Text style={[styles.modalSubTitle, {color: colors.red}]}>Delete All Data</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => setIsSettingsModalVisible(false)}>
                   <Text style={styles.modalSubTitle}>Close</Text>
@@ -167,13 +180,36 @@ const Budget = () => {
 
       
       {/* Add Income Modal*/}
-      <Modal isOpen={isAddingIncome} transparent animationType="fade">
+      <Modal isOpen={isAddingIncome} transparent animationType="fade" onRequestClose={() => setIsAddingIncome(false)}>
         <TouchableWithoutFeedback onPress={() => setIsAddingIncome(false)}>
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback>
               <View style={styles.modalContent}>
                 <Text style={styles.title}>ADD INCOME </Text>
                 <AddIncome setIsAddingIncome={setIsAddingIncome}/>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+
+      {/* User Manual */}
+      <Modal isOpen={isManualVisible} transparent animationType="fade" onRequestClose={() => setManualVisible(false)}>
+        <TouchableWithoutFeedback onPress={() => setManualVisible(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={[styles.modalContent, {height: windowHeight * 0.9, width: windowWidth * 0.9}]}>
+              <View style={{width: '100%', justifyContent: 'center', alignItems: 'flex-end'}}>
+                      <TouchableOpacity 
+                        style={{alignSelf: 'flex-end', margin: 10}}
+                        onPress={() => { 
+                          setManualVisible(false);
+                          
+                      }}>
+                        <AntDesign name="closecircle" size={24} color={colors.green} />
+                      </TouchableOpacity>
+                    </View>
+               <UserManual/>
               </View>
             </TouchableWithoutFeedback>
           </View>

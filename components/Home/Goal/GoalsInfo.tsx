@@ -77,8 +77,8 @@ useEffect(() => {
               <>
               <View style={{flexDirection: 'row', }}>
                 <View style={{paddingRight: 10}}>
-                  <Text style={styles.textW}> Total Amount</Text>
-                  <Text style={styles.textW}>{calcTotalGoal()}</Text>
+                  <Text style={styles.text}> Total Amount</Text>
+                  <Text style={styles.text}>{calcTotalGoal()}</Text>
                 </View>
               </View>
               </>
@@ -89,8 +89,8 @@ useEffect(() => {
             style={styles.headercontent}
             content = {
               <>
-                <Text style={styles.textW}>Goals Completed</Text>
-                <Text style={styles.textW}>{accomplishedGoals.length}/{goals.length}</Text>
+                <Text style={styles.text}>Goals Completed</Text>
+                <Text style={styles.text}>{accomplishedGoals.length}/{goals.length}</Text>
               </>
             }
             />
@@ -204,7 +204,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: 10,
-    backgroundColor: colors.green
   },
   section: {
     flex: 1,

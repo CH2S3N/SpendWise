@@ -193,6 +193,10 @@ const styles= StyleSheet.create({
     fontWeight:'bold',
     
   },
+  text:{
+    fontSize: 15,
+    paddingHorizontal: 10
+  },
   title2:{
     fontSize: 20,
     fontWeight:'bold',
