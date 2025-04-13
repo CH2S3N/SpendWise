@@ -15,7 +15,7 @@ const UserManual = () => {
         <View style={styles.container}>
             <Text style={styles.header}>USER MANUAL</Text>
             <Text style={styles.sectionContent}>  Welcome to <Text style={{fontSize: 20, fontWeight: 'bold', color: colors.green}}>SpendWise!</Text> This manual will guide you through the features and functionalities of the app.</Text>
-            <Text style={styles.sectionContent}>  Tap a title to expanded it and see the instruction for each item. tap again to collapse it.</Text>
+            <Text style={styles.sectionContent}>  Tap a title to expand it and see the instruction for each item. tap again to collapse it.</Text>
                 <View style={styles.section}>
                     <TouchableOpacity onPress={() => toggleSection('allocation')} activeOpacity={1}>
                         <Text style={styles.sectionTitle}>Allocation Setup</Text>

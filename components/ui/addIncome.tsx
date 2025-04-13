@@ -16,8 +16,8 @@ export default function AddIncome({
 }: addIncomeProps) { 
 
     const { insertIncome } = UseTransactionService();
-    const [isrecurrence, setRecurrence] = React.useState<string>("");
-    const [isRecurrenceInput, setRecurrenceInput] = React.useState<string>("");
+    const [isrecurrence, setRecurrence] = React.useState<string>("0");
+    const [isRecurrenceInput, setRecurrenceInput] = React.useState<string>("0");
     const [typeSelected, setTypeSelected] = React.useState<string>("Allowance");
     const [amount, setAmount] = React.useState<string>("");
     const [description, setDescription] = React.useState<string>("");
@@ -31,7 +31,7 @@ export default function AddIncome({
 
 
       function validateFields() {
-        if ( !description || description.length < 3 || !amount || parseInt(amount) < 1 || !typeSelected || (frequency == 'Daily' && !isrecurrence) || (subType === 'Custom' && !isrecurrence) || (frequency == 'Monthly' && !isrecurrence))  {
+        if ( !description || description.length < 3 || !amount || parseInt(amount) < 1 || !typeSelected || parseInt(isrecurrence) < 1 || (frequency !== "Daily" && subType === "Custom" && parseInt(isRecurrenceInput) < 1)) {
           return false;
         }
         
@@ -88,7 +88,7 @@ export default function AddIncome({
          if (frequency === 'Bi-Weekly'){
            setSubType('Custom')
          }
-       }, [frequency]);
+       }, [frequency, subType]);
 
   return (
     <View style={styles.container}>
@@ -142,6 +142,10 @@ export default function AddIncome({
                   selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
                   onChange={(event) => {
                     setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
+                    if ((frequency !== "Daily" && subType === "Custom")) {
+                      setRecurrenceInput('0');
+                      setRecurrence('0'); 
+                    }
                   }}
                   fontStyle={{ color: colors.dark }}
                   activeFontStyle={{ color: colors.light }}
@@ -168,6 +172,9 @@ export default function AddIncome({
                         setRecurrence("8");
                       } else if (selectedType === "Weekdays") {
                         setRecurrence("20");
+                      } else if (selectedType === "Custom") {
+                        setRecurrenceInput("0");
+                        setRecurrence("0");
                       }
                     }}
                     fontStyle={{ color: colors.dark }}
@@ -202,7 +209,7 @@ export default function AddIncome({
                     }}
                     maxLength={2}
                   />
-                  <Text>Day(s) per Week</Text>
+                  <Text>Time(s) per Week</Text>
                   </View>
                 )}
                 {frequency === 'Bi-Weekly' && (
@@ -230,7 +237,7 @@ export default function AddIncome({
                       }}
                       maxLength={2}
                   />
-                  <Text>Day/s per Bi-Week</Text>
+                  <Text>Time(s) per Bi-Week</Text>
                   </View>
                 )}
 
@@ -260,7 +267,7 @@ export default function AddIncome({
                       }}
                       maxLength={2}
                     />
-                    <Text>Day/s per Month</Text>
+                    <Text>Time(s) per Month</Text>
                   </View>
                 )}
             </View>

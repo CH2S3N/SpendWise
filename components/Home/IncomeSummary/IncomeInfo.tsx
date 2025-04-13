@@ -38,8 +38,8 @@ export default function IncomeInfo() {
                 </ScrollView>
                 ) : (
                     <View style={styles.noData}>
-                      <Text style={styles.noDataTxt}>No Income Data!</Text>
-                      <Text style={styles.titletext}>Add your Income Sources</Text>
+                      <Text style={styles.noDataTxt}>Manage all your Income Sources here!</Text>
+                      <Text style={styles.titletext}>Tap the Add Income button for the first one</Text>
                     </View>
                 )}
             </View>
@@ -109,13 +109,14 @@ const styles = StyleSheet.create({
   },
   noDataTxt:{
     fontWeight: 'bold',
-    textAlign: 'left',
+    textAlign: 'center',
     color: colors.dark,
     fontSize: 30,
   },
   titletext:{
     fontWeight: 'bold',
     color: colors.dark,
+    textAlign: 'center',
     fontSize: 20,
   },
   modalOverlay: {

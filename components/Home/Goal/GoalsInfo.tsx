@@ -122,8 +122,8 @@ useEffect(() => {
           {goals.length === 0 && (
             <>
             <View style={[styles.row, {flex: 1, justifyContent: 'center', alignItems: 'center'}]}>
-              <Text style={styles.title}>No Goals to be Found!</Text>
-              <Text style={styles.titletext}>Create some New Goals</Text>
+              <Text style={[styles.title, {textAlign: 'center'}]}>Save for your Goals</Text>
+              <Text style={[styles.titletext, {textAlign: 'center'}]}>Manage all your goals here. tap the Create a New Goal button for the first one</Text>
             </View>
             </>
           )}

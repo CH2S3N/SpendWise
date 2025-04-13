@@ -92,9 +92,10 @@ export default function UpdateIncome({
   
     
   function validateFields() {
-    if ( !description || !amount || !frequency  )  {
+    if ( !description || description.length < 3 || !amount || parseInt(amount) < 1 || parseInt(isRecurrence) < 1 || (frequency !== "Daily" && subType === "Custom" && parseInt(isRecurrenceInput) < 1)) {
       return false;
     }
+    
     return true;
   }
 
@@ -150,6 +151,10 @@ export default function UpdateIncome({
                 selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
                 onChange={(event) => {
                   setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
+                  if ((frequency !== "Daily" && subType === "Custom")) {
+                    setRecurrenceInput('0');
+                    setRecurrence('0'); 
+                  }
                 }}
                 fontStyle={{ color: colors.dark }}
                 activeFontStyle={{ color: colors.light }}
@@ -176,6 +181,9 @@ export default function UpdateIncome({
                       setRecurrence("8");
                     } else if (selectedType === "Weekdays") {
                       setRecurrence("20");
+                    } else if (selectedType === "Custom") {
+                      setRecurrenceInput("0");
+                      setRecurrence("0");
                     }
                   }}
                   fontStyle={{ color: colors.dark }}
@@ -210,7 +218,7 @@ export default function UpdateIncome({
                   }}
                   maxLength={2}
                 />
-                <Text>Time/s per Week</Text>
+                <Text>Time(s) per Week</Text>
                 </View>
               )}
               {frequency === 'Bi-Weekly' && (
@@ -238,7 +246,7 @@ export default function UpdateIncome({
                     }}
                     maxLength={2}
                 />
-                <Text>Time/s per Bi-Week</Text>
+                <Text>Time(s) per Bi-Week</Text>
                 </View>
               )}
 
@@ -268,7 +276,7 @@ export default function UpdateIncome({
                     }}
                     maxLength={2}
                   />
-                  <Text>Time/s per Month</Text>
+                  <Text>Time(s) per Month</Text>
                 </View>
               )}
           </View>

@@ -56,8 +56,6 @@ const _layout = () => {
         // await AsyncStorage.setItem('@firstOpen', 'true');
         // await AsyncStorage.setItem('@userManual', 'false');
         const [onboardingVal, stratVal, setNameVal, firstOpenVal, userManual] = await Promise.all([
-
-          
           AsyncStorage.getItem('@viewedOnboarding'),
           AsyncStorage.getItem('stratSplitted'),
           AsyncStorage.getItem('@hasNamesetted'),

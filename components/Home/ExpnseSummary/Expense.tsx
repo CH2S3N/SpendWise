@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/state/store";
 import ConfirmModal from "@/components/Modal/ConfirmModal";
 
-
+ 
 export default function Expense() { 
     const { categories, transactions } = useSelector(
         (state: RootState) => state.data
@@ -161,8 +161,8 @@ export default function Expense() {
                     </>
                 ) : (
                         <View style={styles.noData}>
-                            <Text style={styles.noDataTxt}>No Expense Data!</Text>
-                            <Text style={styles.titletext}>Add your Expenses</Text>
+                            <Text style={styles.noDataTxt}>Manage your Expense here!</Text>
+                            <Text style={styles.titletext}>To add your expenses just tap the Add Expense button.</Text>
                         </View>
                 )}
 
@@ -346,12 +346,13 @@ const styles=StyleSheet.create({
       },
       noDataTxt:{
         fontWeight: 'bold',
-        textAlign: 'left',
+        textAlign: 'center',
         color: colors.dark,
         fontSize: 30,
       },
       titletext:{
         fontWeight: 'bold',
+        textAlign: 'center',
         color: colors.dark,
         fontSize: 20,
       },

@@ -47,7 +47,7 @@ export default function AddExpense({
     const [categoryDescription, setCategoryDescription] = useState('');
 
     function validateFields() {
-      if ( !description || description.length < 3 || (isfixedamount == 'Yes' && (!amount || parseInt(amount) < 1)) || !typeSelected || (frequency == 'Daily' && (isrecurrence === "0" || null)) || (frequency == 'Bi-Weekly' && (isrecurrence === "0" || null)) || (subType === 'Custom' && (isrecurrence === "0" || null)) || (frequency == 'Monthly' && (isrecurrence === "0" || null)))  {
+      if ( !description || description.length < 3 || (isfixedamount == 'Yes' && (!amount || parseInt(amount) < 1)) || !typeSelected || parseInt(isrecurrence) < 1 ||(frequency !== "Daily" && subType === "Custom" && parseInt(isRecurrenceInput) < 1))  {
         return false;
       }
       
@@ -154,6 +154,12 @@ export default function AddExpense({
                   selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
                   onChange={(event) => {
                     setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
+
+                    if ((frequency !== "Daily" && subType === "Custom")) {
+                      setRecurrenceInput('0');
+                      setRecurrence('0'); 
+                    }
+                    
                   }}
                   fontStyle={{ color: colors.dark }}
                   activeFontStyle={{ color: colors.light }}
@@ -182,6 +188,9 @@ export default function AddExpense({
                         setRecurrence("8");
                       } else if (selectedType === "Weekdays") {
                         setRecurrence("20");
+                      } else if (selectedType === "Custom") {
+                        setRecurrenceInput("0");
+                        setRecurrence("0");
                       }
                     }}
                     fontStyle={{ color: colors.dark }}
@@ -288,13 +297,10 @@ export default function AddExpense({
             <SegmentedControl
               style={styles.segmentCon}
               values={['Yes', 'No']}
-              selectedIndex={selectedIndex}
+              selectedIndex={["Yes", "No"].indexOf(isfixedamount)}
               onChange={(event) => {
                 setSelectedIndex(event.nativeEvent.selectedSegmentIndex)
-                if (selectedIndex === 1) {
-                  setAmount('');
-                  setIsFixedAmount('No')
-                }
+
               }}
               fontStyle={{ color: colors.dark }}
               activeFontStyle={{ color: colors.light }}
@@ -316,7 +322,6 @@ export default function AddExpense({
                   }
   
                   setAmount(numericValue);
-                  setIsFixedAmount('Yes')
                 }}
               
                 maxLength={7}

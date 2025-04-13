@@ -95,14 +95,21 @@ export default function UpdateExpense({
 
 
     function validateFields() {
-      if (!description ||  description.length < 3 || (subType === 'Custom' && !recurrence) || !category || !prioritization || !typeSelected ) {
+      if ( !description || description.length < 3 || (isfixedamount == 'Yes' && (!amount || parseInt(amount) < 1)) || !typeSelected || parseInt(recurrence) < 1 ||(frequency !== "Daily" && subType === "Custom" && parseInt(isRecurrenceInput) < 1))  {
         return false;
       }
       
       return true;
     }
 
-
+    useEffect(() => {
+      if (selectedIndex === 0) {
+        setIsFixedAmount('Yes');
+      } else {
+        setIsFixedAmount('No');
+      }
+    }, [selectedIndex]);
+    
     async function handleSaveExpense() {
         const calculatedAmount = Number(amount)
 
@@ -160,6 +167,11 @@ export default function UpdateExpense({
                 selectedIndex={["Daily", "Weekly", "Bi-Weekly", "Monthly"].indexOf(frequency)}
                 onChange={(event) => {
                   setFrequency(["Daily", "Weekly", "Bi-Weekly", "Monthly"][event.nativeEvent.selectedSegmentIndex]);
+
+                  if ((frequency !== "Daily" && subType === "Custom")) {
+                    setRecurrenceInput('0');
+                    setRecurrence('0'); 
+                  }
                 }}
                 fontStyle={{ color: colors.dark }}
                 activeFontStyle={{ color: colors.light }}
@@ -188,6 +200,9 @@ export default function UpdateExpense({
                       setRecurrence("8");
                     } else if (selectedType === "Weekdays") {
                       setRecurrence("20");
+                    } else if (selectedType === "Custom") {
+                      setRecurrenceInput("0");
+                      setRecurrence("0");
                     }
                   }}
                   fontStyle={{ color: colors.dark }}
@@ -295,11 +310,9 @@ export default function UpdateExpense({
           <SegmentedControl
             style={styles.segmentCon}
             values={['Yes', 'No']}
-            selectedIndex={selectedIndex}
+            selectedIndex={["Yes", "No"].indexOf(isfixedamount)}
             onChange={(event) => {
               setSelectedIndex(event.nativeEvent.selectedSegmentIndex)
-              setIsFixedAmount(event.nativeEvent.selectedSegmentIndex === 0 ? "Yes" : "No")
-
             }}
             fontStyle={{ color: colors.dark }}
             activeFontStyle={{ color: colors.light }}
@@ -321,7 +334,6 @@ export default function UpdateExpense({
                 }
 
                 setAmount(numericValue);
-                setIsFixedAmount('Yes')
               }}
             
               maxLength={7}
