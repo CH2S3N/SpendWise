@@ -42,32 +42,32 @@ const Overview = () => {
                 <>
                     <View style={styles.item}>
                         <Text style={styles.title}>Income</Text>
-                        <Text style={[styles.value, {color: colors.green}]}> + ₱{income}</Text>
+                        <Text style={[styles.value, {color: colors.green}]}> + ₱{(income).toLocaleString()}</Text>
                     </View>
                     {budgetStratSplit === true ? (
                         <>
                             {essentialTransactions.length > 0 && (
                                 <View style={styles.item}>
                                     <Text style={styles.title}>Expenses (Needs)</Text>
-                                    <Text style={[styles.value, {color: '#fc2b46'}]}>- ₱{needsExpense} <Text style={{color: '#fc2b46'}}>({needsRatio}%)</Text></Text>
+                                    <Text style={[styles.value, {color: '#fc2b46'}]}>- ₱{(needsExpense).toLocaleString()} <Text style={{color: '#fc2b46'}}>({needsRatio}%)</Text></Text>
                                 </View>
                             )}
                             {nonEssentialTransactions.length > 0 && (
                                 <View style={styles.item}>
                                     <Text style={styles.title}>Expenses (Wants)</Text>
-                                    <Text style={[styles.value, {color: '#FE6244'}]}>- ₱{wantsExpense} <Text style={{color: '#FE6244'}}>({wantsRatio}%)</Text></Text>
+                                    <Text style={[styles.value, {color: '#FE6244'}]}>- ₱{(wantsExpense).toLocaleString()} <Text style={{color: '#FE6244'}}>({wantsRatio}%)</Text></Text>
                                 </View>
                             )}
                         </>
                     ) : (
                         <View style={styles.item}>
                         <Text style={styles.title}>Expenses</Text>
-                        <Text style={[styles.value, {color: '#fc2b46'}]}>- ₱{expense} <Text style={{color: '#fc2b46'}}>({expenseRatio}%)</Text></Text>
+                        <Text style={[styles.value, {color: '#fc2b46'}]}>- ₱{(expense).toLocaleString()} <Text style={{color: '#fc2b46'}}>({expenseRatio}%)</Text></Text>
                     </View>
                     )}
                     <View style={styles.item}>
                         <Text style={styles.title}>Savings</Text>
-                        <Text style={[styles.value, {color: colors.yellow}]}>₱{savings} <Text style={{color: colors.yellow}}>({savingsRatio}%)</Text></Text>
+                        <Text style={[styles.value, {color: colors.yellow}]}>₱{(savings).toLocaleString()} <Text style={{color: colors.yellow}}>({savingsRatio}%)</Text></Text>
                     </View>
                 </>
             ) : (

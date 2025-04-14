@@ -14,6 +14,7 @@ import { setUsername } from '@/state/userSlice';
 import AddIncome from '@/components/ui/addIncome';
 import ConfirmModal from '@/components/Modal/ConfirmModal';
 import UserManual from '@/components/userManual/userManual';
+import AboutUs from '@/components/aboutUs';
 import { AntDesign } from '@expo/vector-icons';
 
 const Budget = () => {
@@ -33,6 +34,7 @@ const Budget = () => {
   const [input, setInput] = useState(userName);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isManualVisible, setManualVisible] = useState(false);
+  const [isAboutUsVisible, setAboutUsVisible] = useState(false);
   const [isSettingsModalVisible, setIsSettingsModalVisible] = useState(false);
   const [isAddingIncome, setIsAddingIncome] = useState(false);
   const [isConfirmDeletionModalVisible, setIsConfirmDeletionModalVisible] = React.useState(false);
@@ -161,7 +163,7 @@ const Budget = () => {
                 <TouchableOpacity onPress={() => {setManualVisible(true); setIsSettingsModalVisible(false)}}>
                   <Text style={styles.modalSubTitle}>User Manual</Text>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => {setAboutUsVisible(true); setIsSettingsModalVisible(false)}}>
                   <Text style={styles.modalSubTitle}>About Us</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={()=>{
@@ -215,6 +217,30 @@ const Budget = () => {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
+
+      {/* About Us Modal */}
+      <Modal isOpen={isAboutUsVisible} transparent animationType="fade" onRequestClose={() => setAboutUsVisible(false)}>
+        <TouchableWithoutFeedback onPress={() => setAboutUsVisible(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={[styles.modalContent, {height: windowHeight * 0.9, width: windowWidth * 0.9}]}>
+              <View style={{width: '100%', justifyContent: 'center', alignItems: 'flex-end'}}>
+                      <TouchableOpacity 
+                        style={{alignSelf: 'flex-end', margin: 10}}
+                        onPress={() => { 
+                          setAboutUsVisible(false);
+                          
+                      }}>
+                        <AntDesign name="closecircle" size={24} color={colors.green} />
+                      </TouchableOpacity>
+                    </View>
+                    <AboutUs/>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+   
 
 
       {/* Save Confirmation Modal */}
@@ -414,6 +440,7 @@ const styles = StyleSheet.create({
     
 
   },
+
 });
 
 export default Budget;

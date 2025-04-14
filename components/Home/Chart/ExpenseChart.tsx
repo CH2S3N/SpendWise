@@ -82,26 +82,26 @@ export default function ExpenseChart() {
                   {totalEssential > 0 && (
                     <View style={styles.legendItem}>
                       <View style={[styles.colorBox, { backgroundColor: '#FC2947' }]} />
-                      <Text numberOfLines={1} ellipsizeMode="tail">Needs: ₱ {totalEssential} <Text style={{color: '#FC2947'}}>({needsRatio}%)</Text></Text>
+                      <Text numberOfLines={1} ellipsizeMode="tail">Needs: ₱ {(totalEssential).toLocaleString()} <Text style={{color: '#FC2947'}}>({needsRatio}%)</Text></Text>
                     </View>
                   )}
                   {totalNonEssential > 0 && (
                     <View style={styles.legendItem}>
                       <View style={[styles.colorBox, { backgroundColor: '#FE6244' }]} />
-                      <Text numberOfLines={1} ellipsizeMode="tail">Wants: ₱ {totalNonEssential} <Text style={{color: '#FE6244'}}>({wantsRatio}%)</Text></Text>
+                      <Text numberOfLines={1} ellipsizeMode="tail">Wants: ₱ {(totalNonEssential).toLocaleString()} <Text style={{color: '#FE6244'}}>({wantsRatio}%)</Text></Text>
                     </View>
                   )}
                   {totalSavings > 0 && (
                     <View style={styles.legendItem}>
                       <View style={[styles.colorBox, { backgroundColor: '#FFD65A' }]} />
-                      <Text numberOfLines={1} ellipsizeMode="tail">Savings: ₱ {totalSavings} <Text style={{color: '#FFD65A'}}>({savingsRatio}%)</Text></Text>
+                      <Text numberOfLines={1} ellipsizeMode="tail">Savings: ₱ {(totalSavings).toLocaleString()} <Text style={{color: '#FFD65A'}}>({savingsRatio}%)</Text></Text>
                     </View>
                   )}
 
 
                 </View>
                 <View style={styles.total}>
-                  <Text style={[styles.totalTxt, { color: colors.red }]}>Total: <Text style={{}}>₱ {totalExpenses}</Text></Text>
+                  <Text style={[styles.totalTxt, { color: colors.red }]}>Total: <Text style={{}}>₱ {(totalExpenses).toLocaleString()}</Text></Text>
                 </View>
               </View>
             )}

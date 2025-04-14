@@ -46,7 +46,7 @@ export default function IncomeList() {
                                                 </Text>
                                             </View>
                                             <View style={styles.item}>
-                                                <Text style={styles.amount}>₱ {income.amount * income.interval}</Text>
+                                                <Text style={styles.amount}>₱ {(income.amount * income.interval).toLocaleString()}</Text>
                                                 <Text style={styles.label}>Budget per Month</Text>
                                             </View>
                                         </>
@@ -60,7 +60,7 @@ export default function IncomeList() {
                                                         </Text>
                                                     </View>
                                                     <View style={styles.item}>
-                                                        <Text style={styles.amount}>₱ {Math.round(income.amount * income.interval)}</Text>
+                                                        <Text style={styles.amount}>₱ {(Math.round(income.amount * income.interval)).toLocaleString()}</Text>
                                                         <Text style={styles.label}>Budget per Month</Text>
                                                     </View>
                                                 </View>
@@ -69,7 +69,7 @@ export default function IncomeList() {
                                                         <Text style={styles.label}>
                                                             <FontAwesome6 name="bag-shopping" size={18} color={colors.green} /> Income per Ocurrence:
                                                         </Text>
-                                                        <Text style={[styles.amount, {color: colors.green, fontSize:15}]}>₱ {income.amount}</Text>
+                                                        <Text style={[styles.amount, {color: colors.green, fontSize:15}]}>₱ {(income.amount).toLocaleString()}</Text>
                                                     </View>
                                                     <View style={styles.row}>
                                                         <Text style={styles.label}>

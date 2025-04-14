@@ -27,7 +27,7 @@ export default function IncomeInfo() {
           <View style={[styles.tableheader, ]}>
               <View style={[styles.row, ]}>
                 <Text style={styles.title}>Income Sources</Text>
-                <Text style={[styles.amount, {color: colors.green}]}>Total: ₱ {calcIncome()}</Text>
+                <Text style={[styles.amount, {color: colors.green}]}>Total: ₱ {(calcIncome()).toLocaleString()}</Text>
             </View>
           </View>
           <View style={styles.section}> 

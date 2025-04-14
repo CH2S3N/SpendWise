@@ -38,7 +38,7 @@ export default function Expense() {
                 <View style={styles.tableheader}>
                     <View style={styles.row}>
                         <Text style={styles.title}>Expenses</Text>
-                        <Text style={[styles.amount, {color: colors.green}]}>Total: ₱ {calcTransactions()}</Text>
+                        <Text style={[styles.amount, {color: colors.green}]}>Total: ₱ {(calcTransactions()).toLocaleString()}</Text>
                     </View>
                 </View>
                 {transactions.length > 0 ? (
@@ -69,7 +69,7 @@ export default function Expense() {
                                                                         </Text>
                                                                     </View>
                                                                     <View style={styles.item}>
-                                                                        <Text style={styles.amount}>₱ {transaction.amount * transaction.interval}</Text>
+                                                                        <Text style={styles.amount}>₱ {(transaction.amount * transaction.interval).toLocaleString()}</Text>
                                                                         <Text style={[styles.label]}>Budget per Month</Text>
                                                                     </View>
                                                                 </>
@@ -83,7 +83,7 @@ export default function Expense() {
                                                                             </Text>
                                                                         </View>
                                                                         <View style={styles.item}>
-                                                                            <Text style={styles.amount}>₱ {Math.round(transaction.amount * transaction.interval)}</Text>
+                                                                            <Text style={styles.amount}>₱ {(Math.round(transaction.amount * transaction.interval)).toLocaleString()}</Text>
                                                                             <Text style={[styles.label]}>Budget per Month</Text>
                                                                         </View>
                                                                     </View>
@@ -93,7 +93,7 @@ export default function Expense() {
                                                                             <Text style={[styles.label]}>
                                                                                 <FontAwesome6 name="calendar-day" size={18} color={colors.green} /> Budget per Occurrence:
                                                                             </Text>
-                                                                            <Text style={[styles.amount, { color: colors.green, fontSize:15, }]} >₱ {Math.round(transaction.amount)}</Text>
+                                                                            <Text style={[styles.amount, { color: colors.green, fontSize:15, }]} >₱ {(Math.round(transaction.amount)).toLocaleString()}</Text>
                                                                         </View>
                                                                         <View style={styles.row}>
                                                                             <Text style={[styles.label]}>
