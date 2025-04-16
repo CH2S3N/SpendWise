@@ -26,42 +26,24 @@ export default function AllocateAllService() {
 
   // For all Expense
   const allocateAll = async () => {
-    
     const budget = totalIncome;
     const remainingPercentage = Math.max(100 - savings, 0);
-
     const totalNeedsWants = needs + wants;
     const scaledNeedsWants = totalNeedsWants > 0 ? (needs / totalNeedsWants) * remainingPercentage : 0;
-
     const Allocation = Math.round(budget * (scaledNeedsWants / 100));
-
-    const allTransactions = transactions.filter(transaction =>
-      categories.find(category => category.id === transaction.category_id)
-    );
-
-
-    const adjustedCategories = adjustProportions(
-      categories,
-      allTransactions
-    );
-
-
+    const allTransactions = transactions.filter(transaction => categories.find(category => category.id === transaction.category_id));
+    const adjustedCategories = adjustProportions(categories, allTransactions);
     adjustedCategories.sort((a, b) => b.adjustedProportion - a.adjustedProportion);
-
     try {
       // Allocation of all Transactions
       for (const category of adjustedCategories) {
         const cattransactions = allTransactions.filter(transaction => transaction.category_id === category.id);
         const fixedTransactions = cattransactions.filter(transaction => transaction.isfixedamount === "Yes");
         const variableTransactions = cattransactions.filter(transaction => transaction.isfixedamount !== "Yes");
-
-        const totalFixedTransactions = allTransactions
-        .filter(transaction => transaction.isfixedamount === "Yes")
+        const totalFixedTransactions = allTransactions.filter(transaction => transaction.isfixedamount === "Yes")
         .reduce((sum, transaction) => sum + (transaction.amount * transaction.interval), 0);
-
         let remainingAllocation = Allocation - totalFixedTransactions;
         remainingAllocation = Math.max(remainingAllocation, 0);
-
         for (const transaction of fixedTransactions) {
           try {
             await updateTransaction({ ...transaction, amount: transaction.amount });
@@ -70,10 +52,8 @@ export default function AllocateAllService() {
             alert(`An error occurred while saving expense ${transaction.description}.`);
           }
         }
-
         let categoryBudget = remainingAllocation > 0 ? Math.round(remainingAllocation * (category.adjustedProportion / 100)) : 0;
         let remainingBudget = categoryBudget;
-
         for (const transaction of variableTransactions) {
           let allocation = remainingBudget > 0 ? Math.floor(remainingBudget / variableTransactions.length) : 0;
           try {
@@ -84,7 +64,6 @@ export default function AllocateAllService() {
           }
         }
       }
-
       await fetchData();
     } catch (error) {
       console.error('Unexpected error while allocating budget:', error);

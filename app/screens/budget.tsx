@@ -14,9 +14,8 @@ import { setUsername } from '@/state/userSlice';
 import AddIncome from '@/components/ui/addIncome';
 import ConfirmModal from '@/components/Modal/ConfirmModal';
 import UserManual from '@/components/userManual/userManual';
-import AboutUs from '@/components/aboutUs';
 import { AntDesign } from '@expo/vector-icons';
-
+import AboutUs from '@/components/AboutUs/aboutUs';
 const Budget = () => {
   const { user } = useSelector((state: RootState) => state.data);
   const { updateUser, deleteAllData } = UseTransactionService(); 
@@ -201,17 +200,17 @@ const Budget = () => {
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback>
               <View style={[styles.modalContent, {height: windowHeight * 0.9, width: windowWidth * 0.9}]}>
-              <View style={{width: '100%', justifyContent: 'center', alignItems: 'flex-end'}}>
-                      <TouchableOpacity 
-                        style={{alignSelf: 'flex-end', margin: 10}}
-                        onPress={() => { 
-                          setManualVisible(false);
-                          
-                      }}>
-                        <AntDesign name="closecircle" size={24} color={colors.green} />
-                      </TouchableOpacity>
-                    </View>
-               <UserManual/>
+                <View style={{width: '100%', justifyContent: 'center', alignItems: 'flex-end'}}>
+                        <TouchableOpacity 
+                          style={{alignSelf: 'flex-end', margin: 10}}
+                          onPress={() => { 
+                            setManualVisible(false);
+                            
+                        }}>
+                          <AntDesign name="closecircle" size={24} color={colors.green} />
+                        </TouchableOpacity>
+                </View>
+                <UserManual/>
               </View>
             </TouchableWithoutFeedback>
           </View>
@@ -224,17 +223,14 @@ const Budget = () => {
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback>
               <View style={[styles.modalContent, {height: windowHeight * 0.9, width: windowWidth * 0.9}]}>
-              <View style={{width: '100%', justifyContent: 'center', alignItems: 'flex-end'}}>
-                      <TouchableOpacity 
-                        style={{alignSelf: 'flex-end', margin: 10}}
-                        onPress={() => { 
-                          setAboutUsVisible(false);
-                          
-                      }}>
-                        <AntDesign name="closecircle" size={24} color={colors.green} />
-                      </TouchableOpacity>
-                    </View>
-                    <AboutUs/>
+                  <TouchableOpacity 
+                    style={{alignSelf: 'flex-end', margin: 10}}
+                    onPress={() => { 
+                      setAboutUsVisible(false);
+                  }}>
+                    <AntDesign name="closecircle" size={24} color={colors.green} />
+                  </TouchableOpacity>
+                  <AboutUs/>
               </View>
             </TouchableWithoutFeedback>
           </View>
