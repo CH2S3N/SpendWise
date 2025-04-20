@@ -122,8 +122,8 @@ useEffect(() => {
           {goals.length === 0 && (
             <>
             <View style={[styles.row, {flex: 1, justifyContent: 'center', alignItems: 'center'}]}>
-              <Text style={[styles.title, {textAlign: 'center'}]}>Save for your Goals</Text>
-              <Text style={[styles.titletext, {textAlign: 'center'}]}>Manage all your goals here. tap the Create a New Goal button for the first one</Text>
+              <Text style={[styles.noDataTxt, {textAlign: 'center', fontSize: 25}]}>Save for your Goals</Text>
+              <Text style={[styles.noDataTxt, {textAlign: 'center'}]}>Manage all your goals here. tap the Create a New Goal button for the first one</Text>
             </View>
             </>
           )}
@@ -290,6 +290,12 @@ const styles = StyleSheet.create({
     width: '80%',
     height: '80%',
     
+  },
+  noDataTxt:{
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: colors.green,
+    fontSize: 20,
   },
 
 })

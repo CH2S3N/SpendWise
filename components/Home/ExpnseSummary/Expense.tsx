@@ -161,8 +161,8 @@ export default function Expense() {
                     </>
                 ) : (
                         <View style={styles.noData}>
-                            <Text style={styles.noDataTxt}>Manage your Expense here!</Text>
-                            <Text style={styles.titletext}>To add your expenses just tap the Add Expense button.</Text>
+                            <Text style={[styles.noDataTxt, {fontSize: 25}]}>Manage your Expense here!</Text>
+                            <Text style={styles.noDataTxt}>To add your expenses just tap the Add Expense button.</Text>
                         </View>
                 )}
 
@@ -217,7 +217,6 @@ const styles=StyleSheet.create({
         justifyContent: 'center',
         paddingHorizontal: 5
     },
-
     contentSection: {
       
        flex: 1
@@ -228,31 +227,28 @@ const styles=StyleSheet.create({
 
     },
     modal: {
-        flex: 1,
-        
+        flex: 1,  
     },
     modalOverlay: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.2)',
-      },
-      modalContent: {
-        width: '80%',
-        height: '80%',
-        
-        backgroundColor: 'white',
-        padding: 20,
-        borderRadius: 10,
-        alignItems: 'center',
-        elevation: 5,
-        shadowColor: '#000',
-        shadowRadius: 8,
-        shadowOffset: { height: 6, width: 0 },
-        shadowOpacity: 0.15,
-      },
-
-
+    },
+    modalContent: {
+    width: '80%',
+    height: '80%',
+    
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowRadius: 8,
+    shadowOffset: { height: 6, width: 0 },
+    shadowOpacity: 0.15,
+    },
     description: {
         flex: 2,
         alignItems: 'flex-start',
@@ -263,7 +259,6 @@ const styles=StyleSheet.create({
         alignItems: 'flex-start',
         justifyContent: 'flex-start'
     },
-
     card: {
         marginHorizontal: 10,
         padding: 15,
@@ -347,8 +342,8 @@ const styles=StyleSheet.create({
       noDataTxt:{
         fontWeight: 'bold',
         textAlign: 'center',
-        color: colors.dark,
-        fontSize: 30,
+        color: colors.green,
+        fontSize: 20,
       },
       titletext:{
         fontWeight: 'bold',
